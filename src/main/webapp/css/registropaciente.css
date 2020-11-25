@@ -1,0 +1,45 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 20/04/2020, 01:22:33 PM
+    Author     : web
+*/
+section{
+    width: 100%;
+    left: 0;
+}
+.centrar{
+    display: flex;
+    justify-content: center;
+    /*align-items: center;*/
+}
+.btnRegistrar{
+    color:white;
+    width: 40%;
+    height: 3rem;
+    border-radius: 10px;
+    font:bold 12px Arial;
+}
+.btnRegistrar:hover{
+    color:white;
+}
+.btnCancelar{
+    background-color: #da291c;
+    border-color: #da291c;
+    color:white;
+    width: 40%;
+    height: 3rem;
+    border-radius: 10px;
+    font:bold 12px Arial;
+}
+.btnCancelar:hover{
+    color:white;
+    background-color: #ce281c;
+    border-color: #ce281c;
+}
+.idpaciente{
+    font:bold 12px Arial;
+}

@@ -1,0 +1,103 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 21/05/2020, 04:11:12 PM
+    Author     : moises
+*/
+/*
+
+section{
+    width: 100%;
+    left: 0%;
+}
+#contenidoSection {
+    background: #e9ecef;
+}
+.fila{
+    height: 25%;
+}
+.c1{
+    border: solid 3px #495057;
+    border-radius: 20px;
+}
+.c2{
+    border: solid 3px #2f7b41;
+    border-radius: 20px;
+}
+h1{
+    font: bold 1rem Arial;
+    color: #343a40;
+    text-align: center;
+}
+h2{
+        font: normal 3rem Arial;
+    color: #343a40;
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    margin: 0;
+}
+#fila1{
+    height: 120px
+}
+#fila2{
+    height: calc(50% - 160px);
+}
+#fila3{
+    height: 50%;
+}
+.grafica_title{
+    height: 20px;
+}*/
+#sidebar{
+     background: #00000057;
+}
+.c4{
+    min-height: 50%;
+    padding: 5px;
+    background: #000000a3;
+    border: solid 3px #2f2f2f61;
+    font: 3rem Arial;
+    }
+    #contenidoSection{
+        padding: 0 !important;
+    }
+
+.c9{
+    padding:3px;
+    border: solid 3px #2f2f2f61;
+}
+.icon{
+        font: 4rem Arial;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.tit{font: bold 1rem Arial;overflow: hidden;display: flex;align-items: center;justify-content: center;text-overflow: ellipsis;}
+.num{
+    font: bold 3rem Arial;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.menu{
+    height: 40px;
+    border-radius: 5px;
+    background: #252525cf;
+    cursor: pointer;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid 1px #3a3a3a;
+    font: bold 1rem Arial;
+}
+.menu:hover{
+    border: solid 2px #4a4a4a;
+}

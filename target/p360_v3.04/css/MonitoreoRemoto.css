@@ -1,0 +1,111 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 17/05/2020, 10:11:49 AM
+    Author     : moises
+*/
+
+
+.buscarCalendario{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #0000008a;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    color: white;
+    font: bold 1.5rem Arial;
+    display: flex;
+    align-items: center;
+    justify-content: center;    
+}
+.tarjeta{
+    height: 70px;
+    background: #fe8201;
+    cursor: pointer;
+    border-bottom: solid 1px black;
+}
+h1,h2{
+    font: 1rem Arial;
+    margin: 5px;
+    height: 12px;
+}
+h3{
+    margin-top: 15px;
+}
+input{
+    border: solid 1px #797d82;
+    border-radius: 10px;
+    padding: 5px;
+    width: 100%;
+    color: white;
+    background: #36393c;
+}
+label{
+    width: 100%;
+    margin-top: 0.7rem;
+}
+.side1{
+    min-height: 100%;
+    /*height: fit-content!important;*/
+    padding: 15px;
+    background: #40474f;
+    height: 100%;
+    overflow: scroll;
+}
+.side2{
+    height: 100%;
+}
+.boton{
+    margin: 15px;
+    width: 60%;
+    margin-left: 20%;
+}
+#publishers {
+    position: absolute;
+    width: 100% !important;
+    height: 20% !important;
+    bottom: 5px;
+    left: 5px;
+    border: none;
+    border-radius: 0px;
+    background: none;
+    opacity: 1;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    overflow: scroll;
+}
+.OT_publisher{
+    flex: 0 0 25%;
+    max-width: 25%;
+    border-radius: 10px;
+}
+.GRIDcontainerOp {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    left: 0%;
+    overflow: scroll;
+    border: solid 1px #c5c5c56b;
+    border-radius: 4px;
+    background-color: black;
+    top: 0;
+}
+.SwitchEstado{
+    position: absolute;
+    bottom: -30px;
+    z-index: 2;
+}
+.SwitchChat{
+    position: absolute;
+    bottom: auto;
+    z-index: 2;
+}
+
+

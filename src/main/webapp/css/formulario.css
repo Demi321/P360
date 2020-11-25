@@ -1,0 +1,64 @@
+.formulario{
+      display: block;
+      margin-left: 33%;
+      margin-top: 6%;
+      width: 33%;
+      position: relative;
+      box-shadow: 10px 10px 20px #000;
+
+  }
+  .formulario h2{
+    /*background-image: url("../images/index2.png");*/
+    /*background-image: url("/images/fondo.png");*/
+      background-color: #2A313A;
+      color: #E6E6E6;
+      font-size: 18px;
+      font-weight:normal;
+      height: 55px;
+      padding-left: 3%;
+      padding-top: 3%;
+      text-align: left;
+      vertical-align: middle;
+      margin-bottom: 0%;
+  }
+
+  .formulario form{
+    /*background-image: url("../images/index1.png");*/
+    background-color: #3F444B;
+    border-radius: 1px;
+    color: #E6E6E6;
+    font-size: 12px;
+    font-weight: normal;
+    padding: 6% 25% 10% 25%;
+    position: relative;
+  }
+  .formulario form label{
+      font-size: 14px;
+      margin-top: 5%;
+      margin-bottom: 1%;
+  }
+  .formulario form input{
+      margin-top: 2%;
+      margin-right: 0%;
+      margin-bottom: 0%;
+      margin-left: 10%;
+      width: 70%;
+  }
+  .formulario button{
+      display: block;
+      background-color: #E2231A;
+      background-clip: padding-box;
+      color: white;
+      cursor: pointer;
+      font-size: 13px;
+      margin-left: 34%;
+      margin-top: 6%;
+      margin-bottom:6%;
+  }
+  .msg-error-login{
+      background: red;
+      color: white;
+      padding: 3px;
+      text-align: center;
+      font-weight: bold;
+  }

@@ -1,0 +1,214 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 10/11/2020, 08:10:59 PM
+    Author     : moises
+*/
+
+.option__image {
+    width: 60px;
+    border-radius: 10px;
+}
+.option__title {
+    font: bold 1rem Arial;
+    padding: 10px;
+}
+
+.GRIDcontainer {
+    height: calc(100% - 60px);
+    width: calc(100% - 50px);
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    left: 50px;
+    top: 60px;
+    overflow: scroll;
+    /* border: solid 1px white; */
+    border-radius: 5px;
+    background-color: black;
+}
+.empleados_stats {
+    height: calc(0% + 60px);
+    width: 100%;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    left: 0%;
+    top: 0px;
+    overflow-x: scroll;
+    /* border: solid 1px white; */
+    border-radius: 5px;
+    background-color: black;
+    display: flex;
+}
+.GRIDcontainerOp {
+    height: 85%;
+    width: 100%;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    left: 0%;
+    overflow: scroll;
+    border: solid 1px white;
+    border-radius: 2px;
+    background-color: black;
+    top: 0;
+}
+
+.bloque {
+    position: relative;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    max-width: 100%;
+    cursor: pointer;
+    height: 100% !important;
+    overflow: hidden;
+    border: solid 1px #ffffff;
+    cursor: grab;
+}
+.bloque2-1 {
+    position: relative;
+    width: 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+    height: 50% !important;
+}
+.bloque3-1 {
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+    position: relative;
+    width: 100%;
+    height: 50% !important;
+}
+.bloque4-1 {
+    position: relative;
+    width: 100%;
+    flex: 0 0 50%;
+    max-width: 50%;
+    height: 33.33333% !important;
+}
+.bloque5-1 {
+    position: relative;
+    width: 100%;
+    flex: 0 0 50%;
+    max-width: 50%;
+    height: 25% !important;
+}
+.bloquefull {
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    cursor: pointer !important;
+    left: 0;
+    top: 0;
+}
+
+.video_big {
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    cursor: pointer !important;
+    max-width: 100%;
+    max-height: 100%;
+    z-index: 10;
+}
+.stats_box {
+    width: 25%;
+    height: 60px;
+    position: relative;
+    min-width: 150px;
+    display: flex;
+    /* border: solid; */
+    color: white;
+    font: bold 40px Arial;
+    padding: 5px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.stats_box .details {
+    font: bold 25px Arial;
+}
+.stats_box .details_title {
+    font: bold 10px Arial;
+}
+.empleados_list {
+    height: calc(100% - 60px);
+    width: calc(0% + 50px);
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    left: 0%;
+    top: 60px;
+    overflow: scroll;
+    border-top: solid 1px white;
+    background-color: black;
+    border-radius: 5px;
+}
+.user_box {
+    text-align: center;
+    width: 100%;
+    color: white;
+    height: fit-content;
+    padding: 5px 2px;
+    position: relative;
+}
+.user_box .details {
+    height: 46px;
+    width: 46px;
+    border-radius: 25px;
+    background: #343a40;
+}
+.user_box .details_title {
+    font: normal 8px Arial;
+    padding: 2px 5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: initial;
+}
+
+.user_datails{
+    position: absolute; width: 200px; height: 280px; overflow: scroll; left: 55px; padding: 10px; background: #343a40; border-top-right-radius: 10px; border-bottom-right-radius: 10px; top: 183px; color: white; z-index: 10;
+}
+.user_datails .fa-window-close{
+    position: absolute; left: 2px; top: 2px; width: 25px; height: 20px; cursor: pointer;
+}
+.user_details_name{
+    font: bold 1rem arial;
+    text-align: center;
+    border-bottom: solid 2px #6c757d;
+    padding: 2px;
+    width: 100%;
+    display: block;
+}
+.user_details_img{
+    width: 60%; height: 90px; margin: 5px auto 10px auto; border-radius: 10px; background: #212529;
+}
+.user_details_list{
+    font: bold 1.1rem Arial;
+}
+
+.avada_kedavra{
+    transition:1s;
+    animation-name: avada_kedavra;
+    animation-duration: 1s;
+    border: solid 2px #0f97a9;
+    border-radius: 5px;
+}
+@keyframes avada_kedavra {
+    from {
+        background: #6c757d;
+    }
+    to {
+        background: #343a40;
+    }
+}

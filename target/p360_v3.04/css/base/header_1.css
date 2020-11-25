@@ -1,0 +1,1186 @@
+::-webkit-scrollbar {
+    display: none;
+}
+
+
+/*******HEADER********/
+header{
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    height: 60px;
+    background-color: rgba(255, 255, 255);
+    border-bottom: 3px solid rgba(218, 41, 28);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.cabezera{
+    height: 100%;
+    overflow: hidden;
+}
+
+.header1{
+    height: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.header1 img{
+    height: 40px;
+}
+
+.header2 .img1{
+    width: 60px;
+    height: 60px;
+}
+
+.header2 .img2{
+    height: 20px;
+}
+
+.header2 .img3{
+    height: 20px;
+}
+
+.header3 .titulo .tituloPrincipal{
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 2px;
+}
+
+.header3 .titulo .tituloSecundario{
+    font-size: 10px;
+}
+
+.header4{
+    display: flex;
+    justify-content: space-between;
+}
+
+.header4 .nombre{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.header4 .nombre .usuario{
+    font-size: 12px;
+}
+
+.header4 .toggle-btn{
+    height: 100%;
+}
+
+.header4 .toggle-btn button{
+    background-color: transparent;
+    border: none;
+    height: 100%;
+    width: 60px;
+}
+
+.header4 .toggle-btn button span{
+    font-size: 40px;
+    font-weight: bold;
+    background-color: transparent;
+    color: rgb(0, 0, 0);
+    border: none;
+    margin-top: -4px;
+}
+/********FIN DE HEADER********/
+
+/********MENU SERVICIOS********/
+.menuServicios{
+    position: fixed;
+    top: 60px;
+    width: 100%;
+    background-color: black;
+    z-index: 100;
+    display: none;
+}
+
+.menuSerciciosActive{
+    display: block;
+}
+
+.menuServicios ul{
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0 0 0;
+    margin: 0;
+}
+
+.menuServicios ul li{
+    list-style: none;
+}
+
+.menuServicios ul li a{
+    text-align: center;
+}
+
+.menuServicios ul li div{
+    border: 1px solid white;
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+}
+
+.menuServicios ul li label{
+    display: block;
+    color: white;
+}
+/********FIN DE HEADER********/
+
+/********CERRAR SESION********/
+.cerrarSesion{
+    /*		position: fixed;
+                    height: calc(100% - 90px);
+                    top: 60px;
+                    right: 0px;
+                    background-color: rgba(255, 255, 255);
+                    z-index: 1000;
+                    width: 0%;
+                    transition: 0.6s;
+                    overflow: hidden;*/
+}
+
+.cerrarSesion .titulo{
+    width: 100%;
+    height: 5%;
+    background-color: #da291c;
+    padding: 5px;
+}
+
+.cerrarSesion .titulo .titulo-seg{
+    font-size: 16px;
+    color: #fff;
+    font: bold 1rem Arial;
+}
+
+.cerrarSesion .perfil{
+    width: 100%;
+    height: 40%;
+    background-color: rgb(64, 71, 79);
+    overflow-y: auto;
+}
+
+.cerrarSesion .perfil .foto{
+    width: 100%;
+    height: 50%;;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.cerrarSesion .perfil .foto .foto-perfil{
+    width: 150px;
+    border-radius: 100%;
+    height: 100%;
+    overflow: hidden;
+    min-width: 50%;
+}
+
+.cerrarSesion .perfil .datos{
+    width: 100%;
+    height: 30%;
+    display: flex;
+}
+
+.cerrarSesion .perfil .datos .info{
+    width: 60%;
+    height: 100%;
+    overflow: hidden;
+    padding: 10px 5px;
+    text-align: left;
+}
+
+.cerrarSesion .perfil .datos .info p{
+    margin-bottom: 0;
+}
+
+.cerrarSesion .perfil .datos .info .nombre,
+.cerrarSesion .perfil .datos .info .correo,
+.cerrarSesion .perfil .datos .info .ubicacion{
+    color: #fff;
+}
+
+.cerrarSesion .perfil .datos .info .nombre{
+    font-size: 20px;
+    margin: 0;
+    padding: 0 5px;
+}
+
+.cerrarSesion .perfil .datos .info .correo{
+    font-size: 14px;
+    padding: 0 5px;
+    line-height: 1.4;
+}
+
+.cerrarSesion .perfil .datos .info .ubicacion{
+    font-size: 13px;
+    padding: 0 5px;
+    line-height: 1.4;
+}
+
+.cerrarSesion .perfil .datos .semaforo{
+    width: 40%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.cerrarSesion .perfil .btn-perfil{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cerrarSesion .perfil .btn-perfil .boton-perfil{
+    display: block;
+    width: 230px;
+    height: 40px;
+    border: 2px solid #fff;
+    border-radius: 30px;
+    color: #fff;;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cerrarSesion .navegacion{
+    width: 100%;
+    height: 50%;
+    border-top: 2px solid #fff;
+    background-color: rgb(64, 71, 79);
+    border-bottom: 2px solid #fff;
+}
+
+.cerrarSesion .navegacion nav{
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.cerrarSesion .navegacion nav .menu-sesion,
+.cerrarSesion .navegacion nav .menu-sesion .menu-servicios,
+.cerrarSesion .navegacion nav .menu-sesion .menu-segmentos{
+    padding: 0;
+}
+
+.cerrarSesion .navegacion nav .menu-sesion li{
+    display: block;
+    padding: 5px 20px;
+    border-bottom: 2px solid #fff;
+    /*cursor: pointer;*/
+}
+
+.cerrarSesion .navegacion nav .menu-sesion > li:hover,
+.cerrarSesion .navegacion nav .menu-sesion > li a:hover{
+    background-color: crimson;
+}
+
+.cerrarSesion .navegacion nav .menu-sesion li,
+.cerrarSesion .navegacion nav .menu-sesion li a{
+    color: #fff;
+}
+
+.cerrarSesion .navegacion nav .menu-sesion li a{
+    display: block;
+    text-decoration: none;
+}
+
+.cerrarSesion .navegacion nav .menu-sesion .menu-servicios li a{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    padding-left: 15px;
+}
+
+.cerrarSesion .navegacion nav .menu-sesion .menu-servicios li a .icono{
+    height: 100%;
+}
+
+.cerrarSesion .navegacion nav .menu-sesion .menu-segmentos li a{
+    display: block;
+    padding-left: 15px;
+    text-decoration: none;
+}
+
+.cerrarSesion .btn-sesion{
+    width: 100%;
+    height: 5%;
+    background-color: rgb(64, 71, 79);
+}
+
+.cerrarSesion .btn-sesion .boton-sesion{
+    display: block;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    color: #fff;
+    text-decoration: none;
+}
+/********FIN DE CERRAR SESION********/
+
+
+
+
+
+
+header{
+    position: fixed;
+    height: 60px;
+    background: white;
+    width: 100%;
+    border-bottom: solid 3px #da291c;
+    transition: 0.5s;
+}
+
+.hidetoogle{
+    height: calc( 100% - 90px)!important;
+}
+#toggle{
+    background-color: white;
+    color: #5a5a5a;
+    font: 16px Arial;
+    padding: 17px;
+    border-bottom: solid 4px #ff8200;
+    margin: 0 !important;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    height: 51px;
+    position: relative;
+    height: 50px;
+    background: white;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    display: grid;
+}
+.toggleactive{
+    height: 50% !important;
+}
+.header1{
+    width: 20%;
+    max-width: 20%;
+    text-align: center;
+    padding: 15px;
+    min-width: 20%;
+    height: 60px;
+}
+
+.header3{
+    width: 10%;
+    max-width: 10%;
+    text-align: center;
+    padding: 5px;
+    /*    padding-right: 75px;
+        background: #f5f5f5;*/
+    display: table;
+    margin: 0;
+    padding-right: 65px;
+    transition: 0.5s;
+    color: white;
+}
+.containerHeader4{
+    display: table-cell;
+    vertical-align: middle;
+    font: 12px arial;
+}
+#T1Header{
+/*    font: 16px arial;
+    font-weight: bold;
+    margin-top: 9px;
+    margin-bottom: 2px;*/
+}
+#T2Header{
+/*    font: 9px arial;
+    margin-top: 2px;*/
+}
+#T3Header{
+/*    font: 14px arial;
+    font-weight: bold;
+    margin-top: 9px;
+    margin-bottom: 0;
+    text-align: right;
+    margin-right: 3px;*/
+}
+#T4Header{
+/*    font: 9px arial;
+    margin-top: 2px;
+    text-align: right;
+    padding: 5px;*/
+    /*border-right: solid 1px #979a9c;*/
+}
+#T5Header{
+    font: 10px arial;
+    margin-top: 2px;
+    padding: 5px;
+}
+.menuModalIcon{
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 57px;
+    padding:10px;
+    z-index: 100;
+    transition: 0.5s;
+}
+
+#hamburgerMenu{
+    text-align: center;
+    align-items: center;
+    height: 100%;
+}
+
+#menuToggle
+{
+    display: inline-grid;
+    position: relative;
+    z-index: 1;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+#menuToggle input
+{
+    display: block;
+    width: 40px;
+    height: 32px;
+    position: absolute;
+    top: -7px;
+    left: -5px;
+
+    cursor: pointer;
+
+    opacity: 0; /* hide this */
+    z-index: 2; /* and place it over the hamburger */
+
+    -webkit-touch-callout: none;
+}
+
+#menuToggle span
+{
+    display: block;
+    width: 29px;
+    height: 3px;
+    margin-bottom: 4px;
+    position: relative;
+    /*background: #1a202d;*/
+    border-radius: 3px;
+    z-index: 1;
+    transform-origin: -2px 1px;
+    transition: transform 0.5s 
+        cubic-bezier(0.77,0.2,0.05,1.0), 
+        background 0.5s 
+        cubic-bezier(0.77,0.2,0.05,1.0), 
+        opacity 0.55s ease;
+}
+
+#menuToggle span:first-child
+{
+    transform-origin: 0% 0%;
+}
+
+#menuToggle span:nth-last-child(2)
+{
+    transform-origin: 0% 100%;
+}
+
+#menuToggle input:checked ~ span
+{
+    opacity: 1;
+    transform: rotate(45deg) translate(-2px, -1px);
+    /*background: #232323;*/
+    width: 21px;
+    left: 3px;
+    top: 2px;
+}
+
+#menuToggle input:checked ~ span:nth-last-child(3)
+{
+    opacity: 0;
+    transform: rotate(0deg) scale(0.2, 0.2);
+}
+
+#menuToggle input:checked ~ span:nth-last-child(2)
+{
+    transform: rotate(-45deg) translate(0, -1px);
+}
+
+#menu
+{
+    position: fixed;
+    width: 25%;
+    margin: 0;
+    padding: 0;
+    background: #ededed;
+    background: #343a40;
+    list-style-type: none;
+    transform-origin: 0% 0%;
+    transform: translate(100%, 0);
+    transition: transform 0.3s cubic-bezier(1,0.5,0.5,1.0);
+    top: 60px;
+    right: 0;
+    height: calc( 100% - 60px );
+    opacity: 0;
+    transition: 0.5s;
+    overflow: hidden;
+    padding: 5px;
+}
+
+#menuToggle input:checked ~ ul
+{
+    transform: none;
+    opacity: 1;
+}
+
+
+.amenu {
+    padding: 12px;
+    border-bottom: solid 1px #d3d3d3;
+    color: #474848;
+    font: bold 16px arial;
+    margin-top: 3px;
+    justify-content: center;
+    transition: color 0.5s ease;
+}
+
+.amenu:hover{
+    border-bottom: solid 1px #737373;
+    color:black ;
+    text-decoration: none;
+}
+
+#title_textologin {
+    color: #40474f;
+    font: bold 16px arial;
+    border-bottom: solid 1px #d3d3d3;
+    padding-bottom: 4%;
+}
+
+#textologin {
+    vertical-align: middle;
+    font-size: 15px;
+    color: #929799;
+    height: 35%;
+    overflow: auto;
+}
+
+#menuContainer {
+    height: 55%;
+    max-height: 55%;
+    overflow: scroll;
+}
+
+#closeSession{
+    height: 10%;
+}
+
+#botonsesion {
+    vertical-align: middle;
+    width: 100%;
+    height: 100%;
+    /* border-radius: 16px; */
+    background-color: transparent;
+    /*color: #da291c;*/
+    color: inherit;
+    text-align: center;
+    border-color: transparent;
+    font: bold 16px arial;
+    border-top: solid 1px #d3d3d3;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 60px;
+}
+
+.modalText {
+    font: 12px Arial;
+}
+
+
+
+
+#LoadingLottie{
+    width: 60%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: 0.5s;
+    height: 100%;
+}
+
+.Paneblock{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    background: #1f1f1f;
+    transition: 0.3s;
+    transform: translate(-50%, -50%);
+    /*display: none;*/
+}
+.menu li {
+    padding: 0;
+}
+.header3 .btn-registrate, .btn-ingresa {
+    width: 130px;
+    font-size: 14px;
+    border-radius: 30px;
+    padding: 3px;
+    margin: 0;
+    position: fixed;
+    top:15px;
+    right: 75px;
+}
+.menuServicios ul li a {
+    text-align: center;
+    display: block;
+    cursor: pointer;
+}
+
+#menu_perfil{
+    position: absolute;
+    height: 40%;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+#menu_modulos{
+    position: absolute;
+    height: calc(65% - 60px);
+    width: 100%;
+    left: 0;
+    top: 35%;
+    overflow: scroll;
+}
+#menu_perfil{
+    position: absolute;
+    height: 35%;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+#menu_perfil .perfil{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.img_perfil{
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    top: 0;
+    left: 0;
+}
+.img_perfil_user{
+    background: black;
+    position: absolute;
+    padding: 15%;
+    border-radius: 50%;
+    margin: 5%;
+    top: 0;
+    left: 34.5%;
+}
+.info_perfil{
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    top: 50%;
+    left: 0;
+    text-align: left;
+    padding: 0 10px;
+}
+.miperfil360{
+    width: 80%;
+    padding: 3px;
+}
+.card_servicio{
+    height: 130px;
+    background: white;
+    border-radius: 25px;
+    margin: 8px 0;
+}
+.card_servicio .tittle{
+    height: 30px;
+    padding: 0 30px;
+    border-bottom: solid 1px #dee2e6;
+    color: black;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    font: bold 0.9rem Arial;
+}
+.card_servicio .body{
+    height: 100px;
+    padding: 0 20px;
+    color: black;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    font: normal 0.9rem Arial;
+}
+.btn-registro{
+    width: 70%;
+    padding: 5px;
+    font: normal 1rem Arial;
+}
+#registro_nuevo_modulo strong{
+    color: red;
+}
+/* Smartphones (portrait and landscape) ----------- */
+@media 
+only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) {
+}
+
+/* Smartphones (landscape) ----------- */
+@media 
+only screen 
+and (min-width : 321px) {
+    .header1{
+        width: 35%;
+        min-width: 35%;
+    }
+    .header2{
+        max-width: 10%;
+    }
+
+    .header3{
+        width: 25%;
+        max-width: 25%;
+        min-width: 15%;
+    }
+
+}
+
+@media 
+only screen 
+and (min-width : 300px) 
+and (orientation : portrait) {
+    .header1{
+        width: 100%;
+        min-width: 100%
+    }
+
+    #menu
+    {
+        width: 70%;
+        /*height: calc( 100% - 140px );*/
+    }
+
+    .header3{
+        width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    }
+
+}
+
+
+@media 
+only screen 
+and (max-width : 480px) {
+    .amenu {
+        font: bold 13px arial;
+        padding: 7px;
+    }
+
+}
+@media 
+only screen 
+and (min-width : 480px) 
+and (orientation : portrait) {
+    .header1{
+        width: 20%;
+        min-width: 20%
+    }
+    .header2{
+        width: 20%;
+        max-width: 20%
+    }
+
+
+    #menu
+    {
+        width: 50%;
+        /*height: calc( 100% - 140px );*/
+    }
+    .header3{
+        /*display: none;*/
+    }
+
+}
+
+
+@media 
+only screen 
+and (max-width : 768px) {
+    .amenu {
+        font: bold 14px arial;
+        padding: 10px;
+    }
+
+
+}
+@media 
+only screen 
+and (min-width : 768px)  {
+
+    .header2{
+        max-width: 100%
+    }
+}
+@media 
+only screen 
+and (max-width : 768px) 
+and (orientation : landscape) {
+    #textologin {
+        display: none;
+    }
+    #menuContainer {
+        height: 85%;
+        max-height: 85%;
+    }
+    #closeSession{
+        height: 15%;
+    }
+    footer{
+        display: none;
+    }
+    header{
+        height: 40px;
+    }
+    .header1 {
+        padding: 5px;
+    }
+    .menuModalIcon {
+        width: 40px;
+        height: 37px;
+        padding: 0px;
+    }
+    #menu {
+        top: 40px;
+        /*height: calc( 100% - 43px );*/
+    }
+
+}
+
+/* iPads (portrait and landscape) ----------- */
+@media 
+only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) {
+    aside {
+        width: 30%;
+    }
+    .header1{
+        width: 30%;
+        min-width: 30%;
+    }
+
+    #menu
+    {
+        width: 30%;
+    }
+    .header3{
+        width: 30%;
+        max-width: 30%;
+        min-width: 30%;
+    }
+
+}
+
+@media 
+only screen  
+and (min-width : 1224px) {
+    aside {
+        width: 25%;
+    }
+    .header1{
+        width: 25%;
+        min-width: 25%;
+    }
+
+    #menu
+    {
+        width: 25%;
+    }
+    .header3{
+        width: 25%;
+        max-width: 25%;
+        min-width: 25%;
+    }
+}
+
+/* ----------- iPad Pro ----------- */
+/* Portrait and Landscape */
+@media only screen 
+and (min-width: 1024px) 
+and (max-height: 1366px) 
+and (-webkit-min-device-pixel-ratio: 1.5) {
+    .header1{
+        width: 25%;
+        min-width: 25%;
+    }
+
+    #menu
+    {
+        width: 25%;
+    }
+    .header3{
+        width: 25%;
+        max-width: 25%;
+        min-width: 25%;
+    }
+    .amenu {
+        font: bold 14px arial;
+        padding: 10px;
+    } left: 25%;
+
+}
+
+/* Portrait */
+@media only screen and (min-width: 1024px) and (max-height: 1366px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 1.5) {}
+/* Landscape */
+@media only screen and (min-width: 1024px) and (max-height: 1366px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1.5) {}
+
+/* Large screens ----------- */
+@media 
+only screen  
+and (min-width : 1824px) {
+    .header1{
+        width: 20%;
+        min-width: 20%;
+    }
+
+    #menu
+    {
+        width: 20%;
+    }
+    .header3{
+        width: 20%;
+        max-width: 20%;
+        min-width: 20%;
+    }
+
+}
+
+
+
+.segmento{
+    background: whitesmoke;
+    color: black;
+}
+.segmento .header1 a{
+    text-align: right;
+    background-image: url(../../images/base/Claro360_Logo_Header_negro.png);
+    height: 100%;
+    width: 100%;
+    background-size: contain;
+    background-position: left;
+    background-repeat: no-repeat;
+}
+.segmento .header3 , .menuModalIcon.segmento , .segmento .cabezera li:hover{
+    background-color: #da291c;
+    color: white;
+}
+.segmento.menuServicios {
+    position: fixed;
+    top: 60px;
+    width: 100%;
+    background-color: black;
+    z-index: 100;
+}
+
+.segmento .cabezera li a{
+    color:black;
+    padding: 0 15px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+}
+.segmento #menuToggle span{
+    background:#f5f5f5
+}
+.segmento .cabezera li:hover{
+    /*background: #f5f5f5;*/
+}
+.segmento .cabezera li a:hover{
+    color: white;
+}
+.segmento  ul li div {
+    border: 1px solid white;
+}
+.segmento ul li label {
+    color: white;
+}
+
+/*
+
+.segmento #T1Header{
+    color:white;
+}
+.segmento #T2Header{
+    color:white;
+}
+.segmento #T3Header{
+    color:white;
+}
+.segmento #T4Header{
+    color:white;
+}*/
+
+
+.persona .header1 a{
+    text-align: right;
+    background-image: url(../../images/base/Claro360_Logo_Header_negro.png);
+    height: 100%;
+    width: 100%;
+    background-size: contain;
+    background-position: left;
+    background-repeat: no-repeat;
+}
+.persona .header3 , .menuModalIcon.persona , .persona .cabezera li:hover{
+    background-color: #da291c;
+}
+.persona .cabezera li a{
+    /*    color:black;
+        padding: 0 15px;*/
+}
+.persona #menuToggle span{
+    background:#FFFFFF
+}
+.persona .cabezera li:hover{
+    /*background:#da291c;*/
+}
+.persona .cabezera li a:hover{
+    /*color: #fff;*/
+}
+.persona ul li div {
+    border: 1px solid #343a40;
+}
+.persona ul li label {
+    color: #495057; 
+}
+
+.gobierno{
+    /*    background: #6c757d;
+        color: white;*/
+}
+.gobierno .header1 a{
+    text-align: right;
+    background-image: url(../../images/base/Claro360_Logo_Header_blanco.png);
+    height: 100%;
+    width: 100%;
+    background-size: contain;
+    background-position: left;
+    background-repeat: no-repeat;
+}
+.gobierno .header3 , .menuModalIcon.gobierno , .gobierno .cabezera li:hover{
+    background-color: black;
+}
+.gobierno .cabezera li a{
+    /*    color:white;
+        padding: 0 15px;*/
+}
+.gobierno #menuToggle span{
+    background:#f5f5f5
+}
+.gobierno .cabezera li:hover{
+    /*background: #f5f5f5;*/
+}
+.gobierno .cabezera li a:hover{
+    /*color: #000;*/
+}
+
+.empresa{
+    /*    background: #212529;
+        color: white;*/
+}
+.empresa .header1 a{
+    text-align: right;
+    background-image: url(../../images/base/Claro360_Logo_Header_negro.png);
+    height: 100%;
+    width: 100%;
+    background-size: contain;
+    background-position: left;
+    background-repeat: no-repeat;
+}
+.empresa .header3 , .menuModalIcon.empresa , .empresa .cabezera li:hover{
+    background-color: gray;
+}
+.empresa .cabezera li a{
+    /*    color:white;
+        padding: 0 15px;*/
+}
+.empresa #menuToggle span{
+    background:#f5f5f5
+}
+.empresa .cabezera li:hover{
+    /*background: #f5f5f5;*/
+}
+.empresa .cabezera li a:hover{
+    /*color: #000;*/
+}
+
+.corporativo{
+    /*    background: #212529;
+        color: white;*/
+}
+.corporativo .header1 a{
+    text-align: right;
+    background-image: url(../../images/base/Claro360_Logo_Header_blanco.png);
+    height: 100%;
+    width: 100%;
+    background-size: contain;
+    background-position: left;
+    background-repeat: no-repeat;
+}
+.corporativo .header3 , .menuModalIcon.corporativo , .corporativo .cabezera li:hover{
+    background-color: black;
+}
+.corporativo .cabezera li a{
+    /*    color:white;
+        padding: 0 15px;*/
+}
+.corporativo #menuToggle span{
+    background:#f5f5f5
+}
+.corporativo .cabezera li:hover{
+    /*background: #f5f5f5;*/
+}
+.corporativo .cabezera li a:hover{
+    /*color: #000;*/
+}
+
+.unlogged{
+    background-color: unset !important;
+}
+
+.menu-sesion ul li{
+    background: #343a40;
+}

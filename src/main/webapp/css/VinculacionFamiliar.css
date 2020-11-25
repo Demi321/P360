@@ -1,0 +1,77 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 17/05/2020, 10:17:39 AM
+    Author     : moises
+*/
+
+
+#sidebar{
+    height: calc( 100% - 145px );
+}
+h1,h2{
+    font: 1rem Arial;
+    margin: 5px;
+    height: 12px;
+}
+h3{
+    margin-top: 15px;
+}
+input{
+    border: solid 1px #797d82;
+    border-radius: 10px;
+    padding: 5px;
+    width: 100%;
+    color: white;
+    background: #36393c;
+}
+label{
+    width: 100%;
+    margin-top: 0.7rem;
+}
+.side1{
+    min-height: 100%;
+    height: fit-content!important;
+    padding: 15px;
+    background: #40474f;
+}
+.boton{
+    margin: 15px;
+    width: 60%;
+    margin-left: 20%;
+}
+#publishers {
+    position: absolute;
+    width: 100% !important;
+    height: 20% !important;
+    bottom: 5px;
+    left: 5px;
+    border: none;
+    border-radius: 0px;
+    background: none;
+    opacity: 1;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    overflow: scroll;
+}
+.OT_publisher{
+    flex: 0 0 25%;
+    max-width: 25%;
+    border-radius: 10px;
+}
+.GRIDcontainerOp {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    left: 0%;
+    overflow: scroll;
+    border: solid 1px #c5c5c56b;
+    border-radius: 4px;
+    background-color: black;
+    top: 0;
+}

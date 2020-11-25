@@ -1,0 +1,551 @@
+.perfil{
+    color: #40474f;
+    border: solid 1px #d9d9d9;
+    border-radius: 5px;
+    background: #d9d9d9;
+}
+
+.btn{
+    display: block;
+    background-color: #da291c;
+    background-clip: padding-box;
+    color: white;
+    cursor: pointer;
+    font-size: 13px;
+    margin-left: 34%;
+    margin-top: 6%;
+    margin-bottom: 6%;
+    border-radius: 10px;
+    width: 90px;
+}
+.vista_completa{
+    position: fixed;
+    width: 100%;
+    height: calc(100% - 90px);
+    left: 0;
+    top: 60px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    background-image: url(../../local/Img/background.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background: #343a40;
+}
+.vista_completa .body{
+    height: 90%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    overflow: scroll;
+}
+.vista_completa .form_registrar_institucion{
+    height: 100%;
+    overflow: scroll;
+}
+.vista_completa .body .title{
+    height: 70px;
+    color: white;
+    font: bold 1.5rem Arial;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.vista_completa .body .content{
+    height: calc(100% - 70px);
+/*    border: solid 1px #979a9c;
+    border-radius: 15px;*/
+}
+.vista_completa .butons{
+    height: 10%;
+    vertical-align: middle;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    display: flex;
+}
+.institucion_listado{
+    border-radius: 15px; 
+    /*box-shadow: 2px 2px 12px -3px #525252;*/ 
+    cursor: pointer; 
+    margin: 0; 
+    margin-bottom: 10px;
+    padding-left: 30%;
+}
+.institucion_listado:hover{
+    /*border-radius: 15px;*/ 
+    box-shadow: 2px 2px 12px -3px #525252; 
+    background: #747677
+        /*    cursor: pointer; 
+            margin: 0; 
+            margin-bottom: 10px;*/
+}
+.listado_instituciones{
+    /*background: #343a40;*/
+    /*    background: #797979;*/
+    background: #575e65;
+    width: 70%;
+    height: 90%;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: -3px 3px 8px 4px #000000;
+    font: bold 1.2rem Arial;
+    min-width: 350px;
+    min-height: 540px;
+}
+.institucion_seleccionada{
+    background: #65696d;
+    border-radius: 20px;
+    padding: 5px;
+    padding-left: 30%;
+}
+.registro_institucion{
+    background: #343a40;
+    width: 94%;
+    height: 98%;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: -3px 3px 8px 4px #000000;
+    font: bold 1.2rem Arial;
+    min-width: 350px;
+    min-height: 540px;
+    color: white;
+}
+
+/**************** Formulario-index ******************/
+@media (min-width: 1500px) and (max-width:3000px) {
+    .formulario{
+        display: block;
+        margin-left: 33%;
+        margin-top: 6%;
+        width: 33%;
+
+        box-shadow: 10px 10px 20px #000;
+        position: absolute;
+        top: 15%;
+    }
+
+    .formulario h2{
+        /*background-image: url("../images/index1.png");*/
+        background-color: #f5f5f5;
+
+        color: #242935;
+        font-size: 18px;
+        font-weight:normal;
+        height: 55px;
+        padding-left: 3%;
+        padding-top: 3%;
+        text-align: left;
+        vertical-align: middle;
+        margin-bottom: 0%;
+        border-radius: 10px 10px 0px 0px;
+
+    }
+
+    .formulario form{      
+        /*padding: 6% 25% 10% 25%;*/
+        position: relative;
+
+        background-color: #40474f;
+        color: #f5f5f5;
+        font-size: 12px;
+        font-weight: normal;
+        border-radius: 0px 0px 10px 10px;
+        padding-bottom: 4%;
+        padding: 5% 3% 5% 3%;
+
+
+    }
+    .formulario form label{
+        font-size: 14px;
+        margin-top: 5%;
+        margin-bottom: 1%;
+    }
+    .formulario form input{
+        margin-top: 2%;
+        margin-right: auto;
+        margin-bottom: 0%;
+        margin-left: auto;
+        width: 200px;
+        height: 30px;
+        border-radius: 15px;
+        border: none;
+    }
+    .formulario button{
+        display: block;
+        background-color: #da291c ;
+        background-clip: padding-box;
+        color: white;
+        cursor: pointer;
+        font-size: 13px;
+        margin-left: 34%;
+        margin-top: 6%;
+        margin-bottom:6%;
+        border-radius: 10px;
+        width: 90px;
+
+    }
+    .msg-error-login{
+        background: red;
+        color: white;
+        padding: 3px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+}
+
+
+@media (min-width:900px) and (max-width:1499px) {
+    .formulario{
+        display: block;
+        margin-left:30%;
+        margin-top: 6%;
+        width: 50%;
+        position: relative;
+        box-shadow: 10px 10px 20px #000;
+        position: absolute;
+        top: 15%;
+    }
+    .formulario h2{
+        /*background-image: url("../images/index1.png");*/
+        background-color: #f5f5f5;
+        color: #242935;
+        font-size: 18px;
+        font-weight:normal;
+        height: 55px;
+        padding-left: 3%;
+        padding-top: 3%;
+        text-align: left;
+        vertical-align: middle;
+        margin-bottom: 0%;
+        border-radius: 10px 10px 0px 0px;
+    }
+    .formulario form{
+        /*background-image: url("/images/fondo.png");*/
+
+        /*padding: 6% 25% 10% 25%;*/
+        position: relative;
+
+        background-color: #40474f;
+        color: #f5f5f5;
+        font-size: 12px;
+        font-weight: normal;
+        border-radius: 0px 0px 10px 10px;
+        padding-bottom: 4%;
+        padding: 5% 3% 5% 3%;
+    }
+    .formulario form label{
+        font-size: 14px;
+        margin-top: 5%;
+        margin-bottom: 1%;
+    }
+    .formulario form input{
+        margin-top: 2%;
+        margin-right: auto;
+        margin-bottom: 0%;
+        margin-left: auto;
+        width: 200px;
+        height: 30px;
+        border-radius: 15px;
+        border: none;
+    }
+    .formulario button{
+        display: block;
+        background-color: #da291c;
+        background-clip: padding-box;
+        color: white;
+        cursor: pointer;
+        font-size: 13px;
+        margin-left: 35%;
+        margin-top: 6%;
+        margin-bottom:6%;
+        border-radius: 10px;
+        width: 90px;
+    }
+    .msg-error-login{
+        background: red;
+        color: white;
+        padding: 3px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+}
+
+@media (min-width:500px) and (max-width:899px) {
+
+    .formulario{
+        display: block;
+        margin-left: 20%;
+        margin-top: 6%;
+        width:60%;
+        position: relative;
+        box-shadow: 10px 10px 20px #000;
+        position: absolute;
+        top: 15%;
+    }
+    .formulario h2{
+        /*background-image: url("../images/index1.png");*/
+        background-color: #f5f5f5;
+        color: #242935;
+        font-size: 18px;
+        font-weight:normal;
+        height: 55px;
+        padding-left: 3%;
+        padding-top: 3%;
+        text-align: left;
+        vertical-align: middle;
+        margin-bottom: 0%;
+        border-radius: 10px 10px 0px 0px;
+    }
+    .formulario form{
+        position: relative;
+
+        background-color: #40474f;
+        color: #f5f5f5;
+        font-size: 12px;
+        font-weight: normal;
+        border-radius: 0px 0px 10px 10px;
+        padding-bottom: 4%;
+        padding: 5% 3% 5% 3%;
+    }
+    .formulario form label{
+        font-size: 14px;
+        margin-top: 5%;
+        margin-bottom: 1%;
+    }
+    .formulario form input{
+        margin-top: 2%;
+        margin-right: auto;
+        margin-bottom: 0%;
+        margin-left: auto;
+        width: 200px;
+        height: 30px;
+        border-radius: 15px;
+        border: none;
+    }
+    .formulario button{
+        display: block;
+        background-color: #da291c ;
+        background-clip: padding-box;
+        color: white;
+        cursor: pointer;
+        font-size: 13px;
+        margin-left: 34%;
+        margin-top: 6%;
+        margin-bottom:6%;
+        border-radius: 10px;
+        width: 90px;
+    }
+    .msg-error-login{
+        background: red;
+        color: white;
+        padding: 3px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+}
+
+@media (min-width:0px) and (max-width:499px) {
+    .formulario{
+        display: block;
+        margin-left: 2%;
+        margin-top: 6%;
+        margin-right:2%;
+        /*margin-left: 20%;
+        margin-top: 6%;
+        width:60%;
+        position: relative;
+        box-shadow: 10px 10px 20px #000;
+        */
+        position: absolute;
+        top: 15%;
+    }
+    .formulario h2{
+        /*background-image: url("../images/index1.png");*/
+        background-color: #f5f5f5;
+        color: #242935;
+        font-size: 18px;
+        font-weight:normal;
+        height: 40px;
+        padding-left: 3%;
+        padding-top: 3%;
+        text-align: left;
+        vertical-align: middle;
+        margin-bottom: 0%;
+        border-radius: 10px 10px 0px 0px;
+
+    }
+    .formulario form{
+        /*background-image: url("/images/fondo.png");*/
+        position: relative;
+
+        background-color: #40474f;
+        color: #f5f5f5;
+        font-size: 12px;
+        font-weight: normal;
+        border-radius: 0px 0px 10px 10px;
+        padding-bottom: 4%;
+        /*padding: 5% 3% 5% 3%;*/
+    }
+    input,label{
+        margin-left:1%;
+        margin-right: 1%;
+        margin-top: 1px;
+
+    }
+    input{
+        width:10%;
+    }
+    button{
+        display: block;
+        background-color: #da291c;
+        background-clip: padding-box;
+        color: white;
+        cursor: pointer;
+        width:20%;
+        font-size: 13px;
+        margin-left: 1%;
+        margin-top: 6%;
+        margin-bottom:6%;
+        width: 90px;
+        border-radius: 15px;
+    }
+}
+span{
+    display: block;
+
+}
+/*.form-control{
+    border-radius: 10px;
+    margin-right: 0%;
+    margin-bottom: 0%;
+    margin-left: 10%;
+    width:80%;
+}*/
+.container-fluid{
+    text-align: center;
+    padding-right: 0px;
+    padding-left: 0px;
+}
+.alert button.close{
+    width:10%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+
+}
+
+/*/////sweetAlert*/
+.swal2-popup {
+    display: flex; margin: 0; padding: 0; border-radius:10px;     background: #40474f;
+}
+.swal2-popup .swal2-header{
+    background: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.swal2-toast .swal2-header{
+    background: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+
+}
+
+.swal2-popup .swal2-title{
+    display: flex;
+    width: 90%;
+    font: 13px arial;
+    color: rgb(47, 47, 47);
+    margin: 5px;
+}
+.swal2-toast .swal2-title{
+    display: flex;
+    width: 90%;
+    font: 13px arial;
+    color: white;
+    margin: 5px;
+}
+
+.swal2-popup .swal2-actions{
+    width: 100%;
+    display:flex;
+    z-index: 0; 
+}
+.swal2-content {
+    z-index: 1;
+    justify-content: center;
+    margin-top: 15px;
+    padding: 10px;
+    color: #ffffff;
+}
+.swal2-popup .swal2-styled.swal2-confirm {
+    width:40%;
+    background:#dc3545;
+    border-radius:15px;
+    height:25px;
+    margin:15px;
+    padding:0;
+}
+.swal2-popup .swal2-styled.swal2-cancel {
+    width:40%;background:#93939;border-radius:15px;height:25px;margin:15px;padding:0;
+}
+.sweetAlTextLabel{
+    color: #ffffff;
+    font: bold 13px arial;
+    margin-top: 25px;
+    margin-bottom: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+    text-align: justify;
+}
+
+
+.sweetalrtTitle{
+    font-size: 1.2em;
+    margin: 0;
+    text-align: left;
+    font-style: inherit;
+    font-family: sans-serif;
+    padding: 0.2em;
+    padding-top: 0.5em;
+    padding-bottom: 1em;
+    color: white;
+}
+.sweetalrt{
+    display: -webkit-box;
+    font-size: 1.1em;
+    margin: 0;
+    text-align: left;
+    font-style: inherit;
+    font-family: sans-serif;
+    margin-top: 0.5em;
+    margin-bottom: -0.4em;
+    font-weight: bold;
+    color: #fe8201;
+}
+.swalInput{
+    color: white;
+    border: none;
+    box-shadow: none;
+    border-bottom: solid 2px white;
+    border-radius: 0;
+}
+
+.swal2-inputTxtA{
+    margin: 1em auto;
+    width: 100%;
+    transition: border-color .3s,box-shadow .3s;
+    border: 1px solid #d9d9d9;
+    border-radius: .1875em;
+    font-size: 1.125em;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.06);
+    box-sizing: border-box;
+}

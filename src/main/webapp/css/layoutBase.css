@@ -1,0 +1,2042 @@
+/*
+
+
+body{
+    font-family: Arial, sans-serif;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+header{
+    position: fixed;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    visibility: visible;
+    transition: 0.5s;
+    border-bottom: 3px solid #da291c;
+
+    background-color: #000; PROVISIONAL
+}
+
+.cabezera{
+    height: 100%;
+    overflow: hidden;
+}
+
+.header1, .header3{
+    width: 30%;
+}
+
+.header2{
+    width: 60%;
+}
+
+.header1{
+    display: flex;
+    justify-content: flex-end;
+    vertical-align: center;
+}
+
+.header1 img{
+    height: 35px;
+    text-align: right;
+      margin-top:10px;
+      margin-right: 15px;
+}
+
+.header2{
+    display: flex;
+    justify-content: space-between;
+}
+
+.header2 .btn-menuSeg{
+    background-color: transparent;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+}
+
+.header2 .menu{
+    padding: 0;
+    height: 100%;
+}
+
+.header2 .menu nav{
+    display: inline-block;
+}
+
+.menu li{
+    display: inline-block;
+    height: 100%;
+    padding: 0;
+    cursor: pointer;
+}
+
+.header2 .menu li:hover{
+    background-color: #fff;
+}
+
+.header2 .menu li a{
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.header2 .menu li a:hover{
+    color: #000;
+}
+
+.header2 .busqueda{
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border-radius: 100px;
+    background-color: white;
+    margin: 5px 30px 0 0;
+}
+
+.header3 .sesion{
+    width: 100%;
+    height: 100%;
+}
+
+.header3 .sesion{
+    display: flex;
+    justify-content: space-between;
+}
+
+.header3 .sesion .nombre{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    margin-left: 50px;
+}
+
+.header3 .sesion .nombre .usuario{
+    font-size: 14px;
+
+    color: #fff; PROVISIONAL
+}
+
+.header3 .sesion .toggle-btn{
+    height: 100%;
+}
+
+.header3 .sesion .toggle-btn button{
+    background-color: transparent;
+    border: none;
+    height: 100%;
+    width: 60px;
+}
+
+.header3 .sesion .toggle-btn button span{
+    font-size: 40px;
+    font-weight: bold;
+    background-color: transparent;
+    border: none;
+    margin-top: -4px;
+}
+
+
+*******MENU SERVICIOS*******
+.menuServicios{
+    position: fixed;
+    top: 60px;
+    width: 100%;
+    background-color: black;
+    z-index: 100;
+    display: none;
+}
+
+.menuSerciciosActive{
+    display: block;
+}
+
+.menuServicios ul{
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0 0 0;
+    margin: 0;
+}
+
+.menuServicios ul li{
+    list-style: none;
+    cursor: pointer;
+}
+
+.menuServicios ul li a{
+    text-align: center;
+}
+
+.menuServicios ul li div{
+    border: 1px solid white;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 10px;
+}
+
+.menuServicios ul li label{
+    display: block;
+    color: white;
+}
+
+header .header2 .menuResponsivoActive{
+    background-color: #000;
+}
+**** FIN MENU SERVICIOS ****
+
+*******CERRAR SESION*******
+.cerrarSesion{
+    position: fixed;
+    height: calc(100% - 90px);
+    top: 60px;
+    right: 0px;
+    background-color: rgba(255, 255, 255);
+    z-index: 1000;
+    width: 0%;
+    transition: 0.6s;
+}
+
+.cerrarSesion .menuContenedor,
+.cerrarSesion .textoLogin{
+    height: 45%;
+    max-height: 45%;
+    overflow: auto;
+}
+
+.cerrarSesion .btn-cerrar{
+    height: 10%;
+    max-height: 10%;
+    border-top: 1px solid rgba(211, 211, 211);
+}
+
+.cerrarSesion .menuContenedor ul{
+    padding: 0;
+}
+
+.cerrarSesion .menuContenedor ul li .enlace-menu{
+    display: block;
+    padding: 12px;
+    border-bottom: 1px solid rgba(211, 211, 211);
+    color: rgb(64, 71, 79);
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 3px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.cerrarSesion .menuContenedor ul li .enlace-menu:hover{
+    border-bottom: solid 1px #737373;
+    color: rgba(0, 0, 0);
+    text-decoration: none;
+}
+
+.cerrarSesion .textoLogin{
+    text-align: center;
+}
+
+.cerrarSesion .textoLogin .tittleLogin{
+    margin-top: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    padding-bottom: 4%;
+    color: rgba(64, 71, 79);
+    border-bottom: 1px solid rgba(211, 211, 211);
+}
+
+.cerrarSesion .textoLogin img{
+    width: 30%;
+}
+
+.cerrarSesion .textoLogin p{
+    margin-top: 30px;
+    font-size: 12px;
+    color: #929799;
+}
+
+.cerrarSesion .btn-cerrar button{
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: rgba(255, 255, 255);
+    color: rgba(218, 41, 28);
+    font-size: 16px;
+    font-weight: bold;
+}
+*******FIN DE CERRAR SESION*******
+
+*******SECTION*******
+section{
+    position: fixed;
+    top: 60px;
+    width: 100%;
+    height: calc(100% - 90px);
+    overflow: hidden;
+    z-index: 1;
+    background: url('../images/fondosistema.jpg') rgba(0, 0, 0) fixed;
+}
+
+section nav, section main, section aside{
+    display: inline-block;
+}
+
+section nav{
+    height: 50px;
+    background-color: rgb(165, 167, 168);
+    border-bottom: 3px solid rgba(255, 130, 0);
+}
+
+section nav .botonera{
+    padding: 0;
+}
+
+section nav .botonera li{
+    display: inline-block;
+}
+
+section main{
+    float: right;
+    overflow: auto;
+}
+
+section main .container-fluid{
+    background-color: rgba(255, 255, 255, 0.6);
+    border: 1px solid transparent;
+}
+
+section aside{
+    background-color: rgba(64, 71, 79);
+    height: calc(100% - 50px);
+    display: block;
+    z-index: 10;
+}
+
+section aside .titulo-menu{
+    width: 100%;
+    height: 30px;
+    background-color:rgba(245, 245, 245);
+    text-align: center;
+    font-size: 16px;
+    padding: 5px;
+}
+
+section aside .contenidoMenu{
+    width: 100%;
+    max-height: 100%;
+    background-color: rgba(0, 151, 169);
+    overflow: auto;
+}
+
+.chat{
+    position: absolute;
+    right: 0;
+    bottom: 60px;
+    background-color: rgba(0, 0, 0);
+    border-radius: 10px 0px 0px 10px;
+    padding: 0px;
+}
+
+.chat .btn-chat,
+.chat .soluciones{
+    display: inline-block;
+    padding-bottom: 12px;
+}
+
+.chat .btn-chat{
+    color: rgba(245, 245, 245);
+    width: 40px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.chat .btn-chat .glbl{
+    font-weight: bold;
+    background-color: transparent;
+    color: rgba(245, 245, 245);
+    border: none;
+}
+
+.chat .btn-chat .titulo-chat{
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.chat .soluciones{
+    padding-left: 10px;
+    padding-right: 50px;
+    display: none;
+}
+
+.chat .solucionesActive{
+    display: inline-block;
+}
+
+.chat .soluciones .titulo{
+    font-weight: bold;
+    color: rgba(245, 245, 245);
+}
+
+.chat .soluciones .sub-titulo{
+    font-size: 10px;
+    color: rgba(245, 245, 245);
+}
+*******FIN SECTION*******
+
+*******FOOTER*******
+footer{
+    position: fixed;
+    bottom: 0px;
+    background-color: rgba(0, 0, 0);
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+footer .texto,
+footer .logo{
+    height: 100%;
+}
+
+footer .logo img{
+    width: 60px;
+    height: 15px;
+    margin-top: 5px;
+    margin-right: 10px;
+}
+
+footer .texto h6{
+    padding-top: 11px;
+    margin-left: 15px;
+    font-size: 9px;
+    font-weight: 500;
+    color: rgba(255, 255, 255);
+}
+*******FIN FOOTER*******
+
+*****************************************************************************************************************
+*****************************************      PORTRAIT     *****************************************************
+*****************************************************************************************************************
+**********************PORTRAIT DISPOSITIVO MOVIL CELULAR*********************************************************
+@media only screen and (max-width: 320px) and (orientation: portrait){
+    .header3{
+        display: none;
+    }
+    ******HEADER*******
+    header .header1{
+        display: none;
+    }
+
+    header .header2{
+        width: 90%;
+    }
+
+    .header2 .btn-menuSeg{
+        font-size: 12px;
+    }
+
+    .menu li {
+        padding: 17px 15px; 
+    }
+
+    header .header2 .menuResponsivo{
+        position: fixed;
+        top: 60px;
+        left: 0px;
+        flex-direction: column;
+        width: 100%;
+        display: none;
+    }
+
+    header .header2 .menuResponsivoActive{
+        display: block;
+        height: auto;
+    }
+
+    .menuResponsivo li{
+        width: 100%;
+        border-bottom: 2px solid white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: auto;
+    }
+
+    .header2 .menu li a {
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: bold;
+        color: rgb(255, 255, 255);
+    }
+
+    .menuServicios{
+        top: 60px;
+        width: 100%;
+        height: calc(100% - 60px);
+        overflow: auto;
+    }
+
+    .menuServicios ul{
+        flex-direction: column;
+    }
+
+    .menuServicios ul li{
+        display: flex;
+        justify-content: center;
+        border-bottom: 2px solid white;
+        padding-top: 5px;
+    }
+
+    .header3 .sesion .nombre {
+        display: none;
+    }
+    *******FIN HEADER*******
+
+    *******CERRAR SESIÓN*******
+    .cerrarAncho{
+        width: 100%;
+        transition: 0.6s;
+    }
+    *******FIN DE CERRAR SESIÓN*******
+
+    *******SECTION*******
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+
+    section nav{
+        border: none;
+        width: 100%;
+    }
+
+    section main{
+        width: 100%;
+        padding: 5px;
+        height: calc(100% - 80px);
+    }
+
+    section aside{
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        height: auto;
+    }
+
+    section aside .toggle-menuBTN{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 30px;
+    }
+
+    section aside .menuInactivo{
+        height: 0px;
+        transition: height 0.6s ease;
+    }
+
+    .menuActive{
+        height: 300px;
+        transition: height 0.6s ease;
+    }
+    *******FIN DEL SECTION*******
+
+    *******FOOTER*******
+    footer .texto h6{
+        font-size: 8px;
+    }
+    *******FIN DEL FOOTER*******
+}
+@media only screen and (min-width: 321px) and (max-width: 424px) and (orientation: portrait){
+    .header3{
+        display: none;
+    }
+    ******HEADER*******
+    .header1{
+        width: 81%;
+    }
+
+    .header1 a{
+        margin-left: 60px;
+    }
+
+    .header2, .header3, .header4 .titulo{
+        display: none;
+    }
+
+    .header4{
+        width: auto;
+    }
+    *******FIN HEADER*******
+
+    *******CERRAR SESIÓN*******
+    .cerrarAncho{
+        width: 100%;
+        transition: 0.6s;
+    }
+    *******FIN DE CERRAR SESIÓN*******
+
+    *******SECTION*******
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+
+    section nav{
+        border: none;
+        width: 100%;
+    }
+
+    section main{
+        width: 100%;
+        padding: 5px;
+        height: calc(100% - 80px);
+    }
+
+    section aside{
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        height: auto;
+    }
+
+    section aside .toggle-menuBTN{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 30px;
+    }
+
+    section aside .menuInactivo{
+        height: 0px;
+        transition: height 0.8s ease;
+    }
+
+    .menuActive{
+        height: 300px;
+        transition: height 0.6s ease;
+    }
+    *******FIN DEL SECTION*******
+
+    *******FOOTER*******
+    footer .texto h6{
+        font-size: 8px;
+    }
+    *******FIN DEL FOOTER*******
+}
+**********************PORTRAIT DISPOSITIVO MOVIL TABLET**********************************************************
+@media only screen and (min-width: 425px) and (max-width: 600px) and (orientation: portrait){
+    .header3{
+        display: none;
+    }
+    ******HEADER*******
+    .header1{
+        width: 85%;
+    }
+
+    .header1 a{
+        margin-left: 60px;
+    }
+
+    .header2, .header3, .header4 .titulo{
+        display: none;
+    }
+
+    .header4{
+        width: auto;	
+    }
+    *******FIN HEADER*******
+
+    *******CERRAR SESIÓN*******
+    .cerrarAncho{
+        width: 80%;
+        transition: 0.6s;
+    }
+    *******FIN DE CERRAR SESIÓN*******
+
+    *******SECTION*******
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+
+    section nav{
+        border: none;
+        width: 100%;
+    }
+
+    section main{
+        width: 100%;
+        padding: 5px;
+        height: calc(100% - 80px);
+    }
+
+    section aside{
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        height: auto;
+    }
+
+    section aside .toggle-menuBTN{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 30px;
+    }
+
+    section aside .menuInactivo{
+        height: 0px;
+        transition: height 0.6s ease;
+    }
+
+    .menuActive{
+        height: 300px;
+        transition: height 0.6s ease;
+    }
+    *******FIN DEL SECTION*******
+}
+@media only screen and (min-width: 601px) and (max-width: 679px) and (orientation: portrait){
+    .header3{
+        display: none;
+    }
+    ******HEADER*******
+    .header1{
+        width: 90%;
+    }
+
+    .header1 a{
+        margin-left: 60px;
+    }
+
+    .header2, .header3, .header4 .titulo{
+        display: none;
+    }
+
+    .header4{
+        width: auto;	
+    }
+    *******FIN HEADER*******
+
+    *******CERRAR SESIÓN*******
+    .cerrarAncho{
+        width: 70%;
+        transition: 0.6s;
+    }
+    *******FIN DE CERRAR SESIÓN*******
+
+    *******SECTION*******
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+
+    section nav{
+        border: none;
+        width: 100%;
+    }
+
+    section main{
+        width: 100%;
+        padding: 5px;
+        height: calc(100% - 80px);
+    }
+
+    section aside{
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        height: auto;
+    }
+
+    section aside .toggle-menuBTN{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 30px;
+    }
+
+    section aside .menuInactivo{
+        height: 0px;
+        transition: height 0.6s ease;
+    }
+
+    .menuActive{
+        height: 300px;
+        transition: height 0.6s ease;
+    }
+    *******FIN DEL SECTION*******
+}
+@media only screen and (min-width: 680px) and (max-width: 767px) and (orientation: portrait){
+    .header3{
+        display: none;
+    }
+    ******HEADER*******
+    .header1{
+        width: 90%;
+    }
+
+    .header1 a{
+        margin-left: 60px;
+    }
+
+    .header2, .header3, .header4 .titulo{
+        display: none;
+    }
+
+    .header4{
+        width: auto;	
+    }
+    *******FIN HEADER*******
+
+    *******CERRAR SESIÓN*******
+    .cerrarAncho{
+        width: 60%;
+        transition: 0.6s;
+    }
+    *******FIN DE CERRAR SESIÓN*******
+
+    *******SECTION*******
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+
+    section nav{
+        border: none;
+        width: 100%;
+    }
+
+    section main{
+        width: 100%;
+        padding: 5px;
+        height: calc(100% - 80px);
+    }
+
+    section aside{
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        height: auto;
+    }
+
+    section aside .toggle-menuBTN{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 30px;
+    }
+
+    section aside .menuInactivo{
+        height: 0px;
+        transition: height 0.6s ease;
+    }
+
+    .menuActive{
+        height: 300px;
+        transition: height 0.6s ease;
+    }
+    *******FIN DEL SECTION*******
+}
+******************************IPAD USADA EN LA EMPRESA***********************************************************
+@media only screen and (min-width: 768px) and (max-width: 820px) and (orientation: portrait){
+    .header3{
+        display: none;
+    }
+    ******HEADER*******
+    .header1{
+        width: 90%;
+    }
+
+    .header1 a{
+        margin-left: 60px;
+    }
+
+    .header2, .header3, .header4 .titulo{
+        display: none;
+        width: 40%
+    }
+
+    .header4{
+        width: auto;	
+    }
+    *******FIN HEADER*******
+
+    *******CERRAR SESIÓN*******
+    .cerrarAncho{
+        width: 60%;
+        transition: 0.6s;
+    }
+    *******FIN DE CERRAR SESIÓN*******
+
+    *******SECTION*******
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+
+    section nav{
+        border: none;
+        width: 100%;
+    }
+
+    section main{
+        width: 100%;
+        padding: 10px;
+        height: calc(100% - 80px);
+    }
+
+    section aside{
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        height: auto;
+    }
+
+    section aside .toggle-menuBTN{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 30px;
+    }
+
+    section aside .menuInactivo{
+        height: 0px;
+        transition: height 0.6s ease;
+    }
+
+    .menuActive{
+        height: 300px;
+        transition: height 0.6s ease;
+    }
+    *******FIN DEL SECTION*******
+}
+**********************PORTRAIT DISPOSITIVO MOVIL LAPTOP**********************************************************
+@media only screen and (min-width: 821px) and (max-width: 991px) and (orientation: portrait){
+    .header3{
+        display: none;
+    }
+    ******HEADER*******
+    .header1{
+        width: 90%;
+    }
+
+    .header1 a{
+        margin-left: 60px;
+    }
+
+    .header2, .header3, .header4 .titulo{
+        display: none;
+            width: 40%;
+    }
+
+    .header4{
+        width: auto;	
+    }
+    *******FIN HEADER*******
+
+    *******CERRAR SESIÓN*******
+    .cerrarAncho{
+        width: 50%;
+        transition: 0.6s;
+    }
+    *******FIN DE CERRAR SESIÓN*******
+
+    *******SECTION*******
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+
+    section nav{
+        border: none;
+        width: 100%;
+    }
+
+    section main{
+        width: 100%;
+        padding: 10px;
+        height: calc(100% - 80px);
+    }
+
+    section aside{
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        height: auto;
+    }
+
+    section aside .toggle-menuBTN{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 30px;
+    }
+
+    section aside .menuInactivo{
+        height: 0px;
+        transition: height 0.6s ease;
+    }
+
+    .menuActive{
+        height: 300px;
+        transition: height 0.6s ease;
+    }
+    *******FIN DEL SECTION*******
+}
+@media only screen and (min-width: 992px) and (max-width: 1150px) and (orientation: portrait){
+    .header3{
+        display: none;
+    }
+    ******HEADER*******
+    .header1{
+        width: 90%;
+    }
+
+    .header1 a{
+        margin-left: 60px;
+    }
+
+    .header2, .header3, .header4 .titulo{
+        display: none;
+        width: 40%;
+    }
+
+    .header4{
+        width: auto;	
+    }
+    *******FIN HEADER*******
+
+    *******CERRAR SESIÓN*******
+    .cerrarAncho{
+        width: 50%;
+        transition: 0.6s;
+    }
+    *******FIN DE CERRAR SESIÓN*******
+
+    *******SECTION*******
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+
+    section nav{
+        border: none;
+        width: 100%;
+    }
+
+    section main{
+        width: 100%;
+        padding: 10px;
+        height: calc(100% - 80px);
+    }
+
+    section aside{
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        height: auto;
+    }
+
+    section aside .toggle-menuBTN{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 30px;
+    }
+
+    section aside .menuInactivo{
+        height: 0px;
+        transition: height 0.6s ease;
+    }
+
+    .menuActive{
+        height: 300px;
+        transition: height 0.6s ease;
+    }
+    *******FIN DEL SECTION*******
+}
+**********************PORTRAIT DISPOSITIVO PC ESCRITORIO**********************************************************
+@media only screen and (min-width: 1151px) and (max-width: 1199px) and (orientation: portrait){
+    .header3{
+        display: none;
+    }
+    ******HEADER*******
+    .header1{
+        width: 90%;
+    }
+
+    .header1 a{
+        margin-left: 60px;
+    }
+
+    .header2, .header3, .header4 .titulo{
+        display: none;
+    }
+
+    .header4{
+        width: auto;
+    }
+    *******FIN HEADER*******
+
+    *******CERRAR SESIÓN*******
+    .cerrarAncho{
+        width: 50%;
+        transition: 0.6s;
+    }
+    *******FIN DE CERRAR SESIÓN*******
+
+    *******SECTION*******
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+
+    section nav{
+        border: none;
+        width: 100%;
+    }
+
+    section main{
+        width: 100%;
+        padding: 10px;
+        height: calc(100% - 80px);
+    }
+
+    section aside{
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        height: auto;
+    }
+
+    section aside .toggle-menuBTN{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 30px;
+    }
+
+
+    section aside .menuInactivo{
+        height: 0px;
+        transition: height 0.6s ease;
+    }
+
+    .menuActive{
+        height: 300px;
+        transition: height 0.6s ease;
+    }
+    *******FIN DEL SECTION*******
+}
+@media only screen and (min-width: 1200px) and (max-width:3000px) and (orientation: portrait){
+    
+    .header2 .btn-menuSeg{
+        display: none;
+    }
+
+    .cerrarAncho{
+        width: 25%;
+        transition: 0.6s;
+    }
+
+    section nav{
+        width: 25%;
+    }
+
+    section aside{
+        width: 25%;
+    }
+
+    section main{
+        width: 75%;
+        height: 100%;
+        padding: 15px;
+    }
+}
+*****************************************************************************************************************
+*****************************************      LANDSCAPE      ***************************************************
+*****************************************************************************************************************
+********************LANDSCAPE DISPOSITIVO MOVIL CELULAR**********************************************************
+@media only screen and (max-width: 424px) and (orientation: landscape){
+    .header3{
+        display: none;
+    }
+    ******HEADER*******
+    .header1{
+        width: 80%;
+    }
+
+    .header1 a{
+        margin-left: 60px;
+    }
+
+    .header2, .header3, .header4 .titulo{
+        display: none;
+    }
+
+    .header4{
+        width: auto;	
+    }
+    *******FIN HEADER*******
+
+    *******CERRAR SESIÓN*******
+    .cerrarAncho{
+        width: 100%;
+        transition: 0.6s;
+    }
+    *******FIN DE CERRAR SESIÓN*******
+
+    *******SECTION*******
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+
+    section nav{
+        border: none;
+        width: 100%;
+    }
+
+    section main{
+        width: 100%;
+        padding: 5px;
+        height: calc(100% - 80px);
+    }
+
+    section aside{
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        height: auto;
+    }
+
+    section aside .toggle-menuBTN{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 30px;
+    }
+
+    section aside .menuInactivo{
+        height: 0px;
+        transition: height 0.6s ease;
+    }
+
+    .menuActive{
+        height: 200px;
+        transition: height 0.6s ease;
+    }
+    *******FIN DEL SECTION*******
+}
+@media only screen and (min-width: 425px) and (max-width: 600px) and (orientation: landscape){
+    .header3{
+        display: none;
+    }
+    ******HEADER*******
+    .header1{
+        width: 84%;
+    }
+
+    .header1 a{
+        margin-left: 60px;
+    }
+
+    .header2, .header3, .header4 .titulo{
+        display: none;
+    }
+
+    .header4{
+        width: auto;	
+    }
+    *******FIN HEADER*******
+
+    *******CERRAR SESIÓN*******
+    .cerrarAncho{
+        width: 70%;
+        transition: 0.6s;
+    }
+    *******FIN DE CERRAR SESIÓN*******
+
+    *******SECTION*******
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+
+    section nav{
+        width: 100%;
+        border: none;
+    }
+
+    section main{
+        width: 100%;
+        padding: 5px;
+        height: calc(100% - 80px);
+    }
+
+    section aside{
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        height: auto;
+    }
+
+    section aside .toggle-menuBTN{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 30px;
+    }
+
+    section aside .menuInactivo{
+        height: 0px;
+        transition: height 0.6s ease;
+    }
+
+    .menuActive{
+        height: 200px;
+        transition: height 0.6s ease;
+    }
+    *******FIN DEL SECTION*******
+}
+@media only screen and (min-width: 601px) and (max-width: 679px) and (orientation: landscape){
+    .header3{
+        display: none;
+    }
+    ******HEADER*******
+    .header1{
+        width: 90%;
+    }
+
+    .header1 a{
+        margin-left: 60px;
+    }
+
+    .header2, .header3, .header4 .titulo{
+        display: none;
+    }
+
+    .header4{
+        width: auto;	
+    }
+    *******FIN HEADER*******
+
+    *******CERRAR SESIÓN*******
+    .cerrarAncho{
+        width: 60%;
+        transition: 0.6s;
+    }
+    *******FIN DE CERRAR SESIÓN*******
+
+    *******SECTION*******
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+
+    section nav{
+        border: none;
+        width: 100%;
+    }
+
+    section main{
+        width: 100%;
+        padding: 5px;
+        height: calc(100% - 80px);
+    }
+
+    section aside{
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        height: auto;
+    }
+
+    section aside .toggle-menuBTN{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 30px;
+    }
+
+    section aside .menuInactivo{
+        height: 0px;
+        transition: height 0.6s ease;
+    }
+
+    .menuActive{
+        height: 235px;
+        transition: height 0.6s ease;
+    }
+    *******FIN DEL SECTION*******
+}
+@media only screen and (min-width: 680px) and (max-width: 767px) and (orientation: landscape){
+    .header3{
+        display: none;
+    }
+    ******HEADER*******
+    .header1{
+        width: 90%;
+    }
+
+    .header1 a{
+        margin-left: 60px;
+    }
+
+    .header2, .header3, .header4 .titulo{
+        display: none;
+    }	
+
+    .header4{
+        width: auto;	
+    }
+    *******FIN HEADER*******
+
+    *******CERRAR SESIÓN*******
+    .cerrarAncho{
+        width: 60%;
+        transition: 0.6s;
+    }
+    *******FIN DE CERRAR SESIÓN*******
+
+    *******SECTION*******
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+
+    section nav{
+        border: none;
+        width: 100%;
+    }
+
+    section main{
+        width: 100%;
+        padding: 5px;
+        height: calc(100% - 80px);
+    }
+
+    section aside{
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        height: auto;
+    }
+
+    section aside .toggle-menuBTN{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 30px;
+    }
+
+    section aside .menuInactivo{
+        height: 0px;
+        transition: height 0.6s ease;
+    }
+
+    .menuActive{
+        height: 250px;
+        transition: height 0.6s ease;
+    }
+    *******FIN DEL SECTION*******
+}
+@media only screen and (min-width: 768px) and (max-width: 820px) and (orientation : landscape){
+    .header3{
+        display: none;
+    }
+    ******HEADER*******
+    .header1{
+        width: 90%;
+    }
+
+    .header1 a{
+        margin-left: 60px;
+    }
+
+    .header2, .header3, .header4 .titulo{
+        display: none;
+    }
+
+    .header4{
+        width: auto;	
+    }
+    *******FIN HEADER*******
+
+    *******CERRAR SESIÓN*******
+    .cerrarAncho{
+        width: 50%;
+        transition: 0.6s;
+    }
+    *******FIN DE CERRAR SESIÓN*******
+
+    *******SECTION*******
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+
+    section nav{
+        border: none;
+        width: 100%;
+    }
+
+    section main{
+        width: 100%;
+        padding: 5px;
+        height: calc(100% - 80px);
+    }
+
+    section aside{
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        height: auto;
+    }
+
+    section aside .toggle-menuBTN{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 30px;
+    }
+
+    section aside .menuInactivo{
+        height: 0px;
+        transition: height 0.6s ease;
+    }
+
+    .menuActive{
+        height: 250px;
+        transition: height 0.6s ease;
+    }
+    *******FIN DEL SECTION*******
+}
+********************LANDSCAPE DISPOSITIVO MOVIL TABLET**********************************************************
+@media only screen and (min-width: 821px) and (max-width: 991px) and (orientation : landscape){
+    .header3{
+        display: none;
+    }
+    ******HEADER*******
+    .header1{
+        width: 92%;
+    }
+
+    .header1 a{
+        margin-left: 60px;
+    }
+
+    .header2, .header4 .titulo{
+        display: none;
+    }
+
+    .header4{
+        width: auto;	
+    }
+    *******FIN HEADER*******
+
+    *******CERRAR SESIÓN*******
+    .cerrarAncho{
+        width: 40%;
+        transition: 0.6s;
+    }
+    *******FIN DE CERRAR SESIÓN*******
+
+    *******SECTION*******
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+
+    section nav{
+        border: none;
+        width: 100%;
+    }
+
+    section main{
+        width: 100%;
+        padding: 5px;
+        height: calc(100% - 80px);
+    }
+
+    section aside{
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        height: auto;
+    }
+
+    section aside .toggle-menuBTN{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 30px;
+    }
+
+    section aside .menuInactivo{
+        height: 0px;
+        transition: height 0.6s ease;
+    }
+
+    .menuActive{
+        height: 280px;
+        transition: height 0.6s ease;
+    }
+    *******FIN DEL SECTION*******
+}
+@media only screen and (min-width: 992px) and (max-width: 1150px) and (orientation: landscape){
+    .header3{
+        display: none;
+    }
+    ******HEADER*******
+    .menu li {
+        padding: 17px 15px; 
+    }
+
+    header .header2 .menuResponsivo{
+        position: fixed;
+        top: 60px;
+        left: 0px;
+        flex-direction: column;
+        width: 100%;
+        display: none;
+    }
+
+    header .header2 .menuResponsivoActive{
+        display: block;
+        height: auto;
+    }
+
+    .menuResponsivo li{
+        width: 100%;
+        border-bottom: 2px solid white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: auto;
+    }
+
+    .header2 .menu li a {
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: bold;
+        color: rgb(255, 255, 255);
+    }
+
+    .menuServicios{
+        top: 60px;
+        width: 100%;
+        height: calc(100% - 60px);
+        overflow: auto;
+    }
+
+    .menuServicios ul{
+        flex-direction: column;
+    }
+
+    .menuServicios ul li{
+        display: flex;
+        justify-content: center;
+        border-bottom: 2px solid white;
+        padding-top: 5px;
+    }
+
+    .header3 .sesion .nombre {
+        display: none;
+    }
+    *******FIN HEADER*******
+
+    *******CERRAR SESIÓN*******
+    .cerrarAncho{
+        width: 40%;
+        transition: 0.6s;
+    }
+    *******FIN DE CERRAR SESIÓN*******s
+
+    *******SECTION*******
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+
+    section nav{
+        border: none;
+        width: 100%;
+    }
+
+    section main{
+        width: 100%;
+        padding: 10px;
+        height: calc(100% - 80px);
+    }
+
+    section aside{
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        height: auto;
+    }
+
+    section aside .toggle-menuBTN{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 30px;
+    }
+
+    section aside .menuInactivo{
+        height: 0px;
+        transition: height 0.6s ease;
+    }
+
+    .menuActive{
+        height: 300px;
+        transition: height 0.6s ease;
+    }
+    *******FIN DEL SECTION*******
+}
+********************LANDSCAPE DISPOSITIVO MOVIL LAPTOP**********************************************************
+@media only screen and (min-width: 1151px) and (max-width: 1199px) and (orientation: landscape){
+    ******HEADER*******
+        .header2 .btn-menuSeg{
+            display: none;
+        }
+    header .header2 .menuResponsivo{
+        position: fixed;
+        top: 60px;
+        left: 0px;
+        flex-direction: column;
+        width: 100%;
+        display: none;
+    }
+    *******FIN HEADER*******
+
+    *******CERRAR SESIÓN*******
+    .cerrarAncho{
+        width: 40%;
+        transition: 0.6s;
+    }
+    *******FIN DE CERRAR SESIÓN*******
+
+    *******SECTION*******
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+
+    section nav{
+        width: 100%;
+        border: none;
+    }
+
+    section main{
+        width: 100%;
+        padding: 5px;
+        height: calc(100% - 80px);
+    }
+
+    section aside{
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        height: auto;
+    }
+
+    section aside .toggle-menuBTN{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 30px;
+    }
+
+    section aside .menuInactivo{
+        height: 0px;
+        transition: height 0.6s ease;
+    }
+
+    .menuActive{
+        height: 300px;
+        transition: height 0.6s ease;
+    }
+    *******FIN DEL SECTION*******
+    .header3{
+        display: none;
+    }
+}
+@media only screen and (min-width: 1200px) and (max-width: 1360px) and (orientation: landscape){
+        .header2 .btn-menuSeg{
+            display: none;
+        }
+    header .header2 .menuResponsivo{
+        position: fixed;
+        top: 60px;
+        left: 0px;
+        flex-direction: column;
+        width: 100%;
+        display: none;
+    }
+
+    .cerrarAncho{
+        width: 25%;
+        transition: 0.6s;
+    }
+
+    section nav{
+        width: 25%;
+    }
+
+    section aside{
+        width: 25%;
+    }
+
+    section main{
+        width: 75%;
+        height: 100%;
+        padding: 10px;
+    }
+    .header3{
+        display: none;
+    }
+}
+********************LANDSCAPE DISPOSITIVO PC ESCRITORIO**********************************************************
+
+patalla de escritorio utilizado en la empresa
+@media only screen and (min-width: 1361px) and (max-width: 1899px) and (orientation : landscape){
+    .header2 .btn-menuSeg{
+        display: none;
+    }
+    header .header2 .menuResponsivo{
+        position: fixed;
+        top: 60px;
+        left: 0px;
+        flex-direction: column;
+        width: 100%;
+        display: none;
+    }
+    .cerrarAncho{
+        width: 20%;
+        transition: 0.6s;
+    }
+
+    section nav{
+        width: 20%;
+    }
+
+    section aside{
+        width: 20%;
+    }
+
+    section main{
+        width: 80%;
+        height: 100%;
+        padding: 15px;
+    }
+}
+@media only screen and (min-width: 1900px) and (max-width: 2299px) and (orientation : landscape){
+    .header2 .btn-menuSeg{
+        display: none;
+    }
+
+    .cerrarAncho{
+        width: 20%;
+        transition: 0.6s;
+    }
+
+    section nav{
+        width: 20%;
+    }
+
+    section aside{
+        width: 20%;
+    }
+
+    section main{
+        width: 80%;
+        height: 100%;
+        padding: 15px;
+    }
+}
+@media only screen and (min-width: 2300px) and (max-width: 2599px) and (orientation : landscape){
+    .header2 .btn-menuSeg{
+        display: none;
+    }
+
+    .cerrarAncho{
+        width: 20%;
+        transition: 0.6s;
+    }
+
+    section nav{
+        width: 20%;
+    }
+
+    section aside{
+        width: 20%;
+    }
+
+    section main{
+        width: 80%;
+        height: 100%;
+        padding: 15px;
+    }
+}
+@media only screen and (min-width: 2600px) and (max-width: 3599px) and (orientation : landscape){
+    .header2 .btn-menuSeg{
+        display: none;
+    }
+
+    .cerrarAncho{
+        width: 15%;
+        transition: 0.6s;
+    }
+
+    section nav{
+        width: 15%;
+    }
+
+    section aside{
+        width: 15%;
+    }
+
+    section main{
+        width: 85%;
+        height: 100%;
+        padding: 15px;
+    }
+}
+
+
+
+.segmento{
+    background: #212529;
+    color: white;
+}
+
+.segmento .cabezera li a{
+    color:white;
+    padding: 0 15px;
+}
+.segmento #menuToggle span{
+    background:#f5f5f5
+}
+.segmento .cabezera li:hover{
+    background: #f5f5f5;
+}
+.segmento .cabezera li a:hover{
+    color: #000;
+}
+.segmento  ul li div {
+    border: 1px solid white;
+}
+.segmento ul li label {
+    color: white;
+}
+
+
+.segmento #header3{
+    color:white;
+}
+.segmento #T1Header{
+    color:white;
+}
+.segmento #T2Header{
+    color:white;
+}
+.segmento #T3Header{
+    color:white;
+}
+.segmento #T4Header{
+    color:white;
+}
+
+.persona{
+    background: #ffffff;
+    color: black;
+}
+.persona .cabezera li a{
+    color:black;
+    padding: 0 15px;
+}
+.persona #menuToggle span{
+    background:#000000
+}
+.persona .cabezera li:hover{
+    background: #2d2c2c;
+}
+.persona .cabezera li a:hover{
+    color: #fff;
+}
+.persona ul li div {
+    border: 1px solid #343a40;
+}
+.persona ul li label {
+    color: #495057; 
+}
+
+.gobierno{
+    background: #6c757d;
+    color: white;
+}
+
+.gobierno .cabezera li a{
+    color:white;
+    padding: 0 15px;
+}
+.gobierno #menuToggle span{
+    background:#f5f5f5
+}
+.gobierno .cabezera li:hover{
+    background: #f5f5f5;
+}
+.gobierno .cabezera li a:hover{
+    color: #000;
+}
+
+.empresa{
+    background: #212529;
+    color: white;
+}
+
+.empresa .cabezera li a{
+    color:white;
+    padding: 0 15px;
+}
+.empresa #menuToggle span{
+    background:#f5f5f5
+}
+.empresa .cabezera li:hover{
+    background: #f5f5f5;
+}
+.empresa .cabezera li a:hover{
+    color: #000;
+}
+
+.corporativo{
+    background: #212529;
+    color: white;
+}
+
+.corporativo .cabezera li a{
+    color:white;
+    padding: 0 15px;
+}
+.corporativo #menuToggle span{
+    background:#f5f5f5
+}
+.corporativo .cabezera li:hover{
+    background: #f5f5f5;
+}
+.corporativo .cabezera li a:hover{
+    color: #000;
+}*/
