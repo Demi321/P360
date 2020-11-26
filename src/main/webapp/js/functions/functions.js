@@ -1974,175 +1974,181 @@ function ArchiveSession() {
 //////////////////////MAPA**************************************************************
 
 function initMap() {
-    console.log("inicializando mapa");
-    map = new google.maps.Map(document.getElementById('map'), {zoom: 5, center: {lat: 19.503329, lng: -99.185714}/*,mapTypeId:'satellite'*/, styles: [{featureType: 'administrative', elementType: 'geometry', stylers: [{visibility: "off"}, {"weight": 1}]}, {featureType: 'administrative', elementType: 'geometry.fill', stylers: [{visibility: "on"}]}, {featureType: 'administrative', elementType: 'geometry.stroke', stylers: [{visibility: "off"}]}, {featureType: 'administrative', elementType: 'labels', stylers: [{color: '#000000'}, {visibility: "off"}]}, {featureType: 'administrative.country', elementType: 'geometry', stylers: [{color: '#a6a6a6'}, {visibility: "on"}, {"weight": 1.5}]}, {featureType: 'administrative.country', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.country', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.land_parcel', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.land_parcel', elementType: 'labels', stylers: [{visibility: "on"}]}, {featureType: 'administrative.land_parcel', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.locality', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.locality', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.locality', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.neighborhood', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.neighborhood', elementType: 'labels', stylers: [{color: '#696969'}, {visibility: "simplified"}]}, {featureType: 'administrative.neighborhood', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.province', elementType: 'geometry', stylers: [{visibility: "on"}, {"weight": 1.5}]}, {featureType: 'administrative.province', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.province', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: "landscape", stylers: [{color: '#D5D8DC'}]}, {featureType: 'landscape', elementType: 'geometry', stylers: [{color: '#D5D8DC'}]}, {featureType: 'landscape', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'landscape', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'landscape.man_made', elementType: 'geometry', stylers: [{color: '#526081'}, {visibility: "off"}]}, {featureType: 'landscape.natural.landcover', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.landcover', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'road', elementType: 'geometry', stylers: [{visibility: "simplified"}]}, {featureType: 'road', elementType: 'labels', stylers: [{visibility: "simplified"}]}, {featureType: 'road', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'water', elementType: 'geometry', stylers: [{color: '#F2F4F4'}, {visibility: "on"}]}, {featureType: 'water', elementType: 'labels', stylers: [{visibility: "off"}]}]});
-    map.setTilt(45);
-    geocoder = new google.maps.Geocoder;
-    infowindow = new google.maps.InfoWindow({maxWidth: 300});
-    RutaCamino = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#18478d', strokeOpacity: 0.5, strokeWeight: 4});
-    RutaCamino0 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#18478d', strokeOpacity: 0.5, strokeWeight: 4});
-    RutaCamino1 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#1c447f', strokeOpacity: 0.5, strokeWeight: 4});
-    RutaCamino2 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#1f4071', strokeOpacity: 0.5, strokeWeight: 4});
-    RutaCamino3 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#223e65', strokeOpacity: 0.5, strokeWeight: 4});
-    RutaCamino4 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#263a57', strokeOpacity: 0.5, strokeWeight: 4});
-    RutaCamino5 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#283851', strokeOpacity: 0.5, strokeWeight: 4});
-    RutaCamino6 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#2a3648', strokeOpacity: 0.5, strokeWeight: 4});
-    RutaCamino7 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#2c3441', strokeOpacity: 0.5, strokeWeight: 4});
-    RutaCamino8 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#2f3236', strokeOpacity: 0.5, strokeWeight: 4});
-    RutaCamino9 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#303132', strokeOpacity: 0.5, strokeWeight: 4});
+    if ($("#map").length) {
+        console.log("inicializando mapa");
+        map = new google.maps.Map(document.getElementById('map'), { zoom: 5, center: { lat: 19.503329, lng: -99.185714 } /*,mapTypeId:'satellite'*/ , styles: [{ featureType: 'administrative', elementType: 'geometry', stylers: [{ visibility: "off" }, { "weight": 1 }] }, { featureType: 'administrative', elementType: 'geometry.fill', stylers: [{ visibility: "on" }] }, { featureType: 'administrative', elementType: 'geometry.stroke', stylers: [{ visibility: "off" }] }, { featureType: 'administrative', elementType: 'labels', stylers: [{ color: '#000000' }, { visibility: "off" }] }, { featureType: 'administrative.country', elementType: 'geometry', stylers: [{ color: '#a6a6a6' }, { visibility: "on" }, { "weight": 1.5 }] }, { featureType: 'administrative.country', elementType: 'labels', stylers: [{ visibility: "off" }] }, { featureType: 'administrative.country', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'administrative.land_parcel', elementType: 'geometry', stylers: [{ visibility: "on" }] }, { featureType: 'administrative.land_parcel', elementType: 'labels', stylers: [{ visibility: "on" }] }, { featureType: 'administrative.land_parcel', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'administrative.locality', elementType: 'geometry', stylers: [{ visibility: "on" }] }, { featureType: 'administrative.locality', elementType: 'labels', stylers: [{ visibility: "off" }] }, { featureType: 'administrative.locality', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'administrative.neighborhood', elementType: 'geometry', stylers: [{ visibility: "on" }] }, { featureType: 'administrative.neighborhood', elementType: 'labels', stylers: [{ color: '#696969' }, { visibility: "simplified" }] }, { featureType: 'administrative.neighborhood', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'administrative.province', elementType: 'geometry', stylers: [{ visibility: "on" }, { "weight": 1.5 }] }, { featureType: 'administrative.province', elementType: 'labels', stylers: [{ visibility: "off" }] }, { featureType: 'administrative.province', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: "landscape", stylers: [{ color: '#D5D8DC' }] }, { featureType: 'landscape', elementType: 'geometry', stylers: [{ color: '#D5D8DC' }] }, { featureType: 'landscape', elementType: 'labels', stylers: [{ visibility: "off" }] }, { featureType: 'landscape', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'landscape.man_made', elementType: 'geometry', stylers: [{ color: '#526081' }, { visibility: "off" }] }, { featureType: 'landscape.natural.landcover', elementType: 'geometry', stylers: [{ visibility: "off" }] }, { featureType: 'landscape.natural.landcover', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'landscape.natural.terrain', elementType: 'geometry', stylers: [{ visibility: "off" }] }, { featureType: 'landscape.natural.terrain', elementType: 'labels', stylers: [{ visibility: "off" }] }, { featureType: 'landscape.natural.terrain', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'poi', elementType: 'geometry', stylers: [{ visibility: "off" }] }, { featureType: 'poi', elementType: 'labels', stylers: [{ visibility: "off" }] }, { featureType: 'poi', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'road', elementType: 'geometry', stylers: [{ visibility: "simplified" }] }, { featureType: 'road', elementType: 'labels', stylers: [{ visibility: "simplified" }] }, { featureType: 'road', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'transit', elementType: 'geometry', stylers: [{ visibility: "off" }] }, { featureType: 'transit', elementType: 'labels', stylers: [{ visibility: "off" }] }, { featureType: 'transit', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#F2F4F4' }, { visibility: "on" }] }, { featureType: 'water', elementType: 'labels', stylers: [{ visibility: "off" }] }] });
+        map.setTilt(45);
+        geocoder = new google.maps.Geocoder;
+        infowindow = new google.maps.InfoWindow({ maxWidth: 300 });
+        RutaCamino = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#18478d', strokeOpacity: 0.5, strokeWeight: 4 });
+        RutaCamino0 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#18478d', strokeOpacity: 0.5, strokeWeight: 4 });
+        RutaCamino1 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#1c447f', strokeOpacity: 0.5, strokeWeight: 4 });
+        RutaCamino2 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#1f4071', strokeOpacity: 0.5, strokeWeight: 4 });
+        RutaCamino3 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#223e65', strokeOpacity: 0.5, strokeWeight: 4 });
+        RutaCamino4 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#263a57', strokeOpacity: 0.5, strokeWeight: 4 });
+        RutaCamino5 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#283851', strokeOpacity: 0.5, strokeWeight: 4 });
+        RutaCamino6 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#2a3648', strokeOpacity: 0.5, strokeWeight: 4 });
+        RutaCamino7 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#2c3441', strokeOpacity: 0.5, strokeWeight: 4 });
+        RutaCamino8 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#2f3236', strokeOpacity: 0.5, strokeWeight: 4 });
+        RutaCamino9 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#303132', strokeOpacity: 0.5, strokeWeight: 4 });
 
 
-    Circle = new google.maps.Circle({
-        strokeColor: '#B0D1D3',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#B0D1D3',
-        fillOpacity: 0.25,
-        map: null,
-        radius: 0
-    });
-    marcador = new google.maps.Marker({map: map});
-    console.log("Mapa inicializado: map");
-    if ($("#d_autocompletar").length) {
-        let input = document.getElementById("d_autocompletar");
-        let autocomplete = new google.maps.places.Autocomplete(input);
-        autocomplete.bindTo("bounds", map);
-        // Set the data fields to return when the user selects a place.
-        autocomplete.setFields(["address_components", "geometry", "icon", "name"]);
-        infowindow = new google.maps.InfoWindow();
-        var infowindowContent = document.createElement("div");
-        infowindowContent.id = "infowindow-content";
-        let img_wic = document.createElement("img");
-        img_wic.width = "16";
-        img_wic.height = "16";
-        img_wic.id = "place-icon";
-        let p_name = document.createElement("span");
-        p_name.id = "place-name";
-        p_name.className = "tittle";
-        let p_addr = document.createElement("span");
-        p_addr.id = "place-address";
-        infowindowContent.appendChild(img_wic);
-        infowindowContent.appendChild(p_name);
-        infowindowContent.appendChild(document.createElement("br"));
-        infowindowContent.appendChild(p_addr);
-//        infowindow.setContent(infowindowContent);
-        autocomplete.addListener("place_changed", () => {
+        Circle = new google.maps.Circle({
+            strokeColor: '#B0D1D3',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#B0D1D3',
+            fillOpacity: 0.25,
+            map: null,
+            radius: 0
+        });
+        marcador = new google.maps.Marker({ map: map });
+        console.log("Mapa inicializado: map");
+        if ($("#d_autocompletar").length) {
+            let input = document.getElementById("d_autocompletar");
+            let autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.bindTo("bounds", map);
+            // Set the data fields to return when the user selects a place.
+            autocomplete.setFields(["address_components", "geometry", "icon", "name"]);
+            infowindow = new google.maps.InfoWindow();
+            var infowindowContent = document.createElement("div");
+            infowindowContent.id = "infowindow-content";
+            let img_wic = document.createElement("img");
+            img_wic.width = "16";
+            img_wic.height = "16";
+            img_wic.id = "place-icon";
+            let p_name = document.createElement("span");
+            p_name.id = "place-name";
+            p_name.className = "tittle";
+            let p_addr = document.createElement("span");
+            p_addr.id = "place-address";
+            infowindowContent.appendChild(img_wic);
+            infowindowContent.appendChild(p_name);
+            infowindowContent.appendChild(document.createElement("br"));
+            infowindowContent.appendChild(p_addr);
+            //        infowindow.setContent(infowindowContent);
+            autocomplete.addListener("place_changed", () => {
 
 
-            if ($("#pais").length) {
-                $("#pais").val("");
-            }
-            if ($("#estado").length) {
-                $("#estado").val("");
-            }
-            if ($("#ciudad_municipio").length) {
-                $("#ciudad_municipio").val("");
-            }
-            if ($("#colonia").length) {
-                $("#colonia").val("");
-            }
-            if ($("#calle").length) {
-                $("#calle").val("");
-            }
-            if ($("#cp").length) {
-                $("#cp").val("");
-            }
-            if (marcador !== null) {
-                marcador.setMap(null);
-            }
-            marcador = new google.maps.Marker({
-                map,
-                anchorPoint: new google.maps.Point(0, -29),
-                draggable: true
-            });
-            infowindow.close();
-            marcador.setVisible(false);
-            const place = autocomplete.getPlace();
-            if (!place.geometry) {
-                // User entered the name of a Place that was not suggested and
-                // pressed the Enter key, or the Place Details request failed.
-                window.alert("No details available for input: '" + place.name + "'");
-                return;
-            }
+                if ($("#pais").length) {
+                    $("#pais").val("");
+                }
+                if ($("#estado").length) {
+                    $("#estado").val("");
+                }
+                if ($("#ciudad_municipio").length) {
+                    $("#ciudad_municipio").val("");
+                }
+                if ($("#colonia").length) {
+                    $("#colonia").val("");
+                }
+                if ($("#calle").length) {
+                    $("#calle").val("");
+                }
+                if ($("#cp").length) {
+                    $("#cp").val("");
+                }
+                if (marcador !== null) {
+                    marcador.setMap(null);
+                }
+                marcador = new google.maps.Marker({
+                    map,
+                    anchorPoint: new google.maps.Point(0, -29),
+                    draggable: true
+                });
+                infowindow.close();
+                marcador.setVisible(false);
+                const place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    // User entered the name of a Place that was not suggested and
+                    // pressed the Enter key, or the Place Details request failed.
+                    window.alert("No details available for input: '" + place.name + "'");
+                    return;
+                }
 
-            // If the place has a geometry, then present it on a map.
-            if (place.geometry.viewport) {
-                map.fitBounds(place.geometry.viewport);
-            } else {
-                map.setCenter(place.geometry.location);
-                map.setZoom(17); // Why 17? Because it looks good.
-            }
-            marcador.setPosition(place.geometry.location);
-            marcador.setVisible(true);
-            let address = "";
-            if (place.address_components) {
-                address = [
-                    (place.address_components[0] &&
+                // If the place has a geometry, then present it on a map.
+                if (place.geometry.viewport) {
+                    map.fitBounds(place.geometry.viewport);
+                } else {
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(17); // Why 17? Because it looks good.
+                }
+                marcador.setPosition(place.geometry.location);
+                marcador.setVisible(true);
+                let address = "";
+                if (place.address_components) {
+                    address = [
+                        (place.address_components[0] &&
                             place.address_components[0].short_name) ||
-                            "",
-                    (place.address_components[1] &&
+                        "",
+                        (place.address_components[1] &&
                             place.address_components[1].short_name) ||
-                            "",
-                    (place.address_components[2] &&
+                        "",
+                        (place.address_components[2] &&
                             place.address_components[2].short_name) ||
-                            ""
-                ].join(" ");
-            }
-            for (var i = 0; i < place.address_components.length; i++) {
-                let types = place.address_components[i].types;
-                for (var j = 0; j < types.length; j++) {
-                    let type = types[j];
-                    if (type === "country") {
-                        console.log("Pais: " + place.address_components[i].long_name);
-                        if ($("#pais").length) {
-                            $("#pais").val(place.address_components[i].long_name);
+                        ""
+                    ].join(" ");
+                }
+                for (var i = 0; i < place.address_components.length; i++) {
+                    let types = place.address_components[i].types;
+                    for (var j = 0; j < types.length; j++) {
+                        let type = types[j];
+                        if (type === "country") {
+                            console.log("Pais: " + place.address_components[i].long_name);
+                            if ($("#pais").length) {
+                                $("#pais").val(place.address_components[i].long_name);
+                            }
                         }
-                    }
-                    if (type === "administrative_area_level_1") {
-                        console.log("Estado: " + place.address_components[i].long_name);
-                        if ($("#estado").length) {
-                            $("#estado").val(place.address_components[i].long_name);
+                        if (type === "administrative_area_level_1") {
+                            console.log("Estado: " + place.address_components[i].long_name);
+                            if ($("#estado").length) {
+                                $("#estado").val(place.address_components[i].long_name);
+                            }
                         }
-                    }
-                    if (type === "locality") {
-                        console.log("Ciudad o Municipio: " + place.address_components[i].long_name);
-                        if ($("#ciudad_municipio").length) {
-                            $("#ciudad_municipio").val(place.address_components[i].long_name);
+                        if (type === "locality") {
+                            console.log("Ciudad o Municipio: " + place.address_components[i].long_name);
+                            if ($("#ciudad_municipio").length) {
+                                $("#ciudad_municipio").val(place.address_components[i].long_name);
+                            }
+                            if ($("#municipio").length) {
+                                $("#municipio").val(place.address_components[i].long_name);
+                            }
                         }
-                        if ($("#municipio").length) {
-                            $("#municipio").val(place.address_components[i].long_name);
+                        if (type === "sublocality_level_1") {
+                            console.log("colonia: " + place.address_components[i].long_name);
+                            if ($("#colonia").length) {
+                                $("#colonia").val(place.address_components[i].long_name);
+                            }
                         }
-                    }
-                    if (type === "sublocality_level_1") {
-                        console.log("colonia: " + place.address_components[i].long_name);
-                        if ($("#colonia").length) {
-                            $("#colonia").val(place.address_components[i].long_name);
+                        if (type === "route") {
+                            console.log("Calle: " + place.address_components[i].long_name);
+                            if ($("#calle").length) {
+                                $("#calle").val(place.address_components[i].long_name);
+                            }
                         }
-                    }
-                    if (type === "route") {
-                        console.log("Calle: " + place.address_components[i].long_name);
-                        if ($("#calle").length) {
-                            $("#calle").val(place.address_components[i].long_name);
-                        }
-                    }
-                    if (type === "postal_code") {
-                        console.log("CP: " + place.address_components[i].long_name);
-                        if ($("#cp").length) {
-                            $("#cp").val(place.address_components[i].long_name);
+                        if (type === "postal_code") {
+                            console.log("CP: " + place.address_components[i].long_name);
+                            if ($("#cp").length) {
+                                $("#cp").val(place.address_components[i].long_name);
+                            }
                         }
                     }
                 }
-            }
-            console.log(address);
-            console.log(place);
-            console.log(infowindowContent);
-//            infowindowContent.children["place-icon"].src = place.icon;
-//            infowindowContent.children["place-name"].textContent = place.name;
-//            infowindowContent.children["place-address"].textContent = address;
-//            infowindow.open(map, marcador);
-        });
+                console.log(address);
+                console.log(place);
+                console.log(infowindowContent);
+                //            infowindowContent.children["place-icon"].src = place.icon;
+                //            infowindowContent.children["place-name"].textContent = place.name;
+                //            infowindowContent.children["place-address"].textContent = address;
+                //            infowindow.open(map, marcador);
+            });
+        }
+    } else {
+        console.log("No se pudo inicializar el mapa 1");
     }
+
 }
+
 function initMap2() {
     if ($("#map2").length) {
         console.log("inicializando mapa");
