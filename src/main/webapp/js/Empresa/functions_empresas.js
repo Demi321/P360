@@ -768,11 +768,8 @@ function registro_plantilla_laboral(nombre) {
         });
     });
     //$("#menu_section_" + nombre.replace(/\s/g, "")).click();
-
+ 
 }
-$("#file_plantilla_laboral").change(function (e) {
-    fileReader_plantilla_laboral(e);
-});
 //        var json_file={};
 function fileReader_plantilla_laboral(oEvent) {
     console.log("En la funcion fileReader");

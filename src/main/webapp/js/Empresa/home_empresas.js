@@ -1270,3 +1270,8 @@ $(document).ready(function () {
 $(() => {
     $(".menu_sidebar")[0].click();
 });
+
+$("body").on("change",$("#file_plantilla_laboral"),function (e) {
+    console.log("Funciona cargando archivo plantilla laboral");
+    fileReader_plantilla_laboral(e);
+});
