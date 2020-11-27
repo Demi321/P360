@@ -227,7 +227,7 @@ if ($("#menu_cerrar_sesion").length) {
 //agregar_enlace_estatico("Visualización de Datos", "https://gis360.ml/", "VisualizacionDatos");
 //agregar_enlace_estatico("Hogar Conectado", "https://pruebasvideovigilancia.ml/", "Videovigilancia");
 //agregar_enlace_estatico("Videoanalítico", "http://sanborns.ml/", "VisualizacionDatos");
-//agregar_enlace_estatico_perfil("Mi Perfil 360", "https://claro360.ml/plataforma360/perfil/");
+//agregar_enlace_estatico_perfil("Mi Perfil 360", "https://claro360.com/plataforma360/perfil/");
 function agregar_enlace_estatico(nombre, url, icono) {
 
     if (!window.location.href.includes(url)) {
