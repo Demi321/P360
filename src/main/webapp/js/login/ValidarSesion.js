@@ -219,7 +219,7 @@ function agregar_perfil() {
     let logo = document.createElement("div");
     logo.className = "col";
 //    logo.style = "border-radius:5px;padding: 40px;max-width: 40px;background-image:url(" + institucion.logotipo + ");background-size: contain;background-repeat: no-repeat; background-position: center;";
-    logo.style = "border-radius:5px;padding: 25px;max-width: 40px;background-image:url(" + "https://empresas360.ml/p360/Img/Logos/Claro%20360.png" + ");background-size: contain;background-repeat: no-repeat; background-position: center;";
+    logo.style = "border-radius:5px;padding: 25px;max-width: 40px;background-image:url(" + "https://empresas.claro360.com/p360/Img/Logos/Claro%20360.png" + ");background-size: contain;background-repeat: no-repeat; background-position: center;";
     let info = document.createElement("div");
     info.className = "col";
     //info.innerHTML = institucion.razon_social;
@@ -265,7 +265,7 @@ function listar_institucion(institucion) {
     let logo = document.createElement("div");
     logo.className = "col";
     logo.style = "border-radius:5px;padding: 40px;max-width: 40px;background-image:url(" + institucion.logotipo + ");background-size: contain;background-repeat: no-repeat; background-position: center;";
-//    logo.style = "border-radius:5px;padding: 40px;max-width: 40px;background-image:url(" + "https://empresas360.ml/p360/Img/Logos/Claro%20360.png" + ");background-size: contain;background-repeat: no-repeat; background-position: center;";
+//    logo.style = "border-radius:5px;padding: 40px;max-width: 40px;background-image:url(" + "https://empresas.claro360.com/p360/Img/Logos/Claro%20360.png" + ");background-size: contain;background-repeat: no-repeat; background-position: center;";
     let info = document.createElement("div");
     info.className = "col";
     //info.innerHTML = institucion.razon_social;
