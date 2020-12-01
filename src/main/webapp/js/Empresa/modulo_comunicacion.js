@@ -6,7 +6,7 @@
 
 
 
-/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo */
+/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos */
 
 let array_llamar = new Array();
 agregar_menu("Comunicación");
@@ -42,19 +42,21 @@ function agregar_chat_enviado(mensaje) {
      * 
      * revisar que tengamos el chat del usuario que nos escribe
      */
-
+    
     if (!$("#profile_chat" + mensaje.to_id360).length) {
-        RequestPOST("/API/get/perfil360", {
-        id360:mensaje.to_id360
-        }).then((response) => {
+        console.log("EXISTEE MANDO");
+        RequestPOST("/API/get/perfil360", {id360:mensaje.to_id360}).then((response) => {
+            console.log("WAAAAAAAAAAAAAAAA");
             console.log(response);
             contacto_chat(response);
             agregar_chat(mensaje, response,"replies");
         });
     } else {
+        console.log("NO EXISTEE MANDO");
         let user = null;
         $.each(directorio_completo, (i) => {
-            if (mensaje.to_id360 === directorio_completo[i].id360) {
+            if (mensaje.id360 === directorio_completo[i].id360) {
+                console.log("ENCONTRADO WEEEEEEEEEEEEEE");
                 user = directorio_completo[i];
                 return false;
             }
@@ -71,15 +73,19 @@ function recibir_chat(mensaje) {
      */
 
     if (!$("#profile_chat" + mensaje.id360).length) {
+        console.log("EXISTE");
         RequestPOST("/API/get/perfil360", mensaje).then((response) => {
+            console.log("EPAEPAEPA");
             console.log(response);
             contacto_chat(response);
             agregar_chat(mensaje, response,"send");
         });
     } else {
+        console.log("NO EXISTE");
         let user = null;
         $.each(directorio_completo, (i) => {
             if (mensaje.id360 === directorio_completo[i].id360) {
+                console.log("ENCONTRADO");
                 user = directorio_completo[i];
                 return false;
             }
@@ -104,9 +110,82 @@ function agregar_chat(msj,user,type) {
     message.text(mensaje);
     li.append(img_message);
     li.append(message);
-    $("#contact_messaging" + msj.id360).append(li);
-    $("#preview_"+msj.id360).text(user.nombre + ": " + mensaje);
-    $("#messages_"+msj.id360).animate({scrollTop: $(document).height()}, "fast");
+    
+    let id = type === "replies" ? msj.to_id360 : msj.id360;
+    let previewMesagge = type === "replies" ? "Yo: " + mensaje : user.nombre + ": " + mensaje;
+    
+    if(msj.type !== "text"){
+        let extension = msj.type;
+        
+        let partesPorDiagonal = mensaje.split("/");
+        let nombreCorto = partesPorDiagonal[partesPorDiagonal.length-1];
+        
+        previewMesagge = nombreCorto;
+        
+        let imagenPreview = $("<img>").css({"max-width":"125px","max-height":"75px","margin-bottom":"10px"}).attr("src",PathRecursos + "images/icono_default.png");
+
+        let saltoLinea = $("<br>");
+        let nombreAdjunto = $("<span></span>").css({"font-size":"1.1rem"});
+        nombreAdjunto.text(nombreCorto.replaceAll("%20"," ") + " ");
+
+        let buttonDownloadAttachment = $("<a></a>").addClass("btn btn-light").css({"margin-left":"10px"});
+        buttonDownloadAttachment.attr("href",mensaje);
+        buttonDownloadAttachment.attr("download",nombreCorto);
+        buttonDownloadAttachment.html('<i class="fas fa-download"></i>');
+
+        nombreAdjunto.append(buttonDownloadAttachment);
+
+        switch(extension){
+
+            case "jpg":
+            case "png":
+            case "jpeg":
+            case "gif":
+                    imagenPreview.attr("src",mensaje);
+                    imagenPreview.attr("target","_blanck");
+                break;
+
+            case "docx":
+            case "docm":
+            case "dotx":
+            case "dotm":
+            case "doc":
+                    imagenPreview.attr("src", PathRecursos + "images/icono_word.png");
+                break;
+
+            case "xlsx":
+            case "xlsm":
+            case "xlsb":
+            case "xltx":
+            case "xltm":
+            case "xls":
+            case "xlt":
+                imagenPreview.attr("src", PathRecursos + "images/icono_excel.png");
+                break;
+
+            case "pptx":
+            case "pptm":
+            case "ppt":
+            case "xps":
+            case "potx":
+            case "ppsx":
+                imagenPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
+                break;
+
+            case "pdf":
+                imagenPreview.attr("src", PathRecursos + "images/icono_pdf.png");
+                break;
+
+        }
+
+        message.empty().append(imagenPreview);
+        message.append(saltoLinea);
+        message.append(nombreAdjunto);
+    }
+    
+    $("#contact_messaging" + id).append(li);
+    $("#preview_"+id).text(previewMesagge);
+    $("#messages_"+id).animate({scrollTop: $(document).height()+1000000}, "fast");
 }
 //traer el directorio 
 RequestPOST("/API/ConsultarDirectorio", {
@@ -200,6 +279,7 @@ RequestPOST("/API/ConsultarDirectorio", {
                 recibir_chat(response[i]);
             }
         }
+        $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
     });
 });
 function contacto_chat(user) {
@@ -262,23 +342,103 @@ function contacto_chat(user) {
     ul.attr("id",  "contact_messaging" + user.id360);
 //    let div = $("<div></div>").addClass("wrap")
     let message_input = $("<div></div>").addClass("message-input");
-    let wrap = $("<div></div>").addClass("wrap");
+    let wrap = $("<div></div>").addClass("wrap container-fluid");
     let input = $("<input>").addClass("wrap");
     input.attr("id", "message_input_" + user.id360);
     input.attr("type", "text");
     input.attr("placeholder", "Escribe un mensaje aqui....");
     input.attr("maxlength", "400");
-    let paperclip = $(" <i class=\"fa fa-paperclip attachment\" aria-hidden=\"true\"></i>");
-    let button = $("<button></button>").addClass("submit");
-    /*Cambios fernando*/
+    
+    /*
+     * 
+     * @type jQuery
+     * DESARROLLO PARA CHAT EMPRESARIAL, EN DONDE SE SOPORTEN MENSAJED DE TEXTO Y ARCHIVOS ADJUNTO DE CUALQUIER CLASE
+     * 
+     */
+    
+    /* BOTON ENVIAR MENSAJE */
+    let button = $("<button></button>").addClass("submit btn btn-block");
     button.attr("id", "btn_enviar");
-    /******************************/
     let paper_plane = $("<i class=\"fa fa-paper-plane\" aria-hidden=\"true\"></i>").addClass("wrap");
-
     button.append(paper_plane);
-    wrap.append(input);
-    wrap.append(paperclip);
-    wrap.append(button);
+
+    /* BOTON ADJUNTO */
+    let buttonAttachment = $("<button></button>").addClass("btn btn-block");
+    let paperclip = $(" <i class=\"fa fa-paperclip\" aria-hidden=\"true\"></i>").addClass("wrap");
+    buttonAttachment.attr("type","button");
+    buttonAttachment.attr("id","btn-adjunto");
+    buttonAttachment.append(paperclip);
+    buttonAttachment.css({"background-color":"grey"});
+    
+    /* CONTROLES CHAT */
+    let containerChat = $("<div class=\"contenedor-chat-controles\"></div>");
+    let rowChat = $("<div style=\"padding:0 !important;\" class=\"row\"></div>");
+    
+    let colInput = $("<div style=\"padding:0 !important;\" class=\"col-10\"></div>");
+    colInput.append(input);
+    
+    let colButtonAttachment = $("<div style=\"padding:0 !important;\" class=\"col-1\"></div>");
+    colButtonAttachment.append(buttonAttachment);
+    
+    let colButtonSubmit = $("<div style=\"padding:0 !important;\" class=\"col-1\"></div>");
+    colButtonSubmit.append(button);
+    
+    /*Input attachment */
+    let inputAttachment = $("<input />");
+    inputAttachment.attr("id","inputAttachment"+ user.id360);
+    inputAttachment.attr("class","d-none");
+    inputAttachment.attr("type","file");
+    inputAttachment.attr("name","attachment");
+    
+    /* Controles preview*/
+    let rowPreview = $("<div></div>").addClass("row").attr("id","rowPreview").css({"display":"none"});
+    let columPreview = $("<div></div>").addClass("col-12");
+    columPreview.css({
+        "background-color":"white",
+        "padding":"0"
+    });
+    let containerPreview = $("<div></div>").attr("id","preview-attachment");
+    columPreview.append(containerPreview);
+    rowPreview.append(columPreview);
+    
+    let rowButtonAttachment = $("<div></div>").addClass("row").css({"display":"none"});
+    
+    let columnButtonCancel = $("<div></div>").addClass("col-6").css({"padding":"0"});
+    let buttonCancelAttachment = $("<button>Cancelar</button>").attr("type","buttton").addClass("btn btn-block").css({"background-color":"grey"});
+    columnButtonCancel.append(buttonCancelAttachment);
+    
+    let columnButtonSendAttachment = $("<div></div>").addClass("col-6").css({"padding":"0"});
+    let buttonSendAttachment = $("<button>Enviar</button>").attr("type","button").addClass("btn btn-block").attr("id","sendAttachment");
+    columnButtonSendAttachment.append(buttonSendAttachment);
+    
+    rowButtonAttachment.append(columnButtonCancel);
+    rowButtonAttachment.append(columnButtonSendAttachment);
+    
+    let rowNameFile = $("<div></div>").addClass("row").css({"display":"none"});;
+    let colName = $("<div></div>").addClass("col-12").css({"padding":"0"});
+    let nameFile = $("<p></p>").attr("id","nombreArchivoPreview");
+    nameFile.css({
+        "margin":"0",
+        "background-color":"white",
+        "color":"black",
+        "font-size":"1.3rem",
+        "padding":"0 0 20px 0"
+    });
+    colName.append(nameFile);
+    rowNameFile.append(colName);
+    
+    rowChat.append(colInput);
+    rowChat.append(colButtonAttachment);
+    rowChat.append(colButtonSubmit);
+    
+    rowChat.append(inputAttachment);
+    
+    containerChat.append(rowPreview);
+    containerChat.append(rowNameFile);
+    containerChat.append(rowButtonAttachment);
+    containerChat.append(rowChat);
+
+    wrap.append(containerChat);
 
     message_input.append(wrap);
     messages.append(ul);
@@ -291,11 +451,194 @@ function contacto_chat(user) {
     content.append(contact_profile);
     content.append(messages);
     content.append(message_input);
+    
     $("#content_messaging").append(content);
 
     button.click(() => {
         send_chat_messages(input, ul, preview, user, messages);
     });
+    
+    buttonAttachment.click(() => {
+        inputAttachment.click();
+    });
+    
+    
+    inputAttachment.change((e) => {
+        
+        let reader = new FileReader();
+
+        reader.readAsDataURL(e.target.files[0]);
+
+        reader.onload = function(){
+            
+            let nombreAdjunto = inputAttachment.val();
+            let partesNombreAdjunto = nombreAdjunto.split(".");
+            let extension = partesNombreAdjunto[partesNombreAdjunto.length-1];
+            
+            let partesPorDiagonal = nombreAdjunto.split("\\");
+            let nombreCorto = partesPorDiagonal[partesPorDiagonal.length-1];
+            
+            
+            let imagenPreview = $("<img>").css({"max-height":"200px"}).attr("src",PathRecursos + "images/icono_default.png");
+            rowNameFile.css({"display":"block"});
+            nameFile.text(nombreCorto);
+            
+            switch(extension){
+                
+                case "jpg":
+                case "png":
+                case "jpeg":
+                case "gif":
+                        imagenPreview.attr("src",reader.result);
+                        imagenPreview.attr("target","_blanck");
+                    break;
+                
+                case "docx":
+                case "docm":
+                case "dotx":
+                case "dotm":
+                case "doc":
+                        imagenPreview.attr("src", PathRecursos + "images/icono_word.png");
+                    break;
+                    
+                case "xlsx":
+                case "xlsm":
+                case "xlsb":
+                case "xltx":
+                case "xltm":
+                case "xls":
+                case "xlt":
+                    imagenPreview.attr("src", PathRecursos + "images/icono_excel.png");
+                    break;
+                    
+                case "pptx":
+                case "pptm":
+                case "ppt":
+                case "xps":
+                case "potx":
+                case "ppsx":
+                    imagenPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
+                    break;
+                    
+                case "pdf":
+                    imagenPreview.attr("src", PathRecursos + "images/icono_pdf.png");
+                    break;
+                
+            }
+            
+            inputAttachment.data("extension",extension);
+            inputAttachment.data("nombreCorto",nombreCorto);
+          
+            //let img = $("<img>").attr("src",reader.result).css({"max-height":"200px"});
+
+            containerPreview.empty().append(imagenPreview);
+            rowChat.hide("fast",() => {
+              rowPreview.show("fast");
+              rowButtonAttachment.show("fast");
+            });
+          
+        };
+        
+    });
+
+    buttonCancelAttachment.click(() => {
+        cierraAttachment();
+    });
+    
+    const cierraAttachment = () => {
+        rowPreview.hide("fast");
+        rowButtonAttachment.hide("fast");
+        rowNameFile.hide("fast");
+        rowChat.show("fast");
+    };
+    
+    buttonSendAttachment.click(() => {
+        console.log("Enviando documentos");
+        //guarda_adjunto(inputAttachment.attr("id"));
+        guarda_adjunto_chat(inputAttachment.attr("id")).then((response) => {
+
+            cierraAttachment();
+            send_chat_messages(input, ul, preview, user, messages, response);
+            
+        });
+        
+    });
+    
+    const guarda_adjunto_chat = (id) => {
+        return new Promise((resolve, reject) => {
+            
+            var BucketName = "lineamientos";
+            var bucketRegion = "us-east-1";
+            var IdentityPoolId = "us-east-1:a8460f87-8d3f-4452-935a-b95a4fcc83ed";
+
+            AWS.config.update({
+                region: bucketRegion,
+                credentials: new AWS.CognitoIdentityCredentials({
+                    IdentityPoolId: IdentityPoolId
+                })
+            });
+
+            var s3 = new AWS.S3({
+                apiVersion: "2006-03-01",
+                params: {Bucket: BucketName}
+            });
+
+
+            $("#guardando_documentacion").removeClass("d-none");
+            var params = {
+                Bucket: BucketName,
+                Prefix: 'Logotipos'
+            };
+            s3.listObjects(params, function (err, data) {
+                if (err) {
+
+                    swal.fire({
+                        text: "Error de conexión con el servidor."
+                    });
+                } else {
+
+                    numFiles = data.Contents.length;
+
+                    var attachment = document.getElementById(id);
+
+                    var files = attachment.files; // FileList object
+
+                    var uploadFiles = files;
+                    var upFile = files[0];
+                    if (upFile) {
+                        var bucket = new AWS.S3({params: {Bucket: BucketName + "/attachmentsChats"}});
+                        for (var i = 0; i < uploadFiles.length; i++) {
+                            upFile = uploadFiles[i];
+                            var params = {
+                                Body: upFile,
+                                Key: numFiles + upFile.name,
+                                ContentType: upFile.type
+                            };
+                            bucket.upload(params).on('httpUploadProgress', function (evt) {
+
+
+                            }).send(function (err, data) {
+                                if (err) {
+
+                                    swal.fire({
+                                        text: "Error al subir la imagen al servidor."
+                                    });
+                                }
+                                
+                                console.log(data.Location);
+                                $("#guardando_documentacion").addClass("d-none");
+                                resolve(data.Location);
+
+                            });
+                        }
+                    } else {
+                        alert("Seleccione un archivo para subir al bucket");
+                    }
+                }
+            });
+            
+        });
+    };
 
     input.on('keydown', function (e) {
         if (e.which == 13) {
@@ -339,8 +682,12 @@ function contacto_chat(user) {
     });
 }
 
-function send_chat_messages(input, ul, preview, user, messages) {
+function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
     let mensaje = input.val();
+    
+    if(rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
+        mensaje = rutaAdjunto;
+    
     if ($.trim(mensaje) == '') {
         return false;
     } else {
@@ -355,6 +702,10 @@ function send_chat_messages(input, ul, preview, user, messages) {
             "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
             "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
         };
+        
+        if(rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
+            json.type = $("#inputAttachment"+ user.id360).data("extension");
+        
         console.log(json);
         RequestPOST("/API/empresas360/chat", json).then((response) => {
             if (response.success) {
@@ -368,13 +719,81 @@ function send_chat_messages(input, ul, preview, user, messages) {
                     "background-repeat": "no-repeat"
                 });
                 let message = $("<p></p>");
-                message.text(mensaje);
+                
+                if(rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== ""){
+                 
+                    let extension = $("#inputAttachment"+ user.id360).data("extension");
+                    let nombreCorto = $("#inputAttachment"+ user.id360).data("nombreCorto");
+                    let imagenPreview = $("<img>").css({"max-width":"125px","max-height":"75px","margin-bottom":"10px"}).attr("src",PathRecursos + "images/icono_default.png");
+                    
+                    let saltoLinea = $("<br>");
+                    let nombreAdjunto = $("<span></span>").css({"font-size":"1.1rem"});
+                    nombreAdjunto.text(nombreCorto + " ");
+                    
+                    let buttonDownloadAttachment = $("<a></a>").addClass("btn btn-light").css({"margin-left":"10px"});
+                    buttonDownloadAttachment.attr("href",rutaAdjunto);
+                    buttonDownloadAttachment.attr("download",nombreCorto);
+                    buttonDownloadAttachment.html('<i class="fas fa-download"></i>');
+                    
+                    nombreAdjunto.append(buttonDownloadAttachment);
+                    
+                    mensaje = nombreCorto;
+                    
+                    switch(extension){
+                
+                        case "jpg":
+                        case "png":
+                        case "jpeg":
+                        case "gif":
+                                imagenPreview.attr("src",rutaAdjunto);
+                            break;
+
+                        case "docx":
+                        case "docm":
+                        case "dotx":
+                        case "dotm":
+                        case "doc":
+                                imagenPreview.attr("src", PathRecursos + "images/icono_word.png");
+                            break;
+
+                        case "xlsx":
+                        case "xlsm":
+                        case "xlsb":
+                        case "xltx":
+                        case "xltm":
+                        case "xls":
+                        case "xlt":
+                            imagenPreview.attr("src", PathRecursos + "images/icono_excel.png");
+                            break;
+
+                        case "pptx":
+                        case "pptm":
+                        case "ppt":
+                        case "xps":
+                        case "potx":
+                        case "ppsx":
+                            imagenPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
+                            break;
+
+                        case "pdf":
+                            imagenPreview.attr("src", PathRecursos + "images/icono_pdf.png");
+                            break;
+
+                    }
+                    
+                    message.empty().append(imagenPreview);
+                    message.append(saltoLinea);
+                    message.append(nombreAdjunto);
+                    
+                }else
+                    message.text(mensaje);
+                
                 li.append(img_message);
                 li.append(message);
                 ul.append(li);
                 input.val("");
-                preview.text(user.nombre + ": " + mensaje);
-                messages.animate({scrollTop: $(document).height()}, "fast");
+                preview.text("Yo: " + mensaje);
+                messages.animate({scrollTop: $(document).height()+100000}, "fast");
 
             }
         });
