@@ -120,7 +120,12 @@ function agregar_chat(msj,user,type) {
         let partesPorDiagonal = mensaje.split("/");
         let nombreCorto = partesPorDiagonal[partesPorDiagonal.length-1];
         
-        previewMesagge = nombreCorto;
+        let nombreCortoPorGuionBajo = nombreCorto.split("_");
+        nombreCortoPorGuionBajo.shift();
+
+        nombreCorto = nombreCortoPorGuionBajo.join('_');
+        
+        previewMesagge = type === "replies" ? "Yo: " + nombreCorto.replaceAll("%20", " ") : user.nombre + ": " + nombreCorto.replaceAll("%20", " ");
         
         let imagenPreview = $("<img>").css({"max-width":"125px","max-height":"75px","margin-bottom":"10px"}).attr("src",PathRecursos + "images/icono_default.png");
 
@@ -198,7 +203,12 @@ RequestPOST("/API/ConsultarDirectorio", {
 }).then((response) => {
     console.log(response);
     let directorio = response.directorio;
-    console.log(directorio);
+    
+    for (var i = 0; i < directorio.length; i++)
+         if(directorio[i].id360 === sesion_cookie.id_usuario)
+            directorio.splice(i,1);
+    
+    
     new Vue({
         el: "#app",
         data() {
@@ -268,6 +278,7 @@ RequestPOST("/API/ConsultarDirectorio", {
         contacto_chat(user);
 
     }
+    
     RequestPOST("/API/empresas360/backup_chat",{
         id360:sesion_cookie.id_usuario
     }).then((response)=>{
@@ -278,10 +289,12 @@ RequestPOST("/API/ConsultarDirectorio", {
             } else {
                 recibir_chat(response[i]);
             }
+            $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
         }
         $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
     });
 });
+
 function contacto_chat(user) {
     let li = $("<li></li>").addClass("contact");
     li.attr("id", "profile_chat" + user.id360);
@@ -348,6 +361,14 @@ function contacto_chat(user) {
     input.attr("type", "text");
     input.attr("placeholder", "Escribe un mensaje aqui....");
     input.attr("maxlength", "400");
+    
+    let divCargando = $("<div></div>").addClass("contenedor-cargando-chat d-none");
+    let spinCargando = $("<div></div>").addClass("spin-cargando-chat");
+    let spin = $("<img>").attr("src",PathRecursos + "images/spin.gif");
+    
+    spinCargando.append(spin);
+    divCargando.append(spinCargando);
+    message_input.append(divCargando);
     
     /*
      * 
@@ -482,6 +503,7 @@ function contacto_chat(user) {
             let imagenPreview = $("<img>").css({"max-height":"200px"}).attr("src",PathRecursos + "images/icono_default.png");
             rowNameFile.css({"display":"block"});
             nameFile.text(nombreCorto);
+            let tipo = "others";
             
             switch(extension){
                 
@@ -491,6 +513,7 @@ function contacto_chat(user) {
                 case "gif":
                         imagenPreview.attr("src",reader.result);
                         imagenPreview.attr("target","_blanck");
+                        tipo = 'images';
                     break;
                 
                 case "docx":
@@ -499,6 +522,7 @@ function contacto_chat(user) {
                 case "dotm":
                 case "doc":
                         imagenPreview.attr("src", PathRecursos + "images/icono_word.png");
+                        tipo = 'docs/word';
                     break;
                     
                 case "xlsx":
@@ -509,6 +533,7 @@ function contacto_chat(user) {
                 case "xls":
                 case "xlt":
                     imagenPreview.attr("src", PathRecursos + "images/icono_excel.png");
+                    tipo = 'docs/excel';
                     break;
                     
                 case "pptx":
@@ -518,16 +543,23 @@ function contacto_chat(user) {
                 case "potx":
                 case "ppsx":
                     imagenPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
+                    tipo = 'docs/powerpoint';
                     break;
                     
                 case "pdf":
                     imagenPreview.attr("src", PathRecursos + "images/icono_pdf.png");
+                    tipo = 'docs/pdf';
+                    break;
+                    
+                case "txt":
+                    tipo = 'docs/txt';
                     break;
                 
             }
             
             inputAttachment.data("extension",extension);
             inputAttachment.data("nombreCorto",nombreCorto);
+            inputAttachment.data("tipo",tipo);
           
             //let img = $("<img>").attr("src",reader.result).css({"max-height":"200px"});
 
@@ -555,8 +587,10 @@ function contacto_chat(user) {
     buttonSendAttachment.click(() => {
         console.log("Enviando documentos");
         //guarda_adjunto(inputAttachment.attr("id"));
-        guarda_adjunto_chat(inputAttachment.attr("id")).then((response) => {
+        divCargando.removeClass("d-none");
+        guarda_adjunto_chat(inputAttachment.attr("id"),user.id360).then((response) => {
 
+            divCargando.addClass("d-none");
             cierraAttachment();
             send_chat_messages(input, ul, preview, user, messages, response);
             
@@ -564,7 +598,7 @@ function contacto_chat(user) {
         
     });
     
-    const guarda_adjunto_chat = (id) => {
+    const guarda_adjunto_chat = (id, to) => {
         return new Promise((resolve, reject) => {
             
             var BucketName = "lineamientos";
@@ -606,12 +640,20 @@ function contacto_chat(user) {
                     var uploadFiles = files;
                     var upFile = files[0];
                     if (upFile) {
-                        var bucket = new AWS.S3({params: {Bucket: BucketName + "/attachmentsChats"}});
+                        
+                        /*
+                         * 
+                         * @type RUTA PARA EL GUARDADO
+                         */
+                        let extension = $("#inputAttachment"+ to).data("tipo");
+                        let ruta = sesion_cookie.id_usuario + "_to_" + to + '/' + extension;
+                        
+                        var bucket = new AWS.S3({params: {Bucket: BucketName + "/attachmentsChats/"+ruta}});
                         for (var i = 0; i < uploadFiles.length; i++) {
                             upFile = uploadFiles[i];
                             var params = {
                                 Body: upFile,
-                                Key: numFiles + upFile.name,
+                                Key: numFiles + "_" + upFile.name,
                                 ContentType: upFile.type
                             };
                             bucket.upload(params).on('httpUploadProgress', function (evt) {
