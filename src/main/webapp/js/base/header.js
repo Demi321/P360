@@ -47,6 +47,11 @@ $(document).ready(function () {
     });
 
 
+    $(document).click((e) => {
+        if (e.target.id !== "servicios" && e.target.id !=="iconServ" && e.target.nodeName !=="path" && e.target.nodeName !=="svg") {
+            $("#menuServicios").removeClass("show_servicios");
+        }
+    });
 
     if (sesion_cookie === "") {
 
