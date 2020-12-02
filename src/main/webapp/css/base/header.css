@@ -332,7 +332,7 @@ header{
 }
 .cerrarSesion .navegacion nav .segPerf .logoPrfl{
     -moz-border-radius: 50%;
-     -webkit-border-radius: 50%;
+    -webkit-border-radius: 50%;
     border-radius: 50%;
     border: 1px solid #000;
     background-size: contain;
@@ -386,7 +386,12 @@ header{
     display: block;
     padding: 5px 20px;
     border-bottom: 2px solid #2b2b2b;
-    /*cursor: pointer;*/
+    /* cursor: pointer; */
+    padding: 0;
+    min-height: 30px;
+    padding-left: 15px !important;
+    display: flex;
+    align-items: center
 }
 
 
@@ -408,8 +413,16 @@ header{
     align-items: center;
     text-decoration: none;
     padding-left: 15px;
+    width: 100%;
+    filter: invert(1);
+    color: white;
 }
-
+.cerrarSesion .navegacion nav .menu-sesion li a:hover {
+    color:white;
+}
+.cerrarSesion .navegacion nav .menu-sesion .menu-servicios li a:hover {
+    filter: invert(0);
+}
 .cerrarSesion .navegacion nav .menu-sesion .menu-servicios li a .icono{
     height: 100%;
 }
@@ -503,6 +516,14 @@ header{
     padding-right: 50px;
     transition: 0.5s;
     color: white;
+    margin-right: 50px;
+}
+#user{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    font: bold 1rem Arial;
 }
 .containerHeader4{
     display: table-cell;
@@ -962,7 +983,9 @@ header{
     background-color: #000;
     color: white !important;
 }    
-
+.segmento #user{
+    /*color: white;*/
+}
 /*-----PERSONA-------PERSONA------PERSONA-------*/
 .persona .header3{
     background-color: #da291c;
@@ -1029,6 +1052,9 @@ header{
     float:left;
     cursor: pointer;
 }
+.persona #user{
+    color: white;
+}
 /*-----EMPRESA-------EMPRESA------EMPRESA-------*/
 .empresa .header3{
     background-color: #A4A2A2;
@@ -1092,6 +1118,13 @@ header{
     margin: auto 10px;
     float:left;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+}
+.empresa #user{
+    color: white;
 }
 /*-----CORPORATIVO-------CORPORATIVO------CORPORATIVO-------*/
 .corporativo .header3{
@@ -1157,6 +1190,9 @@ header{
     float:left;
     cursor: pointer;
 }
+.corporativo #user{
+    color: white;
+}
 /*-----GOBIERNO-------GOBIERNO------GOBIERNO-------*/
 .gobierno .header3{
     background-color: #000;
@@ -1221,6 +1257,9 @@ header{
     float:left;
     cursor: pointer;
 }
+.gobierno #user{
+    color: white;
+}
 /* ESTILOS PARA SWEAT ALERT ONBOARDING-------------- */
 .alrtRegIni{
     color: #da291c !important;
@@ -1262,8 +1301,8 @@ header{
 
     .header3{
         width: 100%;
-    max-width: 100%;
-    min-width: 100%;
+        max-width: 100%;
+        min-width: 100%;
     }
 
 }
@@ -1345,7 +1384,7 @@ header{
 }
 /* iPads (portrait and landscape) ----------- */
 @media only screen and (min-width: 680px) and (max-width: 767px) and (orientation: landscape){
-   .segmento .header1 a {
+    .segmento .header1 a {
         width: 70%;
     } 
 }
@@ -1674,10 +1713,10 @@ header{
         min-width: 30%;
     }
 }
-  /*******************************************************************************************************************/
-  /******************************************      LANDSCAPE      ****************************************************/
-  /*******************************************************************************************************************/
-  /*********************LANDSCAPE DISPOSITIVO MOVIL CELULAR***********************************************************/
+/*******************************************************************************************************************/
+/******************************************      LANDSCAPE      ****************************************************/
+/*******************************************************************************************************************/
+/*********************LANDSCAPE DISPOSITIVO MOVIL CELULAR***********************************************************/
 @media only screen and (max-width: 424px) and (orientation: landscape){
     .header2{
         display: none;
@@ -1884,7 +1923,7 @@ header{
         background-color: #000;
     }    
 }
-  /*********************LANDSCAPE DISPOSITIVO MOVIL TABLET***********************************************************/
+/*********************LANDSCAPE DISPOSITIVO MOVIL TABLET***********************************************************/
 @media only screen and (min-width: 821px) and (max-width: 991px) and (orientation : landscape){
     #menu{
         width: 30%;
@@ -1967,7 +2006,7 @@ header{
         width: 50px;
     }
 }
-  /*********************LANDSCAPE DISPOSITIVO MOVIL LAPTOP***********************************************************/
+/*********************LANDSCAPE DISPOSITIVO MOVIL LAPTOP***********************************************************/
 @media only screen and (min-width: 1151px) and (max-width: 1199px) and (orientation: landscape){
     #menu{
         width: 25%;
@@ -2021,7 +2060,7 @@ header{
     }	
 }
 /*********************LANDSCAPE DISPOSITIVO PC ESCRITORIO***********************************************************/
-  /*patalla de escritorio utilizado en la empresa*/
+/*patalla de escritorio utilizado en la empresa*/
 @media only screen and (min-width: 1361px) and (max-width: 1899px) and (orientation : landscape){
     #menu{
         width: 25%;
@@ -2111,3 +2150,7 @@ header{
     }
 }
 
+.show_servicios{
+    height: auto;
+    display: block;
+}
