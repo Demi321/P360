@@ -34,15 +34,16 @@ $(document).ready(function () {
         $('.servicios').addClass('d-none');
         $('.segmentos').removeClass('activo');
         //$('#'+this.id).addClass('activo');
-        document.getElementById("menuServicios").style.height = "auto";
-        document.getElementById("menuServicios").style.display = "block";
+//        document.getElementById("menuServicios").style.height = "auto";
+//        document.getElementById("menuServicios").style.display = "block";
+        $("#menuServicios").toggleClass("show_servicios");
         document.getElementById("servicios").classList.remove('d-none');
-        setTimeout(function () {
-            $('.servicios').addClass('d-none');
-            $('.segmentos').removeClass('activo');
-            document.getElementById("menuServicios").style.height = "0px";
-            document.getElementById("menuServicios").style.display = "none";
-        }, 10000);
+//        setTimeout(function () {
+//            $('.servicios').addClass('d-none');
+//            $('.segmentos').removeClass('activo');
+//            document.getElementById("menuServicios").style.height = "0px";
+//            document.getElementById("menuServicios").style.display = "none";
+//        }, 10000);
     });
 
 
