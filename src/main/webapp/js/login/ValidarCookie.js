@@ -19,7 +19,7 @@ if (window.location.host !== "localhost:8080") {
     }
 }
 window.onload = checkCookie();
-
+var sesion_cookie="";
 function setCookie(cname, cvalue, exdays) {
     cvalue = window.btoa(cvalue);
     var d = new Date();
@@ -56,7 +56,7 @@ function getCookie(cname) {
 
 function checkCookie() {
     var user = getCookie("username_v3.1_" + DEPENDENCIA);
-
+    sesion_cookie=user;
     if (user === "") {
 
         if (window.location.href.includes("/Reporte/")) {

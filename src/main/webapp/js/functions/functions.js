@@ -6183,6 +6183,21 @@ function acceso_externo(url) {
 
     });
 }
+function acceso_externo_ruta(url,ruta) {
+    RequestPOST("/API/cuenta360/access_token", {
+        "token": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).token,
+        "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys
+    }).then(function (response) {
+        if (response.success) {
+            //access_token
+            ruta = ruta.replace(/\//g,"*");
+            let path = url + "API/cuenta360/access_token/" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys + "/" + response.access_token+"/"+ruta;
+            window.location.replace(path);
+//            window.open(path);
+        }
+
+    });
+}
 
 function load_file_img(id) {
     // id es del file
@@ -6348,4 +6363,17 @@ function validarFecha(fecha) {
     } else {
         return false;
     }
+}
+
+function personalizar_header(perfil) {
+    let perfiles = ["persona","empresa","corporativo","gobierno"];
+    if(perfiles.includes(perfil)){
+        for(let i=0; i<perfiles.length; i++){
+            $(".segmento").removeClass(perfiles[i]);
+        }
+        $(".segmento").addClass(perfil);
+    }else{
+        console.error("Perfil: " + perfil + " no identificado.");
+    }
+    
 }

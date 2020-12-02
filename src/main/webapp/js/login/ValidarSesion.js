@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 /* global DEPENDENCIA */
-
+var sesion_cookie="";
 if (window.location.host !== "localhost:8080") {
     if (location.protocol !== 'https:')
     {
