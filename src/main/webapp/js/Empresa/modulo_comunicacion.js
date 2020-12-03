@@ -6,7 +6,9 @@
 
 
 
-/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos */
+/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos, Notification */
+
+var NotificacionesActivadas = false;
 
 let array_llamar = new Array();
 agregar_menu("Comunicación");
@@ -90,10 +92,64 @@ function recibir_chat(mensaje) {
                 return false;
             }
         });
+        
+        if(NotificacionesActivadas){
+         
+            let body = '';
+            if(mensaje.type === "text"){
+                body = user.nombre + " " + user.apellido_paterno + " dice: " + mensaje.message;
+            }else{
+                body = user.nombre + " " + user.apellido_paterno + " ha enviado un adjunto";
+            }
+            
+            let onClickNotification = () => {
+                $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
+                $("#message_input_"+user.id360).focus();
+                
+                if($("#profile_chat" + value.id360).length){
+                    $("#profile_chat" + value.id360).click();
+                }else{
+                    contacto_chat(value);
+                    $("#profile_chat" + value.id360).click();
+                }
+                
+            };
+         
+            notificacion_mensaje("Nuevo mensaje", body , () => {});
+            
+        }
+        
         agregar_chat(mensaje,user,"send");
     }
 
 }
+
+function notificacion_mensaje(title, body, onclick){
+    console.log("Notificacion");
+    if (Notification.permission !== "granted") {
+        Notification.requestPermission();
+    } else {
+
+        var options = {
+            body: body,
+            icon: PathRecursos + "images/claro2min.png",
+            silent: true
+        };
+
+        var notificacion = new Notification(title, options);
+
+        notificacion.onshow = function() {
+            //document.getElementById('').play();
+        };
+
+        notificacion.onclick = onclick;
+
+        notificacion.silent = true;
+
+    }
+    
+}
+
 function agregar_chat(msj,user,type) {
     console.log("****************************************");
     console.log("****************************************");
@@ -320,6 +376,7 @@ RequestPOST("/API/ConsultarDirectorio", {
                 $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
             }
             $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
+            NotificacionesActivadas = true;
         });
         
     });
@@ -725,6 +782,8 @@ function contacto_chat(user) {
         console.log(user);
         $(".content").addClass("d-none");
         content.removeClass("d-none");
+        $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
+        $("#message_input_"+user.id360).focus();
     });
 
     div_llamar.click(() => {
