@@ -95,6 +95,11 @@ function recibir_chat(mensaje) {
 
 }
 function agregar_chat(msj,user,type) {
+    console.log("****************************************");
+    console.log("****************************************");
+    console.log("Agregando chat");
+    console.log("****************************************");
+    console.log("****************************************");
     console.log(msj);
     console.log(user);
     let mensaje = msj.message;
@@ -112,6 +117,7 @@ function agregar_chat(msj,user,type) {
     li.append(message);
     
     let id = type === "replies" ? msj.to_id360 : msj.id360;
+    let idConver = type === "replies" ? msj.to_id360 : msj.id360;
     let previewMesagge = type === "replies" ? "Yo: " + mensaje : user.nombre + ": " + mensaje;
     
     if(msj.type !== "text"){
@@ -191,6 +197,8 @@ function agregar_chat(msj,user,type) {
     $("#contact_messaging" + id).append(li);
     $("#preview_"+id).text(previewMesagge);
     $("#messages_"+id).animate({scrollTop: $(document).height()+1000000}, "fast");
+    console.log(document.getElementById("profile_chat"+user.id360));
+    $("#message_contacts").prepend( document.getElementById("profile_chat"+id) );
 }
 //traer el directorio 
 RequestPOST("/API/ConsultarDirectorio", {
@@ -266,7 +274,12 @@ RequestPOST("/API/ConsultarDirectorio", {
 
             onInput(value) {
                 console.log(value);
-                $("#profile_chat" + value.id360).click();
+                if($("#profile_chat" + value.id360).length){
+                    $("#profile_chat" + value.id360).click();
+                }else{
+                    contacto_chat(value);
+                    $("#profile_chat" + value.id360).click();
+                }
             }
         }
     });
@@ -342,7 +355,7 @@ function contacto_chat(user) {
 
     li.append(div);
 
-    $("#message_contacts").append(li);
+    $("#message_contacts").prepend(li);
 
     let content = $("<div></div>").addClass("content");
     content.addClass("d-none");
@@ -854,6 +867,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 ul.append(li);
                 input.val("");
                 preview.text("Yo: " + mensaje);
+                $("#message_contacts").prepend( document.getElementById("profile_chat"+user.id360) );
                 messages.animate({scrollTop: $(document).height()+100000}, "fast");
 
             }
