@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 /* global DEPENDENCIA */
-var sesion_cookie="";
+//var sesion_cookie;
 if (window.location.host !== "localhost:8080") {
     if (location.protocol !== 'https:')
     {
@@ -66,7 +66,7 @@ function checkCookie() {
         window.location.replace(path);
     }
 }
-var sesion_cookie = null;
+//var sesion_cookie = null;
 var institucion_seleccionada = null;
 $("#Log-in").submit(function (e) {
     e.preventDefault();

@@ -3,7 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-$(document).ready(function () {
+$( window ).on( "load", function() { 
+    console.log("loaded");
     /*$('.segmentos').mouseover(function() {
      $('.servicios').addClass('d-none');
      $('.segmentos').removeClass('activo');
@@ -52,7 +53,8 @@ $(document).ready(function () {
             $("#menuServicios").removeClass("show_servicios");
         }
     });
-
+    //var sesion_cookie = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
+    console.log(sesion_cookie);
     if (sesion_cookie === "") {
 
         $("#logo360").click(() => {

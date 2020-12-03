@@ -172,3 +172,5 @@ var marcador4;
 var marcador5;
 var catalogo = config.catalogo;
 var JSONlottie = config.lottie;
+
+var sesion_cookie="";
