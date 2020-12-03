@@ -56,9 +56,9 @@ function getCookie(cname) {
 
 function checkCookie() {
     var user = getCookie("username_v3.1_" + DEPENDENCIA);
-    sesion_cookie=JSON.parse(user);
+    sesion_cookie=user;
     if (user === "") {
-
+        sesion_cookie=JSON.parse(user);
         if (window.location.href.includes("/Reporte/")) {
 
             var form = document.createElement("form");
