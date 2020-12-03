@@ -270,29 +270,48 @@ RequestPOST("/API/ConsultarDirectorio", {
             }
         }
     });
-
-    for (var i = 0; i < directorio.length; i++) {
-        let user = directorio[i];
-
-
-        contacto_chat(user);
-
-    }
     
-    RequestPOST("/API/empresas360/backup_chat",{
-        id360:sesion_cookie.id_usuario
-    }).then((response)=>{
+    /*
+     * Consultar solamente los usuarios con los que se tiene un chat
+     */
+    RequestPOST("/API/empresas360/usuarios_con_chat",{ id360: sesion_cookie.idUsuario_Sys }).then((response) => {
+        
+        console.log("*************************************************************");
+        console.log("*************************************************************");
         console.log(response);
-        for (var i = 0; i < response.length; i++) {
-            if (response[i].id360 === sesion_cookie.id_usuario) {
-                agregar_chat_enviado(response[i]);
-            } else {
-                recibir_chat(response[i]);
+        console.log("*************************************************************");
+        console.log("*************************************************************");
+        
+        let cantidadDirectorio = directorio.length;
+        $.each(response, (index, contacto) => {
+            console.log("CONTACTO CON CHAT" + contacto);
+            for (let i = 0; i < cantidadDirectorio; i++) 
+                if( directorio[i].id360 ===  contacto.id360 ){
+                    console.log("ENCONTRADO");
+                    contacto_chat(directorio[i]);
+                    break;
+                }
+            
+        });
+        
+        RequestPOST("/API/empresas360/backup_chat",{
+            id360:sesion_cookie.id_usuario
+        }).then((response)=>{
+            console.log(response);
+            for (var i = 0; i < response.length; i++) {
+                if (response[i].id360 === sesion_cookie.id_usuario) {
+                    agregar_chat_enviado(response[i]);
+                } else {
+                    recibir_chat(response[i]);
+                }
+                $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
             }
             $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
-        }
-        $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
+        });
+        
     });
+    
+  
 });
 
 function contacto_chat(user) {
