@@ -12,7 +12,7 @@ var BucketName = "lineamientos";
 var bucketRegion = "us-east-1";
 var IdentityPoolId = "us-east-1:a8460f87-8d3f-4452-935a-b95a4fcc83ed";
 var listado_sucursales = null;
-var sesion_cookie = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
+//var sesion_cookie = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
 AWS.config.update({
     region: bucketRegion,
     credentials: new AWS.CognitoIdentityCredentials({

@@ -2,7 +2,7 @@
 
 
 data = JSON.parse(document.getElementById("data").value);
-let sesion_cookie=JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA))
+//var sesion_cookie=JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA))
 
 var proyecto = DatosProyecto();
 
