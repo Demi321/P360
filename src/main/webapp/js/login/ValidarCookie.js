@@ -56,9 +56,10 @@ function getCookie(cname) {
 
 function checkCookie() {
     var user = getCookie("username_v3.1_" + DEPENDENCIA);
-    sesion_cookie=JSON.parse(user);
+    sesion_cookie=user;
+    
     if (user === "") {
-
+        //XD
         if (window.location.href.includes("/Reporte/")) {
 
             var form = document.createElement("form");
@@ -95,6 +96,7 @@ function checkCookie() {
 
 
         } else {
+            
 
             if (window.location.toString().split(DEPENDENCIA)[1] !== "/Login")
             {
@@ -107,6 +109,7 @@ function checkCookie() {
 
 
     } else {
+        sesion_cookie=JSON.parse(user);//ya 
         if (!JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("modulos")) {
             deleteCookie("username_v3.1_" + DEPENDENCIA);
         }
