@@ -2177,7 +2177,7 @@ header{
     width: 60px;
     height: 60px;
     margin: auto;
-    background: white;
+    /*background: white;*/
     border-radius: 30px;
 }
 .service_label{

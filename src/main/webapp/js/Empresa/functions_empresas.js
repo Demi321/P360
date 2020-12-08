@@ -12,6 +12,7 @@ var BucketName = "lineamientos";
 var bucketRegion = "us-east-1";
 var IdentityPoolId = "us-east-1:a8460f87-8d3f-4452-935a-b95a4fcc83ed";
 var listado_sucursales = null;
+var directorio_completo = null;
 //var sesion_cookie = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
 AWS.config.update({
     region: bucketRegion,
@@ -46,6 +47,55 @@ WebSocketGeneral.onmessage = function (message) {
                 console.log("Videowall");
                 //agregarlo a la lista 
                 actualizacion_listado_video_empleados(mensaje);
+            }
+        }
+         if (mensaje.sesionelemento) {
+            initializeSessionElemento(mensaje);
+        }
+
+        if (mensaje.ActualizaGPS) {
+            for (var k = 0; k < dataG.integrantes.length; k++) {
+                if (dataG.integrantes[k].idUsuarios_Movil === mensaje.idUsuarios_Movil) {
+                    dataG.integrantes[k].gps.ult.lat = mensaje.lat;
+                    dataG.integrantes[k].gps.ult.lng = mensaje.lng;
+                    dataG.integrantes[k].gps.hora = mensaje.hora;
+                    dataG.integrantes[k].gps.fecha = mensaje.fecha;
+                    if (mensaje.gpsOTS) {
+
+                        dataG.integrantes[k].gps.estatus = "ocupado";
+                        if (document.getElementById("LlamarFirebase:" + mensaje.idUsuarios_Movil) !== null) {
+                            document.getElementById("LlamarFirebase:" + mensaje.idUsuarios_Movil).className = "botonllamada btn btn-outline-secondary btn-sm";
+                            document.getElementById("LlamarFirebase:" + mensaje.idUsuarios_Movil).value = "En llamada";
+                            document.getElementById("LlamarFirebase:" + mensaje.idUsuarios_Movil).disabled = true;
+                            document.getElementById("infowindowfecha" + mensaje.idUsuarios_Movil).innerHTML = mensaje.fecha;
+                            document.getElementById("infowindowhora" + mensaje.idUsuarios_Movil).innerHTML = mensaje.hora;
+                            console.log(mensaje);
+                            console.log(document.getElementById("infowindowhora" + mensaje.idUsuarios_Movil));
+
+                        }
+                    } else {
+
+                        if (dataG.integrantes[k].gps.estatus) {
+
+
+
+                            delete dataG.integrantes[k].gps.estatus;
+
+
+                            if (document.getElementById("LlamarFirebase:" + mensaje.idUsuarios_Movil) !== null) {
+                                document.getElementById("LlamarFirebase:" + mensaje.idUsuarios_Movil).className = "botonllamada btn btn-outline-success btn-sm";
+                                document.getElementById("LlamarFirebase:" + mensaje.idUsuarios_Movil).value = "Llamar";
+                                document.getElementById("LlamarFirebase:" + mensaje.idUsuarios_Movil).disabled = false;
+
+                            }
+
+                        }
+                    }
+
+                    moveMarker(mensaje.idUsuarios_Movil);
+                    break;
+                }
+
             }
         }
     } catch (e) {

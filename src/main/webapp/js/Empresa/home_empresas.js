@@ -1272,6 +1272,10 @@ $(() => {
 });
 
 $("body").on("change",$("#file_plantilla_laboral"),function (e) {
-    console.log("Funciona cargando archivo plantilla laboral");
+    
+    if("file_plantilla_laboral"===e.target.id){
+        console.log("Funciona cargando archivo plantilla laboral");
     fileReader_plantilla_laboral(e);
+    }
+    
 });

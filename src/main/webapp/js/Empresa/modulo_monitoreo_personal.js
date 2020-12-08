@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+agregar_menu("Monitoreo de Empleados");
 
 
 /* global OT, Promise, DEPENDENCIA, hostdir, GenerarCredenciales, markers, GenerarTicket */
@@ -321,7 +321,7 @@ DataGrupos().then(function (data) {
         }
     }
     new Vue({
-        el: "#buscarContactos",
+        el: "#buscarContactos_monitoreo",
         data() {
             return {
                 value: [],
