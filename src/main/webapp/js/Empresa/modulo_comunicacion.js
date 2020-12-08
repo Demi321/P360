@@ -807,7 +807,7 @@ function contacto_chat(user) {
                 console.log(id360);
                 RequestPOST("/API/notificacion/llamada360", id360).then((msj) => {
                     console.log(msj);
-                    window.open('https://empresas360.ml/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');
+                    window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');
 
                 });
             }
@@ -983,7 +983,7 @@ $("#iniciar_llamada").click(() => {
     console.log(id360);
     RequestPOST("/API/notificacion/llamada360", id360).then((mensaje) => {
         console.log(mensaje);
-        window.open('https://empresas360.ml/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
+        window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
 
     });
 });
