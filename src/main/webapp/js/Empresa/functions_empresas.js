@@ -84,6 +84,35 @@ function agregar_menu(nombre) {
     }
 }
 
+function agregar_menu2(nombre,fawsome) {
+    let div = document.createElement("div");
+    div.className = "menu_sidebar d-flex";
+    div.innerHTML = fawsome+nombre;
+    div.id = "menu_section_" + nombre.replace(/\s/g, "");
+    $("#sidebar").append(div);
+
+    let div2 = document.createElement("div");
+    div2.className = "modulo_section d-none";
+    div2.id = "modulo_section_" + nombre.replace(/\s/g, "");//quitale los espacios si llegara a tener 
+//            div2.innerHTML = nombre;
+
+    $("#contenidoSection").append(div2);
+
+    div.addEventListener("click", function () {
+        let modulos = $(".modulo_section");
+        modulos.addClass("d-none");
+        let menus = $(".menu_sidebar");
+        menus.removeClass("menu_selected");
+        $("#modulo_section_" + nombre.replace(/\s/g, "")).removeClass("d-none");
+        $("#menu_section_" + nombre.replace(/\s/g, "")).addClass("menu_selected");
+    });
+
+    if ($("#base_modulo_" + nombre.replace(/\s/g, "")).length) {
+        $("#base_modulo_" + nombre.replace(/\s/g, "")).removeClass("d-none");
+//                div2.appendChild($("#base_modulo_"+ nombre.replace(/\s/g, "")));
+        div2.appendChild(document.getElementById("base_modulo_" + nombre.replace(/\s/g, "")));
+    }
+}
 function mostrar_info_perfil() {
     RequestPOST("/API/cuenta360/empresas360/perfil/empleado", {
         "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario

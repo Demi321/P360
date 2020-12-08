@@ -56,9 +56,18 @@ $("#toggle").click(function () {
     }
 });
 
+
+
 function showToggle() {
+    $("aside").removeClass("aside_compressed");
+        $("section").removeClass("section_compressed");
+        $("#toggle span").removeClass("compressed");
+        $("#sidebar .menu_sidebar").removeClass("compressed");
     $("body aside").css("transition", "unset");
+    console.log(position);
     if (position.includes("portrait")) {
+        $("#toggle i").addClass("d-none");
+        $("#toggle svg").addClass("d-none");
         $("body aside").css({
             "height": "50px",
             "width": "100%",
@@ -81,8 +90,11 @@ function showToggle() {
                 "left": "0"
             });
         }
+
     }
     if (position.includes("landscape")) {
+        $("#toggle i").removeClass("d-none");
+        $("#toggle svg").removeClass("d-none");
         if ($("body aside").hasClass("toggleactive")) {
             $("body aside").removeClass("toggleactive")
         }
@@ -150,4 +162,24 @@ $("section").on('focusout', 'select, textarea, input[type=text], input[type=date
     if (position.includes("portrait")) {
         onKeyboardOnOff(nowWithKeyboard, $obj);
     }
+});
+
+$(() => {
+    $("#toggle div").click(() => {
+        console.log("clicked");
+        $("aside").toggleClass("aside_compressed");
+        $("section").toggleClass("section_compressed");
+        $("#toggle span").toggleClass("compressed");
+        $("#sidebar .menu_sidebar").toggleClass("compressed");
+      
+        /*        aside {
+         display: none;
+         }
+         section{
+         width: 100%;
+         left: 0%;
+         height: calc( 100% - 90px) !important;
+         transition: none;
+         }*/
+    });
 });

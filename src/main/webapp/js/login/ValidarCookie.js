@@ -164,6 +164,11 @@ function checkCookie() {
             if ($("#direccion_modal").length) {
                 $("#direccion_modal").text(u.direccion);
             }
+            if(user.segmento === null){
+                personalizar_header("empresa");
+            }else{
+                personalizar_header(user.segmento);
+            }
         }
 
         if ($("#user").length)

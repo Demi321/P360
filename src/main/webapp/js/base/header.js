@@ -38,7 +38,7 @@ $( window ).on( "load", function() {
 //        document.getElementById("menuServicios").style.height = "auto";
 //        document.getElementById("menuServicios").style.display = "block";
         $("#menuServicios").toggleClass("show_servicios");
-        document.getElementById("servicios").classList.remove('d-none');
+//        document.getElementById("servicios").classList.remove('d-none');
 //        setTimeout(function () {
 //            $('.servicios').addClass('d-none');
 //            $('.segmentos').removeClass('activo');
@@ -48,9 +48,27 @@ $( window ).on( "load", function() {
     });
 
 
-    $(document).click((e) => {
-        if (e.target.id !== "servicios" && e.target.id !=="iconServ" && e.target.nodeName !=="path" && e.target.nodeName !=="svg") {
+   $(document).click((e) => {
+        if (e.target.id !== "servicios" && e.target.id !=="iconServ" && e.target.nodeName !=="path" && e.target.nodeName !=="svg" && e.target.className !=="expand_menu" && e.target.className !=="expanded_menu") {
             $("#menuServicios").removeClass("show_servicios");
+        }else{
+            $("#cbmenuToggle").prop("checked", false);
+        }
+
+        if(e.target.className ==="expand_menu"){
+            $(".expand_menu").addClass("d-none");
+            $("#servicios_grid").css({
+                "max-height": "calc(100%)"
+            });
+            $("#menuServicios").css({
+                "max-height": "calc(100% - 90px)"
+            });
+        }
+        if(e.target.className ==="expanded_menu"){
+            $(".expand_menu").removeClass("d-none");
+            $("#servicios_grid").removeAttr("style")
+            $("#menuServicios").removeAttr("style")
+            document.getElementById("servicios_grid").scrollIntoView();
         }
     });
     //var sesion_cookie = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));

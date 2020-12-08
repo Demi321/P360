@@ -135,6 +135,52 @@ footer{
     text-align: center;
     position: relative;
     display: grid;
+    display: flex;
+}
+#toggle svg{
+    padding: 5px 5px;
+    width: 35px;
+    font: normal 25px Arial;
+    margin: 5px;
+    border-radius: 5px;
+    height: 25px;
+    cursor: pointer;
+}
+#toggle span{
+    color: #5a5a5a;
+    font: bold 16px Arial;
+    margin-left: auto;
+    margin-right: auto;
+    padding-right: 40px;
+    transition: 0.6s
+}
+
+#toggle span.compressed{
+    font: bold 1px Arial;
+    width: 100%;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 5px;
+    display: none;
+    /*border-bottom: solid 1px #6c757d;*/
+}
+.aside_compressed{
+    width: calc(60px) !important;
+}
+.section_compressed{
+    width: calc(100% - 60px) !important;
+    left: 60px!important;
+}
+#sidebar .menu_sidebar.compressed {
+    font: normal 8px Arial;
+    width: 100%;
+    text-align: center;
+    padding: 5px 0px;
+    margin: 0;
+    margin-bottom: 2px;
+    display: block!important;
+    height: auto;
 }
 .toggleactive{
     height: 50% !important;

@@ -208,6 +208,7 @@ try {
         let modulo_externo = modulos_externos[i];
         agregar_enlace(modulo_externo[0], modulo_externo[1], modulo_externo[2]);
         agregar_enlace_servicios(modulo_externo[0], modulo_externo[1], modulo_externo[2]);
+        agregar_enlace_servicios_grid(modulo_externo[0], modulo_externo[1], modulo_externo[2]);
     }
 
 } catch (e) {
@@ -283,6 +284,33 @@ function agregar_enlace_servicios(nombre, url, icono) {
         a.appendChild(div_nombre);
         $("#servicios").append(li);
         a.addEventListener("click", function () {
+            acceso_externo(url);
+        });
+
+    } 
+}
+
+function agregar_enlace_servicios_grid(nombre, url, icono) {
+
+    if (!window.location.href.includes(url)) {
+        let div = $("<div></div>").addClass("col-4 p-2");
+        let div_icon = $("<div></div>").addClass("service");
+        let div_label = $("<div></div>").addClass("service_label");
+        div_label.text(nombre);
+        div_icon.css({
+            "background-image":"url('" + PathRecursos + "Img/iconoheader/" + icono + "')",
+            "background-position":"center",
+            "background-size":"contain",
+            "background-repeat":"no-repeat",
+            "border":"none"
+        });
+        div.append(div_icon);
+        div.append(div_label);
+        
+
+       
+        $("#servicios_grid").append(div);
+        div.click(()=>{
             acceso_externo(url);
         });
 
