@@ -44,21 +44,19 @@ function agregar_chat_enviado(mensaje) {
      * 
      * revisar que tengamos el chat del usuario que nos escribe
      */
+    console.log("**************************");
+    console.log( "profile_chat" + mensaje.to_id360 + "-" + $("#profile_chat" + mensaje.to_id360).length);
+    console.log("*********************");
     
     if (!$("#profile_chat" + mensaje.to_id360).length) {
-        console.log("EXISTEE MANDO");
         RequestPOST("/API/get/perfil360", {id360:mensaje.to_id360}).then((response) => {
-            console.log("WAAAAAAAAAAAAAAAA");
-            console.log(response);
             contacto_chat(response);
             agregar_chat(mensaje, response,"replies");
         });
     } else {
-        console.log("NO EXISTEE MANDO");
         let user = null;
         $.each(directorio_completo, (i) => {
             if (mensaje.id360 === directorio_completo[i].id360) {
-                console.log("ENCONTRADO WEEEEEEEEEEEEEE");
                 user = directorio_completo[i];
                 return false;
             }
@@ -75,19 +73,14 @@ function recibir_chat(mensaje) {
      */
 
     if (!$("#profile_chat" + mensaje.id360).length) {
-        console.log("EXISTE");
         RequestPOST("/API/get/perfil360", mensaje).then((response) => {
-            console.log("EPAEPAEPA");
-            console.log(response);
             contacto_chat(response);
             agregar_chat(mensaje, response,"send");
         });
     } else {
-        console.log("NO EXISTE");
         let user = null;
         $.each(directorio_completo, (i) => {
             if (mensaje.id360 === directorio_completo[i].id360) {
-                console.log("ENCONTRADO");
                 user = directorio_completo[i];
                 return false;
             }
@@ -353,20 +346,27 @@ RequestPOST("/API/ConsultarDirectorio", {
         
         let cantidadDirectorio = directorio.length;
         $.each(response, (index, contacto) => {
-            console.log("CONTACTO CON CHAT" + contacto);
+            let encontrado = false;
             for (let i = 0; i < cantidadDirectorio; i++) 
                 if( directorio[i].id360 ===  contacto.id360 ){
-                    console.log("ENCONTRADO");
+                    encontrado = true;
+                    console.log(directorio[i]);
                     contacto_chat(directorio[i]);
                     break;
                 }
             
+            if(!encontrado)
+                RequestPOST("/API/empresas360/directorio/un_usuario",{id360:contacto.id360}).then((response) => {
+                    if(response.success){
+                        directorio.push(response);
+                        contacto_chat(response);
+                    }
+                });
         });
         
         RequestPOST("/API/empresas360/backup_chat",{
             id360:sesion_cookie.id_usuario
         }).then((response)=>{
-            console.log(response);
             for (var i = 0; i < response.length; i++) {
                 if (response[i].id360 === sesion_cookie.id_usuario) {
                     agregar_chat_enviado(response[i]);
