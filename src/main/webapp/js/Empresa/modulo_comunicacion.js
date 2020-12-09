@@ -39,14 +39,19 @@ if (perfil !== "" && perfil !== null && perfil !== undefined) {
     });
 }
 function agregar_chat_enviado(mensaje) {
+    console.log("**** MENSAJE ENVIADO POR MI *****");
+    console.log(mensaje);
     if (!$("#profile_chat" + mensaje.to_id360).length) {
+        console.log("WA");
         RequestPOST("/API/get/perfil360", {id360:mensaje.to_id360}).then((response) => {
             if(response.sucesss){
                 contacto_chat(response);
+                directorio_completo.push(response);
                 agregar_chat(mensaje, response,"replies");
             }
         });
     } else {
+        console.log("WE");
         let user = null;
         $.each(directorio_completo, (i) => {
             if (mensaje.to_id360 === directorio_completo[i].id360) {
@@ -54,6 +59,7 @@ function agregar_chat_enviado(mensaje) {
                 return false;
             }
         });
+        console.log(user);
         if(user !== null)
             agregar_chat(mensaje,user,"replies");
     }
@@ -61,9 +67,11 @@ function agregar_chat_enviado(mensaje) {
 }
 function recibir_chat(mensaje) {
     if (!$("#profile_chat" + mensaje.id360).length) {
+        console.log("WE");
         RequestPOST("/API/get/perfil360", mensaje).then((response) => {
             if(response.success){
                 contacto_chat(response);
+                directorio_completo.push(response);
                 agregar_chat(mensaje, response,"send");
             }
         });
@@ -75,7 +83,6 @@ function recibir_chat(mensaje) {
                 return false;
             }
         });
-        
         if(user !== null){
             if(NotificacionesActivadas){
          
@@ -362,8 +369,9 @@ RequestPOST("/API/ConsultarDirectorio", {
             RequestPOST("/API/empresas360/directorio/un_usuario",fueraDeDirectorio).then((response) => {
                 $.each(response, function(index, empleado){
                     if(empleado.success){
-                        directorio.push(response);
-                        contacto_chat(response);
+                        directorio.push(empleado);
+                        directorio_completo.push(empleado);
+                        contacto_chat(empleado);
                     }
                 });
                 cargaBackUp();

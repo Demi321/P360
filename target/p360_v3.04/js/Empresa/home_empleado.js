@@ -23,10 +23,6 @@ WebSocketGeneral.onmessage = function (message) {
     }
 
     try {
-        
-        if(mensaje.chat_empresarial){
-            recibir_chat(mensaje);
-        }
 
         if (mensaje.inicializacionSG) {
             idSocketOperador = mensaje.idSocket;
