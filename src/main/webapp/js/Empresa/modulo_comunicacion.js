@@ -345,6 +345,9 @@ RequestPOST("/API/ConsultarDirectorio", {
         console.log("*************************************************************");
         
         let cantidadDirectorio = directorio.length;
+        
+        let fueraDeDirectorio = [];
+        
         $.each(response, (index, contacto) => {
             let encontrado = false;
             for (let i = 0; i < cantidadDirectorio; i++) 
@@ -356,28 +359,41 @@ RequestPOST("/API/ConsultarDirectorio", {
                 }
             
             if(!encontrado)
-                RequestPOST("/API/empresas360/directorio/un_usuario",{id360:contacto.id360}).then((response) => {
-                    if(response.success){
-                        directorio.push(response);
-                        contacto_chat(response);
-                    }
-                });
+                fueraDeDirectorio.push(contacto.id360);
+                
         });
         
-        RequestPOST("/API/empresas360/backup_chat",{
-            id360:sesion_cookie.id_usuario
-        }).then((response)=>{
-            for (var i = 0; i < response.length; i++) {
-                if (response[i].id360 === sesion_cookie.id_usuario) {
-                    agregar_chat_enviado(response[i]);
-                } else {
-                    recibir_chat(response[i]);
+        if(fueraDeDirectorio.length>0){
+            
+            RequestPOST("/API/empresas360/directorio/un_usuario",{fueraDeDirectorio}).then((response) => {
+                $.each(response, function(index, empleado){
+                    directorio.push(response);
+                    contacto_chat(response);
+                });
+                cargaBackUp();
+            });
+            
+        }else
+            cargaBackUp();
+        
+        
+                
+        const cargaBackUp = () => {
+            RequestPOST("/API/empresas360/backup_chat",{
+                id360:sesion_cookie.id_usuario
+            }).then((response)=>{
+                for (var i = 0; i < response.length; i++) {
+                    if (response[i].id360 === sesion_cookie.id_usuario) {
+                        agregar_chat_enviado(response[i]);
+                    } else {
+                        recibir_chat(response[i]);
+                    }
+                    $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
                 }
                 $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
-            }
-            $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
-            NotificacionesActivadas = true;
-        });
+                NotificacionesActivadas = true;
+            });
+        };
         
     });
     
