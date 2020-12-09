@@ -155,6 +155,25 @@ function agregar_chat(msj,user,type) {
         });
         let message = $("<p></p>");
         message.text(mensaje);
+        
+        let fecha = $("<span></span>").addClass("time");
+        
+        let fechaDate = new Date(msj.fecha);
+        let fechaCorta = fechaDate.getDate() + "/" + (fechaDate.getMonth()+1) + "/" + fechaDate.getFullYear();
+        
+        fecha.text(fechaCorta + " " + msj.hora);
+        let iconClock = $("<li></li>").addClass("far fa-clock");
+
+        if(type === "replies") {
+            fecha.append(iconClock);
+            iconClock.addClass("ml-2");
+        }else {
+            fecha.prepend(iconClock);
+            iconClock.addClass("mr-2");
+        }
+        
+        message.append(fecha);
+        
         li.append(img_message);
         li.append(message);
 
@@ -234,6 +253,7 @@ function agregar_chat(msj,user,type) {
             message.empty().append(imagenPreview);
             message.append(saltoLinea);
             message.append(nombreAdjunto);
+            message.append(fecha);
         }
 
         $("#contact_messaging" + id).append(li);
@@ -923,6 +943,17 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                     
                 }else
                     message.text(mensaje);
+                
+                let fecha = $("<span></span>").addClass("time");
+        
+                let fechaDate = new Date();
+                let fechaCorta = fechaDate.getDate() + "/" + (fechaDate.getMonth()+1) + "/" + fechaDate.getFullYear();
+                let horaEnvio = fechaDate.getHours() + ":" + fechaDate.getMinutes() + ":" + fechaDate.getSeconds();
+
+                fecha.text(fechaCorta + "-" + horaEnvio);
+                let iconClock = $("<li></li>").addClass("far fa-clock ml-2");
+                fecha.append(iconClock);
+                message.append(fecha);
                 
                 li.append(img_message);
                 li.append(message);
