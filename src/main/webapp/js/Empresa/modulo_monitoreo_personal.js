@@ -375,13 +375,13 @@ DataGrupos().then(function (data) {
         }
     });
 
-    for (var i = 0; i < directorio.length; i++) {
+    /*for (var i = 0; i < directorio.length; i++) {
         let user = directorio[i];
 
 
         contacto_chat(user);
 
-    }
+    }*/
 
 });
 function EditarGrupo(id_Grupo) {

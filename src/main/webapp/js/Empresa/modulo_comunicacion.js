@@ -39,7 +39,6 @@ if (perfil !== "" && perfil !== null && perfil !== undefined) {
     });
 }
 function agregar_chat_enviado(mensaje) {
-    
     if (!$("#profile_chat" + mensaje.to_id360).length) {
         RequestPOST("/API/get/perfil360", {id360:mensaje.to_id360}).then((response) => {
             if(response.sucesss){
@@ -50,7 +49,7 @@ function agregar_chat_enviado(mensaje) {
     } else {
         let user = null;
         $.each(directorio_completo, (i) => {
-            if (mensaje.id360 === directorio_completo[i].id360) {
+            if (mensaje.to_id360 === directorio_completo[i].id360) {
                 user = directorio_completo[i];
                 return false;
             }
@@ -61,7 +60,6 @@ function agregar_chat_enviado(mensaje) {
 
 }
 function recibir_chat(mensaje) {
-
     if (!$("#profile_chat" + mensaje.id360).length) {
         RequestPOST("/API/get/perfil360", mensaje).then((response) => {
             if(response.success){
@@ -246,7 +244,6 @@ RequestPOST("/API/ConsultarDirectorio", {
 //    "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area,
     "tipo_area": "0"
 }).then((response) => {
-    console.log(response);
     let directorio = response.directorio;
     
     for (var i = 0; i < directorio.length; i++)

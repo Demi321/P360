@@ -13,6 +13,16 @@ var bucketRegion = "us-east-1";
 var IdentityPoolId = "us-east-1:a8460f87-8d3f-4452-935a-b95a4fcc83ed";
 var listado_sucursales = null;
 var directorio_completo = null;
+RequestPOST("/API/ConsultarDirectorio", {
+    "fecha": getFecha(),
+    "hora": getHora(),
+    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
+    "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
+//    "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area,
+    "tipo_area": "0"
+}).then((response) => {
+    directorio_completo = response.directorio;
+});
 //var sesion_cookie = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
 AWS.config.update({
     region: bucketRegion,
@@ -33,6 +43,10 @@ WebSocketGeneral.onmessage = function (message) {
         credenciales = mensaje;
     }
     try {
+
+        if(mensaje.chat_empresarial){
+            recibir_chat(mensaje);
+        }
 
         if (mensaje.inicializacionSG) {
             idSocketOperador = mensaje.idSocket;
