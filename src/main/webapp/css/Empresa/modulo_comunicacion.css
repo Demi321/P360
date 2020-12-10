@@ -789,3 +789,22 @@ MENSAJE FECHA Y HORA
     text-align: left;
     color: aliceblue;
 }
+
+/*
+CARGAR MáS MENSAJES
+*/
+
+.liMasMensajes{
+    color: black;
+}
+
+.spanMasMensajes{
+    background-color: linen;
+    padding: 10px 20px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.iconMasMensajes{
+    margin-right: 5px;
+}

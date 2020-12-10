@@ -9,6 +9,7 @@
 /* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos, Notification */
 
 var NotificacionesActivadas = false;
+var CantidadMensajesPorChat = {};
 
 let array_llamar = new Array();
 agregar_menu("Comunicación");
@@ -38,20 +39,16 @@ if (perfil !== "" && perfil !== null && perfil !== undefined) {
         }
     });
 }
-function agregar_chat_enviado(mensaje) {
-    console.log("**** MENSAJE ENVIADO POR MI *****");
-    console.log(mensaje);
+function agregar_chat_enviado(mensaje,viejo) {
     if (!$("#profile_chat" + mensaje.to_id360).length) {
-        console.log("WA");
         RequestPOST("/API/get/perfil360", {id360:mensaje.to_id360}).then((response) => {
             if(response.sucesss){
                 contacto_chat(response);
                 directorio_completo.push(response);
-                agregar_chat(mensaje, response,"replies");
+                agregar_chat(mensaje, response,"replies",viejo);
             }
         });
     } else {
-        console.log("WE");
         let user = null;
         $.each(directorio_completo, (i) => {
             if (mensaje.to_id360 === directorio_completo[i].id360) {
@@ -59,20 +56,18 @@ function agregar_chat_enviado(mensaje) {
                 return false;
             }
         });
-        console.log(user);
         if(user !== null)
-            agregar_chat(mensaje,user,"replies");
+            agregar_chat(mensaje,user,"replies",viejo);
     }
 
 }
-function recibir_chat(mensaje) {
+function recibir_chat(mensaje, viejo) {
     if (!$("#profile_chat" + mensaje.id360).length) {
-        console.log("WE");
         RequestPOST("/API/get/perfil360", mensaje).then((response) => {
             if(response.success){
                 contacto_chat(response);
                 directorio_completo.push(response);
-                agregar_chat(mensaje, response,"send");
+                agregar_chat(mensaje, response,"send",viejo);
             }
         });
     } else {
@@ -93,7 +88,7 @@ function recibir_chat(mensaje) {
                     body = user.nombre + " " + user.apellido_paterno + " ha enviado un adjunto";
                 }
 
-                let onClickNotification = () => {
+                /*let onClickNotification = () => {
                     $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
                     $("#message_input_"+user.id360).focus();
 
@@ -104,13 +99,13 @@ function recibir_chat(mensaje) {
                         $("#profile_chat" + value.id360).click();
                     }
 
-                };
+                };*/
 
                 notificacion_mensaje("Nuevo mensaje", body , () => {});
 
             }
 
-            agregar_chat(mensaje,user,"send");
+            agregar_chat(mensaje,user,"send",viejo);
         }
         
     }
@@ -142,7 +137,7 @@ function notificacion_mensaje(title, body, onclick){
     
 }
 
-function agregar_chat(msj,user,type) {
+function agregar_chat(msj,user,type, viejo) {
     if(user.success){
         let mensaje = msj.message;
         let li = $("<li></li>").addClass(type);
@@ -160,6 +155,9 @@ function agregar_chat(msj,user,type) {
         
         let fechaDate = new Date(msj.fecha);
         let fechaCorta = fechaDate.getDate() + "/" + (fechaDate.getMonth()+1) + "/" + fechaDate.getFullYear();
+        let hoy = new Date();
+        
+        fechaCorta = fechaDate.getTime() === hoy.getTime() ? "" : fechaCorta;
         
         fecha.text(fechaCorta + " " + msj.hora);
         let iconClock = $("<li></li>").addClass("far fa-clock");
@@ -256,10 +254,15 @@ function agregar_chat(msj,user,type) {
             message.append(fecha);
         }
 
-        $("#contact_messaging" + id).append(li);
-        $("#preview_"+id).text(previewMesagge);
-        $("#messages_"+id).animate({scrollTop: $(document).height()+1000000}, "fast");
-        $("#message_contacts").prepend( document.getElementById("profile_chat"+id) );
+        if(viejo){
+            $("#contact_messaging" + id).prepend(li);
+        }else{
+            $("#contact_messaging" + id).append(li);
+            $("#messages_"+id).animate({scrollTop: $(document).height()+1000000}, "fast");
+            $("#preview_"+id).text(previewMesagge);
+            $("#message_contacts").prepend( document.getElementById("profile_chat"+id) );
+        }
+        
     }
 }
 //traer el directorio 
@@ -355,16 +358,20 @@ RequestPOST("/API/ConsultarDirectorio", {
         let fueraDeDirectorio = [];
         
         $.each(response, (index, contacto) => {
+            
+            CantidadMensajesPorChat[contacto.id360chat] = {
+                cantidad: parseInt(contacto.cantidadMensajes)-20
+            };
             let encontrado = false;
             for (let i = 0; i < cantidadDirectorio; i++) 
-                if( directorio[i].id360 ===  contacto.id360 ){
+                if( directorio[i].id360 ===  contacto.id360chat ){
                     encontrado = true;
                     contacto_chat(directorio[i]);
                     break;
                 }
             
             if(!encontrado)
-                fueraDeDirectorio.push({"id360":contacto.id360});
+                fueraDeDirectorio.push({"id360":contacto.id360chat});
                 
         });
         
@@ -374,9 +381,9 @@ RequestPOST("/API/ConsultarDirectorio", {
             }).then((response)=>{
                 for (var i = 0; i < response.length; i++) {
                     if (response[i].id360 === sesion_cookie.id_usuario) {
-                        agregar_chat_enviado(response[i]);
+                        agregar_chat_enviado(response[i],false);
                     } else {
-                        recibir_chat(response[i]);
+                        recibir_chat(response[i],false);
                     }
                     $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
                 }
@@ -404,6 +411,74 @@ RequestPOST("/API/ConsultarDirectorio", {
     
   
 });
+
+const cargaMasMensajes = (id360) => {
+    
+    let init, limit;
+    
+    limit = CantidadMensajesPorChat[id360].cantidad;
+    init = (limit-20) < 0 ? 0 : limit - 20;
+    
+    let dataMasMensajes = {
+        "id360-1" : id360,
+        "id360-2" : sesion_cookie.idUsuario_Sys,
+        "init" : init,
+        "limit" : limit
+    };
+console.log(dataMasMensajes);
+    RequestPOST("/API/empresas360/carga_mas_mensajes_chat", dataMasMensajes).then((response) => {
+
+        CantidadMensajesPorChat[id360].cantidad -= 20;
+        
+        $("#contact_messaging"+ id360).find(".liMasMensajes").hide("fast",() => {
+            $("#contact_messaging"+ id360).css({"overflow":"hidden"});
+            NotificacionesActivadas = false;
+            if(response.length === 1){
+                if (response[0].id360 === sesion_cookie.id_usuario) {
+                    agregar_chat_enviado(response[0],true); 
+                }else{
+                    recibir_chat(response[0],true);
+                }
+            }else{
+                for (var i = response.length-1; i >= 0; i--){
+                    if (response[i].id360 === sesion_cookie.id_usuario) {
+                        agregar_chat_enviado(response[i],true); 
+                    }else{
+                        recibir_chat(response[i],true);
+                    }
+                }
+            }
+            NotificacionesActivadas = true;
+            
+            $("#contact_messaging"+ id360).find(".liMasMensajes").remove();
+            
+            if(CantidadMensajesPorChat[id360].cantidad>0){
+                let liMasMensajes = $("<li></li>").addClass("liMasMensajes");
+                let spanMasMensajes = $("<span></span>").addClass("spanMasMensajes");
+                let iconManMensajes = $("<li></li>").addClass("fas fa-spinner iconMasMensajes");
+                spanMasMensajes.text("Más mensajes...");
+                spanMasMensajes.prepend(iconManMensajes);
+                spanMasMensajes.data("id360-1",id360);
+                spanMasMensajes.data("id360-2",sesion_cookie.idUsuario_Sys);
+                liMasMensajes.append(spanMasMensajes);
+                $("#contact_messaging"+ id360).prepend(liMasMensajes);
+
+                /*
+                 * EVENTO CLICK PARA CARGAR MáS MENSAJES
+                 */
+
+                spanMasMensajes.click(() => {
+                    cargaMasMensajes(id360);
+                });
+
+            }
+            
+            // $("#contact_messaging"+ id360).css({"overflow":"visible"});
+            
+        });
+
+    });
+};
 
 function contacto_chat(user) {
     
@@ -466,6 +541,32 @@ function contacto_chat(user) {
         let ul = $("<ul></ul>").addClass("p-0");
     //    ul.id = "contact_messaging" + user.id360;
         ul.attr("id",  "contact_messaging" + user.id360);
+        
+        /*
+         * CARGA MAS MENSAJES
+         */
+        
+        if(CantidadMensajesPorChat[user.id360].cantidad>0){
+            let liMasMensajes = $("<li></li>").addClass("liMasMensajes");
+            let spanMasMensajes = $("<span></span>").addClass("spanMasMensajes");
+            let iconManMensajes = $("<li></li>").addClass("fas fa-spinner iconMasMensajes");
+            spanMasMensajes.text("Más mensajes...");
+            spanMasMensajes.prepend(iconManMensajes);
+            spanMasMensajes.data("id360-1",user.id360);
+            spanMasMensajes.data("id360-2",sesion_cookie.idUsuario_Sys);
+            liMasMensajes.append(spanMasMensajes);
+            ul.append(liMasMensajes);
+            
+            /*
+             * EVENTO CLICK PARA CARGAR MáS MENSAJES
+             */
+            
+            spanMasMensajes.click(() => {
+                cargaMasMensajes(user.id360);
+            });
+            
+        }
+        
     //    let div = $("<div></div>").addClass("wrap")
         let message_input = $("<div></div>").addClass("message-input");
         let wrap = $("<div></div>").addClass("wrap container-fluid");
@@ -948,6 +1049,11 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
         
                 let fechaDate = new Date();
                 let fechaCorta = fechaDate.getDate() + "/" + (fechaDate.getMonth()+1) + "/" + fechaDate.getFullYear();
+                
+                let hoy = new Date();
+        
+                fechaCorta = fechaDate.getTime() === hoy.getTime() ? "" : fechaCorta;
+                
                 let horaEnvio = fechaDate.getHours() + ":" + fechaDate.getMinutes() + ":" + fechaDate.getSeconds();
 
                 fecha.text(fechaCorta + "-" + horaEnvio);
@@ -1022,9 +1128,6 @@ $("#iniciar_llamada").click(() => {
     });
 });
 
-
-$(".messages").animate({scrollTop: $(document).height()}, "fast");
-
 $("#profile-img").click(function () {
     $("#status-options").toggleClass("active");
 });
@@ -1063,7 +1166,6 @@ function newMessage() {
     $('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
     $('.message-input input').val(null);
     $('.contact.active .preview').html('<span>You: </span>' + message);
-    $(".messages").animate({scrollTop: $(document).height()}, "fast");
 }
 ;
 
