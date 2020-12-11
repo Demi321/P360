@@ -369,7 +369,6 @@ and open the template in the editor.
     position: relative;
     padding: 10px 0 15px 0;
     font-size: 0.9em;
-    cursor: pointer;
     list-style: none;
 }
 @media screen and (max-width: 735px) {
@@ -430,6 +429,7 @@ and open the template in the editor.
 }
 #frame #sidepanel #contacts ul li.contact .wrap .meta {
     padding: 5px 0 0 0;
+    position: relative;
 }
 @media screen and (max-width: 735px) {
     #frame #sidepanel #contacts ul li.contact .wrap .meta {
@@ -807,4 +807,31 @@ CARGAR MáS MENSAJES
 
 .iconMasMensajes{
     margin-right: 5px;
+}
+
+/*
+CONTROLES ENVIAR MENSAJE
+*/
+
+#message_contacts .btn-enviarMensajeChat,
+#message_contacts .btn-realizarLlamadaChat{
+    height: 100%;
+    font-size: 1.6rem;
+    color: #fff;
+}
+
+#message_contacts .btn-enviarMensajeChat:hover,
+#message_contacts .btn-realizarLlamadaChat:hover{
+    background-color: #fff;
+    color: #000;
+}
+
+#message_contacts .controlesChat{
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    transition: all 2s ease-in-out;
+    background: #32465a;
+    display: none;
 }
