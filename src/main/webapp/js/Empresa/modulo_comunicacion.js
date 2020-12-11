@@ -416,8 +416,8 @@ const cargaMasMensajes = (id360) => {
     
     let init, limit;
     
-    limit = CantidadMensajesPorChat[id360].cantidad;
-    init = (limit-20) < 0 ? 0 : limit - 20;
+    init = (CantidadMensajesPorChat[id360].cantidad-20) < 0 ? 0 : CantidadMensajesPorChat[id360].cantidad - 20;
+    limit = (CantidadMensajesPorChat[id360].cantidad-20) < 0 ? CantidadMensajesPorChat[id360].cantidad : 20;
     
     let dataMasMensajes = {
         "id360-1" : id360,
@@ -425,18 +425,22 @@ const cargaMasMensajes = (id360) => {
         "init" : init,
         "limit" : limit
     };
-console.log(dataMasMensajes);
-    RequestPOST("/API/empresas360/carga_mas_mensajes_chat", dataMasMensajes).then((response) => {
 
-        CantidadMensajesPorChat[id360].cantidad -= 20;
+    RequestPOST("/API/empresas360/carga_mas_mensajes_chat", dataMasMensajes).then((response) => {
         
-        $("#contact_messaging"+ id360).find(".liMasMensajes").hide("fast",() => {
-            $("#contact_messaging"+ id360).css({"overflow":"hidden"});
+        $('#messages_'+id360).animate({
+
+            scrollTop: 500
+
+        }, 0, "swing", () => {
+            
+            CantidadMensajesPorChat[id360].cantidad -= 20;
             NotificacionesActivadas = false;
             if(response.length === 1){
                 if (response[0].id360 === sesion_cookie.id_usuario) {
                     agregar_chat_enviado(response[0],true); 
                 }else{
+                    
                     recibir_chat(response[0],true);
                 }
             }else{
@@ -449,9 +453,17 @@ console.log(dataMasMensajes);
                 }
             }
             NotificacionesActivadas = true;
+
+            let liCargaMensajesAnterior = $("#contact_messaging"+ id360).find(".liMasMensajes");
             
-            $("#contact_messaging"+ id360).find(".liMasMensajes").remove();
-            
+            $('#messages_'+id360).animate({
+
+                scrollTop: liCargaMensajesAnterior.before().offset().top-150
+
+            }, 0, "swing", () => {
+                liCargaMensajesAnterior.remove();
+            });
+
             if(CantidadMensajesPorChat[id360].cantidad>0){
                 let liMasMensajes = $("<li></li>").addClass("liMasMensajes");
                 let spanMasMensajes = $("<span></span>").addClass("spanMasMensajes");
@@ -472,8 +484,6 @@ console.log(dataMasMensajes);
                 });
 
             }
-            
-            // $("#contact_messaging"+ id360).css({"overflow":"visible"});
             
         });
 
