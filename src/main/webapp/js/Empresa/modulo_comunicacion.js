@@ -258,7 +258,10 @@ function agregar_chat(msj,user,type, viejo) {
             $("#contact_messaging" + id).prepend(li);
         }else{
             $("#contact_messaging" + id).append(li);
-            $("#messages_"+id).animate({scrollTop: $(document).height()+1000000}, "fast");
+            
+            document.querySelector("#messages_"+id+" li:last-child").scrollIntoView();
+            
+            //$("#messages_"+id).animate({scrollTop: $(document).height()+1000000}, 0);
             $("#preview_"+id).text(previewMesagge);
             $("#message_contacts").prepend( document.getElementById("profile_chat"+id) );
         }
@@ -287,7 +290,7 @@ RequestPOST("/API/ConsultarDirectorio", {
             return {
                 value: [],
                 options: directorio
-            }
+            };
         },
         methods: {
             customLabel(option) {
@@ -317,7 +320,7 @@ RequestPOST("/API/ConsultarDirectorio", {
             return {
                 value: [],
                 options: directorio
-            }
+            };
         },
         methods: {
             customLabel(option) {
@@ -385,9 +388,9 @@ RequestPOST("/API/ConsultarDirectorio", {
                     } else {
                         recibir_chat(response[i],false);
                     }
-                    $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
+                    //$(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
                 }
-                $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
+                //$(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
                 NotificacionesActivadas = true;
             });
         };
@@ -456,14 +459,9 @@ const cargaMasMensajes = (id360) => {
 
             let liCargaMensajesAnterior = $("#contact_messaging"+ id360).find(".liMasMensajes");
             
-            $('#messages_'+id360).animate({
-
-                scrollTop: liCargaMensajesAnterior.before().offset().top-150
-
-            }, 0, "swing", () => {
-                liCargaMensajesAnterior.remove();
-            });
-
+            document.querySelector("#contact_messaging"+ id360 +" .liMasMensajes").scrollIntoView();
+            liCargaMensajesAnterior.remove();
+                
             if(CantidadMensajesPorChat[id360].cantidad>0){
                 let liMasMensajes = $("<li></li>").addClass("liMasMensajes");
                 let spanMasMensajes = $("<span></span>").addClass("spanMasMensajes");
@@ -518,6 +516,13 @@ function contacto_chat(user) {
         div.append(span);
         div.append(img);
         div.append(meta);
+        
+        /*
+         * CONTROLES PARA LLAMADA Y MENSAJES
+         */
+        let divControlesChat = $("<div></div>");
+        let buttonEnviarMensaje = $("<button></button>");
+        buttonEnviarMensaje.addClass("btn btn-enviarMensajeChat");
 
         li.append(div);
 
@@ -556,7 +561,7 @@ function contacto_chat(user) {
          * CARGA MAS MENSAJES
          */
         
-        if(CantidadMensajesPorChat[user.id360].cantidad>0){
+        if(CantidadMensajesPorChat[user.id360] !== undefined && CantidadMensajesPorChat[user.id360].cantidad>0){
             let liMasMensajes = $("<li></li>").addClass("liMasMensajes");
             let spanMasMensajes = $("<span></span>").addClass("spanMasMensajes");
             let iconManMensajes = $("<li></li>").addClass("fas fa-spinner iconMasMensajes");
