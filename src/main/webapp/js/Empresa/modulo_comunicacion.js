@@ -342,10 +342,10 @@ RequestPOST("/API/ConsultarDirectorio", {
             onInput(value) {
                 console.log(value);
                 if($("#profile_chat" + value.id360).length){
-                    $("#profile_chat" + value.id360).click();
+                    $("#profile_chat" + value.id360 + " .btn-enviarMensajeChat").click();
                 }else{
                     contacto_chat(value);
-                    $("#profile_chat" + value.id360).click();
+                    $("#profile_chat" + value.id360 + " .btn-enviarMensajeChat").click();
                 }
             }
         }
@@ -512,17 +512,28 @@ function contacto_chat(user) {
         preview.attr("id","preview_"+user.id360);
         meta.append(name);
         meta.append(preview);
-
-        div.append(span);
-        div.append(img);
-        div.append(meta);
         
         /*
          * CONTROLES PARA LLAMADA Y MENSAJES
          */
-        let divControlesChat = $("<div></div>");
+        let divControlesChat = $("<div></div>").addClass("controlesChat");
+        
         let buttonEnviarMensaje = $("<button></button>");
         buttonEnviarMensaje.addClass("btn btn-enviarMensajeChat");
+        buttonEnviarMensaje.html('<i class="fas fa-comment-dots"></i>');
+        
+        let buttonRealizarLlamadaChat = $("<button></button>");
+        buttonRealizarLlamadaChat.addClass("btn btn-realizarLlamadaChat");
+        buttonRealizarLlamadaChat.html('<i class="fas fa-phone"></i>');
+        
+        divControlesChat.append(buttonEnviarMensaje);
+        divControlesChat.append(buttonRealizarLlamadaChat);
+        
+        meta.append(divControlesChat);
+        
+        div.append(span);
+        div.append(img);
+        div.append(meta);
 
         li.append(div);
 
@@ -540,17 +551,7 @@ function contacto_chat(user) {
         });
         let nombre = $("<p></p>");
         nombre.text(user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno);
-        let social_media = $("<div></div>").addClass("social-media");
-        let div_llamar = $("<div></div>");
-        let llamar = $("<i class=\"fas fa-phone-alt\"></i>");
-        llamar.attr("id", "llamar_" + user.id360);
-        llamar.css({
-            "background": "#40474f",
-            "padding": "17px",
-            "font-size": "60px",
-            "width": "50px",
-            "cursor": "pointer"
-        });
+        
         let messages = $("<div></div>").addClass("messages");
         messages.attr("id","messages_"+user.id360);
         let ul = $("<ul></ul>").addClass("p-0");
@@ -693,11 +694,8 @@ function contacto_chat(user) {
         message_input.append(wrap);
         messages.append(ul);
 
-        div_llamar.append(llamar);
-        social_media.append(div_llamar);
         contact_profile.append(img_profile);
         contact_profile.append(nombre);
-        contact_profile.append(social_media);
         content.append(contact_profile);
         content.append(messages);
         content.append(message_input);
@@ -917,14 +915,20 @@ function contacto_chat(user) {
             }
         });
 
-        li.click(() => {
+        buttonEnviarMensaje.click(() => {
             $(".content").addClass("d-none");
             content.removeClass("d-none");
             $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
             $("#message_input_"+user.id360).focus();
         });
+        
+        li.mouseenter( () => {
+            divControlesChat.css({"display":"block"});
+        }).mouseleave( () => {
+            divControlesChat.css({"display":"none"});
+        });
 
-        div_llamar.click(() => {
+        buttonRealizarLlamadaChat.click(() => {
             Swal.fire({
                 text: "Iniciar una llamada con: " + user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno,
                 showCancelButton: true,
