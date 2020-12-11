@@ -370,6 +370,7 @@ and open the template in the editor.
     padding: 10px 0 15px 0;
     font-size: 0.9em;
     list-style: none;
+    cursor: pointer;
 }
 @media screen and (max-width: 735px) {
     #frame #sidepanel #contacts ul li.contact {

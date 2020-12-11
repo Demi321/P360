@@ -513,6 +513,18 @@ function contacto_chat(user) {
         meta.append(name);
         meta.append(preview);
         
+        let social_media = $("<div></div>").addClass("social-media");
+        let div_llamar = $("<div></div>");
+        let llamar = $("<i class=\"fas fa-phone-alt\"></i>");
+        llamar.attr("id", "llamar_" + user.id360);
+        llamar.css({
+            "background": "#40474f",
+            "padding": "17px",
+            "font-size": "60px",
+            "width": "50px",
+            "cursor": "pointer"
+        });
+        
         /*
          * CONTROLES PARA LLAMADA Y MENSAJES
          */
@@ -693,9 +705,13 @@ function contacto_chat(user) {
 
         message_input.append(wrap);
         messages.append(ul);
+        
+        div_llamar.append(llamar);
+        social_media.append(div_llamar);
 
         contact_profile.append(img_profile);
         contact_profile.append(nombre);
+        contact_profile.append(social_media);
         content.append(contact_profile);
         content.append(messages);
         content.append(message_input);
@@ -916,11 +932,19 @@ function contacto_chat(user) {
         });
 
         buttonEnviarMensaje.click(() => {
+            clickVerMensaje();
+        });
+        
+        li.click(() => {
+            clickVerMensaje();
+        });
+        
+        const clickVerMensaje = () => {
             $(".content").addClass("d-none");
             content.removeClass("d-none");
             $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
             $("#message_input_"+user.id360).focus();
-        });
+        };
         
         li.mouseenter( () => {
             divControlesChat.css({"display":"block"});
@@ -929,6 +953,14 @@ function contacto_chat(user) {
         });
 
         buttonRealizarLlamadaChat.click(() => {
+            clickIniciarLlamada();
+        });
+        
+        div_llamar.click(() => {
+            clickIniciarLlamada();
+        });
+        
+        const clickIniciarLlamada = () => {
             Swal.fire({
                 text: "Iniciar una llamada con: " + user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno,
                 showCancelButton: true,
@@ -954,7 +986,7 @@ function contacto_chat(user) {
                     });
                 }
             });
-        });
+        };
     }
   
 }
