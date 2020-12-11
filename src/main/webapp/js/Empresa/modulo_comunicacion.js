@@ -934,7 +934,7 @@ function contacto_chat(user) {
                 showCancelButton: true,
                 focusConfirm: true,
                 cancelButtonText: "Cancelar",
-                confirmButtonText: '<i class="fas fa-phone-volume"></i>Continuar',
+                confirmButtonText: '<i style="margin-right: 5px;" class="fas fa-phone-volume"></i>Continuar',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
@@ -947,10 +947,10 @@ function contacto_chat(user) {
                     });
                     id360.to_id360 = to_id360;
                     console.log(id360);
+                    //initCall();  
                     RequestPOST("/API/notificacion/llamada360", id360).then((msj) => {
                         console.log(msj);
-                        window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');
-
+                        window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
                     });
                 }
             });
@@ -1203,3 +1203,19 @@ $(".expand-button").click(function () {
     $("#profile").toggleClass("expanded");
     $("#contacts").toggleClass("expanded");
 });
+
+/*
+ * 
+ * DESARRLLO PARA LLAMADA
+ * 
+ * 
+ */
+
+const initCall = () => {
+    $("#content_messaging").hide("fast",() => {
+        
+        $("#toggle div").click();
+        
+        $("#content_call").show("fast");
+    });
+};

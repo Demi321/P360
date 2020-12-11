@@ -835,3 +835,14 @@ CONTROLES ENVIAR MENSAJE
     background: #32465a;
     display: none;
 }
+
+/*
+ESTILOS LLAMADA
+*/
+
+#content_call #contenedor-p-c{
+    display: grid;
+    height: 100vh;
+    grid-template-rows: 1fr 1fr;
+}
+
