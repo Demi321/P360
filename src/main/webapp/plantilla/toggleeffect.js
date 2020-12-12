@@ -171,7 +171,14 @@ $(() => {
         $("section").toggleClass("section_compressed");
         $("#toggle span").toggleClass("compressed");
         $("#sidebar .menu_sidebar").toggleClass("compressed");
-      
+        
+        /*Parche el pirata*/
+        if (window.location.href.includes("Llamada")) {
+            $("#sidebar").toggleClass("d-none");
+            $("#directorio").toggleClass("position-relative");
+            $("#toggle").toggleClass("height-fit-content");
+        }
+        /******************/
         /*        aside {
          display: none;
          }

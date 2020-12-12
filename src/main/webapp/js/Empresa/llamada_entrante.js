@@ -6,21 +6,31 @@ data = JSON.parse(document.getElementById("data").value);
 
 var proyecto = DatosProyecto();
 
-
-//dataG_FULL().then(function (response) {
-//      dataG = response;
-//      initializeSession();
-//});
-
-RequestPOST("/API/empresas360/GruposPersonalizados", {
-    "idUsuarioSys": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+var Directorio;
+var tel_a_agregar = new Array();
+RequestPOST("/API/ConsultarDirectorio", {
+    "fecha": getFecha(),
+    "hora": getHora(),
     "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
     "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-    "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
+//    "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area,
+    "tipo_area": "0"
 }).then((response) => {
     dataG = response;
     initializeSession();
+    Directorio = response.directorio;
+    directorio();
 });
+
+//RequestPOST("/API/empresas360/GruposPersonalizados", {
+//    "idUsuarioSys": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+//    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
+//    "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
+//    "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
+//}).then((response) => {
+//    dataG = response;
+//    initializeSession();
+//});
 
 
 
@@ -114,6 +124,11 @@ function initializeSession() {
             if (event.type === "signal:idoperador-signal") {
                 enviarMensaje(session, session.connection.connectionId);
             }
+            if (event.type === "signal:user_connected") {
+                /////////Se identifico un nuevo usuario conectado 
+                var info_user = JSON.parse(event.data);
+                CardParticipante_user_connected(info_user);
+            }
         }
 
     });
@@ -131,7 +146,7 @@ function initializeSession() {
             // Send a signal once the user enters data in the form
             form.addEventListener('submit', function submit(event) {
                 event.preventDefault();
-                enviarMensaje(session, sesion_cookie.nombre+" "+sesion_cookie.apellido_p+"", msgTxt.value);
+                enviarMensaje(session, sesion_cookie.nombre + " " + sesion_cookie.apellido_p + "", msgTxt.value);
 
             });
             // Initialize the publisher
@@ -148,7 +163,10 @@ function initializeSession() {
                     notificarError(initErr.message);
                     return;
                 } else {
-                    enviarMensaje(session, sesion_cookie.nombre+" "+sesion_cookie.apellido_p+"", MSJ);
+                    enviarMensaje(session, sesion_cookie.nombre + " " + sesion_cookie.apellido_p + "", MSJ);
+                    enviarMensajeOT(session,"user_connected", {
+                        id360:sesion_cookie.id_usuario
+                    });
 
                     document.getElementById("msgTxt").disabled = false;
                 }
@@ -171,17 +189,18 @@ function initializeSession() {
                     menu.style = "background: #343a40; position: absolute; bottom: 0px; left: calc(50% - 100px); width: 300px;border-top-left-radius: 50px;border-top-right-radius: 50px;";
                     menu.className = "row col-12 m-0 p-0";
                     menu.id = "menu_botones";
+                    console.log(menu);
                     let div = document.createElement("div");
                     div.className = "col-12";
                     div.style = "text-align: center; font: bold 2rem Arial; color: white;cursor: pointer;";
-                    let i = document.createElement("i");
+                    var i = document.createElement("i");
                     i.className = "fas fa-chevron-up";
-
+                    console.log(i);
                     let botones = document.createElement("div");
                     botones.className = "row m-0 p-2 col-12 d-none";
                     botones.style = "height: 60px;";
 
-
+                    console.log(botones);
 
                     div.addEventListener("click", function () {
                         if (botones.className === "row m-0 p-2 col-12 d-none") {
@@ -211,7 +230,7 @@ function initializeSession() {
                         RegistrarDesconexionOp();
                         menu.className = "row col-12 m-0 p-0 d-none";
                     });
-
+                    console.log(colgar);
                     botones.appendChild(colgar);
 
                     //////////Solicitar Cambio de camara  ******
@@ -228,7 +247,7 @@ function initializeSession() {
                         publisher.publishVideo(!publisher.stream.hasVideo);
                     });
                     botones.appendChild(activarVideo);
-
+                    console.log(activarVideo);
 
                     //////////Compartir Pantalla  ******
                     let share_screen = document.createElement("div");
@@ -314,6 +333,8 @@ function initializeSession() {
 
                     });
                     botones.appendChild(share_screen);
+                    console.log(menu);
+                    console.log(document.getElementById("videos"));
                     document.getElementById("videos").appendChild(menu);
 //                    var colgar = document.createElement("input");
 //                    colgar.className = "colgarPublisher";
@@ -1046,7 +1067,7 @@ function enviarNotificacionIndividual(ElementoId, apikey, sesion, token, Depende
 
 
 }
-directorio();
+
 function directorio() {
 
     $("#directorio").on("click", function () {
@@ -1060,7 +1081,7 @@ function directorio() {
                     'placeholder=""' +
                     'v-model="value" ' +
                     ':options="options"' +
-                    'track-by="id"' +
+                    'track-by="id360"' +
                     ':multiple="true"' +
                     ':taggable="false"' +
                     ':close-on-select="false"' +
@@ -1089,106 +1110,90 @@ function directorio() {
             if (result.value) {
                 if (tel_a_agregar.length)
                 {
+                    let id360 = {
+                        id360: sesion_cookie.id_usuario
+                    };
+                    let to_id360 = new Array();
+
+
 
                     for (var i = 0; i < tel_a_agregar.length; i++) {
-                        var encontrado = false;
+//                        var encontrado = false;
 
-                        for (var j = 0; j < dataG.integrantes.length; j++) {
-                            if (tel_a_agregar[i].idUsuario === dataG.integrantes[j].idUsuarios_Movil) {
+//                        for (var j = 0; j < dataG.integrantes.length; j++) {
+//                            if (tel_a_agregar[i].idUsuario === dataG.integrantes[j].idUsuarios_Movil) {
 
 
-                                encontrado = true;
-                                var elemento = dataG.integrantes[j]
-                                if (!elemento.gps.estatus) {
-                                    RegistrarNuevoParticipante(dataG.integrantes[j].idUsuarios_Movil, dataG.integrantes[j].FireBaseKey);
-                                } else {
-                                    Swal.fire({
-                                        type: 'error',
-                                        title: "",
-                                        //text: 'El reporte se ha guardado correctamente',
-                                        html: "<p style=\"    font: bold 12px arial;    margin: 4px;    padding: 0;\">La notificacion no se envio!</p><p style=\"color: back;font: bold 14px Arial; padding: 0; margin: 0;\">El usuario se encuentra atendiendo otra llamada.</p>",
-                                        showConfirmButton: false,
-                                        timer: 2000
-                                    });
-                                }
+//                                encontrado = true;
+//                                var elemento = dataG.integrantes[j]
+                        var elemento = tel_a_agregar[i];
+                        to_id360.push({
+                            id360: elemento.id360
+                        });
+//                                if (!elemento.gps.estatus) {
+//                                    RegistrarNuevoParticipante(dataG.integrantes[j].idUsuarios_Movil, dataG.integrantes[j].FireBaseKey);
+//                                } else {
+//                                    Swal.fire({
+//                                        type: 'error',
+//                                        title: "",
+//                                        //text: 'El reporte se ha guardado correctamente',
+//                                        html: "<p style=\"    font: bold 12px arial;    margin: 4px;    padding: 0;\">La notificacion no se envio!</p><p style=\"color: back;font: bold 14px Arial; padding: 0; margin: 0;\">El usuario se encuentra atendiendo otra llamada.</p>",
+//                                        showConfirmButton: false,
+//                                        timer: 2000
+//                                    });
+//                                }
 
-                                break;
-                            }
-                        }
-                        if (!encontrado) {
-                            console.warn(tel_a_agregar[i].idUsuario + " NO SE ENCONTRO EN DATAG...");
-                        }
+//                        break;
+//                            }
+//                        }
+//                        if (!encontrado) {
+//                            console.warn(tel_a_agregar[i].idUsuario + " NO SE ENCONTRO EN DATAG...");
+//                        }
                     }
 
 
+                    id360.to_id360 = to_id360;
+                    id360.credenciales={
+                        apikey:data.credenciales.apikey,
+                        idsesion:data.credenciales.sesion,
+                        token:data.credenciales.token
+                    };
+                    id360.idLlamada=data.registro_llamada.idLlamada;
+                    console.log(id360);
+                    RequestPOST("/API/notificacion/llamada360/agregar_participante", id360).then((msj) => {
+                        console.log(msj);
+                        let Toast = Swal.mixin({
+                            toast: true,
+                            position: 'center',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        })
+
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Invitacion enviada correctamente.'
+                        })
+                        //window.open('https://empresas.claro360.com/plataforma360/Llamada/agregar_participante' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
+                    });
                 }
             }
 
         });
 
         vuemodel();
-        //document.getElementsByClassName("swal2-confirm")[0].style = "background:green;";
     });
 }
-var Directorio;
-var tel_a_agregar = new Array();
-ConsultarDirectorio().then(function (directorio) {
-//      for (var i = 0; i < directorio.directorio.length; i++) {
-//            //console.info(directorio.directorio[i].urlServicio);
-//            for (var j = 0; j < directorio.dependencias.length; j++) {
-//                  if (directorio.dependencias[j].url === directorio.directorio[i].urlServicio) {
-//                        directorio.directorio[i].aliasServicio = directorio.dependencias[j].alias;
-//                        break;
-//                  } else if (j === directorio.dependencias.length - 1) {
-//                        console.error("No hubo match");
-//                  }
-//            }
-//
-//      }
 
-    Directorio = directorio.directorio;
-    console.info(Directorio);
-});
 
-function ConsultarDirectorio() {
-    return Promise.resolve($.ajax({
-        type: 'POST',
-        url: '/' + DEPENDENCIA + '/API/ConsultarDirectorio',
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({
-            "fecha": getFecha(),
-            "hora": getHora(),
-            "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-            "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
-        }),
-        success: function (response) {
-            console.info(response);
-        },
-        error: function (err) {
-            //alert("No hay ubicacion para el usuario:" + idUsuarios_Movil);
-            console.error(err)
-        }
-    }));
 
-}
 function vuemodel() {
     tel_a_agregar = new Array();
-
-
     var json = Directorio;
-//      for (var i = 0; i < json.length; i++) {
-//            var elemento = BuscarIntegranteDataG(json[i].idUsuario);
-//            if (elemento.gps.estatus) {
-//                  json.splice(i, 1);
-//                  i--;
-//            }
-//      }
-
-
-// register globally
-
     vue = new Vue({
         components: {
             Multiselect: window.VueMultiselect.default
@@ -1206,12 +1211,7 @@ function vuemodel() {
                 return  option.nombre + " " + option.apellido_paterno + " " + option.apellido_materno;
             },
             onSelect(op) {
-
                 tel_a_agregar.push(op);
-                //console.info(tel_a_agregar);
-
-
-
             },
             onClose() {
                 //console.info(this.value);
@@ -1219,14 +1219,10 @@ function vuemodel() {
             onRemove(op) {
                 var i = tel_a_agregar.indexOf(op);
                 tel_a_agregar.splice(i, 1);
-                //console.info(op);
-                //console.info(tel_a_agregar);
             }
 
         }
     }).$mount('#agregarTels');
-
-
 }
 
 
@@ -1352,6 +1348,59 @@ function CardParticipante(gps_data) {
     }
 
 }
+function CardParticipante_user_connected(info_user) {
+
+    if (!$("#card" + info_user.id360).length)
+    {
+        var elemento = buscarelemento_directorio(info_user.id360);
+        if(elemento!==null){
+            AgregarCardParticipante360(elemento);
+            
+        }else{
+            console.error("El usuario no se encontro en el directorio ");
+            //Proximamente se tiene que validar el trael la informacion de un usuario que bno este en nuestro catalogo de usuarios 
+        }
+        
+
+
+    }
+
+}
+function AgregarCardParticipante360(elemento) {
+
+    var container = document.createElement("div");
+    container.id = "card" + elemento.id360;
+    container.className = "row col-12 m-0 p-0";
+    var img = document.createElement("div");
+    img.style = "padding:12.5%;background-image:url('" + elemento.img + "'); background-size: cover;  background-repeat: no-repeat;  background-position: center;";
+    img.className = "col-3 m-0";
+    var card = document.createElement("div");
+    card.className = "card col-9 m-0 p-0";
+    card.style = "cursor:pointer";
+    var body = document.createElement("div");
+    body.className = "card-body";
+    var title = document.createElement("h5");
+    title.className = "card-title";
+    title.innerHTML = elemento.nombre + " " + elemento.apellido_paterno + " " + elemento.apellido_materno;
+    var text = document.createElement("p");
+    text.className = "card-text";
+    text.innerHTML = "<strong>Correo: </strong>" + elemento.correo + "<br><strong>Teléfono: </strong>" + elemento.telefono;
+
+    container.appendChild(img);
+    container.appendChild(card);
+    card.appendChild(body);
+    body.appendChild(title);
+    body.appendChild(text);
+
+    document.getElementById("participantes").appendChild(container);
+
+//    card.addEventListener("click", function () {
+//
+//        map.setCenter(elemento.gps);
+//        map.setZoom(16);
+//
+//    });
+}
 function AgregarCardParticipante(elemento) {
 
     var container = document.createElement("div");
@@ -1395,6 +1444,15 @@ function buscarelemento(idUsuario_Movil) {
             break;
         }
     }
+}
+function buscarelemento_directorio(id360) {
+    for (var i = 0; i < Directorio.length; i++) {
+        if (Directorio[i].id360 === id360) {
+            return Directorio[i];
+            break;
+        }
+    }
+    return null;
 }
 
 habilitarMaximizarVideo();

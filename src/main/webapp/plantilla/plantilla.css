@@ -980,3 +980,7 @@ input:focus , video:focus, textArea:focus{
     font: bold 1rem Arial;
     padding: 20px;
 }
+
+.height-fit-content{
+    height: fit-content !important;
+}
