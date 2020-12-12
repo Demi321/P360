@@ -652,6 +652,7 @@ function agregarVideo(session, stream) {
                     }
                 });
             });
+            
             document.getElementById(pos).appendChild(event);
             //////////Colgar la llamada   ******
             var usrDesconectado = false;
@@ -717,6 +718,10 @@ function agregarVideo(session, stream) {
 
 
         }
+        if(stream.videoType==="screen"){
+                event.click();
+                $("#maximizarVideo").click();
+            }
     });
 
 }

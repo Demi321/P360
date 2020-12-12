@@ -5,7 +5,7 @@
     <artifactId>SpringMVCRecursos</artifactId>
     <packaging>war</packaging>
     <version>7.2</version>
-    <name>p360_v3.04</name>
+    <name>p360_v4</name>
     <url>http://maven.apache.org</url>
     <properties>
         <junit.version>3.8.1</junit.version>
@@ -79,7 +79,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>p360_v3.04</finalName>
+        <finalName>p360_v4</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>

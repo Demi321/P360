@@ -177,26 +177,26 @@ function initializeSession() {
                 if (publishErr) {
                     console.error('There was an error publishing: ', publishErr.name, publishErr.message);
                 } else {
-                    data.registro_llamada.time.h_conexion_operador = getHora();
-                    ArchiveSession().then(function (response) {
-                        RegistrarURL(response.ruta_video);
-                    });
+//                    data.registro_llamada.time.h_conexion_operador = getHora();
+//                    ArchiveSession().then(function (response) {
+//                        RegistrarURL(response.ruta_video);
+//                    });
 
                     /*******Activar el menu*******/
 
-
-                    let menu = document.createElement("div");
+                    console.log("Publicador iniciado");
+                    var menu = document.createElement("div");
                     menu.style = "background: #343a40; position: absolute; bottom: 0px; left: calc(50% - 100px); width: 300px;border-top-left-radius: 50px;border-top-right-radius: 50px;";
                     menu.className = "row col-12 m-0 p-0";
                     menu.id = "menu_botones";
                     console.log(menu);
-                    let div = document.createElement("div");
+                    var div = document.createElement("div");
                     div.className = "col-12";
                     div.style = "text-align: center; font: bold 2rem Arial; color: white;cursor: pointer;";
                     var i = document.createElement("i");
                     i.className = "fas fa-chevron-up";
                     console.log(i);
-                    let botones = document.createElement("div");
+                    var botones = document.createElement("div");
                     botones.className = "row m-0 p-2 col-12 d-none";
                     botones.style = "height: 60px;";
 
@@ -224,7 +224,7 @@ function initializeSession() {
                     colgar.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;color:red;cursor:pointer;border-right:solid 1px #6c757d;";
                     colgar.innerHTML = '<i class="fas fa-phone-slash"></i>';
                     colgar.addEventListener("click", function () {
-
+                        window.close();
                         session.unpublish(publisher);
                         //session.disconnect();
                         RegistrarDesconexionOp();
@@ -250,7 +250,7 @@ function initializeSession() {
                     console.log(activarVideo);
 
                     //////////Compartir Pantalla  ******
-                    let share_screen = document.createElement("div");
+                    var share_screen = document.createElement("div");
                     share_screen.className = "col-4";
                     share_screen.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;"
                     share_screen.innerHTML = '<i class="fas fa-external-link-alt"></i>';

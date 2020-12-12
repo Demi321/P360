@@ -1595,3 +1595,100 @@ function agregar_area(json) {
 
 
 }
+
+
+
+function notificacion_llamada(mensaje) {
+    swal.fire({
+//        title: 'Sweet!',
+//        text: 'Modal with a custom image.',
+//        imageUrl: mensaje.emisor.img,
+//        imageWidth: 400,
+//        imageHeight: 200,
+//        imageAlt: 'Custom image',
+        html: content_notification_call(mensaje.emisor),
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonText: 'Atender llamada!',
+        cancelButtonText: 'No, atender!',
+        allowOutsideClick: false,
+        reverseButtons: true
+    }).then((result) => {
+        console.log(result);
+        if (result.value) {
+            console.log(mensaje);
+            //Abrir la ventana de llamada 
+            window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
+        }
+    });
+    $(".swal2-actions").addClass("m-0");
+    $(".swal2-cancel").addClass("mt-0");
+    $(".swal2-confirm").addClass("mt-0");
+
+
+}
+;
+
+function prueba_notificacion(mensaje) {
+    console.log("prueba_notificacion");
+    if (Notification) {
+        if (Notification.permission !== "granted") {
+            Notification.requestPermission()
+        }
+        var title = "Llamada entrante:"
+        var extra = {
+            icon: mensaje.emisor.img,
+            body: mensaje.emisor.nombre + " " + mensaje.emisor.apellido_paterno + " " + mensaje.emisor.apellido_materno,
+            timeout: 8000, // Timeout before notification closes automatically.
+            vibrate: [100, 100, 100] // An array of vibration pulses for mobile devices.
+        };
+        console.log(title);
+        var notificar = new Notification(title, extra);
+        notificar.onclick = function () {
+            console.log('notification.Click');
+            window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
+
+        };
+        notificar.onerror = function () {
+            console.log('notification.Error');
+        };
+        notificar.onshow = function () {
+            console.log('notification.Show');
+        };
+        notificar.onclose = function () {
+            console.log('notification.Close');
+        };
+    }
+    return true;
+}
+
+function content_notification_call(emisor) {
+
+    var img = emisor.img;
+
+
+    if (emisor.telefono === null || emisor.telefono === "null") {
+        emisor.telefono = "-";
+    }
+
+
+    let html = '<div class="row col-12 m-0 p-0 w-100">' +
+            '<div class="col-4 m-0 p-0" style=" height: calc(130px - 1rem);">' +
+            '<div class="infowindow-img" style="background-image: url(' + img + ');"></div>' +
+            '</div>' +
+            '<div class="col-8 m-0 p-0 pl-2" >' +
+            '<div class="col-12 m-0 p-0">' +
+            '<h2 class="title text-light text-center border-bottom py-2">' + emisor.nombre + " " + emisor.apellido_paterno + " " + emisor.apellido_materno + '</h2>' +
+            '</div>' +
+            '<h2 class="title text-white m-0 px-2 py-1">' + emisor.correo + '</h2>' +
+            '<h2 class="subtitle text-white m-0 px-2 py-1">Teléfono: ' + emisor.telefono + '</h2>' +
+            '<div class="row col-12 m-0 px-2 py-1">' +
+            '<label class="col-6 p-0 m-0 subtitle text-white">Fecha:<label class="text text-white" >' + getFecha() + '</label></label>' +
+            '<label class="col-6 p-0 m-0 subtitle text-white">Hora:<label class="text text-white">' + getHora() + '</label></label>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+
+    return html;
+}
+

@@ -110,6 +110,7 @@ and open the template in the editor.
     cursor: pointer !important;
     left: 0;
     top: 0;
+    z-index: 100;
 }
 
 .video_big {
