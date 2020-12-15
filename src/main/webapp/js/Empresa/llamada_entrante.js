@@ -218,7 +218,7 @@ function initializeSession() {
                     menu.appendChild(botones);
 
 
-                    let colgar = document.createElement("div");
+                    var colgar = document.createElement("div");
                     colgar.className = "col-4";
                     colgar.id = "colgarPublisher";
                     colgar.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;color:red;cursor:pointer;border-right:solid 1px #6c757d;";

@@ -219,6 +219,7 @@ opacity: 0.3;
     opacity: 0.3;
     -webkit-transition: 0.5s; /* For Safari 3.1 to 6.0 */
     transition: 0.5s;
+    z-index: 101;
 }
 #publisher:hover{
     width: 15% !important;
