@@ -1274,6 +1274,7 @@ const initCall = (msj) => {
     });
     
     function initializeSession() {
+        connectionCount = 0;
         var session = OT.initSession(data.credenciales.apikey, data.credenciales.idsesion);
 
         session.on({
@@ -1295,8 +1296,24 @@ const initCall = (msj) => {
 
             },
             sessionDisconnected: function (event) {
-                console.error('You were disconnected from the session.', event.reason);
+                //console.error('You were disconnected from the session.', event.reason);
+                $("#content_call").hide("fast",() => {
+                    $("#participantes").empty();
+                    $("#history").empty();
+                    $("#GRID").empty();
+                    $("#menu_botones").remove();
+                    $("#msgTxt").val("");
 
+                    //session.unpublish(publisher);
+                    //session.disconnect();
+                    RegistrarDesconexionOp();
+                    //menu.className = "row col-12 m-0 p-0 d-none";
+
+                    $("#content_messaging").show("fast", () => {
+                        swal.fire({text:'Llamada finalizada'});
+                        $("#toggle div").click();
+                    });
+                });        
             },
             sessionReconnected: function (event) {
 
@@ -1463,11 +1480,22 @@ const initCall = (msj) => {
                         colgar.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;color:red;cursor:pointer;border-right:solid 1px #6c757d;";
                         colgar.innerHTML = '<i class="fas fa-phone-slash"></i>';
                         colgar.addEventListener("click", function () {
-                            window.close();
-                            session.unpublish(publisher);
-                            //session.disconnect();
-                            RegistrarDesconexionOp();
-                            menu.className = "row col-12 m-0 p-0 d-none";
+                            session.disconnect();
+                            //window.close();
+                            /*$("#content_call").hide("fast",() => {
+                                $("#participantes").empty();
+                                $("#history").empty();
+                                $("#msgTxt").val("");
+                                
+                                session.unpublish(publisher);
+                                //session.disconnect();
+                                RegistrarDesconexionOp();
+                                menu.className = "row col-12 m-0 p-0 d-none";
+                                
+                                $("#content_messaging").show("fast", () => {
+                                    $("#toggle div").click();
+                                });
+                            });*/
                         });
                         console.log(colgar);
                         botones.appendChild(colgar);

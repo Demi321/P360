@@ -196,7 +196,10 @@ function prueba_notificacion(mensaje) {
         var notificar = new Notification(title, extra);
         notificar.onclick = function () {
             console.log('notification.Click');
-            window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
+            Swal.close()
+            $("#menu_section_Comunicación").click();
+            initCall(mensaje);
+            //window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
 
         };
         notificar.onerror = function () {
