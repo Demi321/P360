@@ -1,4 +1,4 @@
-
+console.log("Plataforma desarrollo");
 var config;
 if ($("#config").length) {
       if ($("#config").val() !== "") {
