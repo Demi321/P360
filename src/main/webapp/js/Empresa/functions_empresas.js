@@ -1619,8 +1619,8 @@ function notificacion_llamada(mensaje) {
             console.log(mensaje);
             //Abrir la ventana de llamada
             $("#menu_section_Comunicación").click();
-            initCall(mensaje);
-            //window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
+            //initCall(mensaje);
+            window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
         }
     });
     $(".swal2-actions").addClass("m-0");
@@ -1650,8 +1650,8 @@ function prueba_notificacion(mensaje) {
             console.log('notification.Click');
             Swal.close()
             $("#menu_section_Comunicación").click();
-            initCall(mensaje);
-            //window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
+            //initCall(mensaje);
+            window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
 
         };
         notificar.onerror = function () {

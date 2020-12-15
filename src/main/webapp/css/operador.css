@@ -607,14 +607,13 @@ input[type=checkbox]
     background-color: var(--main-bg-color);
 }
 
-#content_call .GRIDcontainer{
+.GRIDcontainer{
     height: 100%;
     width: 100%;
     position: absolute;
     margin: 0;
     padding: 0;
-    left: 0 !important;
-    top: 0 !important;
+    left: 0%;
     overflow: scroll;
     border: solid 1px white;
     border-radius: 5px;

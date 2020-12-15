@@ -717,6 +717,7 @@ function contacto_chat(user) {
         content.append(contact_profile);
         content.append(messages);
         content.append(message_input);
+        
 
         $("#content_messaging").append(content);
 
@@ -984,8 +985,8 @@ function contacto_chat(user) {
                     //initCall();  
                     RequestPOST("/API/notificacion/llamada360", id360).then((msj) => {
                         dataLlamada = msj;
-                        initCall(); 
-                        //window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
+                        //initCall(); 
+                        window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
                     });
                 }
             });
@@ -1410,7 +1411,7 @@ const initCall = (msj) => {
                     insertMode: 'replace',
                     width: '100%',
                     height: '100%',
-                    name: DEPENDENCIA_ALIAS,
+                    name: sesion_cookie.nombre + " " + sesion_cookie.apellidos
                 };
                 var publisher = OT.initPublisher('publisher', publisherOptions, function initCallback(initErr) {
 
@@ -1515,6 +1516,23 @@ const initCall = (msj) => {
                         });
                         botones.appendChild(activarVideo);
                         console.log(activarVideo);
+                        
+                        
+                        //////////Solicitar Bloqueo de microfono  ******
+                        var activarAudio = document.createElement("div");
+                        activarAudio.className = "col-4";
+                        activarAudio.innerHTML = '<i class="fas fa-video-slash"></i>';
+                        activarAudio.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-right:solid 1px #6c757d;";
+                        activarAudio.addEventListener("click", function () {
+                            if (publisher.stream.hasAudio) {
+                                activarAudio.innerHTML = '<i class="fas fa-microphone"></i>';
+                            } else {
+                                activarAudio.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                            }
+                            publisher.publishAudio(!publisher.stream.hasVideo);
+                        });
+                        botones.appendChild(activarAudio);
+                        console.log(activarAudio);
 
                         //////////Compartir Pantalla  ******
                         var share_screen = document.createElement("div");
