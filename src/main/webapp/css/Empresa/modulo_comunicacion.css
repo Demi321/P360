@@ -843,7 +843,13 @@ ESTILOS LLAMADA
 
 #content_call #contenedor-p-c{
     display: grid;
-    height: 100vh;
+    height: 100%;
     grid-template-rows: 1fr 1fr;
+}
+
+#contenedor-llamada{
+    display: grid;
+    height: 100%;
+    grid-template-rows: 1.5fr 0.5fr;
 }
 

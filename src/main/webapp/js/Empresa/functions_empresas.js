@@ -1617,8 +1617,10 @@ function notificacion_llamada(mensaje) {
         console.log(result);
         if (result.value) {
             console.log(mensaje);
-            //Abrir la ventana de llamada 
-            window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
+            //Abrir la ventana de llamada
+            $("#menu_section_Comunicación").click();
+            initCall(mensaje);
+            //window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
         }
     });
     $(".swal2-actions").addClass("m-0");
