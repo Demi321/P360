@@ -8,6 +8,10 @@ and open the template in the editor.
     Author     : moises
 */
 
+#base_modulo_Comunicación .OT_publisher .OT_mute{
+    display: block !important;
+}
+
 .option__image {
     width: 60px;
     border-radius: 10px;

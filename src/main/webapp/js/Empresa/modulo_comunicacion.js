@@ -255,6 +255,10 @@ function agregar_chat(msj,user,type, viejo) {
             message.append(nombreAdjunto);
             message.append(fecha);
         }
+        
+        message.css({
+            "word-break":"break-all"
+        });
 
         if(viejo){
             $("#contact_messaging" + id).prepend(li);
@@ -985,8 +989,8 @@ function contacto_chat(user) {
                     //initCall();  
                     RequestPOST("/API/notificacion/llamada360", id360).then((msj) => {
                         dataLlamada = msj;
-                        //initCall(); 
-                        window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
+                        initCall(); 
+                        //window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
                     });
                 }
             });
@@ -1099,6 +1103,10 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                     
                 }else
                     message.text(mensaje);
+                
+                message.css({
+                    "word-break":"break-all"
+                });
                 
                 let fecha = $("<span></span>").addClass("time");
         
@@ -1329,9 +1337,10 @@ const initCall = (msj) => {
             },
             streamDestroyed: function (event) {
 
-                mosaico("remover");
+                mosaico("remover", sesion_cookie.idUsuario_Sys);
 
                 console.log("Registrar desconexion?");
+                console.log(event);
     //            RegistrarDesconexion(event.stream.connection.connectionId);
             },
             signal: function (event) {
@@ -1476,11 +1485,12 @@ const initCall = (msj) => {
 
 
                         var colgar = document.createElement("div");
-                        colgar.className = "col-4";
+                        colgar.className = "col-3";
                         colgar.id = "colgarPublisher";
                         colgar.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;color:red;cursor:pointer;border-right:solid 1px #6c757d;";
                         colgar.innerHTML = '<i class="fas fa-phone-slash"></i>';
                         colgar.addEventListener("click", function () {
+                            session.unpublish(publisher);
                             session.disconnect();
                             //window.close();
                             /*$("#content_call").hide("fast",() => {
@@ -1503,7 +1513,7 @@ const initCall = (msj) => {
 
                         //////////Solicitar Cambio de camara  ******
                         var activarVideo = document.createElement("div");
-                        activarVideo.className = "col-4";
+                        activarVideo.className = "col-3";
                         activarVideo.innerHTML = '<i class="fas fa-video-slash"></i>';
                         activarVideo.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-right:solid 1px #6c757d;";
                         activarVideo.addEventListener("click", function () {
@@ -1520,8 +1530,8 @@ const initCall = (msj) => {
                         
                         //////////Solicitar Bloqueo de microfono  ******
                         var activarAudio = document.createElement("div");
-                        activarAudio.className = "col-4";
-                        activarAudio.innerHTML = '<i class="fas fa-video-slash"></i>';
+                        activarAudio.className = "col-3";
+                        activarAudio.innerHTML = '<i class="fas fa-microphone-slash"></i>';
                         activarAudio.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-right:solid 1px #6c757d;";
                         activarAudio.addEventListener("click", function () {
                             if (publisher.stream.hasAudio) {
@@ -1529,14 +1539,14 @@ const initCall = (msj) => {
                             } else {
                                 activarAudio.innerHTML = '<i class="fas fa-microphone-slash"></i>';
                             }
-                            publisher.publishAudio(!publisher.stream.hasVideo);
+                            publisher.publishAudio(!publisher.stream.hasAudio);
                         });
                         botones.appendChild(activarAudio);
                         console.log(activarAudio);
 
                         //////////Compartir Pantalla  ******
                         var share_screen = document.createElement("div");
-                        share_screen.className = "col-4";
+                        share_screen.className = "col-3";
                         share_screen.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;"
                         share_screen.innerHTML = '<i class="fas fa-external-link-alt"></i>';
                         share_screen.addEventListener("click", function () {
@@ -1621,6 +1631,16 @@ const initCall = (msj) => {
                         console.log(menu);
                         console.log(document.getElementById("videos"));
                         document.getElementById("videos").appendChild(menu);
+                        
+                        $("#base_modulo_Comunicación .OT_publisher .OT_mute").click(() => {
+                            activarAudio.click();
+                        });
+                        
+                        $("#base_modulo_Comunicación .OT_publisher .OT_mute, #base_modulo_Comunicación .OT_subscriber .OT_mute").css({
+                            "left":"50%",
+                            "outline": "none"
+                        });
+                        
     //                    var colgar = document.createElement("input");
     //                    colgar.className = "colgarPublisher";
     //                    colgar.id = "colgarPublisher";
