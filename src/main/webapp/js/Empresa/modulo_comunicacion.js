@@ -288,12 +288,22 @@ function agregar_chat(msj,user,type, viejo) {
                 }
             });
         });
+        menuOpcionesMensaje.append(opcionEliminaMensaje);
         
         //OPCION PARA EDITAR EL MENSAJE
         let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
         opcionEditaMensaje.text("Editar mensaje");
         opcionEditaMensaje.click(() => {
             
+        });
+        menuOpcionesMensaje.append(opcionEditaMensaje);
+        
+        message.append(menuOpcionesMensaje);
+        
+        message.mouseenter( () => {
+            iconOpciones.css({"display":"block"});
+        }).mouseleave( () => {
+            iconOpciones.css({"display":"none"});
         });
 
         if(viejo){
@@ -1014,8 +1024,22 @@ function contacto_chat(user) {
                     //initCall();  
                     RequestPOST("/API/notificacion/llamada360", id360).then((msj) => {
                         dataLlamada = msj;
-                        initCall(); 
-                        //window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
+                        
+                        Swal.fire({
+                            text: '¿Cómo quieres continuar la llamada? (Selecciona ventana externa.)',
+                            showDenyButton: true,
+                            showCancelButton: true,
+                            confirmButtonText: `Ventana externa`,
+                            denyButtonText: `Aquí mismo.`
+                          }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+                              window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
+                            } else if (result.isDenied) {
+                              initCall(); 
+                            }
+                          });
+                        
                     });
                 }
             });
@@ -1431,8 +1455,8 @@ const initCall = (msj) => {
                 // Send a signal once the user enters data in the form
                 form.addEventListener('submit', function submit(event) {
                     event.preventDefault();
+                    console.log("Enviando mensaje");
                     enviarMensaje(session, sesion_cookie.nombre + " " + sesion_cookie.apellido_p + "", msgTxt.value);
-
                 });
                 // Initialize the publisher
                 var publisherOptions = {
