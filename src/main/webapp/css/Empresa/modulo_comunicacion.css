@@ -606,6 +606,7 @@ and open the template in the editor.
     background: #0f97a9;
     color: #f5f5f5;
     float: left;
+    position: relative;
 }
 #frame .content .messages ul li.replies .img {
     float: right;
@@ -615,6 +616,7 @@ and open the template in the editor.
     background: #f5f5f5;
     float: right;
     color: #434343;
+    position: relative;
 }
 #frame .content .messages ul li .img {
     width: 22px;
@@ -857,3 +859,39 @@ ESTILOS LLAMADA
     grid-template-rows: 1.5fr 0.5fr;
 }
 
+span.iconOpciones{
+    position: absolute;
+    top: 0;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: all 0.5s ease-out;
+    display: none;
+    cursor: pointer;
+}
+
+ul.menuOpcionesMensaje{
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #fff;
+    transition: all 0.5s ease-in-out;
+    display: none;
+}
+
+ul.menuOpcionesMensaje li.opcionMensaje{
+    cursor: pointer;
+}
+
+#frame .content .messages ul li.send span.iconOpciones{
+    right: 15px;
+}
+
+#frame .content .messages ul li.replies span.iconOpciones{
+    left: 15px;
+}
+
+#frame .content .messages ul li.send p:hover ~ span.iconOpciones,
+#frame .content .messages ul li.replies p:hover ~ span.iconOpciones{
+    display: block;
+}
