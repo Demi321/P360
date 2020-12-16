@@ -164,8 +164,8 @@ function initializeSession() {
                     return;
                 } else {
                     enviarMensaje(session, sesion_cookie.nombre + " " + sesion_cookie.apellido_p + "", MSJ);
-                    enviarMensajeOT(session,"user_connected", {
-                        id360:sesion_cookie.id_usuario
+                    enviarMensajeOT(session, "user_connected", {
+                        id360: sesion_cookie.id_usuario
                     });
 
                     document.getElementById("msgTxt").disabled = false;
@@ -186,7 +186,7 @@ function initializeSession() {
 
                     console.log("Publicador iniciado");
                     var menu = document.createElement("div");
-                    menu.style = "background: #343a40; position: absolute; bottom: 0px; left: calc(50% - 100px); width: 300px;border-top-left-radius: 50px;border-top-right-radius: 50px;";
+                    menu.style = "background: #343a40; position: absolute; bottom: 0px; left: calc(50% - 100px); width: 300px;border-top-left-radius: 50px;border-top-right-radius: 50px; z-index: 103;";
                     menu.className = "row col-12 m-0 p-0";
                     menu.id = "menu_botones";
                     console.log(menu);
@@ -219,7 +219,7 @@ function initializeSession() {
 
 
                     var colgar = document.createElement("div");
-                    colgar.className = "col-4";
+                    colgar.className = "col-3";
                     colgar.id = "colgarPublisher";
                     colgar.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;color:red;cursor:pointer;border-right:solid 1px #6c757d;";
                     colgar.innerHTML = '<i class="fas fa-phone-slash"></i>';
@@ -235,11 +235,11 @@ function initializeSession() {
 
                     //////////Solicitar Cambio de camara  ******
                     var activarVideo = document.createElement("div");
-                    activarVideo.className = "col-4";
-                    activarVideo.innerHTML = '<i class="fas fa-video-slash"></i>';
+                    activarVideo.className = "col-3";
+                    activarVideo.innerHTML = '<i class="fas fa-video"></i>';
                     activarVideo.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-right:solid 1px #6c757d;";
                     activarVideo.addEventListener("click", function () {
-                        if (publisher.stream.hasVideo) {
+                        if (!publisher.stream.hasVideo) {
                             activarVideo.innerHTML = '<i class="fas fa-video"></i>';
                         } else {
                             activarVideo.innerHTML = '<i class="fas fa-video-slash"></i>';
@@ -249,9 +249,26 @@ function initializeSession() {
                     botones.appendChild(activarVideo);
                     console.log(activarVideo);
 
+
+                    //////////Solicitar Bloqueo de microfono  ******
+                    var activarAudio = document.createElement("div");
+                    activarAudio.className = "col-3";
+                    activarAudio.innerHTML = '<i class="fas fa-microphone"></i>';
+                    activarAudio.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-right:solid 1px #6c757d;";
+                    activarAudio.addEventListener("click", function () {
+                        if (!publisher.stream.hasAudio) {
+                            activarAudio.innerHTML = '<i class="fas fa-microphone"></i>';
+                        } else {
+                            activarAudio.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                        }
+                        publisher.publishAudio(!publisher.stream.hasAudio);
+                    });
+                    botones.appendChild(activarAudio);
+                    console.log(activarAudio);
+
                     //////////Compartir Pantalla  ******
                     var share_screen = document.createElement("div");
-                    share_screen.className = "col-4";
+                    share_screen.className = "col-3";
                     share_screen.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;"
                     share_screen.innerHTML = '<i class="fas fa-external-link-alt"></i>';
                     share_screen.addEventListener("click", function () {
@@ -273,14 +290,14 @@ function initializeSession() {
                                                 // Look at error.message to see what went wrong.
                                             } else {
                                                 let stop_share = document.createElement("div");
-                                                stop_share.className = "col-4";
+                                                stop_share.className = "col-3";
                                                 stop_share.id = "stop_sharePublisher";
                                                 stop_share.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;color:red;cursor:pointer;border-right:solid 1px #6c757d;";
                                                 stop_share.innerHTML = '<i class="far fa-times-circle"></i>';
                                                 stop_share.addEventListener("click", function () {
                                                     session.unpublish(publisher_screen);
-                                                    share_screen.className = "col-4";
-                                                    stop_share.className = "col-4 d-none";
+                                                    share_screen.className = "col-3";
+                                                    stop_share.className = "col-3 d-none";
                                                     $("#maximizarVideo").removeClass("active");
                                                     $("aside").removeAttr('style');
                                                     $("header").removeAttr('style');
@@ -301,7 +318,7 @@ function initializeSession() {
                                                     showToggle();
                                                 });
                                                 botones.appendChild(stop_share);
-                                                share_screen.className = "col-4 d-none";
+                                                share_screen.className = "col-3 d-none";
                                                 $("#maximizarVideo").click();
                                                 session.publish(publisher_screen, function (error) {
                                                     if (error) {
@@ -1153,12 +1170,12 @@ function directorio() {
 
 
                     id360.to_id360 = to_id360;
-                    id360.credenciales={
-                        apikey:data.credenciales.apikey,
-                        idsesion:data.credenciales.sesion,
-                        token:data.credenciales.token
+                    id360.credenciales = {
+                        apikey: data.credenciales.apikey,
+                        idsesion: data.credenciales.sesion,
+                        token: data.credenciales.token
                     };
-                    id360.idLlamada=data.registro_llamada.idLlamada;
+                    id360.idLlamada = data.registro_llamada.idLlamada;
                     console.log(id360);
                     RequestPOST("/API/notificacion/llamada360/agregar_participante", id360).then((msj) => {
                         console.log(msj);
@@ -1353,14 +1370,14 @@ function CardParticipante_user_connected(info_user) {
     if (!$("#card" + info_user.id360).length)
     {
         var elemento = buscarelemento_directorio(info_user.id360);
-        if(elemento!==null){
+        if (elemento !== null) {
             AgregarCardParticipante360(elemento);
-            
-        }else{
+
+        } else {
             console.error("El usuario no se encontro en el directorio ");
             //Proximamente se tiene que validar el trael la informacion de un usuario que bno este en nuestro catalogo de usuarios 
         }
-        
+
 
 
     }

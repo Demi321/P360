@@ -1427,7 +1427,7 @@ function fullcontainer() {
     var fc = $("#bloquefull");
     $.each(fc, function (i) {
         fc[i].remove();
-    })
+    });
     var full = document.createElement("div");
     full.className = "bloquefull";
     full.id = "bloquefull";
