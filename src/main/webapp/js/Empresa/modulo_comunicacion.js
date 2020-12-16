@@ -279,7 +279,7 @@ function agregar_chat(msj,user,type, viejo) {
         //OPCION DE ELIMINAR MENSAJE
         let opcionEliminaMensaje = $("<li></li>").addClass("opcionMensaje");
         opcionEliminaMensaje.text("Eliminar mensaje");
-        opcionEliminaMensaje.clicki(() => {
+        opcionEliminaMensaje.click(() => {
             //PEDIR CONFIRMACION DE ELIMINAR
             swalConfirmDialog("¿Eliminar mensaje?","Eliminar", "Cancelar").then((response) => {
                 if(response){
