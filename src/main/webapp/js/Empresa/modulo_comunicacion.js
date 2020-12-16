@@ -139,6 +139,22 @@ function notificacion_mensaje(title, body, onclick){
     
 }
 
+const swalConfirmDialog = (message, textConfirm, textCancel) => {
+    return new Promise((resolve, reject) => {
+        swal.fire({
+            text: message,
+            showCancelButton: true,
+            confirmButtonText: textConfirm,
+            cancelButtonText: textCancel
+        }).then((result) => {
+            if (result.dismiss)
+                resolve(false);
+            if (result.value)
+                resolve(true);
+        });
+    });
+};
+
 function agregar_chat(msj,user,type, viejo) {
     if(user.success){
         let mensaje = msj.message;
@@ -151,7 +167,16 @@ function agregar_chat(msj,user,type, viejo) {
             "background-repeat": "no-repeat"
         });
         let message = $("<p></p>");
-        message.text(mensaje);
+        
+        if( mensaje.slice(0,7) === "http://" || mensaje.slice(0,8) === "https://" || mensaje.slice(0,4) === "www."  ){
+            let linkMensaje = $("<a>");
+            linkMensaje.text(mensaje);
+            linkMensaje.attr("href",mensaje);
+            linkMensaje.attr("tarjet","_blanck");
+            message.html(linkMensaje);
+        }else{
+            message.text(mensaje);
+        }
         
         let fecha = $("<span></span>").addClass("time");
         
@@ -209,38 +234,20 @@ function agregar_chat(msj,user,type, viejo) {
 
             switch(extension){
 
-                case "jpg":
-                case "png":
-                case "jpeg":
-                case "gif":
+                case "jpg": case "png": case "jpeg": case "gif":
                         imagenPreview.attr("src",mensaje);
                         imagenPreview.attr("target","_blanck");
                     break;
 
-                case "docx":
-                case "docm":
-                case "dotx":
-                case "dotm":
-                case "doc":
+                case "docx": case "docm": case "dotx": case "dotm": case "doc":
                         imagenPreview.attr("src", PathRecursos + "images/icono_word.png");
                     break;
 
-                case "xlsx":
-                case "xlsm":
-                case "xlsb":
-                case "xltx":
-                case "xltm":
-                case "xls":
-                case "xlt":
+                case "xlsx": case "xlsm": case "xlsb": case "xltx": case "xltm": case "xls": case "xlt":
                     imagenPreview.attr("src", PathRecursos + "images/icono_excel.png");
                     break;
 
-                case "pptx":
-                case "pptm":
-                case "ppt":
-                case "xps":
-                case "potx":
-                case "ppsx":
+                case "pptx": case "pptm": case "ppt": case "xps": case "potx": case "ppsx":
                     imagenPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
                     break;
 
@@ -255,6 +262,39 @@ function agregar_chat(msj,user,type, viejo) {
             message.append(nombreAdjunto);
             message.append(fecha);
         }
+        
+        message.css({
+            "word-break":"break-all"
+        });
+        
+        //ICONO MENU DE OPCION PARA EL MENSAJE
+        let iconOpciones = $("<span></span>").addClass("iconOpciones");
+        let iconDespliegaMenu = $('<i class="fas fa-chevron-down"></i>');
+        iconOpciones.append(iconDespliegaMenu);
+        message.append(iconOpciones);
+        
+        //LISTADO DE OPCIONES POR MENSAJE
+        let menuOpcionesMensaje = $("<ul></ul>").addClass("menuOpcionesMensaje");
+        
+        //OPCION DE ELIMINAR MENSAJE
+        let opcionEliminaMensaje = $("<li></li>").addClass("opcionMensaje");
+        opcionEliminaMensaje.text("Eliminar mensaje");
+        opcionEliminaMensaje.clicki(() => {
+            //PEDIR CONFIRMACION DE ELIMINAR
+            swalConfirmDialog("¿Eliminar mensaje?","Eliminar", "Cancelar").then((response) => {
+                if(response){
+                    //PROCESO DE ELIMINACION
+                    console.log("Eliminando...");
+                }
+            });
+        });
+        
+        //OPCION PARA EDITAR EL MENSAJE
+        let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
+        opcionEditaMensaje.text("Editar mensaje");
+        opcionEditaMensaje.click(() => {
+            
+        });
 
         if(viejo){
             $("#contact_messaging" + id).prepend(li);
@@ -753,41 +793,23 @@ function contacto_chat(user) {
 
                 switch(extension){
 
-                    case "jpg":
-                    case "png":
-                    case "jpeg":
-                    case "gif":
+                    case "jpg": case "png": case "jpeg": case "gif":
                             imagenPreview.attr("src",reader.result);
                             imagenPreview.attr("target","_blanck");
                             tipo = 'images';
                         break;
 
-                    case "docx":
-                    case "docm":
-                    case "dotx":
-                    case "dotm":
-                    case "doc":
+                    case "docx": case "docm": case "dotx": case "dotm": case "doc":
                             imagenPreview.attr("src", PathRecursos + "images/icono_word.png");
                             tipo = 'docs/word';
                         break;
 
-                    case "xlsx":
-                    case "xlsm":
-                    case "xlsb":
-                    case "xltx":
-                    case "xltm":
-                    case "xls":
-                    case "xlt":
+                    case "xlsx": case "xlsm": case "xlsb": case "xltx": case "xltm": case "xls": case "xlt":
                         imagenPreview.attr("src", PathRecursos + "images/icono_excel.png");
                         tipo = 'docs/excel';
                         break;
 
-                    case "pptx":
-                    case "pptm":
-                    case "ppt":
-                    case "xps":
-                    case "potx":
-                    case "ppsx":
+                    case "pptx": case "pptm": case "ppt": case "xps": case "potx": case "ppsx":
                         imagenPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
                         tipo = 'docs/powerpoint';
                         break;
@@ -824,6 +846,7 @@ function contacto_chat(user) {
         });
 
         const cierraAttachment = () => {
+            inputAttachment.val(null);
             rowPreview.hide("fast");
             rowButtonAttachment.hide("fast");
             rowNameFile.hide("fast");
@@ -926,6 +949,12 @@ function contacto_chat(user) {
 
             });
         };
+        
+        ul.on("drop", function(event) {
+            event.preventDefault();  
+            event.stopPropagation();
+            alert("Dropped!");
+        });
 
         input.on('keydown', function (e) {
             if (e.which == 13) {
@@ -985,8 +1014,8 @@ function contacto_chat(user) {
                     //initCall();  
                     RequestPOST("/API/notificacion/llamada360", id360).then((msj) => {
                         dataLlamada = msj;
-                        //initCall(); 
-                        window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
+                        initCall(); 
+                        //window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
                     });
                 }
             });
@@ -1053,37 +1082,19 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                     
                     switch(extension){
                 
-                        case "jpg":
-                        case "png":
-                        case "jpeg":
-                        case "gif":
+                        case "jpg": case "png": case "jpeg": case "gif":
                                 imagenPreview.attr("src",rutaAdjunto);
                             break;
 
-                        case "docx":
-                        case "docm":
-                        case "dotx":
-                        case "dotm":
-                        case "doc":
+                        case "docx": case "docm": case "dotx": case "dotm": case "doc":
                                 imagenPreview.attr("src", PathRecursos + "images/icono_word.png");
                             break;
 
-                        case "xlsx":
-                        case "xlsm":
-                        case "xlsb":
-                        case "xltx":
-                        case "xltm":
-                        case "xls":
-                        case "xlt":
+                        case "xlsx": case "xlsm": case "xlsb": case "xltx": case "xltm": case "xls": case "xlt":
                             imagenPreview.attr("src", PathRecursos + "images/icono_excel.png");
                             break;
 
-                        case "pptx":
-                        case "pptm":
-                        case "ppt":
-                        case "xps":
-                        case "potx":
-                        case "ppsx":
+                        case "pptx": case "pptm": case "ppt": case "xps": case "potx": case "ppsx":
                             imagenPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
                             break;
 
@@ -1097,17 +1108,28 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                     message.append(saltoLinea);
                     message.append(nombreAdjunto);
                     
-                }else
-                    message.text(mensaje);
+                }else{
+                    
+                    if( mensaje.slice(0,7) === "http://" || mensaje.slice(0,8) === "https://" || mensaje.slice(0,4) === "www."  ){
+                        let linkMensaje = $("<a>");
+                        linkMensaje.text(mensaje);
+                        linkMensaje.attr("href",mensaje);
+                        linkMensaje.attr("tarjet","_blanck");
+                        message.html(linkMensaje);
+                    }else{
+                        message.text(mensaje);
+                    }
+                    
+                }
+                
+                message.css({
+                    "word-break":"break-all"
+                });
                 
                 let fecha = $("<span></span>").addClass("time");
         
                 let fechaDate = new Date();
                 let fechaCorta = fechaDate.getDate() + "/" + (fechaDate.getMonth()+1) + "/" + fechaDate.getFullYear();
-                
-                let hoy = new Date();
-        
-                fechaCorta = fechaDate.getTime() === hoy.getTime() ? "" : fechaCorta;
                 
                 let horaEnvio = fechaDate.getHours() + ":" + fechaDate.getMinutes() + ":" + fechaDate.getSeconds();
 
@@ -1115,6 +1137,11 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 let iconClock = $("<li></li>").addClass("far fa-clock ml-2");
                 fecha.append(iconClock);
                 message.append(fecha);
+                
+                let iconOpciones = $("<span></span>").addClass("iconOpciones");
+                let iconDespliegaMenu = $('<i class="fas fa-chevron-down"></i>');
+                iconOpciones.append(iconDespliegaMenu);
+                message.append(iconOpciones);
                 
                 li.append(img_message);
                 li.append(message);
@@ -1329,9 +1356,10 @@ const initCall = (msj) => {
             },
             streamDestroyed: function (event) {
 
-                mosaico("remover");
+                mosaico("remover", sesion_cookie.idUsuario_Sys);
 
                 console.log("Registrar desconexion?");
+                console.log(event);
     //            RegistrarDesconexion(event.stream.connection.connectionId);
             },
             signal: function (event) {
@@ -1443,7 +1471,7 @@ const initCall = (msj) => {
 
                         console.log("Publicador iniciado");
                         var menu = document.createElement("div");
-                        menu.style = "background: #343a40; position: absolute; bottom: 0px; left: calc(50% - 100px); width: 300px;border-top-left-radius: 50px;border-top-right-radius: 50px;";
+                        menu.style = "z-index: 9999; background: #343a40; position: absolute; bottom: 0px; left: calc(50% - 100px); width: 300px;border-top-left-radius: 50px;border-top-right-radius: 50px;";
                         menu.className = "row col-12 m-0 p-0";
                         menu.id = "menu_botones";
                         console.log(menu);
@@ -1476,11 +1504,12 @@ const initCall = (msj) => {
 
 
                         var colgar = document.createElement("div");
-                        colgar.className = "col-4";
+                        colgar.className = "col-3";
                         colgar.id = "colgarPublisher";
                         colgar.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;color:red;cursor:pointer;border-right:solid 1px #6c757d;";
                         colgar.innerHTML = '<i class="fas fa-phone-slash"></i>';
                         colgar.addEventListener("click", function () {
+                            session.unpublish(publisher);
                             session.disconnect();
                             //window.close();
                             /*$("#content_call").hide("fast",() => {
@@ -1503,7 +1532,7 @@ const initCall = (msj) => {
 
                         //////////Solicitar Cambio de camara  ******
                         var activarVideo = document.createElement("div");
-                        activarVideo.className = "col-4";
+                        activarVideo.className = "col-3";
                         activarVideo.innerHTML = '<i class="fas fa-video-slash"></i>';
                         activarVideo.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-right:solid 1px #6c757d;";
                         activarVideo.addEventListener("click", function () {
@@ -1520,8 +1549,8 @@ const initCall = (msj) => {
                         
                         //////////Solicitar Bloqueo de microfono  ******
                         var activarAudio = document.createElement("div");
-                        activarAudio.className = "col-4";
-                        activarAudio.innerHTML = '<i class="fas fa-video-slash"></i>';
+                        activarAudio.className = "col-3";
+                        activarAudio.innerHTML = '<i class="fas fa-microphone"></i>';
                         activarAudio.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-right:solid 1px #6c757d;";
                         activarAudio.addEventListener("click", function () {
                             if (publisher.stream.hasAudio) {
@@ -1529,14 +1558,14 @@ const initCall = (msj) => {
                             } else {
                                 activarAudio.innerHTML = '<i class="fas fa-microphone-slash"></i>';
                             }
-                            publisher.publishAudio(!publisher.stream.hasVideo);
+                            publisher.publishAudio(!publisher.stream.hasAudio);
                         });
                         botones.appendChild(activarAudio);
                         console.log(activarAudio);
 
                         //////////Compartir Pantalla  ******
                         var share_screen = document.createElement("div");
-                        share_screen.className = "col-4";
+                        share_screen.className = "col-3";
                         share_screen.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;"
                         share_screen.innerHTML = '<i class="fas fa-external-link-alt"></i>';
                         share_screen.addEventListener("click", function () {
@@ -1621,6 +1650,21 @@ const initCall = (msj) => {
                         console.log(menu);
                         console.log(document.getElementById("videos"));
                         document.getElementById("videos").appendChild(menu);
+                        
+                        $("#base_modulo_Comunicación .OT_publisher .OT_mute").click(() => {
+                            activarAudio.click();
+                        });
+                        
+                        $("#base_modulo_Comunicación .OT_publisher .OT_mute").css({
+                            "left":"50%",
+                            "outline": "none"
+                        });
+                        
+                        $("#base_modulo_Comunicación .OT_subscriber .OT_mute").css({
+                            "left":"50%",
+                            "outline": "none"
+                        });
+                        
     //                    var colgar = document.createElement("input");
     //                    colgar.className = "colgarPublisher";
     //                    colgar.id = "colgarPublisher";

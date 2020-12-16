@@ -1169,7 +1169,7 @@ function insertarImagen(json) {
         $("#" + msj.idFile).addClass("active");
     });
 }
-function mosaico(metodo) {
+function mosaico(metodo, id360) {
     if (metodo === "agregar") {
         var clase = "bloque";
 
@@ -1217,6 +1217,11 @@ function mosaico(metodo) {
         }
         return clase;
     } else if (metodo === "remover") {
+        
+        if(id360 !== undefined && id360 !== null){
+            $("#participantes #card"+id360).remove();
+        }
+        
         count--;
 
         var x = $("#GRID *");
