@@ -713,7 +713,7 @@ function agregarVideo(session, stream) {
                     }
                 });
             });
-            document.getElementById(pos).appendChild(cambiarCam);
+            //document.getElementById(pos).appendChild(cambiarCam);
 
 
 
