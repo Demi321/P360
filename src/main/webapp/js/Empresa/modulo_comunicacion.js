@@ -1027,18 +1027,20 @@ function contacto_chat(user) {
                         
                         Swal.fire({
                             text: '¿Cómo quieres continuar la llamada? (Selecciona ventana externa.)',
-                            showDenyButton: true,
                             showCancelButton: true,
                             confirmButtonText: `Ventana externa`,
-                            denyButtonText: `Aquí mismo.`
-                          }).then((result) => {
+                            cancelButtonText: `Aquí mismo.`
+                        }).then((result) => {
                             /* Read more about isConfirmed, isDenied below */
                             if (result.isConfirmed) {
-                              window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
-                            } else if (result.isDenied) {
+                                console.log("Externa");
+                                window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
+                            } else{
+                              console.log("Aquí mismo");
+                              $("#menu_section_Comunicación").click();
                               initCall(); 
                             }
-                          });
+                        });
                         
                     });
                 }
