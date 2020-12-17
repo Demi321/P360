@@ -1634,7 +1634,7 @@ function notificacion_llamada(mensaje) {
                   console.log("Aquí mismo");
                   console.log(result);
                   $("#menu_section_Comunicación").click();
-                  initCall(); 
+                  initCall(mensaje); 
                 }
             });
             
@@ -1680,9 +1680,9 @@ function prueba_notificacion(mensaje) {
                     window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');  
                 } else{
                     console.log("Aquí mismo");
-                    Swal.close()
+                    Swal.close();
                     $("#menu_section_Comunicación").click();
-                    initCall(); 
+                    initCall(mensaje); 
                 }
             });
 
