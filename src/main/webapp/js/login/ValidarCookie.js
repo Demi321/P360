@@ -232,7 +232,7 @@ if ($("#menu_cerrar_sesion").length) {
 //agregar_enlace_estatico("Escuela 360", "https://escuela360.ml/plataforma360/", "VisualizacionDatos");
 //agregar_enlace_estatico("Mi Empresa 360", "https://empresas.claro360.com/plataforma360/", "Empresa360");
 //agregar_enlace_estatico("Plataforma 360", "https://sos911.ml/plataforma360/", "Empresa360");
-//agregar_enlace_estatico("Visualización de Datos", "https://gis360.ml/", "VisualizacionDatos");
+//agregar_enlace_estatico("Visualización de Datos", "https://geodatos.claro360.com/", "VisualizacionDatos");
 //agregar_enlace_estatico("Hogar Conectado", "https://pruebasvideovigilancia.ml/", "Videovigilancia");
 //agregar_enlace_estatico("Videoanalítico", "http://sanborns.ml/", "VisualizacionDatos");
 //agregar_enlace_estatico_perfil("Mi Perfil 360", "https://claro360.com/plataforma360/perfil/");

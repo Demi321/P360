@@ -3328,7 +3328,7 @@ function transforma_arreglo_registro_sucursales(arreglo) {
 }
 
 $("#ver_gis").click(() => {
-    acceso_externo('https://gis360.ml/');
+    acceso_externo('https://geodatos.claro360.com/');
 });
 $("#ver_lineamientos").click(() => {
     acceso_externo('https://seguridadsanitaria360.ml/lineamientos/');
