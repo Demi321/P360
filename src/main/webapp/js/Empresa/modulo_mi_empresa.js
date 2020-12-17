@@ -97,7 +97,7 @@ $("#MiEmpresa_form_registro_de_empresa").submit((e) => {
 
 
 $("#ver_gis").click(() => {
-    acceso_externo('https://gis360.ml/');
+    acceso_externo('https://geodatos.claro360.com/');
 });
 $("#ver_lineamientos").click(() => {
     acceso_externo('https://seguridadsanitaria360.ml/lineamientos/');

@@ -2973,10 +2973,10 @@ function transforma_arreglo_registro_sucursales(arreglo) {
 }
 
 $("#ver_gis").click(() => {
-    acceso_externo('https://gis360.ml/');
+    acceso_externo('https://geodatos.claro360.com/');
 });
 $("#ver_lineamientos").click(() => {
-    acceso_externo('https://seguridadsanitaria360.ml/lineamientos/');
+    acceso_externo('https://seguridadsanitaria.claro360.com/lineamientos/');
 });
 $("#ver_registrarsucursal").click(() => {
     document.getElementById('menu_section_RegistrarSucursal').click();
