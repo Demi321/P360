@@ -17,6 +17,16 @@ let array_llamar = new Array();
 agregar_menu("Comunicación");
 Vue.component("multiselect", window.VueMultiselect.default);
 
+$(document).on("click",function(e) {
+                    
+    var menuMensajes = $(".menuOpcionesMensaje");
+
+    if (!menuMensajes.is(e.target) && menuMensajes.has(e.target).length === 0) { 
+       menuMensajes.css({"height":"auto"});           
+    }
+    
+});
+
 if (perfil !== "" && perfil !== null && perfil !== undefined) {
     $("#profile-nombre").text(perfil.nombre + " " + perfil.apellido_paterno + " " + perfil.apellido_materno);
     $("#profile-img").css({
@@ -313,7 +323,7 @@ function agregar_chat(msj, user, type, viejo) {
         let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
         opcionEditaMensaje.text("Editar mensaje");
         opcionEditaMensaje.click(() => {
-
+            console.log("Editando..");
         });
         menuOpcionesMensaje.append(opcionEditaMensaje);
 
@@ -323,6 +333,10 @@ function agregar_chat(msj, user, type, viejo) {
             iconOpciones.css({"display": "block"});
         }).mouseleave(() => {
             iconOpciones.css({"display": "none"});
+        });
+        
+        iconOpciones.click(() => {
+            menuOpcionesMensaje.css({"height":"auto"});
         });
 
         if (viejo) {

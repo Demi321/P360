@@ -861,22 +861,60 @@ ESTILOS LLAMADA
 
 span.iconOpciones{
     position: absolute;
-    top: 0;
-    color: #fff;
+    top: 5px;
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1rem;
     transition: all 0.5s ease-out;
     display: none;
     cursor: pointer;
 }
 
+.send span.iconOpciones{
+    color: #fff;
+}
+
 ul.menuOpcionesMensaje{
     position: absolute;
+    background-color: #40474f;
     top: 0;
-    right: 0;
-    background-color: #fff;
-    transition: all 0.5s ease-in-out;
-    display: none;
+    z-index: 9;
+    list-style: none;
+    text-align: right;
+    border-radius: 10%;
+    overflow: hidden;
+    display: block;
+    color: #f5f5f5;
+    padding: 0;
+    height: 0;
+}
+
+ul.menuOpcionesMensaje.conAltura{
+    height: auto;
+}
+
+ul.menuOpcionesMensaje li{
+    display: block;
+    cursor: pointer;
+    background: rgba(0,0,0,0.5);
+    width: 100%;
+    margin: 0;
+    position: relative;
+    list-style: none;
+    padding: 15px;
+}
+
+ul.menuOpcionesMensaje li:hover{
+    background: rgba(0,0,0,0.5);
+}
+
+.send ul.menuOpcionesMensaje{
+    right: -150px;
+    text-align: left;
+}
+
+.replies ul.menuOpcionesMensaje{
+    left: -150px;
+    text-align: right;
 }
 
 ul.menuOpcionesMensaje li.opcionMensaje{
