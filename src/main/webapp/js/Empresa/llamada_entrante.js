@@ -128,6 +128,14 @@ function initializeSession() {
                 /////////Se identifico un nuevo usuario conectado 
                 var info_user = JSON.parse(event.data);
                 CardParticipante_user_connected(info_user);
+                enviarMensajeOT(session, "user_connected2", {
+                        id360: sesion_cookie.id_usuario
+                    });
+            }
+            if (event.type === "signal:user_connected2") {
+                /////////Se identifico un nuevo usuario conectado 
+                var info_user = JSON.parse(event.data);
+                CardParticipante_user_connected(info_user);
             }
         }
 
