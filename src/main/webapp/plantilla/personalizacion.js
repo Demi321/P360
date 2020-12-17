@@ -177,7 +177,7 @@ try {
         let del = true;
         for (let j = 0; j < modulos_cargados.length; j++) {
             if (modulos_cargados[j] === modulo_id) {
-                del = false;
+                //del = false;
                 break;
             }
         }
