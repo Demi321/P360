@@ -188,10 +188,11 @@ function agregar_chat(msj, user, type, viejo) {
             message.empty();
             message.text("Mensaje eliminado");
             let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
-            iconMensajeEliminado.css({"margin-right":"10px"});
             if(type === "send"){
+                iconMensajeEliminado.css({"margin-left":"10px"});
                 message.append(iconMensajeEliminado);
             }else{
+                iconMensajeEliminado.css({"margin-right":"10px"});
                 message.prepend(iconMensajeEliminado);
             }
             message.css({
