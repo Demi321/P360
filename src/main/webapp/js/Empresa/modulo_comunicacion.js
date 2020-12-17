@@ -183,19 +183,27 @@ function agregar_chat(msj, user, type, viejo) {
         let id = type === "replies" ? msj.to_id360 : msj.id360;
         let previewMesagge;
         
-        if(msj.activo === 1){
+        if(msj.activo === "0"){
             
             message.empty();
             message.text("Mensaje eliminado");
             let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
             iconMensajeEliminado.css({"margin-right":"10px"});
-            message.prepend(iconMensajeEliminado);
+            if(type === "send"){
+                message.append(iconMensajeEliminado);
+            }else{
+                message.prepend(iconMensajeEliminado);
+            }
             message.css({
                 "background-color":"transparent",
                 "font-style":"italic",
-                "font-size":"1.1rem"
+                "font-size":"1.1rem",
+                "color":"#434343"
             });
             previewMesagge = "Mensaje eliminado";
+            
+            li.append(img_message);
+            li.append(message);
             
         }else{
             

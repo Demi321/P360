@@ -50,7 +50,7 @@ WebSocketGeneral.onmessage = function (message) {
         if(mensaje.eliminacion_mensaje_chat_empresarial){
             
             let liMensaje = $("#mensaje_"+mensaje.idMensaje);
-            let pMensaje = liMensaje.find(p);
+            let pMensaje = liMensaje.find('p');
             pMensaje.empty();
             pMensaje.text("Mensaje eliminado");
             let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
@@ -59,7 +59,8 @@ WebSocketGeneral.onmessage = function (message) {
             pMensaje.css({
                 "background-color":"transparent",
                 "font-style":"italic",
-                "font-size":"1.1rem"
+                "font-size":"1.1rem",
+                "color":"#434343"
             });
             
         }
