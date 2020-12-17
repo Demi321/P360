@@ -41,13 +41,13 @@ if (perfil !== "" && perfil !== null && perfil !== undefined) {
         }
     });
 }
-function agregar_chat_enviado(mensaje,viejo) {
+function agregar_chat_enviado(mensaje, viejo) {
     if (!$("#profile_chat" + mensaje.to_id360).length) {
-        RequestPOST("/API/get/perfil360", {id360:mensaje.to_id360}).then((response) => {
-            if(response.sucesss){
+        RequestPOST("/API/get/perfil360", {id360: mensaje.to_id360}).then((response) => {
+            if (response.sucesss) {
                 contacto_chat(response);
                 directorio_completo.push(response);
-                agregar_chat(mensaje, response,"replies",viejo);
+                agregar_chat(mensaje, response, "replies", viejo);
             }
         });
     } else {
@@ -58,18 +58,18 @@ function agregar_chat_enviado(mensaje,viejo) {
                 return false;
             }
         });
-        if(user !== null)
-            agregar_chat(mensaje,user,"replies",viejo);
+        if (user !== null)
+            agregar_chat(mensaje, user, "replies", viejo);
     }
 
 }
 function recibir_chat(mensaje, viejo) {
     if (!$("#profile_chat" + mensaje.id360).length) {
         RequestPOST("/API/get/perfil360", mensaje).then((response) => {
-            if(response.success){
+            if (response.success) {
                 contacto_chat(response);
                 directorio_completo.push(response);
-                agregar_chat(mensaje, response,"send",viejo);
+                agregar_chat(mensaje, response, "send", viejo);
             }
         });
     } else {
@@ -80,41 +80,42 @@ function recibir_chat(mensaje, viejo) {
                 return false;
             }
         });
-        if(user !== null){
-            if(NotificacionesActivadas){
-         
+        if (user !== null) {
+            if (NotificacionesActivadas) {
+
                 let body = '';
-                if(mensaje.type === "text"){
+                if (mensaje.type === "text") {
                     body = user.nombre + " " + user.apellido_paterno + " dice: " + mensaje.message;
-                }else{
+                } else {
                     body = user.nombre + " " + user.apellido_paterno + " ha enviado un adjunto";
                 }
 
                 /*let onClickNotification = () => {
-                    $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
-                    $("#message_input_"+user.id360).focus();
+                 $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
+                 $("#message_input_"+user.id360).focus();
+                 
+                 if($("#profile_chat" + value.id360).length){
+                 $("#profile_chat" + value.id360).click();
+                 }else{
+                 contacto_chat(value);
+                 $("#profile_chat" + value.id360).click();
+                 }
+                 
+                 };*/
 
-                    if($("#profile_chat" + value.id360).length){
-                        $("#profile_chat" + value.id360).click();
-                    }else{
-                        contacto_chat(value);
-                        $("#profile_chat" + value.id360).click();
-                    }
-
-                };*/
-
-                notificacion_mensaje("Nuevo mensaje", body , () => {});
+                notificacion_mensaje("Nuevo mensaje", body, () => {
+                });
 
             }
 
-            agregar_chat(mensaje,user,"send",viejo);
+            agregar_chat(mensaje, user, "send", viejo);
         }
-        
+
     }
 
 }
 
-function notificacion_mensaje(title, body, onclick){
+function notificacion_mensaje(title, body, onclick) {
     if (Notification.permission !== "granted") {
         Notification.requestPermission();
     } else {
@@ -127,7 +128,7 @@ function notificacion_mensaje(title, body, onclick){
 
         var notificacion = new Notification(title, options);
 
-        notificacion.onshow = function() {
+        notificacion.onshow = function () {
             //document.getElementById('').play();
         };
 
@@ -136,7 +137,7 @@ function notificacion_mensaje(title, body, onclick){
         notificacion.silent = true;
 
     }
-    
+
 }
 
 const swalConfirmDialog = (message, textConfirm, textCancel) => {
@@ -155,8 +156,8 @@ const swalConfirmDialog = (message, textConfirm, textCancel) => {
     });
 };
 
-function agregar_chat(msj,user,type, viejo) {
-    if(user.success){
+function agregar_chat(msj, user, type, viejo) {
+    if (user.success) {
         let mensaje = msj.message;
         let li = $("<li></li>").addClass(type);
         let img_message = $("<div></div>").addClass("img");
@@ -167,38 +168,38 @@ function agregar_chat(msj,user,type, viejo) {
             "background-repeat": "no-repeat"
         });
         let message = $("<p></p>");
-        
-        if( mensaje.slice(0,7) === "http://" || mensaje.slice(0,8) === "https://" || mensaje.slice(0,4) === "www."  ){
+
+        if (mensaje.slice(0, 7) === "http://" || mensaje.slice(0, 8) === "https://" || mensaje.slice(0, 4) === "www.") {
             let linkMensaje = $("<a>");
             linkMensaje.text(mensaje);
-            linkMensaje.attr("href",mensaje);
-            linkMensaje.attr("tarjet","_blanck");
+            linkMensaje.attr("href", mensaje);
+            linkMensaje.attr("tarjet", "_blanck");
             message.html(linkMensaje);
-        }else{
+        } else {
             message.text(mensaje);
         }
-        
+
         let fecha = $("<span></span>").addClass("time");
-        
+
         let fechaDate = new Date(msj.fecha);
-        let fechaCorta = fechaDate.getDate() + "/" + (fechaDate.getMonth()+1) + "/" + fechaDate.getFullYear();
+        let fechaCorta = fechaDate.getDate() + "/" + (fechaDate.getMonth() + 1) + "/" + fechaDate.getFullYear();
         let hoy = new Date();
-        
+
         fechaCorta = fechaDate.getTime() === hoy.getTime() ? "" : fechaCorta;
-        
+
         fecha.text(fechaCorta + " " + msj.hora);
         let iconClock = $("<li></li>").addClass("far fa-clock");
 
-        if(type === "replies") {
+        if (type === "replies") {
             fecha.append(iconClock);
             iconClock.addClass("ml-2");
-        }else {
+        } else {
             fecha.prepend(iconClock);
             iconClock.addClass("mr-2");
         }
-        
+
         message.append(fecha);
-        
+
         li.append(img_message);
         li.append(message);
 
@@ -206,11 +207,11 @@ function agregar_chat(msj,user,type, viejo) {
         let idConver = type === "replies" ? msj.to_id360 : msj.id360;
         let previewMesagge = type === "replies" ? "Yo: " + mensaje : user.nombre + ": " + mensaje;
 
-        if(msj.type !== "text"){
+        if (msj.type !== "text") {
             let extension = msj.type;
 
             let partesPorDiagonal = mensaje.split("/");
-            let nombreCorto = partesPorDiagonal[partesPorDiagonal.length-1];
+            let nombreCorto = partesPorDiagonal[partesPorDiagonal.length - 1];
 
             let nombreCortoPorGuionBajo = nombreCorto.split("_");
             nombreCortoPorGuionBajo.shift();
@@ -219,35 +220,53 @@ function agregar_chat(msj,user,type, viejo) {
 
             previewMesagge = type === "replies" ? "Yo: " + nombreCorto.replaceAll("%20", " ") : user.nombre + ": " + nombreCorto.replaceAll("%20", " ");
 
-            let imagenPreview = $("<img>").css({"max-width":"125px","max-height":"75px","margin-bottom":"10px"}).attr("src",PathRecursos + "images/icono_default.png");
+            let imagenPreview = $("<img>").css({"max-width": "125px", "max-height": "75px", "margin-bottom": "10px"}).attr("src", PathRecursos + "images/icono_default.png");
 
             let saltoLinea = $("<br>");
-            let nombreAdjunto = $("<span></span>").css({"font-size":"1.1rem"});
-            nombreAdjunto.text(nombreCorto.replaceAll("%20"," ") + " ");
+            let nombreAdjunto = $("<span></span>").css({"font-size": "1.1rem"});
+            nombreAdjunto.text(nombreCorto.replaceAll("%20", " ") + " ");
 
-            let buttonDownloadAttachment = $("<a></a>").addClass("btn btn-light").css({"margin-left":"10px"});
-            buttonDownloadAttachment.attr("href",mensaje);
-            buttonDownloadAttachment.attr("download",nombreCorto);
+            let buttonDownloadAttachment = $("<a></a>").addClass("btn btn-light").css({"margin-left": "10px"});
+            buttonDownloadAttachment.attr("href", mensaje);
+            buttonDownloadAttachment.attr("download", nombreCorto);
             buttonDownloadAttachment.html('<i class="fas fa-download"></i>');
 
             nombreAdjunto.append(buttonDownloadAttachment);
 
-            switch(extension){
+            switch (extension) {
 
-                case "jpg": case "png": case "jpeg": case "gif":
-                        imagenPreview.attr("src",mensaje);
-                        imagenPreview.attr("target","_blanck");
+                case "jpg":
+                case "png":
+                case "jpeg":
+                case "gif":
+                    imagenPreview.attr("src", mensaje);
+                    imagenPreview.attr("target", "_blanck");
                     break;
 
-                case "docx": case "docm": case "dotx": case "dotm": case "doc":
-                        imagenPreview.attr("src", PathRecursos + "images/icono_word.png");
+                case "docx":
+                case "docm":
+                case "dotx":
+                case "dotm":
+                case "doc":
+                    imagenPreview.attr("src", PathRecursos + "images/icono_word.png");
                     break;
 
-                case "xlsx": case "xlsm": case "xlsb": case "xltx": case "xltm": case "xls": case "xlt":
+                case "xlsx":
+                case "xlsm":
+                case "xlsb":
+                case "xltx":
+                case "xltm":
+                case "xls":
+                case "xlt":
                     imagenPreview.attr("src", PathRecursos + "images/icono_excel.png");
                     break;
 
-                case "pptx": case "pptm": case "ppt": case "xps": case "potx": case "ppsx":
+                case "pptx":
+                case "pptm":
+                case "ppt":
+                case "xps":
+                case "potx":
+                case "ppsx":
                     imagenPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
                     break;
 
@@ -262,62 +281,62 @@ function agregar_chat(msj,user,type, viejo) {
             message.append(nombreAdjunto);
             message.append(fecha);
         }
-        
+
         message.css({
-            "word-break":"break-all"
+            "word-break": "break-all"
         });
-        
+
         //ICONO MENU DE OPCION PARA EL MENSAJE
         let iconOpciones = $("<span></span>").addClass("iconOpciones");
         let iconDespliegaMenu = $('<i class="fas fa-chevron-down"></i>');
         iconOpciones.append(iconDespliegaMenu);
         message.append(iconOpciones);
-        
+
         //LISTADO DE OPCIONES POR MENSAJE
         let menuOpcionesMensaje = $("<ul></ul>").addClass("menuOpcionesMensaje");
-        
+
         //OPCION DE ELIMINAR MENSAJE
         let opcionEliminaMensaje = $("<li></li>").addClass("opcionMensaje");
         opcionEliminaMensaje.text("Eliminar mensaje");
         opcionEliminaMensaje.click(() => {
             //PEDIR CONFIRMACION DE ELIMINAR
-            swalConfirmDialog("¿Eliminar mensaje?","Eliminar", "Cancelar").then((response) => {
-                if(response){
+            swalConfirmDialog("¿Eliminar mensaje?", "Eliminar", "Cancelar").then((response) => {
+                if (response) {
                     //PROCESO DE ELIMINACION
                     console.log("Eliminando...");
                 }
             });
         });
         menuOpcionesMensaje.append(opcionEliminaMensaje);
-        
+
         //OPCION PARA EDITAR EL MENSAJE
         let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
         opcionEditaMensaje.text("Editar mensaje");
         opcionEditaMensaje.click(() => {
-            
+
         });
         menuOpcionesMensaje.append(opcionEditaMensaje);
-        
+
         message.append(menuOpcionesMensaje);
-        
-        message.mouseenter( () => {
-            iconOpciones.css({"display":"block"});
-        }).mouseleave( () => {
-            iconOpciones.css({"display":"none"});
+
+        message.mouseenter(() => {
+            iconOpciones.css({"display": "block"});
+        }).mouseleave(() => {
+            iconOpciones.css({"display": "none"});
         });
 
-        if(viejo){
+        if (viejo) {
             $("#contact_messaging" + id).prepend(li);
-        }else{
+        } else {
             $("#contact_messaging" + id).append(li);
-            
-            document.querySelector("#messages_"+id+" li:last-child").scrollIntoView();
-            
+
+            document.querySelector("#messages_" + id + " li:last-child").scrollIntoView();
+
             //$("#messages_"+id).animate({scrollTop: $(document).height()+1000000}, 0);
-            $("#preview_"+id).text(previewMesagge);
-            $("#message_contacts").prepend( document.getElementById("profile_chat"+id) );
+            $("#preview_" + id).text(previewMesagge);
+            $("#message_contacts").prepend(document.getElementById("profile_chat" + id));
         }
-        
+
     }
 }
 //traer el directorio 
@@ -330,12 +349,12 @@ RequestPOST("/API/ConsultarDirectorio", {
     "tipo_area": "0"
 }).then((response) => {
     let directorio = response.directorio;
-    
+
     for (var i = 0; i < directorio.length; i++)
-         if(directorio[i].id360 === sesion_cookie.id_usuario)
-            directorio.splice(i,1);
-    
-    
+        if (directorio[i].id360 === sesion_cookie.id_usuario)
+            directorio.splice(i, 1);
+
+
     new Vue({
         el: "#app",
         data() {
@@ -393,52 +412,52 @@ RequestPOST("/API/ConsultarDirectorio", {
 
             onInput(value) {
                 console.log(value);
-                if($("#profile_chat" + value.id360).length){
+                if ($("#profile_chat" + value.id360).length) {
                     $("#profile_chat" + value.id360 + " .btn-enviarMensajeChat").click();
-                }else{
+                } else {
                     contacto_chat(value);
                     $("#profile_chat" + value.id360 + " .btn-enviarMensajeChat").click();
                 }
             }
         }
     });
-    
+
     /*
      * Consultar solamente los usuarios con los que se tiene un chat
      */
-    RequestPOST("/API/empresas360/usuarios_con_chat",{ id360: sesion_cookie.idUsuario_Sys }).then((response) => {
-        
+    RequestPOST("/API/empresas360/usuarios_con_chat", {id360: sesion_cookie.idUsuario_Sys}).then((response) => {
+
         let cantidadDirectorio = directorio.length;
-        
+
         let fueraDeDirectorio = [];
-        
+
         $.each(response, (index, contacto) => {
-            
+
             CantidadMensajesPorChat[contacto.id360chat] = {
-                cantidad: parseInt(contacto.cantidadMensajes)-20
+                cantidad: parseInt(contacto.cantidadMensajes) - 20
             };
             let encontrado = false;
-            for (let i = 0; i < cantidadDirectorio; i++) 
-                if( directorio[i].id360 ===  contacto.id360chat ){
+            for (let i = 0; i < cantidadDirectorio; i++)
+                if (directorio[i].id360 === contacto.id360chat) {
                     encontrado = true;
                     contacto_chat(directorio[i]);
                     break;
                 }
-            
-            if(!encontrado)
-                fueraDeDirectorio.push({"id360":contacto.id360chat});
-                
+
+            if (!encontrado)
+                fueraDeDirectorio.push({"id360": contacto.id360chat});
+
         });
-        
+
         const cargaBackUp = () => {
-            RequestPOST("/API/empresas360/backup_chat",{
-                id360:sesion_cookie.id_usuario
-            }).then((response)=>{
+            RequestPOST("/API/empresas360/backup_chat", {
+                id360: sesion_cookie.id_usuario
+            }).then((response) => {
                 for (var i = 0; i < response.length; i++) {
                     if (response[i].id360 === sesion_cookie.id_usuario) {
-                        agregar_chat_enviado(response[i],false);
+                        agregar_chat_enviado(response[i], false);
                     } else {
-                        recibir_chat(response[i],false);
+                        recibir_chat(response[i], false);
                     }
                     //$(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
                 }
@@ -446,11 +465,11 @@ RequestPOST("/API/ConsultarDirectorio", {
                 NotificacionesActivadas = true;
             });
         };
-        
-        if(fueraDeDirectorio.length>0){
-            RequestPOST("/API/empresas360/directorio/un_usuario",fueraDeDirectorio).then((response) => {
-                $.each(response, function(index, empleado){
-                    if(empleado.success){
+
+        if (fueraDeDirectorio.length > 0) {
+            RequestPOST("/API/empresas360/directorio/un_usuario", fueraDeDirectorio).then((response) => {
+                $.each(response, function (index, empleado) {
+                    if (empleado.success) {
                         directorio.push(empleado);
                         directorio_completo.push(empleado);
                         contacto_chat(empleado);
@@ -458,72 +477,72 @@ RequestPOST("/API/ConsultarDirectorio", {
                 });
                 cargaBackUp();
             });
-            
-        }else
+
+        } else
             cargaBackUp();
-        
+
     });
-    
-  
+
+
 });
 
 const cargaMasMensajes = (id360) => {
-    
+
     let init, limit;
-    
-    init = (CantidadMensajesPorChat[id360].cantidad-20) < 0 ? 0 : CantidadMensajesPorChat[id360].cantidad - 20;
-    limit = (CantidadMensajesPorChat[id360].cantidad-20) < 0 ? CantidadMensajesPorChat[id360].cantidad : 20;
-    
+
+    init = (CantidadMensajesPorChat[id360].cantidad - 20) < 0 ? 0 : CantidadMensajesPorChat[id360].cantidad - 20;
+    limit = (CantidadMensajesPorChat[id360].cantidad - 20) < 0 ? CantidadMensajesPorChat[id360].cantidad : 20;
+
     let dataMasMensajes = {
-        "id360-1" : id360,
-        "id360-2" : sesion_cookie.idUsuario_Sys,
-        "init" : init,
-        "limit" : limit
+        "id360-1": id360,
+        "id360-2": sesion_cookie.idUsuario_Sys,
+        "init": init,
+        "limit": limit
     };
 
     RequestPOST("/API/empresas360/carga_mas_mensajes_chat", dataMasMensajes).then((response) => {
-        
-        $('#messages_'+id360).animate({
+
+        $('#messages_' + id360).animate({
 
             scrollTop: 500
 
         }, 0, "swing", () => {
-            
+
             CantidadMensajesPorChat[id360].cantidad -= 20;
             NotificacionesActivadas = false;
-            if(response.length === 1){
+            if (response.length === 1) {
                 if (response[0].id360 === sesion_cookie.id_usuario) {
-                    agregar_chat_enviado(response[0],true); 
-                }else{
-                    
-                    recibir_chat(response[0],true);
+                    agregar_chat_enviado(response[0], true);
+                } else {
+
+                    recibir_chat(response[0], true);
                 }
-            }else{
-                for (var i = response.length-1; i >= 0; i--){
+            } else {
+                for (var i = response.length - 1; i >= 0; i--) {
                     if (response[i].id360 === sesion_cookie.id_usuario) {
-                        agregar_chat_enviado(response[i],true); 
-                    }else{
-                        recibir_chat(response[i],true);
+                        agregar_chat_enviado(response[i], true);
+                    } else {
+                        recibir_chat(response[i], true);
                     }
                 }
             }
             NotificacionesActivadas = true;
 
-            let liCargaMensajesAnterior = $("#contact_messaging"+ id360).find(".liMasMensajes");
-            
-            document.querySelector("#contact_messaging"+ id360 +" .liMasMensajes").scrollIntoView();
+            let liCargaMensajesAnterior = $("#contact_messaging" + id360).find(".liMasMensajes");
+
+            document.querySelector("#contact_messaging" + id360 + " .liMasMensajes").scrollIntoView();
             liCargaMensajesAnterior.remove();
-                
-            if(CantidadMensajesPorChat[id360].cantidad>0){
+
+            if (CantidadMensajesPorChat[id360].cantidad > 0) {
                 let liMasMensajes = $("<li></li>").addClass("liMasMensajes");
                 let spanMasMensajes = $("<span></span>").addClass("spanMasMensajes");
                 let iconManMensajes = $("<li></li>").addClass("fas fa-spinner iconMasMensajes");
                 spanMasMensajes.text("Más mensajes...");
                 spanMasMensajes.prepend(iconManMensajes);
-                spanMasMensajes.data("id360-1",id360);
-                spanMasMensajes.data("id360-2",sesion_cookie.idUsuario_Sys);
+                spanMasMensajes.data("id360-1", id360);
+                spanMasMensajes.data("id360-2", sesion_cookie.idUsuario_Sys);
                 liMasMensajes.append(spanMasMensajes);
-                $("#contact_messaging"+ id360).prepend(liMasMensajes);
+                $("#contact_messaging" + id360).prepend(liMasMensajes);
 
                 /*
                  * EVENTO CLICK PARA CARGAR MáS MENSAJES
@@ -534,15 +553,15 @@ const cargaMasMensajes = (id360) => {
                 });
 
             }
-            
+
         });
 
     });
 };
 
 function contacto_chat(user) {
-    
-    if(!$("#profile_chat"+ user.id360).length && user.id360 !== undefined){
+
+    if (!$("#profile_chat" + user.id360).length && user.id360 !== undefined) {
 
         let li = $("<li></li>").addClass("contact");
         li.attr("id", "profile_chat" + user.id360);
@@ -561,10 +580,10 @@ function contacto_chat(user) {
         let name = $("<p></p>").addClass("name");
         name.text(user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno);
         let preview = $("<p></p>").addClass("preview");
-        preview.attr("id","preview_"+user.id360);
+        preview.attr("id", "preview_" + user.id360);
         meta.append(name);
         meta.append(preview);
-        
+
         let social_media = $("<div></div>").addClass("social-media");
         let div_llamar = $("<div></div>");
         let llamar = $("<i class=\"fas fa-phone-alt\"></i>");
@@ -576,25 +595,25 @@ function contacto_chat(user) {
             "width": "50px",
             "cursor": "pointer"
         });
-        
+
         /*
          * CONTROLES PARA LLAMADA Y MENSAJES
          */
         let divControlesChat = $("<div></div>").addClass("controlesChat");
-        
+
         let buttonEnviarMensaje = $("<button></button>");
         buttonEnviarMensaje.addClass("btn btn-enviarMensajeChat");
         buttonEnviarMensaje.html('<i class="fas fa-comment-dots"></i>');
-        
+
         let buttonRealizarLlamadaChat = $("<button></button>");
         buttonRealizarLlamadaChat.addClass("btn btn-realizarLlamadaChat");
         buttonRealizarLlamadaChat.html('<i class="fas fa-phone"></i>');
-        
+
         divControlesChat.append(buttonEnviarMensaje);
         divControlesChat.append(buttonRealizarLlamadaChat);
-        
+
         meta.append(divControlesChat);
-        
+
         div.append(span);
         div.append(img);
         div.append(meta);
@@ -615,39 +634,39 @@ function contacto_chat(user) {
         });
         let nombre = $("<p></p>");
         nombre.text(user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno);
-        
+
         let messages = $("<div></div>").addClass("messages");
-        messages.attr("id","messages_"+user.id360);
+        messages.attr("id", "messages_" + user.id360);
         let ul = $("<ul></ul>").addClass("p-0");
-    //    ul.id = "contact_messaging" + user.id360;
-        ul.attr("id",  "contact_messaging" + user.id360);
-        
+        //    ul.id = "contact_messaging" + user.id360;
+        ul.attr("id", "contact_messaging" + user.id360);
+
         /*
          * CARGA MAS MENSAJES
          */
-        
-        if(CantidadMensajesPorChat[user.id360] !== undefined && CantidadMensajesPorChat[user.id360].cantidad>0){
+
+        if (CantidadMensajesPorChat[user.id360] !== undefined && CantidadMensajesPorChat[user.id360].cantidad > 0) {
             let liMasMensajes = $("<li></li>").addClass("liMasMensajes");
             let spanMasMensajes = $("<span></span>").addClass("spanMasMensajes");
             let iconManMensajes = $("<li></li>").addClass("fas fa-spinner iconMasMensajes");
             spanMasMensajes.text("Más mensajes...");
             spanMasMensajes.prepend(iconManMensajes);
-            spanMasMensajes.data("id360-1",user.id360);
-            spanMasMensajes.data("id360-2",sesion_cookie.idUsuario_Sys);
+            spanMasMensajes.data("id360-1", user.id360);
+            spanMasMensajes.data("id360-2", sesion_cookie.idUsuario_Sys);
             liMasMensajes.append(spanMasMensajes);
             ul.append(liMasMensajes);
-            
+
             /*
              * EVENTO CLICK PARA CARGAR MáS MENSAJES
              */
-            
+
             spanMasMensajes.click(() => {
                 cargaMasMensajes(user.id360);
             });
-            
+
         }
-        
-    //    let div = $("<div></div>").addClass("wrap")
+
+        //    let div = $("<div></div>").addClass("wrap")
         let message_input = $("<div></div>").addClass("message-input");
         let wrap = $("<div></div>").addClass("wrap container-fluid");
         let input = $("<input>").addClass("wrap");
@@ -658,7 +677,7 @@ function contacto_chat(user) {
 
         let divCargando = $("<div></div>").addClass("contenedor-cargando-chat d-none");
         let spinCargando = $("<div></div>").addClass("spin-cargando-chat");
-        let spin = $("<img>").attr("src",PathRecursos + "images/spin.gif");
+        let spin = $("<img>").attr("src", PathRecursos + "images/spin.gif");
 
         spinCargando.append(spin);
         divCargando.append(spinCargando);
@@ -680,10 +699,10 @@ function contacto_chat(user) {
         /* BOTON ADJUNTO */
         let buttonAttachment = $("<button></button>").addClass("btn btn-block");
         let paperclip = $(" <i class=\"fa fa-paperclip\" aria-hidden=\"true\"></i>").addClass("wrap");
-        buttonAttachment.attr("type","button");
-        buttonAttachment.attr("id","btn-adjunto");
+        buttonAttachment.attr("type", "button");
+        buttonAttachment.attr("id", "btn-adjunto");
         buttonAttachment.append(paperclip);
-        buttonAttachment.css({"background-color":"grey"});
+        buttonAttachment.css({"background-color": "grey"});
 
         /* CONTROLES CHAT */
         let containerChat = $("<div class=\"contenedor-chat-controles\"></div>");
@@ -700,44 +719,45 @@ function contacto_chat(user) {
 
         /*Input attachment */
         let inputAttachment = $("<input />");
-        inputAttachment.attr("id","inputAttachment"+ user.id360);
-        inputAttachment.attr("class","d-none");
-        inputAttachment.attr("type","file");
-        inputAttachment.attr("name","attachment");
+        inputAttachment.attr("id", "inputAttachment" + user.id360);
+        inputAttachment.attr("class", "d-none");
+        inputAttachment.attr("type", "file");
+        inputAttachment.attr("name", "attachment");
 
         /* Controles preview*/
-        let rowPreview = $("<div></div>").addClass("row").attr("id","rowPreview").css({"display":"none"});
+        let rowPreview = $("<div></div>").addClass("row").attr("id", "rowPreview").css({"display": "none"});
         let columPreview = $("<div></div>").addClass("col-12");
         columPreview.css({
-            "background-color":"white",
-            "padding":"0"
+            "background-color": "white",
+            "padding": "0"
         });
-        let containerPreview = $("<div></div>").attr("id","preview-attachment");
+        let containerPreview = $("<div></div>").attr("id", "preview-attachment");
         columPreview.append(containerPreview);
         rowPreview.append(columPreview);
 
-        let rowButtonAttachment = $("<div></div>").addClass("row").css({"display":"none"});
+        let rowButtonAttachment = $("<div></div>").addClass("row").css({"display": "none"});
 
-        let columnButtonCancel = $("<div></div>").addClass("col-6").css({"padding":"0"});
-        let buttonCancelAttachment = $("<button>Cancelar</button>").attr("type","buttton").addClass("btn btn-block").css({"background-color":"grey"});
+        let columnButtonCancel = $("<div></div>").addClass("col-6").css({"padding": "0"});
+        let buttonCancelAttachment = $("<button>Cancelar</button>").attr("type", "buttton").addClass("btn btn-block").css({"background-color": "grey"});
         columnButtonCancel.append(buttonCancelAttachment);
 
-        let columnButtonSendAttachment = $("<div></div>").addClass("col-6").css({"padding":"0"});
-        let buttonSendAttachment = $("<button>Enviar</button>").attr("type","button").addClass("btn btn-block").attr("id","sendAttachment");
+        let columnButtonSendAttachment = $("<div></div>").addClass("col-6").css({"padding": "0"});
+        let buttonSendAttachment = $("<button>Enviar</button>").attr("type", "button").addClass("btn btn-block").attr("id", "sendAttachment");
         columnButtonSendAttachment.append(buttonSendAttachment);
 
         rowButtonAttachment.append(columnButtonCancel);
         rowButtonAttachment.append(columnButtonSendAttachment);
 
-        let rowNameFile = $("<div></div>").addClass("row").css({"display":"none"});;
-        let colName = $("<div></div>").addClass("col-12").css({"padding":"0"});
-        let nameFile = $("<p></p>").attr("id","nombreArchivoPreview");
+        let rowNameFile = $("<div></div>").addClass("row").css({"display": "none"});
+        ;
+        let colName = $("<div></div>").addClass("col-12").css({"padding": "0"});
+        let nameFile = $("<p></p>").attr("id", "nombreArchivoPreview");
         nameFile.css({
-            "margin":"0",
-            "background-color":"white",
-            "color":"black",
-            "font-size":"1.3rem",
-            "padding":"0 0 20px 0"
+            "margin": "0",
+            "background-color": "white",
+            "color": "black",
+            "font-size": "1.3rem",
+            "padding": "0 0 20px 0"
         });
         colName.append(nameFile);
         rowNameFile.append(colName);
@@ -757,7 +777,7 @@ function contacto_chat(user) {
 
         message_input.append(wrap);
         messages.append(ul);
-        
+
         div_llamar.append(llamar);
         social_media.append(div_llamar);
 
@@ -767,7 +787,7 @@ function contacto_chat(user) {
         content.append(contact_profile);
         content.append(messages);
         content.append(message_input);
-        
+
 
         $("#content_messaging").append(content);
 
@@ -786,40 +806,58 @@ function contacto_chat(user) {
 
             reader.readAsDataURL(e.target.files[0]);
 
-            reader.onload = function(){
+            reader.onload = function () {
 
                 let nombreAdjunto = inputAttachment.val();
                 let partesNombreAdjunto = nombreAdjunto.split(".");
-                let extension = partesNombreAdjunto[partesNombreAdjunto.length-1];
+                let extension = partesNombreAdjunto[partesNombreAdjunto.length - 1];
 
                 let partesPorDiagonal = nombreAdjunto.split("\\");
-                let nombreCorto = partesPorDiagonal[partesPorDiagonal.length-1];
+                let nombreCorto = partesPorDiagonal[partesPorDiagonal.length - 1];
 
 
-                let imagenPreview = $("<img>").css({"max-height":"200px"}).attr("src",PathRecursos + "images/icono_default.png");
-                rowNameFile.css({"display":"block"});
+                let imagenPreview = $("<img>").css({"max-height": "200px"}).attr("src", PathRecursos + "images/icono_default.png");
+                rowNameFile.css({"display": "block"});
                 nameFile.text(nombreCorto);
                 let tipo = "others";
 
-                switch(extension){
+                switch (extension) {
 
-                    case "jpg": case "png": case "jpeg": case "gif":
-                            imagenPreview.attr("src",reader.result);
-                            imagenPreview.attr("target","_blanck");
-                            tipo = 'images';
+                    case "jpg":
+                    case "png":
+                    case "jpeg":
+                    case "gif":
+                        imagenPreview.attr("src", reader.result);
+                        imagenPreview.attr("target", "_blanck");
+                        tipo = 'images';
                         break;
 
-                    case "docx": case "docm": case "dotx": case "dotm": case "doc":
-                            imagenPreview.attr("src", PathRecursos + "images/icono_word.png");
-                            tipo = 'docs/word';
+                    case "docx":
+                    case "docm":
+                    case "dotx":
+                    case "dotm":
+                    case "doc":
+                        imagenPreview.attr("src", PathRecursos + "images/icono_word.png");
+                        tipo = 'docs/word';
                         break;
 
-                    case "xlsx": case "xlsm": case "xlsb": case "xltx": case "xltm": case "xls": case "xlt":
+                    case "xlsx":
+                    case "xlsm":
+                    case "xlsb":
+                    case "xltx":
+                    case "xltm":
+                    case "xls":
+                    case "xlt":
                         imagenPreview.attr("src", PathRecursos + "images/icono_excel.png");
                         tipo = 'docs/excel';
                         break;
 
-                    case "pptx": case "pptm": case "ppt": case "xps": case "potx": case "ppsx":
+                    case "pptx":
+                    case "pptm":
+                    case "ppt":
+                    case "xps":
+                    case "potx":
+                    case "ppsx":
                         imagenPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
                         tipo = 'docs/powerpoint';
                         break;
@@ -835,16 +873,16 @@ function contacto_chat(user) {
 
                 }
 
-                inputAttachment.data("extension",extension);
-                inputAttachment.data("nombreCorto",nombreCorto);
-                inputAttachment.data("tipo",tipo);
+                inputAttachment.data("extension", extension);
+                inputAttachment.data("nombreCorto", nombreCorto);
+                inputAttachment.data("tipo", tipo);
 
                 //let img = $("<img>").attr("src",reader.result).css({"max-height":"200px"});
 
                 containerPreview.empty().append(imagenPreview);
-                rowChat.hide("fast",() => {
-                  rowPreview.show("fast");
-                  rowButtonAttachment.show("fast");
+                rowChat.hide("fast", () => {
+                    rowPreview.show("fast");
+                    rowButtonAttachment.show("fast");
                 });
 
             };
@@ -866,7 +904,7 @@ function contacto_chat(user) {
         buttonSendAttachment.click(() => {
             //guarda_adjunto(inputAttachment.attr("id"));
             divCargando.removeClass("d-none");
-            guarda_adjunto_chat(inputAttachment.attr("id"),user.id360).then((response) => {
+            guarda_adjunto_chat(inputAttachment.attr("id"), user.id360).then((response) => {
 
                 divCargando.addClass("d-none");
                 cierraAttachment();
@@ -923,10 +961,10 @@ function contacto_chat(user) {
                              * 
                              * @type RUTA PARA EL GUARDADO
                              */
-                            let extension = $("#inputAttachment"+ to).data("tipo");
+                            let extension = $("#inputAttachment" + to).data("tipo");
                             let ruta = sesion_cookie.id_usuario + "_to_" + to + '/' + extension;
 
-                            var bucket = new AWS.S3({params: {Bucket: BucketName + "/attachmentsChats/"+ruta}});
+                            var bucket = new AWS.S3({params: {Bucket: BucketName + "/attachmentsChats/" + ruta}});
                             for (var i = 0; i < uploadFiles.length; i++) {
                                 upFile = uploadFiles[i];
                                 var params = {
@@ -959,9 +997,9 @@ function contacto_chat(user) {
 
             });
         };
-        
-        ul.on("drop", function(event) {
-            event.preventDefault();  
+
+        ul.on("drop", function (event) {
+            event.preventDefault();
             event.stopPropagation();
             alert("Dropped!");
         });
@@ -976,32 +1014,32 @@ function contacto_chat(user) {
         buttonEnviarMensaje.click(() => {
             clickVerMensaje();
         });
-        
+
         li.click(() => {
             clickVerMensaje();
         });
-        
+
         const clickVerMensaje = () => {
             $(".content").addClass("d-none");
             content.removeClass("d-none");
-            $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
-            $("#message_input_"+user.id360).focus();
+            $(".messages").animate({scrollTop: $(document).height() + 100000}, "fast");
+            $("#message_input_" + user.id360).focus();
         };
-        
-        li.mouseenter( () => {
-            divControlesChat.css({"display":"block"});
-        }).mouseleave( () => {
-            divControlesChat.css({"display":"none"});
+
+        li.mouseenter(() => {
+            divControlesChat.css({"display": "block"});
+        }).mouseleave(() => {
+            divControlesChat.css({"display": "none"});
         });
 
         buttonRealizarLlamadaChat.click(() => {
             clickIniciarLlamada();
         });
-        
+
         div_llamar.click(() => {
             clickIniciarLlamada();
         });
-        
+
         const clickIniciarLlamada = () => {
             Swal.fire({
                 text: "Iniciar una llamada con: " + user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno,
@@ -1024,7 +1062,7 @@ function contacto_chat(user) {
                     //initCall();  
                     RequestPOST("/API/notificacion/llamada360", id360).then((msj) => {
                         dataLlamada = msj;
-                        
+
                         Swal.fire({
                             text: '¿Cómo quieres continuar la llamada? (Selecciona ventana externa.)',
                             showCancelButton: true,
@@ -1036,29 +1074,29 @@ function contacto_chat(user) {
                             console.log(result);
                             if (result.value) {
                                 console.log("Externa");
-                                window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
-                            } else{
-                              console.log("Aquí mismo");
-                              console.log(result);
-                              $("#menu_section_Comunicación").click();
-                              initCall(); 
+                                window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');
+                            } else {
+                                console.log("Aquí mismo");
+                                console.log(result);
+                                $("#menu_section_Comunicación").click();
+                                initCall();
                             }
                         });
-                        
+
                     });
                 }
             });
         };
     }
-  
+
 }
 
 function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
     let mensaje = input.val();
-    
-    if(rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
+
+    if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
         mensaje = rutaAdjunto;
-    
+
     if ($.trim(mensaje) == '') {
         return false;
     } else {
@@ -1073,10 +1111,10 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
             "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
             "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
         };
-        
-        if(rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
-            json.type = $("#inputAttachment"+ user.id360).data("extension");
-        
+
+        if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
+            json.type = $("#inputAttachment" + user.id360).data("extension");
+
         RequestPOST("/API/empresas360/chat", json).then((response) => {
             if (response.success) {
 //                let li = $("<li></li>").addClass("sent");
@@ -1089,41 +1127,59 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                     "background-repeat": "no-repeat"
                 });
                 let message = $("<p></p>");
-                
-                if(rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== ""){
-                 
-                    let extension = $("#inputAttachment"+ user.id360).data("extension");
-                    let nombreCorto = $("#inputAttachment"+ user.id360).data("nombreCorto");
-                    let imagenPreview = $("<img>").css({"max-width":"125px","max-height":"75px","margin-bottom":"10px"}).attr("src",PathRecursos + "images/icono_default.png");
-                    
+
+                if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "") {
+
+                    let extension = $("#inputAttachment" + user.id360).data("extension");
+                    let nombreCorto = $("#inputAttachment" + user.id360).data("nombreCorto");
+                    let imagenPreview = $("<img>").css({"max-width": "125px", "max-height": "75px", "margin-bottom": "10px"}).attr("src", PathRecursos + "images/icono_default.png");
+
                     let saltoLinea = $("<br>");
-                    let nombreAdjunto = $("<span></span>").css({"font-size":"1.1rem"});
+                    let nombreAdjunto = $("<span></span>").css({"font-size": "1.1rem"});
                     nombreAdjunto.text(nombreCorto + " ");
-                    
-                    let buttonDownloadAttachment = $("<a></a>").addClass("btn btn-light").css({"margin-left":"10px"});
-                    buttonDownloadAttachment.attr("href",rutaAdjunto);
-                    buttonDownloadAttachment.attr("download",nombreCorto);
+
+                    let buttonDownloadAttachment = $("<a></a>").addClass("btn btn-light").css({"margin-left": "10px"});
+                    buttonDownloadAttachment.attr("href", rutaAdjunto);
+                    buttonDownloadAttachment.attr("download", nombreCorto);
                     buttonDownloadAttachment.html('<i class="fas fa-download"></i>');
-                    
+
                     nombreAdjunto.append(buttonDownloadAttachment);
-                    
+
                     mensaje = nombreCorto;
-                    
-                    switch(extension){
-                
-                        case "jpg": case "png": case "jpeg": case "gif":
-                                imagenPreview.attr("src",rutaAdjunto);
+
+                    switch (extension) {
+
+                        case "jpg":
+                        case "png":
+                        case "jpeg":
+                        case "gif":
+                            imagenPreview.attr("src", rutaAdjunto);
                             break;
 
-                        case "docx": case "docm": case "dotx": case "dotm": case "doc":
-                                imagenPreview.attr("src", PathRecursos + "images/icono_word.png");
+                        case "docx":
+                        case "docm":
+                        case "dotx":
+                        case "dotm":
+                        case "doc":
+                            imagenPreview.attr("src", PathRecursos + "images/icono_word.png");
                             break;
 
-                        case "xlsx": case "xlsm": case "xlsb": case "xltx": case "xltm": case "xls": case "xlt":
+                        case "xlsx":
+                        case "xlsm":
+                        case "xlsb":
+                        case "xltx":
+                        case "xltm":
+                        case "xls":
+                        case "xlt":
                             imagenPreview.attr("src", PathRecursos + "images/icono_excel.png");
                             break;
 
-                        case "pptx": case "pptm": case "ppt": case "xps": case "potx": case "ppsx":
+                        case "pptx":
+                        case "pptm":
+                        case "ppt":
+                        case "xps":
+                        case "potx":
+                        case "ppsx":
                             imagenPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
                             break;
 
@@ -1132,53 +1188,53 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                             break;
 
                     }
-                    
+
                     message.empty().append(imagenPreview);
                     message.append(saltoLinea);
                     message.append(nombreAdjunto);
-                    
-                }else{
-                    
-                    if( mensaje.slice(0,7) === "http://" || mensaje.slice(0,8) === "https://" || mensaje.slice(0,4) === "www."  ){
+
+                } else {
+
+                    if (mensaje.slice(0, 7) === "http://" || mensaje.slice(0, 8) === "https://" || mensaje.slice(0, 4) === "www.") {
                         let linkMensaje = $("<a>");
                         linkMensaje.text(mensaje);
-                        linkMensaje.attr("href",mensaje);
-                        linkMensaje.attr("tarjet","_blanck");
+                        linkMensaje.attr("href", mensaje);
+                        linkMensaje.attr("tarjet", "_blanck");
                         message.html(linkMensaje);
-                    }else{
+                    } else {
                         message.text(mensaje);
                     }
-                    
+
                 }
-                
+
                 message.css({
-                    "word-break":"break-all"
+                    "word-break": "break-all"
                 });
-                
+
                 let fecha = $("<span></span>").addClass("time");
-        
+
                 let fechaDate = new Date();
-                let fechaCorta = fechaDate.getDate() + "/" + (fechaDate.getMonth()+1) + "/" + fechaDate.getFullYear();
-                
+                let fechaCorta = fechaDate.getDate() + "/" + (fechaDate.getMonth() + 1) + "/" + fechaDate.getFullYear();
+
                 let horaEnvio = fechaDate.getHours() + ":" + fechaDate.getMinutes() + ":" + fechaDate.getSeconds();
 
                 fecha.text(fechaCorta + "-" + horaEnvio);
                 let iconClock = $("<li></li>").addClass("far fa-clock ml-2");
                 fecha.append(iconClock);
                 message.append(fecha);
-                
+
                 let iconOpciones = $("<span></span>").addClass("iconOpciones");
                 let iconDespliegaMenu = $('<i class="fas fa-chevron-down"></i>');
                 iconOpciones.append(iconDespliegaMenu);
                 message.append(iconOpciones);
-                
+
                 li.append(img_message);
                 li.append(message);
                 ul.append(li);
                 input.val("");
                 preview.text("Yo: " + mensaje);
-                $("#message_contacts").prepend( document.getElementById("profile_chat"+user.id360) );
-                messages.animate({scrollTop: $(document).height()+100000}, "fast");
+                $("#message_contacts").prepend(document.getElementById("profile_chat" + user.id360));
+                messages.animate({scrollTop: $(document).height() + 100000}, "fast");
 
             }
         });
@@ -1300,17 +1356,17 @@ $(".expand-button").click(function () {
  */
 
 const initCall = (msj) => {
-    
+
     data = (msj === undefined || msj === null) ? dataLlamada : msj;
     //var sesion_cookie=JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA))
-    
+
     var proyecto = DatosProyecto();
 
     var Directorio;
     var tel_a_agregar = new Array();
-    
-    $("#content_messaging").hide("fast",() => {
-        
+
+    $("#content_messaging").hide("fast", () => {
+
         $("#toggle div").click();
 
         RequestPOST("/API/ConsultarDirectorio", {
@@ -1318,7 +1374,7 @@ const initCall = (msj) => {
             "hora": getHora(),
             "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
             "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-        //    "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area,
+            //    "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area,
             "tipo_area": "0"
         }).then((response) => {
             dataG = response;
@@ -1327,9 +1383,9 @@ const initCall = (msj) => {
             directorio();
             $("#content_call").show("fast");
         });
-        
+
     });
-    
+
     function initializeSession() {
         connectionCount = 0;
         var session = OT.initSession(data.credenciales.apikey, data.credenciales.idsesion);
@@ -1354,7 +1410,7 @@ const initCall = (msj) => {
             },
             sessionDisconnected: function (event) {
                 //console.error('You were disconnected from the session.', event.reason);
-                $("#content_call").hide("fast",() => {
+                $("#content_call").hide("fast", () => {
                     $("#participantes").empty();
                     $("#history").empty();
                     $("#GRID").empty();
@@ -1367,10 +1423,10 @@ const initCall = (msj) => {
                     //menu.className = "row col-12 m-0 p-0 d-none";
 
                     $("#content_messaging").show("fast", () => {
-                        swal.fire({text:'Llamada finalizada'});
+                        swal.fire({text: 'Llamada finalizada'});
                         $("#toggle div").click();
                     });
-                });        
+                });
             },
             sessionReconnected: function (event) {
 
@@ -1389,7 +1445,7 @@ const initCall = (msj) => {
 
                 console.log("Registrar desconexion?");
                 console.log(event);
-    //            RegistrarDesconexion(event.stream.connection.connectionId);
+                //            RegistrarDesconexion(event.stream.connection.connectionId);
             },
             signal: function (event) {
 
@@ -1478,8 +1534,8 @@ const initCall = (msj) => {
                         return;
                     } else {
                         enviarMensaje(session, sesion_cookie.nombre + " " + sesion_cookie.apellido_p + "", MSJ);
-                        enviarMensajeOT(session,"user_connected", {
-                            id360:sesion_cookie.id_usuario
+                        enviarMensajeOT(session, "user_connected", {
+                            id360: sesion_cookie.id_usuario
                         });
 
                         document.getElementById("msgTxt").disabled = false;
@@ -1491,16 +1547,16 @@ const initCall = (msj) => {
                     if (publishErr) {
                         console.error('There was an error publishing: ', publishErr.name, publishErr.message);
                     } else {
-    //                    data.registro_llamada.time.h_conexion_operador = getHora();
-    //                    ArchiveSession().then(function (response) {
-    //                        RegistrarURL(response.ruta_video);
-    //                    });
+                        //                    data.registro_llamada.time.h_conexion_operador = getHora();
+                        //                    ArchiveSession().then(function (response) {
+                        //                        RegistrarURL(response.ruta_video);
+                        //                    });
 
                         /*******Activar el menu*******/
 
                         console.log("Publicador iniciado");
                         var menu = document.createElement("div");
-                        menu.style = "z-index: 9999; background: #343a40; position: absolute; bottom: 0px; left: calc(50% - 100px); width: 300px;border-top-left-radius: 50px;border-top-right-radius: 50px;";
+                        menu.style = "background: #343a40; position: absolute; bottom: 0px; left: calc(50% - 100px); width: 300px;border-top-left-radius: 50px;border-top-right-radius: 50px; z-index: 103;";
                         menu.className = "row col-12 m-0 p-0";
                         menu.id = "menu_botones";
                         console.log(menu);
@@ -1538,23 +1594,11 @@ const initCall = (msj) => {
                         colgar.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;color:red;cursor:pointer;border-right:solid 1px #6c757d;";
                         colgar.innerHTML = '<i class="fas fa-phone-slash"></i>';
                         colgar.addEventListener("click", function () {
+                            window.close();
                             session.unpublish(publisher);
-                            session.disconnect();
-                            //window.close();
-                            /*$("#content_call").hide("fast",() => {
-                                $("#participantes").empty();
-                                $("#history").empty();
-                                $("#msgTxt").val("");
-                                
-                                session.unpublish(publisher);
-                                //session.disconnect();
-                                RegistrarDesconexionOp();
-                                menu.className = "row col-12 m-0 p-0 d-none";
-                                
-                                $("#content_messaging").show("fast", () => {
-                                    $("#toggle div").click();
-                                });
-                            });*/
+                            //session.disconnect();
+                            RegistrarDesconexionOp();
+                            menu.className = "row col-12 m-0 p-0 d-none";
                         });
                         console.log(colgar);
                         botones.appendChild(colgar);
@@ -1562,10 +1606,10 @@ const initCall = (msj) => {
                         //////////Solicitar Cambio de camara  ******
                         var activarVideo = document.createElement("div");
                         activarVideo.className = "col-3";
-                        activarVideo.innerHTML = '<i class="fas fa-video-slash"></i>';
+                        activarVideo.innerHTML = '<i class="fas fa-video"></i>';
                         activarVideo.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-right:solid 1px #6c757d;";
                         activarVideo.addEventListener("click", function () {
-                            if (publisher.stream.hasVideo) {
+                            if (!publisher.stream.hasVideo) {
                                 activarVideo.innerHTML = '<i class="fas fa-video"></i>';
                             } else {
                                 activarVideo.innerHTML = '<i class="fas fa-video-slash"></i>';
@@ -1574,15 +1618,15 @@ const initCall = (msj) => {
                         });
                         botones.appendChild(activarVideo);
                         console.log(activarVideo);
-                        
-                        
+
+
                         //////////Solicitar Bloqueo de microfono  ******
                         var activarAudio = document.createElement("div");
                         activarAudio.className = "col-3";
                         activarAudio.innerHTML = '<i class="fas fa-microphone"></i>';
                         activarAudio.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-right:solid 1px #6c757d;";
                         activarAudio.addEventListener("click", function () {
-                            if (publisher.stream.hasAudio) {
+                            if (!publisher.stream.hasAudio) {
                                 activarAudio.innerHTML = '<i class="fas fa-microphone"></i>';
                             } else {
                                 activarAudio.innerHTML = '<i class="fas fa-microphone-slash"></i>';
@@ -1607,7 +1651,7 @@ const initCall = (msj) => {
                                     console.log("Prompt to install the extension.");
                                 } else {
                                     // Screen sharing is available. Publish the screen.
-    //                                var pos = NuevaUbicacion();
+//                                var pos = NuevaUbicacion();
                                     var pos = fullcontainer_screen();
                                     var publisher_screen = OT.initPublisher(pos,
                                             {videoSource: 'screen'},
@@ -1616,14 +1660,14 @@ const initCall = (msj) => {
                                                     // Look at error.message to see what went wrong.
                                                 } else {
                                                     let stop_share = document.createElement("div");
-                                                    stop_share.className = "col-4";
+                                                    stop_share.className = "col-3";
                                                     stop_share.id = "stop_sharePublisher";
                                                     stop_share.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;color:red;cursor:pointer;border-right:solid 1px #6c757d;";
                                                     stop_share.innerHTML = '<i class="far fa-times-circle"></i>';
                                                     stop_share.addEventListener("click", function () {
                                                         session.unpublish(publisher_screen);
-                                                        share_screen.className = "col-4";
-                                                        stop_share.className = "col-4 d-none";
+                                                        share_screen.className = "col-3";
+                                                        stop_share.className = "col-3 d-none";
                                                         $("#maximizarVideo").removeClass("active");
                                                         $("aside").removeAttr('style');
                                                         $("header").removeAttr('style');
@@ -1644,7 +1688,7 @@ const initCall = (msj) => {
                                                         showToggle();
                                                     });
                                                     botones.appendChild(stop_share);
-                                                    share_screen.className = "col-4 d-none";
+                                                    share_screen.className = "col-3 d-none";
                                                     $("#maximizarVideo").click();
                                                     session.publish(publisher_screen, function (error) {
                                                         if (error) {
@@ -1679,42 +1723,42 @@ const initCall = (msj) => {
                         console.log(menu);
                         console.log(document.getElementById("videos"));
                         document.getElementById("videos").appendChild(menu);
-                        
+
                         $("#base_modulo_Comunicación .OT_publisher .OT_mute").click(() => {
                             activarAudio.click();
                         });
-                        
+
                         $("#base_modulo_Comunicación .OT_publisher .OT_mute").css({
-                            "left":"50%",
+                            "left": "50%",
                             "outline": "none"
                         });
-                        
+
                         $("#base_modulo_Comunicación .OT_subscriber .OT_mute").css({
-                            "left":"50%",
+                            "left": "50%",
                             "outline": "none"
                         });
-                        
-    //                    var colgar = document.createElement("input");
-    //                    colgar.className = "colgarPublisher";
-    //                    colgar.id = "colgarPublisher";
-    //                    colgar.value = "";
-    //                    colgar.addEventListener("click", function () {
-    //
-    //                        session.unpublish(publisher);
-    //                        //session.disconnect();
-    //                        RegistrarDesconexionOp();
-    //                    });
-    //                    document.getElementById("publisher").appendChild(colgar);
-    //
-    //                    //////////Solicitar Cambio de camara  ******
-    //                    var activarVideo = document.createElement("input");
-    //                    activarVideo.className = "activarVideoPublisher";
-    //                    activarVideo.value = "";
-    //                    activarVideo.addEventListener("click", function () {
-    //
-    //                        publisher.publishVideo(!publisher.stream.hasVideo);
-    //                    });
-    //                    document.getElementById("publisher").appendChild(activarVideo);
+
+                        //                    var colgar = document.createElement("input");
+                        //                    colgar.className = "colgarPublisher";
+                        //                    colgar.id = "colgarPublisher";
+                        //                    colgar.value = "";
+                        //                    colgar.addEventListener("click", function () {
+                        //
+                        //                        session.unpublish(publisher);
+                        //                        //session.disconnect();
+                        //                        RegistrarDesconexionOp();
+                        //                    });
+                        //                    document.getElementById("publisher").appendChild(colgar);
+                        //
+                        //                    //////////Solicitar Cambio de camara  ******
+                        //                    var activarVideo = document.createElement("input");
+                        //                    activarVideo.className = "activarVideoPublisher";
+                        //                    activarVideo.value = "";
+                        //                    activarVideo.addEventListener("click", function () {
+                        //
+                        //                        publisher.publishVideo(!publisher.stream.hasVideo);
+                        //                    });
+                        //                    document.getElementById("publisher").appendChild(activarVideo);
 
 
                     }
@@ -1749,7 +1793,7 @@ const initCall = (msj) => {
         return Promise.resolve($.ajax(settings));
 
     }
-    
+
     function RegistrarDesconexionOp() {
 
         var settings = {
@@ -1774,7 +1818,7 @@ const initCall = (msj) => {
         return Promise.resolve($.ajax(settings));
 
     }
-    
+
     function RegistrarConexionUsr(id, hora_conexion) {
         var settings = {
             "async": true,
@@ -1796,7 +1840,7 @@ const initCall = (msj) => {
         };
         return Promise.resolve($.ajax(settings));
     }
-    
+
     function RegistrarNuevoParticipante(idUsuarios_Movil, firebase) {
         var idUsers = new Array();
         idUsers.push(idUsuarios_Movil);
@@ -2089,7 +2133,7 @@ const initCall = (msj) => {
 
         });
     }
-    
+
     function enviarNotificacionGrupal() {
 
 
@@ -2232,9 +2276,9 @@ const initCall = (msj) => {
                         document.getElementById("nivelemergencia").value = incidente.Prioridad;
 
 
-    //                    document.getElementById("divnotificarDependencias").style.display = "block";
-    //                    document.getElementById("ContainerMarcadoresDependencias").style.display = "block";
-    //                    document.getElementById("enviarNotificacion").style.display = "block";
+                        //                    document.getElementById("divnotificarDependencias").style.display = "block";
+                        //                    document.getElementById("ContainerMarcadoresDependencias").style.display = "block";
+                        //                    document.getElementById("enviarNotificacion").style.display = "block";
                         document.getElementById("nivelAtencion").style.display = "block";
                         document.getElementById("swal-input4").value = incidente.Prioridad;
                         document.getElementById("chained_relative-flexdatalist").value = incidente.Incidente;
@@ -2242,10 +2286,10 @@ const initCall = (msj) => {
                     } else {
                         document.getElementById("nivelemergencia").value = "";
                         incidente = "";
-    //                    document.getElementById("divnotificarDependencias").style.display = "none";
-    //                    document.getElementById("enviarNotificacion").style.display = "none";
+                        //                    document.getElementById("divnotificarDependencias").style.display = "none";
+                        //                    document.getElementById("enviarNotificacion").style.display = "none";
                         document.getElementById("nivelAtencion").style.display = "none";
-    //                    document.getElementById("ContainerMarcadoresDependencias").style.display = "none";
+                        //                    document.getElementById("ContainerMarcadoresDependencias").style.display = "none";
                         document.getElementById("swal-input4").value = "";
                         document.getElementById("chained_relative-flexdatalist").value = "";
                     }
@@ -2257,7 +2301,7 @@ const initCall = (msj) => {
 
 
     }
-    
+
     function enviarNotificacionIndividual(ElementoId, apikey, sesion, token, Dependencia) {
 
 
@@ -2338,22 +2382,22 @@ const initCall = (msj) => {
                     if (proceder)
                     {
 
-    //
-    //                    var data = document.getElementById("DependenciasID").value.split("|");
-    //                    for (var i = 0; i < data.length; i++) {
-    //                        var dependencia = data[i].split(",");
-    //                       
-    //                        var idElementos = document.getElementById("elementos" + dependencia[0] + dependencia[3]).value.split(",");
-    //                      
-    //                       
-    //                        for (var j = 0; j < idElementos.length; j++) {
-    //                            if (idElementos[j] !== "") {
-    //                              
-    //                                FireBaseKey(idElementos[j], 3, API_KEY, SESSION_ID, TOKEN, dependencia[1]);
-    //                            }
-    //                        }
-    //
-    //                    }
+                        //
+                        //                    var data = document.getElementById("DependenciasID").value.split("|");
+                        //                    for (var i = 0; i < data.length; i++) {
+                        //                        var dependencia = data[i].split(",");
+                        //                       
+                        //                        var idElementos = document.getElementById("elementos" + dependencia[0] + dependencia[3]).value.split(",");
+                        //                      
+                        //                       
+                        //                        for (var j = 0; j < idElementos.length; j++) {
+                        //                            if (idElementos[j] !== "") {
+                        //                              
+                        //                                FireBaseKey(idElementos[j], 3, API_KEY, SESSION_ID, TOKEN, dependencia[1]);
+                        //                            }
+                        //                        }
+                        //
+                        //                    }
 
 
                         FireBaseKey(ElementoId, 2, apikey, sesion, token, Dependencia);
@@ -2399,9 +2443,9 @@ const initCall = (msj) => {
                         document.getElementById("nivelemergencia").value = incidente.Prioridad;
 
 
-    //                    document.getElementById("divnotificarDependencias").style.display = "block";
-    //                    document.getElementById("ContainerMarcadoresDependencias").style.display = "block";
-    //                    document.getElementById("enviarNotificacion").style.display = "block";
+                        //                    document.getElementById("divnotificarDependencias").style.display = "block";
+                        //                    document.getElementById("ContainerMarcadoresDependencias").style.display = "block";
+                        //                    document.getElementById("enviarNotificacion").style.display = "block";
                         document.getElementById("nivelAtencion").style.display = "block";
                         document.getElementById("swal-input4").value = incidente.Prioridad;
                         document.getElementById("chained_relative-flexdatalist").value = incidente.Incidente;
@@ -2409,10 +2453,10 @@ const initCall = (msj) => {
                     } else {
                         document.getElementById("nivelemergencia").value = "";
                         incidente = "";
-    //                    document.getElementById("divnotificarDependencias").style.display = "none";
-    //                    document.getElementById("enviarNotificacion").style.display = "none";
+                        //                    document.getElementById("divnotificarDependencias").style.display = "none";
+                        //                    document.getElementById("enviarNotificacion").style.display = "none";
                         document.getElementById("nivelAtencion").style.display = "none";
-    //                    document.getElementById("ContainerMarcadoresDependencias").style.display = "none";
+                        //                    document.getElementById("ContainerMarcadoresDependencias").style.display = "none";
                         document.getElementById("swal-input4").value = "";
                         document.getElementById("chained_relative-flexdatalist").value = "";
                     }
@@ -2476,47 +2520,47 @@ const initCall = (msj) => {
 
 
                         for (var i = 0; i < tel_a_agregar.length; i++) {
-    //                        var encontrado = false;
+                            //                        var encontrado = false;
 
-    //                        for (var j = 0; j < dataG.integrantes.length; j++) {
-    //                            if (tel_a_agregar[i].idUsuario === dataG.integrantes[j].idUsuarios_Movil) {
+                            //                        for (var j = 0; j < dataG.integrantes.length; j++) {
+                            //                            if (tel_a_agregar[i].idUsuario === dataG.integrantes[j].idUsuarios_Movil) {
 
 
-    //                                encontrado = true;
-    //                                var elemento = dataG.integrantes[j]
+                            //                                encontrado = true;
+                            //                                var elemento = dataG.integrantes[j]
                             var elemento = tel_a_agregar[i];
                             to_id360.push({
                                 id360: elemento.id360
                             });
-    //                                if (!elemento.gps.estatus) {
-    //                                    RegistrarNuevoParticipante(dataG.integrantes[j].idUsuarios_Movil, dataG.integrantes[j].FireBaseKey);
-    //                                } else {
-    //                                    Swal.fire({
-    //                                        type: 'error',
-    //                                        title: "",
-    //                                        //text: 'El reporte se ha guardado correctamente',
-    //                                        html: "<p style=\"    font: bold 12px arial;    margin: 4px;    padding: 0;\">La notificacion no se envio!</p><p style=\"color: back;font: bold 14px Arial; padding: 0; margin: 0;\">El usuario se encuentra atendiendo otra llamada.</p>",
-    //                                        showConfirmButton: false,
-    //                                        timer: 2000
-    //                                    });
-    //                                }
+                            //                                if (!elemento.gps.estatus) {
+                            //                                    RegistrarNuevoParticipante(dataG.integrantes[j].idUsuarios_Movil, dataG.integrantes[j].FireBaseKey);
+                            //                                } else {
+                            //                                    Swal.fire({
+                            //                                        type: 'error',
+                            //                                        title: "",
+                            //                                        //text: 'El reporte se ha guardado correctamente',
+                            //                                        html: "<p style=\"    font: bold 12px arial;    margin: 4px;    padding: 0;\">La notificacion no se envio!</p><p style=\"color: back;font: bold 14px Arial; padding: 0; margin: 0;\">El usuario se encuentra atendiendo otra llamada.</p>",
+                            //                                        showConfirmButton: false,
+                            //                                        timer: 2000
+                            //                                    });
+                            //                                }
 
-    //                        break;
-    //                            }
-    //                        }
-    //                        if (!encontrado) {
-    //                            console.warn(tel_a_agregar[i].idUsuario + " NO SE ENCONTRO EN DATAG...");
-    //                        }
+                            //                        break;
+                            //                            }
+                            //                        }
+                            //                        if (!encontrado) {
+                            //                            console.warn(tel_a_agregar[i].idUsuario + " NO SE ENCONTRO EN DATAG...");
+                            //                        }
                         }
 
 
                         id360.to_id360 = to_id360;
-                        id360.credenciales={
-                            apikey:data.credenciales.apikey,
-                            idsesion:data.credenciales.idsesion,
-                            token:data.credenciales.token
+                        id360.credenciales = {
+                            apikey: data.credenciales.apikey,
+                            idsesion: data.credenciales.idsesion,
+                            token: data.credenciales.token
                         };
-                        id360.idLlamada=data.registro_llamada.idLlamada;
+                        id360.idLlamada = data.registro_llamada.idLlamada;
                         console.log(id360);
                         RequestPOST("/API/notificacion/llamada360/agregar_participante", id360).then((msj) => {
                             console.log(msj);
@@ -2709,10 +2753,10 @@ const initCall = (msj) => {
         if (!$("#card" + info_user.id360).length)
         {
             var elemento = buscarelemento_directorio(info_user.id360);
-            if(elemento!==null){
+            if (elemento !== null) {
                 AgregarCardParticipante360(elemento);
 
-            }else{
+            } else {
                 console.error("El usuario no se encontro en el directorio ");
                 //Proximamente se tiene que validar el trael la informacion de un usuario que bno este en nuestro catalogo de usuarios 
             }
@@ -2722,7 +2766,7 @@ const initCall = (msj) => {
         }
 
     }
-    
+
     function AgregarCardParticipante360(elemento) {
 
         var container = document.createElement("div");
@@ -2736,9 +2780,9 @@ const initCall = (msj) => {
         card.style = "cursor:pointer";
         var body = document.createElement("div");
         body.className = "card-body";
-        
+
         var divBody = document.createElement("div");
-        
+
         var title = document.createElement("h5");
         title.className = "card-title";
         title.innerHTML = elemento.nombre + " " + elemento.apellido_paterno + " " + elemento.apellido_materno;
@@ -2749,21 +2793,21 @@ const initCall = (msj) => {
         container.appendChild(img);
         container.appendChild(card);
         card.appendChild(body);
-        
+
         divBody.appendChild(title);
         divBody.appendChild(text);
         body.appendChild(divBody);
 
         document.getElementById("participantes").appendChild(container);
 
-    //    card.addEventListener("click", function () {
-    //
-    //        map.setCenter(elemento.gps);
-    //        map.setZoom(16);
-    //
-    //    });
+        //    card.addEventListener("click", function () {
+        //
+        //        map.setCenter(elemento.gps);
+        //        map.setZoom(16);
+        //
+        //    });
     }
-    
+
     function AgregarCardParticipante(elemento) {
 
         var container = document.createElement("div");
@@ -2808,7 +2852,7 @@ const initCall = (msj) => {
             }
         }
     }
-    
+
     function buscarelemento_directorio(id360) {
         for (var i = 0; i < Directorio.length; i++) {
             if (Directorio[i].id360 === id360) {
@@ -2820,5 +2864,5 @@ const initCall = (msj) => {
     }
 
     habilitarMaximizarVideo();
-    
+
 };

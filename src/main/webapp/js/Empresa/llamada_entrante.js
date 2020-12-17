@@ -353,6 +353,17 @@ function initializeSession() {
                     console.log(menu);
                     console.log(document.getElementById("videos"));
                     document.getElementById("videos").appendChild(menu);
+                     $(".OT_publisher .OT_mute").click(() => {
+                            activarAudio.click();
+                        });
+
+                        $(".OT_publisher .OT_mute").css({
+                            "outline": "none"
+                        });
+
+                        $(".OT_subscriber .OT_mute").css({
+                            "outline": "none"
+                        });
 //                    var colgar = document.createElement("input");
 //                    colgar.className = "colgarPublisher";
 //                    colgar.id = "colgarPublisher";
