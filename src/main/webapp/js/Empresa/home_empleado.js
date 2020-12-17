@@ -165,10 +165,27 @@ function notificacion_llamada(mensaje) {
         console.log(result);
         if (result.value) {
             console.log(mensaje);
-            //Abrir la ventana de llamada 
-            $("#menu_section_Comunicación").click();
-            initCall(mensaje);
-            //window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
+            
+            Swal.fire({
+                text: '¿Cómo quieres continuar la llamada? (Selecciona ventana externa.)',
+                showCancelButton: true,
+                confirmButtonText: `Ventana externa`,
+                cancelButtonText: `Aquí mismo.`
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                console.log("Presionado " + result.isConfirmed);
+                console.log(result);
+                if (result.value) {
+                    console.log("Externa");
+                    window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');  
+                } else{
+                  console.log("Aquí mismo");
+                  console.log(result);
+                  $("#menu_section_Comunicación").click();
+                  initCall(); 
+                }
+            });
+            
         }
     });
     $(".swal2-actions").addClass("m-0");
@@ -196,10 +213,27 @@ function prueba_notificacion(mensaje) {
         var notificar = new Notification(title, extra);
         notificar.onclick = function () {
             console.log('notification.Click');
-            Swal.close()
-            $("#menu_section_Comunicación").click();
-            initCall(mensaje);
-            //window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
+              
+            Swal.fire({
+                text: '¿Cómo quieres continuar la llamada? (Selecciona ventana externa.)',
+                showCancelButton: true,
+                confirmButtonText: `Ventana externa`,
+                cancelButtonText: `Aquí mismo.`
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                console.log("Presionado " + result.isConfirmed);
+                console.log(result);
+                if (result.value) {
+                    console.log("Externa");
+                    window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');  
+                } else{
+                    console.log("Aquí mismo");
+                    Swal.close()
+                    $("#menu_section_Comunicación").click();
+                    initCall(); 
+                }
+            });
+            
 
         };
         notificar.onerror = function () {
