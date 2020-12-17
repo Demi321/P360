@@ -173,11 +173,14 @@ function notificacion_llamada(mensaje) {
                 cancelButtonText: `Aquí mismo.`
             }).then((result) => {
                 /* Read more about isConfirmed, isDenied below */
-                if (result.isConfirmed) {
+                console.log("Presionado " + result.isConfirmed);
+                console.log(result);
+                if (result.value) {
                     console.log("Externa");
-                  window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
+                    window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');  
                 } else{
                   console.log("Aquí mismo");
+                  console.log(result);
                   $("#menu_section_Comunicación").click();
                   initCall(); 
                 }
@@ -218,14 +221,16 @@ function prueba_notificacion(mensaje) {
                 cancelButtonText: `Aquí mismo.`
             }).then((result) => {
                 /* Read more about isConfirmed, isDenied below */
-                if (result.isConfirmed) {
+                console.log("Presionado " + result.isConfirmed);
+                console.log(result);
+                if (result.value) {
                     console.log("Externa");
-                    window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
+                    window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');  
                 } else{
-                  console.log("Aquí mismo");
-                  Swal.close()
-                  $("#menu_section_Comunicación").click();
-                  initCall(); 
+                    console.log("Aquí mismo");
+                    Swal.close()
+                    $("#menu_section_Comunicación").click();
+                    initCall(); 
                 }
             });
             
