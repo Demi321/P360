@@ -47,7 +47,22 @@ WebSocketGeneral.onmessage = function (message) {
         if(mensaje.chat_empresarial){
             recibir_chat(mensaje);
         }
-
+        if(mensaje.eliminacion_mensaje_chat_empresarial){
+            
+            let liMensaje = $("#mensaje_"+mensaje.idMensaje);
+            let pMensaje = liMensaje.find(p);
+            pMensaje.empty();
+            pMensaje.text("Mensaje eliminado");
+            let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
+            iconMensajeEliminado.css({"margin-left":"10px"});
+            pMensaje.append(iconMensajeEliminado);
+            pMensaje.css({
+                "background-color":"transparent",
+                "font-style":"italic",
+                "font-size":"1.1rem"
+            });
+            
+        }
         if (mensaje.inicializacionSG) {
             idSocketOperador = mensaje.idSocket;
         }
