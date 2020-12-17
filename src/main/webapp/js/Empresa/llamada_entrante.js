@@ -162,7 +162,7 @@ function initializeSession() {
                 insertMode: 'replace',
                 width: '100%',
                 height: '100%',
-                name: DEPENDENCIA_ALIAS,
+                name: sesion_cookie.nombre +" " +sesion_cookie.apellidos,
             };
             var publisher = OT.initPublisher('publisher', publisherOptions, function initCallback(initErr) {
 
