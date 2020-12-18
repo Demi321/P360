@@ -171,6 +171,7 @@ function agregar_chat(msj, user, type, viejo) {
         let mensaje = msj.message;
         let li = $("<li></li>").addClass(type);
         li.attr("id", "mensaje_" + msj.id);
+        li.addClass("limessage");
         let img_message = $("<div></div>").addClass("img");
 
         img_message.css({
@@ -371,27 +372,40 @@ function agregar_chat(msj, user, type, viejo) {
                     swalConfirmDialog("¿Eliminar mensaje?", "Eliminar", "Cancelar").then((response) => {
                         if (response) {
                             //PROCESO DE ELIMINACION
+                            
                             let dataMensaje = {
-                                "idMensaje": msj.id,
-                                "id360": sesion_cookie.idUsuario_Sys,
-                                "to_id360": id
+                                "idMensaje": msj.id
                             };
-
-                            let services = tipo === 0 ? "/API/empresas360/eliminaMensaje" : "/API/empresas360/eliminaMensajeParaMi";
+                            
+                            let services;
+                            
+                            if(tipo === 0){
+                                services = "/API/empresas360/eliminaMensaje";
+                                dataMensaje.id360 = sesion_cookie.idUsuario_Sys;
+                                dataMensaje.to_id360 = user.id360;
+                            }else{
+                                services = "/API/empresas360/eliminaMensajeParaMi";
+                                dataMensaje.idUser = sesion_cookie.idUsuario_Sys;
+                            }
 
                             RequestPOST(services, dataMensaje).then((response) => {
                                 if (response.success) {
                                     menuOpcionesMensaje.removeClass("conAltura");
-                                    message.empty();
-                                    message.text("Mensaje eliminado");
-                                    let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
-                                    iconMensajeEliminado.css({"margin-right": "10px"});
-                                    message.prepend(iconMensajeEliminado);
-                                    message.css({
-                                        "background-color": "transparent",
-                                        "font-style": "italic",
-                                        "font-size": "1.1rem"
-                                    });
+                                    if(tipo === 0){
+                                        message.empty();
+                                        message.text("Mensaje eliminado");
+                                        let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
+                                        iconMensajeEliminado.css({"margin-right": "10px"});
+                                        message.prepend(iconMensajeEliminado);
+                                        message.css({
+                                            "background-color": "transparent",
+                                            "font-style": "italic",
+                                            "font-size": "1.1rem"
+                                        });
+                                    }else{
+                                        li.remove();
+                                    }
+                                    
                                 }
                             });
 
@@ -458,7 +472,7 @@ function agregar_chat(msj, user, type, viejo) {
         } else {
             $("#contact_messaging" + id).append(li);
 
-            document.querySelector("#messages_" + id + " li:last-child").scrollIntoView();
+            document.querySelector("#messages_" + id + " li.limessage:last-child").scrollIntoView();
 
             //$("#messages_"+id).animate({scrollTop: $(document).height()+1000000}, 0);
             $("#preview_" + id).text(previewMesagge);
@@ -1252,6 +1266,25 @@ function contacto_chat(user) {
                 }
             });
         };
+        
+        opcionVaciarChat.click(() => {
+            swalConfirmDialog("¿Vaciar chat?","Vaciar","Cancelar").then((response) => {
+                if(response){
+                    let dataChat = {
+                        "idUser": sesion_cookie.idUsuario_Sys,
+                        "idContact": user.id360
+                    };
+                    
+                    RequestPOST("/API/empresas360/vaciarChat", dataChat).then((response) => {
+                        if(response){
+                            ul.empty();
+                            preview.text("");
+                        }
+                    });
+                    
+                }
+            });
+        });
     }
 
 }
@@ -1286,6 +1319,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
 //                let li = $("<li></li>").addClass("sent");
                 let li = $("<li></li>").addClass("replies");
                 li.attr("id", "mensaje_" + idMensaje);
+                li.addClass("limessage");
                 let img_message = $("<div></div>").addClass("img");
                 img_message.css({
                     "background": "url('" + perfil.img + "')",
@@ -1423,26 +1457,37 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                         if (response) {
                             //PROCESO DE ELIMINACION
                             let dataMensaje = {
-                                "idMensaje": idMensaje,
-                                "id360": sesion_cookie.idUsuario_Sys,
-                                "to_id360": user.id360
+                                "idMensaje": idMensaje
                             };
-
-                            let services = tipo === 0 ? "/API/empresas360/eliminaMensaje" : "/API/empresas360/eliminaMensajeParaMi";
+                            
+                            let services;
+                            
+                            if(tipo === 0){
+                                services = "/API/empresas360/eliminaMensaje";
+                                dataMensaje.id360 = sesion_cookie.idUsuario_Sys;
+                                dataMensaje.to_id360 = user.id360;
+                            }else{
+                                services = "/API/empresas360/eliminaMensajeParaMi";
+                                dataMensaje.idUser = sesion_cookie.idUsuario_Sys;
+                            }
 
                             RequestPOST(services, dataMensaje).then((response) => {
                                 if (response.success) {
                                     menuOpcionesMensaje.removeClass("conAltura");
-                                    message.empty();
-                                    message.text("Mensaje eliminado");
-                                    let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
-                                    iconMensajeEliminado.css({"margin-right": "10px"});
-                                    message.prepend(iconMensajeEliminado);
-                                    message.css({
-                                        "background-color": "transparent",
-                                        "font-style": "italic",
-                                        "font-size": "1.1rem"
-                                    });
+                                    if(tipo === 0){
+                                        message.empty();
+                                        message.text("Mensaje eliminado");
+                                        let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
+                                        iconMensajeEliminado.css({"margin-right": "10px"});
+                                        message.prepend(iconMensajeEliminado);
+                                        message.css({
+                                            "background-color": "transparent",
+                                            "font-style": "italic",
+                                            "font-size": "1.1rem"
+                                        });
+                                    }else{
+                                        li.remove();
+                                    }
                                 }
                             });
 
@@ -1505,7 +1550,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 input.val("");
                 preview.text("Yo: " + mensaje);
                 $("#message_contacts").prepend(document.getElementById("profile_chat" + user.id360));
-                messages.animate({scrollTop: $(document).height() + 100000}, "fast");
+                document.querySelector("#messages_" + user.id360 + " li.limessage:last-child").scrollIntoView();
 
             }
         });
