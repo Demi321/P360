@@ -103,7 +103,7 @@ $("#Log-in").submit(function (e) {
                     for (var i = 0; i < response.plataforma360.length; i++) {
                         let institucion = response.plataforma360[i];
                         console.log(institucion);
-                        if (institucion.url === window.location.protocol + "//" + window.location.host + '/' + DEPENDENCIA + '/') {
+                        if (institucion.url === window.location.protocol + "//" + window.location.host + '/' + "plataforma360" + '/') {
                             plataforma360 = true;
                             count_plataforma360++;
                             if (count_plataforma360 === 1) {

@@ -6,7 +6,7 @@
 
 
 /*******************************/
-agregar_menu("Mis Sucursales");
+agregar_menu("Mis Sucursales",'<i class="fas fa-building"></i>',"Empresa");
 //Servicio para obtener el listado de sucursales 
 RequestGET("/API/lineamientos/listado_sucursales/" + sesion_cookie.tipo_usuario).then((response) => {
     //Este listado de sucursales es para la vista de MisSucursales

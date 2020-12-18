@@ -5,7 +5,7 @@
  */
 
 
-agregar_menu("Registrar Sucursal");
+agregar_menu("Registrar Sucursal",'<i class="fas fa-clipboard-check"></i>',"Empresa");
 load_file_img("upFile_MiEmpresa");
 $("#upFile_MiEmpresa_logotipo_preview").click(() => {
     $("#upFile_MiEmpresa").click();

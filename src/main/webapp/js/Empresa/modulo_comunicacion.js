@@ -14,7 +14,7 @@ var CantidadMensajesPorChat = {};
 var dataLlamada = {};
 
 let array_llamar = new Array();
-agregar_menu("Comunicación");
+agregar_menu("Comunicación",'<i class="fas fa-comments"></i>',"Trabajo");
 Vue.component("multiselect", window.VueMultiselect.default);
 
 /*$(document).on("click",function(e) {

@@ -6,7 +6,7 @@
 var file_evento = null;
 var catalogo_lineamientos = null;
 
-agregar_menu("Nuevo Reporte");
+agregar_menu("Nuevo Reporte",'<i class="fas fa-file-export"></i>',"Trabajo");
 
 $("#evidencia_evento").click(() => {
     document.getElementById("img_reporte_evento").click();

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-agregar_menu("Reporte Jornadas Laborales");
+agregar_menu("Reporte Jornadas Laborales",'<i class="fas fa-clipboard-list"></i>','Recursos Humanos');
 
 var empleados = [],
     empleadosEmpresa = [];

@@ -5,7 +5,7 @@
  */
 
 
-agregar_menu("Entrada y Salida");
+agregar_menu("Entrada y Salida",'<i class="fas fa-id-card-alt"></i>','Trabajo');
 
 $("#iniciar_jornada_laboral").click(() => {
     $("#mensaje-cargando-proceso").removeClass("d-none");
