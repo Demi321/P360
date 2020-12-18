@@ -292,7 +292,7 @@ function agregar_chat(msj, user, type, viejo) {
                     case "jpeg":
                     case "gif":
                         imagenPreview.attr("src", mensaje);
-                        imagenPreview.attr("target", "_blanck");
+                        buttonDownloadAttachment.attr("target", "_blanck");
                         break;
 
                     case "docx":
@@ -334,9 +334,15 @@ function agregar_chat(msj, user, type, viejo) {
                 if (!(extension === "jpg" || extension === "png" || extension === "jpeg" || extension === "gif")) {
                     message.append(nombreAdjunto);
                 } else {
-                    imagenPreview.css({"cursor": "pointer", "max-width": "250px"});
-                    let imagenPreviewCopy = imagenPreview;
-                    imagenPreviewCopy.css({"width": "700px"});
+                    imagenPreview.css({"cursor": "pointer", "max-width": "250px","max-height":"250px"});
+                    
+                    let imagenPreviewCopy = $("<img>");
+                    imagenPreviewCopy.attr("src", mensaje);
+                    imagenPreviewCopy.css({
+                        "max-width": "650px",
+                        "max-height":"650px"
+                    });
+                    
                     imagenPreview.click(() => {
                         Swal.fire({
                             width: 700,
@@ -1279,6 +1285,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 let idMensaje = response.id;
 //                let li = $("<li></li>").addClass("sent");
                 let li = $("<li></li>").addClass("replies");
+                li.attr("id", "mensaje_" + idMensaje);
                 let img_message = $("<div></div>").addClass("img");
                 img_message.css({
                     "background": "url('" + perfil.img + "')",
@@ -1351,7 +1358,29 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
 
                     message.empty().append(imagenPreview);
                     message.append(saltoLinea);
-                    message.append(nombreAdjunto);
+                    
+                    
+                    if (!(extension === "jpg" || extension === "png" || extension === "jpeg" || extension === "gif")) {
+                        message.append(nombreAdjunto);
+                    } else {
+                        imagenPreview.css({"cursor": "pointer", "max-width": "250px","max-height":"250px"});
+                        
+                        let imagenPreviewCopy = $("<img>");
+                        imagenPreviewCopy.attr("src", mensaje);
+                        imagenPreviewCopy.css({
+                            "max-width": "650px",
+                            "max-height":"650px"
+                        });
+                        
+                        imagenPreview.click(() => {
+                            Swal.fire({
+                                width: 700,
+                                showCancelButton: false,
+                                showConfirmButton: false,
+                                html: imagenPreviewCopy
+                            });
+                        });
+                    }
 
                 } else {
 
@@ -1407,6 +1436,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                                     message.empty();
                                     message.text("Mensaje eliminado");
                                     let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
+                                    iconMensajeEliminado.css({"margin-right": "10px"});
                                     message.prepend(iconMensajeEliminado);
                                     message.css({
                                         "background-color": "transparent",
@@ -1427,7 +1457,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 let opcionEliminaMensaje = $("<li></li>").addClass("opcionMensaje");
                 opcionEliminaMensaje.text("Eliminar para todos");
                 opcionEliminaMensaje.click(() => {
-                    eliminaMensaje();
+                    eliminaMensaje(0);
                 });
                 menuOpcionesMensaje.append(opcionEliminaMensaje);
 
@@ -1435,9 +1465,9 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 let opcionEliminaMensajeMi = $("<li></li>").addClass("opcionMensaje");
                 opcionEliminaMensajeMi.text("Eliminar para mi");
                 opcionEliminaMensajeMi.click(() => {
-                    eliminaMensaje();
+                    eliminaMensaje(1);
                 });
-                opcionEliminaMensajeMi.append(opcionEliminaMensajeMi);
+                menuOpcionesMensaje.append(opcionEliminaMensajeMi);
 
                 //OPCION PARA EDITAR EL MENSAJE
                 let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
@@ -1450,7 +1480,10 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 //OPCION PARA RESPONDER UN MENSAJE
                 let opcionRespondeMensaje = $("<li></li>").addClass("opcionMensaje");
                 opcionRespondeMensaje.text("Responder mensaje");
-                opcionRespondeMensaje.append(opcionRespondeMensaje);
+                opcionRespondeMensaje.click(() => {
+                    console.log("Respondiendo...");
+                });
+                menuOpcionesMensaje.append(opcionRespondeMensaje);
 
                 message.append(menuOpcionesMensaje);
 
