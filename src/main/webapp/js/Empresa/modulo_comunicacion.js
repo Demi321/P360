@@ -707,17 +707,49 @@ function contacto_chat(user) {
         meta.append(preview);
 
         let social_media = $("<div></div>").addClass("social-media");
-        let div_llamar = $("<div></div>");
-        let llamar = $("<i class=\"fas fa-phone-alt\"></i>");
-        llamar.attr("id", "llamar_" + user.id360);
-        llamar.css({
+        
+        let div_search = $("<div></div>");
+        div_search.css({"display":"contents"});
+        let icon_search = $("<i class=\"fas fa-search\"></i>");
+        icon_search.css({
+            "background": "#fff",
+            "padding": "17px",
+            "font-size": "60px",
+            "width": "50px",
+            "cursor": "pointer",
+            "color":"rgb(64, 71, 79)"
+        });
+        
+        let div_menu_chat = $("<div></div>");
+        div_menu_chat.css({"display":"contents","position":"relative"});
+        let icon_menu_chat = $("<i class=\"fas fa-ellipsis-h\"></i>");
+        icon_menu_chat.css({
             "background": "#40474f",
             "padding": "17px",
             "font-size": "60px",
             "width": "50px",
             "cursor": "pointer"
         });
-
+        
+        let menu_chat = $("<ul></ul>");
+        menu_chat.addClass("menu_chat");
+        
+        let opcionIniciarLlamada = $("<li></li>").addClass("opcion_menu_chat");
+        opcionIniciarLlamada.text("Iniciar llamada");
+        let iconOpcionIniciarLlamada = $("<i class=\"fas fa-phone\"></i>");
+        iconOpcionIniciarLlamada.css({"margin-right":"10px"});
+        opcionIniciarLlamada.prepend(iconOpcionIniciarLlamada);
+        menu_chat.append(opcionIniciarLlamada);
+        
+        let opcionVaciarChat = $("<li></li>").addClass("opcion_menu_chat");
+        opcionVaciarChat.text("Vaciar chat");
+        let iconVaciarChat = $("<i class=\"fas fa-trash\"></i>");
+        iconVaciarChat.css({"margin-right":"10px"});
+        opcionVaciarChat.prepend(iconVaciarChat);
+        menu_chat.append(opcionVaciarChat);
+        
+        div_menu_chat.append(menu_chat);
+        
         /*
          * CONTROLES PARA LLAMADA Y MENSAJES
          */
@@ -871,7 +903,6 @@ function contacto_chat(user) {
         rowButtonAttachment.append(columnButtonSendAttachment);
 
         let rowNameFile = $("<div></div>").addClass("row").css({"display": "none"});
-        ;
         let colName = $("<div></div>").addClass("col-12").css({"padding": "0"});
         let nameFile = $("<p></p>").attr("id", "nombreArchivoPreview");
         nameFile.css({
@@ -899,9 +930,15 @@ function contacto_chat(user) {
 
         message_input.append(wrap);
         messages.append(ul);
+        
+        div_menu_chat.click(() => {
+            menu_chat.toggleClass("desplegado");
+        });
 
-        div_llamar.append(llamar);
-        social_media.append(div_llamar);
+        div_search.append(icon_search);
+        div_menu_chat.append(icon_menu_chat);
+        social_media.append(div_search);
+        social_media.append(div_menu_chat);
 
         contact_profile.append(img_profile);
         contact_profile.append(nombre);
@@ -1158,7 +1195,7 @@ function contacto_chat(user) {
             clickIniciarLlamada();
         });
 
-        div_llamar.click(() => {
+        opcionIniciarLlamada.click(() => {
             clickIniciarLlamada();
         });
 

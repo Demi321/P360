@@ -974,3 +974,29 @@ ul.menuOpcionesMensaje li.opcionMensaje:hover{
 .swal2-header{
     background-color: #40474f;
 }
+
+.menu_chat{
+    position: absolute;
+    background: #40474f;
+    right: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: none;
+    text-align: left;
+    transition: all 3s ease-in-out;
+    z-index: 999;
+}
+
+.menu_chat.desplegado{
+    display: block;
+}
+
+.menu_chat .opcion_menu_chat{
+    padding: 10px;
+    cursor: pointer;
+}
+
+.menu_chat .opcion_menu_chat:hover{
+    background-color: rgba(0,0,0,0.5);
+}
