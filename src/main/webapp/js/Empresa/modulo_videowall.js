@@ -6,7 +6,7 @@
 
 
 var lista_video_empleados = {};
-agregar_menu("Video Wall Empleados",'<i class="fas fa-grip-horizontal"></i>',"Recursos Humano");
+agregar_menu("Video Wall Empleados",'<i class="fas fa-grip-horizontal"></i>',"Recursos Humanos");
 let videowall_started = false;
 let videowall_conectados = 0;
 let videowall_listado;
