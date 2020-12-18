@@ -194,7 +194,8 @@ function initializeSessionEmpleado(data) {
                         "idsesion": Credenciales.idsesion,
                         "token": Credenciales.token,
                         "id_socket": idSocketOperador,
-                        "activo": "1"
+                        "activo": "1",
+                        "web": true
 
                     }).then(function (response) {
                         $("#ing").val(response.date_created + " " + response.time_created);
@@ -215,7 +216,8 @@ function initializeSessionEmpleado(data) {
                                 "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area,
                                 "id": response.id,
                                 "reporte": $("#rep").val(),
-                                "activo": "0"
+                                "activo": "0",
+                                "web": true
                             }).then(function (response) {
                                 $("#ing").val(response.date_created + " " + response.time_created + " - " + response.date_updated + " " + response.time_updated);
                                 swal.fire({
@@ -632,3 +634,18 @@ const cabeceraReporteExcel = () => {
     cabecera += '<tr><th>Día</th><th>Fecha</th><th>Hora Entrada</th><th>Hora Salida</th></tr><tr></tr><tr></tr>';
     return cabecera;
 };
+
+if (perfil === null) {
+    RequestPOST("/API/cuenta360/empresas360/perfil/empleado", {
+        "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario
+    }).then(function (response) {
+        if (response.success) {
+            perfil = response;
+            if (perfil.en_jornada === "1") {
+                $("#iniciar_jornada_laboral").click();
+            }
+        }
+    });
+} else if (perfil.en_jornada === "1") {
+    $("#iniciar_jornada_laboral").click();
+}
