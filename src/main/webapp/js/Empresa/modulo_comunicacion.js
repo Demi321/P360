@@ -7,6 +7,7 @@
 
 
 /* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal */
+//jQuery.event.props.push('dataTransfer');
 
 var NotificacionesActivadas = false;
 var CantidadMensajesPorChat = {};
@@ -701,6 +702,50 @@ const cargaMasMensajes = (id360) => {
     });
 };
 
+function removeDragData(ev) {
+
+  if (ev.dataTransfer.items) {
+    // Use DataTransferItemList interface to remove the drag data
+    ev.dataTransfer.items.clear();
+  } else {
+    // Use DataTransfer interface to remove the drag data
+    ev.dataTransfer.clearData();
+  }
+  
+}
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drop(ev) {
+  console.log('Fichero(s) arrastrados');
+
+  // Evitar el comportamiendo por defecto (Evitar que el fichero se abra/ejecute)
+  ev.preventDefault();
+
+  if (ev.dataTransfer.items) {
+    // Usar la interfaz DataTransferItemList para acceder a el/los archivos)
+    for (var i = 0; i < ev.dataTransfer.items.length; i++) {
+      // Si los elementos arrastrados no son ficheros, rechazarlos
+      if (ev.dataTransfer.items[i].kind === 'file') {
+        var file = ev.dataTransfer.items[i].getAsFile();
+        console.log("1");
+        console.log(file);
+      }
+    }
+  } else {
+    // Usar la interfaz DataTransfer para acceder a el/los archivos
+    for (var i = 0; i < ev.dataTransfer.files.length; i++) {
+        console.log("2");
+        console.log(file);
+    }
+  }
+
+  // Pasar el evento a removeDragData para limpiar
+  removeDragData(ev);
+}
+
 function contacto_chat(user) {
 
     if (!$("#profile_chat" + user.id360).length && user.id360 !== undefined) {
@@ -811,6 +856,8 @@ function contacto_chat(user) {
 
         let messages = $("<div></div>").addClass("messages");
         messages.attr("id", "messages_" + user.id360);
+        messages.attr("ondragover","allowDrop(event)");
+        messages.attr("ondrop","drop(event)");
         let ul = $("<ul></ul>").addClass("p-0");
         //    ul.id = "contact_messaging" + user.id360;
         ul.attr("id", "contact_messaging" + user.id360);
