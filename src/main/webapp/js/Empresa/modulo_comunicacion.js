@@ -7,6 +7,7 @@
 
 
 /* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal */
+//jQuery.event.props.push('dataTransfer');
 
 var NotificacionesActivadas = false;
 var CantidadMensajesPorChat = {};
@@ -171,6 +172,7 @@ function agregar_chat(msj, user, type, viejo) {
         let mensaje = msj.message;
         let li = $("<li></li>").addClass(type);
         li.attr("id", "mensaje_" + msj.id);
+        li.addClass("limessage");
         let img_message = $("<div></div>").addClass("img");
 
         img_message.css({
@@ -292,7 +294,7 @@ function agregar_chat(msj, user, type, viejo) {
                     case "jpeg":
                     case "gif":
                         imagenPreview.attr("src", mensaje);
-                        imagenPreview.attr("target", "_blanck");
+                        buttonDownloadAttachment.attr("target", "_blanck");
                         break;
 
                     case "docx":
@@ -334,9 +336,15 @@ function agregar_chat(msj, user, type, viejo) {
                 if (!(extension === "jpg" || extension === "png" || extension === "jpeg" || extension === "gif")) {
                     message.append(nombreAdjunto);
                 } else {
-                    imagenPreview.css({"cursor": "pointer", "max-width": "250px"});
-                    let imagenPreviewCopy = imagenPreview;
-                    imagenPreviewCopy.css({"width": "700px"});
+                    imagenPreview.css({"cursor": "pointer", "max-width": "250px","max-height":"250px"});
+                    
+                    let imagenPreviewCopy = $("<img>");
+                    imagenPreviewCopy.attr("src", mensaje);
+                    imagenPreviewCopy.css({
+                        "max-width": "650px",
+                        "max-height":"650px"
+                    });
+                    
                     imagenPreview.click(() => {
                         Swal.fire({
                             width: 700,
@@ -365,27 +373,40 @@ function agregar_chat(msj, user, type, viejo) {
                     swalConfirmDialog("¿Eliminar mensaje?", "Eliminar", "Cancelar").then((response) => {
                         if (response) {
                             //PROCESO DE ELIMINACION
+                            
                             let dataMensaje = {
-                                "idMensaje": msj.id,
-                                "id360": sesion_cookie.idUsuario_Sys,
-                                "to_id360": id
+                                "idMensaje": msj.id
                             };
-
-                            let services = tipo === 0 ? "/API/empresas360/eliminaMensaje" : "/API/empresas360/eliminaMensajeParaMi";
+                            
+                            let services;
+                            
+                            if(tipo === 0){
+                                services = "/API/empresas360/eliminaMensaje";
+                                dataMensaje.id360 = sesion_cookie.idUsuario_Sys;
+                                dataMensaje.to_id360 = user.id360;
+                            }else{
+                                services = "/API/empresas360/eliminaMensajeParaMi";
+                                dataMensaje.idUser = sesion_cookie.idUsuario_Sys;
+                            }
 
                             RequestPOST(services, dataMensaje).then((response) => {
                                 if (response.success) {
                                     menuOpcionesMensaje.removeClass("conAltura");
-                                    message.empty();
-                                    message.text("Mensaje eliminado");
-                                    let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
-                                    iconMensajeEliminado.css({"margin-right": "10px"});
-                                    message.prepend(iconMensajeEliminado);
-                                    message.css({
-                                        "background-color": "transparent",
-                                        "font-style": "italic",
-                                        "font-size": "1.1rem"
-                                    });
+                                    if(tipo === 0){
+                                        message.empty();
+                                        message.text("Mensaje eliminado");
+                                        let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
+                                        iconMensajeEliminado.css({"margin-right": "10px"});
+                                        message.prepend(iconMensajeEliminado);
+                                        message.css({
+                                            "background-color": "transparent",
+                                            "font-style": "italic",
+                                            "font-size": "1.1rem"
+                                        });
+                                    }else{
+                                        li.remove();
+                                    }
+                                    
                                 }
                             });
 
@@ -452,7 +473,7 @@ function agregar_chat(msj, user, type, viejo) {
         } else {
             $("#contact_messaging" + id).append(li);
 
-            document.querySelector("#messages_" + id + " li:last-child").scrollIntoView();
+            document.querySelector("#messages_" + id + " li.limessage:last-child").scrollIntoView();
 
             //$("#messages_"+id).animate({scrollTop: $(document).height()+1000000}, 0);
             $("#preview_" + id).text(previewMesagge);
@@ -681,6 +702,50 @@ const cargaMasMensajes = (id360) => {
     });
 };
 
+function removeDragData(ev) {
+
+  if (ev.dataTransfer.items) {
+    // Use DataTransferItemList interface to remove the drag data
+    ev.dataTransfer.items.clear();
+  } else {
+    // Use DataTransfer interface to remove the drag data
+    ev.dataTransfer.clearData();
+  }
+  
+}
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drop(ev) {
+  console.log('Fichero(s) arrastrados');
+
+  // Evitar el comportamiendo por defecto (Evitar que el fichero se abra/ejecute)
+  ev.preventDefault();
+
+  if (ev.dataTransfer.items) {
+    // Usar la interfaz DataTransferItemList para acceder a el/los archivos)
+    for (var i = 0; i < ev.dataTransfer.items.length; i++) {
+      // Si los elementos arrastrados no son ficheros, rechazarlos
+      if (ev.dataTransfer.items[i].kind === 'file') {
+        var file = ev.dataTransfer.items[i].getAsFile();
+        console.log("1");
+        console.log(file);
+      }
+    }
+  } else {
+    // Usar la interfaz DataTransfer para acceder a el/los archivos
+    for (var i = 0; i < ev.dataTransfer.files.length; i++) {
+        console.log("2");
+        console.log(file);
+    }
+  }
+
+  // Pasar el evento a removeDragData para limpiar
+  removeDragData(ev);
+}
+
 function contacto_chat(user) {
 
     if (!$("#profile_chat" + user.id360).length && user.id360 !== undefined) {
@@ -707,17 +772,49 @@ function contacto_chat(user) {
         meta.append(preview);
 
         let social_media = $("<div></div>").addClass("social-media");
-        let div_llamar = $("<div></div>");
-        let llamar = $("<i class=\"fas fa-phone-alt\"></i>");
-        llamar.attr("id", "llamar_" + user.id360);
-        llamar.css({
+        
+        let div_search = $("<div></div>");
+        div_search.css({"display":"contents"});
+        let icon_search = $("<i class=\"fas fa-search\"></i>");
+        icon_search.css({
+            "background": "#fff",
+            "padding": "17px",
+            "font-size": "60px",
+            "width": "50px",
+            "cursor": "pointer",
+            "color":"rgb(64, 71, 79)"
+        });
+        
+        let div_menu_chat = $("<div></div>");
+        div_menu_chat.css({"display":"contents","position":"relative"});
+        let icon_menu_chat = $("<i class=\"fas fa-ellipsis-h\"></i>");
+        icon_menu_chat.css({
             "background": "#40474f",
             "padding": "17px",
             "font-size": "60px",
             "width": "50px",
             "cursor": "pointer"
         });
-
+        
+        let menu_chat = $("<ul></ul>");
+        menu_chat.addClass("menu_chat");
+        
+        let opcionIniciarLlamada = $("<li></li>").addClass("opcion_menu_chat");
+        opcionIniciarLlamada.text("Iniciar llamada");
+        let iconOpcionIniciarLlamada = $("<i class=\"fas fa-phone\"></i>");
+        iconOpcionIniciarLlamada.css({"margin-right":"10px"});
+        opcionIniciarLlamada.prepend(iconOpcionIniciarLlamada);
+        menu_chat.append(opcionIniciarLlamada);
+        
+        let opcionVaciarChat = $("<li></li>").addClass("opcion_menu_chat");
+        opcionVaciarChat.text("Vaciar chat");
+        let iconVaciarChat = $("<i class=\"fas fa-trash\"></i>");
+        iconVaciarChat.css({"margin-right":"10px"});
+        opcionVaciarChat.prepend(iconVaciarChat);
+        menu_chat.append(opcionVaciarChat);
+        
+        div_menu_chat.append(menu_chat);
+        
         /*
          * CONTROLES PARA LLAMADA Y MENSAJES
          */
@@ -759,6 +856,8 @@ function contacto_chat(user) {
 
         let messages = $("<div></div>").addClass("messages");
         messages.attr("id", "messages_" + user.id360);
+        messages.attr("ondragover","allowDrop(event)");
+        messages.attr("ondrop","drop(event)");
         let ul = $("<ul></ul>").addClass("p-0");
         //    ul.id = "contact_messaging" + user.id360;
         ul.attr("id", "contact_messaging" + user.id360);
@@ -871,7 +970,6 @@ function contacto_chat(user) {
         rowButtonAttachment.append(columnButtonSendAttachment);
 
         let rowNameFile = $("<div></div>").addClass("row").css({"display": "none"});
-        ;
         let colName = $("<div></div>").addClass("col-12").css({"padding": "0"});
         let nameFile = $("<p></p>").attr("id", "nombreArchivoPreview");
         nameFile.css({
@@ -899,9 +997,15 @@ function contacto_chat(user) {
 
         message_input.append(wrap);
         messages.append(ul);
+        
+        div_menu_chat.click(() => {
+            menu_chat.toggleClass("desplegado");
+        });
 
-        div_llamar.append(llamar);
-        social_media.append(div_llamar);
+        div_search.append(icon_search);
+        div_menu_chat.append(icon_menu_chat);
+        social_media.append(div_search);
+        social_media.append(div_menu_chat);
 
         contact_profile.append(img_profile);
         contact_profile.append(nombre);
@@ -1158,7 +1262,7 @@ function contacto_chat(user) {
             clickIniciarLlamada();
         });
 
-        div_llamar.click(() => {
+        opcionIniciarLlamada.click(() => {
             clickIniciarLlamada();
         });
 
@@ -1209,6 +1313,25 @@ function contacto_chat(user) {
                 }
             });
         };
+        
+        opcionVaciarChat.click(() => {
+            swalConfirmDialog("¿Vaciar chat?","Vaciar","Cancelar").then((response) => {
+                if(response){
+                    let dataChat = {
+                        "idUser": sesion_cookie.idUsuario_Sys,
+                        "idContact": user.id360
+                    };
+                    
+                    RequestPOST("/API/empresas360/vaciarChat", dataChat).then((response) => {
+                        if(response){
+                            ul.empty();
+                            preview.text("");
+                        }
+                    });
+                    
+                }
+            });
+        });
     }
 
 }
@@ -1242,6 +1365,8 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 let idMensaje = response.id;
 //                let li = $("<li></li>").addClass("sent");
                 let li = $("<li></li>").addClass("replies");
+                li.attr("id", "mensaje_" + idMensaje);
+                li.addClass("limessage");
                 let img_message = $("<div></div>").addClass("img");
                 img_message.css({
                     "background": "url('" + perfil.img + "')",
@@ -1314,7 +1439,29 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
 
                     message.empty().append(imagenPreview);
                     message.append(saltoLinea);
-                    message.append(nombreAdjunto);
+                    
+                    
+                    if (!(extension === "jpg" || extension === "png" || extension === "jpeg" || extension === "gif")) {
+                        message.append(nombreAdjunto);
+                    } else {
+                        imagenPreview.css({"cursor": "pointer", "max-width": "250px","max-height":"250px"});
+                        
+                        let imagenPreviewCopy = $("<img>");
+                        imagenPreviewCopy.attr("src", mensaje);
+                        imagenPreviewCopy.css({
+                            "max-width": "650px",
+                            "max-height":"650px"
+                        });
+                        
+                        imagenPreview.click(() => {
+                            Swal.fire({
+                                width: 700,
+                                showCancelButton: false,
+                                showConfirmButton: false,
+                                html: imagenPreviewCopy
+                            });
+                        });
+                    }
 
                 } else {
 
@@ -1357,25 +1504,37 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                         if (response) {
                             //PROCESO DE ELIMINACION
                             let dataMensaje = {
-                                "idMensaje": idMensaje,
-                                "id360": sesion_cookie.idUsuario_Sys,
-                                "to_id360": user.id360
+                                "idMensaje": idMensaje
                             };
-
-                            let services = tipo === 0 ? "/API/empresas360/eliminaMensaje" : "/API/empresas360/eliminaMensajeParaMi";
+                            
+                            let services;
+                            
+                            if(tipo === 0){
+                                services = "/API/empresas360/eliminaMensaje";
+                                dataMensaje.id360 = sesion_cookie.idUsuario_Sys;
+                                dataMensaje.to_id360 = user.id360;
+                            }else{
+                                services = "/API/empresas360/eliminaMensajeParaMi";
+                                dataMensaje.idUser = sesion_cookie.idUsuario_Sys;
+                            }
 
                             RequestPOST(services, dataMensaje).then((response) => {
                                 if (response.success) {
                                     menuOpcionesMensaje.removeClass("conAltura");
-                                    message.empty();
-                                    message.text("Mensaje eliminado");
-                                    let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
-                                    message.prepend(iconMensajeEliminado);
-                                    message.css({
-                                        "background-color": "transparent",
-                                        "font-style": "italic",
-                                        "font-size": "1.1rem"
-                                    });
+                                    if(tipo === 0){
+                                        message.empty();
+                                        message.text("Mensaje eliminado");
+                                        let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
+                                        iconMensajeEliminado.css({"margin-right": "10px"});
+                                        message.prepend(iconMensajeEliminado);
+                                        message.css({
+                                            "background-color": "transparent",
+                                            "font-style": "italic",
+                                            "font-size": "1.1rem"
+                                        });
+                                    }else{
+                                        li.remove();
+                                    }
                                 }
                             });
 
@@ -1390,7 +1549,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 let opcionEliminaMensaje = $("<li></li>").addClass("opcionMensaje");
                 opcionEliminaMensaje.text("Eliminar para todos");
                 opcionEliminaMensaje.click(() => {
-                    eliminaMensaje();
+                    eliminaMensaje(0);
                 });
                 menuOpcionesMensaje.append(opcionEliminaMensaje);
 
@@ -1398,9 +1557,9 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 let opcionEliminaMensajeMi = $("<li></li>").addClass("opcionMensaje");
                 opcionEliminaMensajeMi.text("Eliminar para mi");
                 opcionEliminaMensajeMi.click(() => {
-                    eliminaMensaje();
+                    eliminaMensaje(1);
                 });
-                opcionEliminaMensajeMi.append(opcionEliminaMensajeMi);
+                menuOpcionesMensaje.append(opcionEliminaMensajeMi);
 
                 //OPCION PARA EDITAR EL MENSAJE
                 let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
@@ -1413,7 +1572,10 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 //OPCION PARA RESPONDER UN MENSAJE
                 let opcionRespondeMensaje = $("<li></li>").addClass("opcionMensaje");
                 opcionRespondeMensaje.text("Responder mensaje");
-                opcionRespondeMensaje.append(opcionRespondeMensaje);
+                opcionRespondeMensaje.click(() => {
+                    console.log("Respondiendo...");
+                });
+                menuOpcionesMensaje.append(opcionRespondeMensaje);
 
                 message.append(menuOpcionesMensaje);
 
@@ -1435,7 +1597,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 input.val("");
                 preview.text("Yo: " + mensaje);
                 $("#message_contacts").prepend(document.getElementById("profile_chat" + user.id360));
-                messages.animate({scrollTop: $(document).height() + 100000}, "fast");
+                document.querySelector("#messages_" + user.id360 + " li.limessage:last-child").scrollIntoView();
 
             }
         });
@@ -1579,87 +1741,13 @@ const initCall = (msj) => {
             "tipo_area": "0"
         }).then((response) => {
             dataG = response;
-            //initializeSession();
+            initializeSession();
             Directorio = response.directorio;
             directorio();
             $("#content_call").show("fast");
-
-            swal.fire({
-                html: '<form class="">' +
-                        '<h2>Configuración de hardware</h2>' +
-                        '<div class="mb-3">' +
-                        '<label for="audio-source-select" class="form-label">Microfono</label>' +
-                        '<select id="audio-source-select" class="form-control"></select>' +
-                        '</div>' +
-                        '<div class="mb-3">' +
-                        '<label for="video-source-select" class="form-label">Camara</label>' +
-                        '<select id="video-source-select" class="form-control"></select>' +
-                        '</div>' +
-                        '</form>',
-                allowOutsideClick: false,
-                confirmButtonText: 'Iniciar<i class="ms-2 fas fa-arrow-circle-right"></i>',
-                preConfirm: () => {
-                    return {
-                        audio: $("#audio-source-select").val(),
-                        video: $("#video-source-select").val()
-                    };
-                }
-            }).then((result) => {
-                console.log(result);
-                initializeSession(result.value);
-
-            });
-
-
-            let audioSelector = $('#audio-source-select');
-            let videoSelector = $('#video-source-select');
-            let publishBtn = $('#publish-btn');
-            let cycleVideoBtn = $('#cycle-video-btn');
-
-            publishBtn.disabled = true;
-// We request access to Microphones and Cameras so we can get the labels
-            OT.getUserMedia().then((stream) => {
-                populateDeviceSources(audioSelector, 'audioInput');
-                populateDeviceSources(videoSelector, 'videoInput');
-                // Stop the tracks so that we stop using this camera and microphone
-                // If you don't do this then cycleVideo does not work on some Android devices
-                stream.getTracks().forEach(track => track.stop());
-            });
-            OT.getUserMedia().catch(function (err) {
-                console.log(err);
-            });
         });
 
     });
-
-
-// Get the list of devices and populate the drop down lists
-    function populateDeviceSources(selector, kind) {
-        OT.getDevices((err, devices) => {
-            if (err) {
-                alert('getDevices error ' + err.message);
-                return;
-            }
-            let index = 0;
-            console.log(devices);
-            for (var i in devices) {
-                let device = devices[i];
-                if (!device.label) {
-                    device.label = device.kind + index;
-                }
-                if (device.kind === kind) {
-                    let option = $("<option value = '" + device.deviceId + "'>" + device.label + "</option>");
-                    selector.append(option);
-                    index += 1;
-                }
-
-            }
-            console.log(selector);
-            console.log(selector.id);
-            publishBtn.disabled = false;
-        });
-    }
-
 
     function initializeSession() {
         connectionCount = 0;
@@ -1864,7 +1952,7 @@ const initCall = (msj) => {
 
 
                         var colgar = document.createElement("div");
-                        colgar.className = "col";
+                        colgar.className = "col-3";
                         colgar.id = "colgarPublisher";
                         colgar.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;color:red;cursor:pointer;border-right:solid 1px #6c757d;";
                         colgar.innerHTML = '<i class="fas fa-phone-slash"></i>';
@@ -1880,7 +1968,7 @@ const initCall = (msj) => {
 
                         //////////Solicitar Cambio de camara  ******
                         var activarVideo = document.createElement("div");
-                        activarVideo.className = "col";
+                        activarVideo.className = "col-3";
                         activarVideo.innerHTML = '<i class="fas fa-video"></i>';
                         activarVideo.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-right:solid 1px #6c757d;";
                         activarVideo.addEventListener("click", function () {
@@ -1897,7 +1985,7 @@ const initCall = (msj) => {
 
                         //////////Solicitar Bloqueo de microfono  ******
                         var activarAudio = document.createElement("div");
-                        activarAudio.className = "col";
+                        activarAudio.className = "col-3";
                         activarAudio.innerHTML = '<i class="fas fa-microphone"></i>';
                         activarAudio.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-right:solid 1px #6c757d;";
                         activarAudio.addEventListener("click", function () {
@@ -1913,7 +2001,7 @@ const initCall = (msj) => {
 
                         //////////Compartir Pantalla  ******
                         var share_screen = document.createElement("div");
-                        share_screen.className = "col";
+                        share_screen.className = "col-3";
                         share_screen.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;"
                         share_screen.innerHTML = '<i class="fas fa-external-link-alt"></i>';
                         share_screen.addEventListener("click", function () {
@@ -1935,14 +2023,14 @@ const initCall = (msj) => {
                                                     // Look at error.message to see what went wrong.
                                                 } else {
                                                     let stop_share = document.createElement("div");
-                                                    stop_share.className = "col";
+                                                    stop_share.className = "col-3";
                                                     stop_share.id = "stop_sharePublisher";
                                                     stop_share.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;color:red;cursor:pointer;border-right:solid 1px #6c757d;";
                                                     stop_share.innerHTML = '<i class="far fa-times-circle"></i>';
                                                     stop_share.addEventListener("click", function () {
                                                         session.unpublish(publisher_screen);
-                                                        share_screen.className = "col";
-                                                        stop_share.className = "col d-none";
+                                                        share_screen.className = "col-3";
+                                                        stop_share.className = "col-3 d-none";
                                                         $("#maximizarVideo").removeClass("active");
                                                         $("aside").removeAttr('style');
                                                         $("header").removeAttr('style');
@@ -1963,7 +2051,7 @@ const initCall = (msj) => {
                                                         showToggle();
                                                     });
                                                     botones.appendChild(stop_share);
-                                                    share_screen.className = "col d-none";
+                                                    share_screen.className = "col-3 d-none";
                                                     $("#maximizarVideo").click();
                                                     session.publish(publisher_screen, function (error) {
                                                         if (error) {
@@ -1995,101 +2083,8 @@ const initCall = (msj) => {
 
                         });
                         botones.appendChild(share_screen);
-
-
-                        /*****************Settings audio and video publisher *****************/
-
-                        var audio_video_settings = document.createElement("div");
-                        audio_video_settings.className = "col";
-                        audio_video_settings.innerHTML = '<i class="fas fa-cog" id="settings"></i>';
-                        audio_video_settings.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-left:solid 1px #6c757d;";
-                        audio_video_settings.addEventListener("click", function () {
-                            swal.fire({
-                                html: '<form class="">' +
-                                        '<h2>Configuración de hardware</h2>' +
-                                        '<div class="mb-3">' +
-                                        '<label for="audio-source-select" class="form-label">Microfono</label>' +
-                                        '<select id="audio-source-select" class="form-control"></select>' +
-                                        '</div>' +
-                                        '<div class="mb-3" id="audio-meter">' +
-                                        '<label for="audio-source-select" class="form-label">Nivel del microfono</label>' +
-                                        '<meter min="0" max="1" low=".25" optimum=".55" high=".85"></meter>' +
-                                        '</div>' +
-                                        '<div class="mb-3">' +
-                                        '<label for="video-source-select" class="form-label">Camara</label>' +
-                                        '<select id="video-source-select" class="form-control"></select>' +
-                                        '</div>' +
-                                        '</form>',
-                                confirmButtonText: 'Aceptar',
-                            }).then((result) => {
-                                console.log(result);
-                            });
-
-                            let audioSelector = $('#audio-source-select');
-                            let videoSelector = $('#video-source-select');
-                            let audioLevel = $('#audio-meter');
-                            let meter = $('#audio-meter meter');
-
-
-                            OT.getUserMedia().then((stream) => {
-                                populateDeviceSources(audioSelector, 'audioInput');
-                                populateDeviceSources(videoSelector, 'videoInput');
-                                // Stop the tracks so that we stop using this camera and microphone
-                                // If you don't do this then cycleVideo does not work on some Android devices
-                                stream.getTracks().forEach(track => track.stop());
-                            });
-                            OT.getUserMedia().catch(function (err) {
-                                console.log(err);
-                            });
-
-                            audioSelector.attr("disabled", false);
-
-                            // When the audio selector changes we update the audio source
-                            audioSelector.on('change', () => {
-                                console.log(event.target);
-                                audioSelector.attr("disabled", true);
-                                publisher.setAudioSource(event.target.value).then(() => {
-                                    audioSelector.attr("disabled", false);
-                                }).catch((err) => {
-                                    alert(`setAudioSource failed: ${err.message}`);
-                                    audioSelector.attr("disabled", false);
-                                });
-                            });
-
-                            videoSelector.attr("disabled", false);
-
-                            // When the audio selector changes we update the audio source
-                            videoSelector.on('change', () => {
-                                console.log(event.target);
-                                videoSelector.attr("disabled", true);
-                                publisher.cycleVideo(event.target.value).then(() => {
-                                    videoSelector.attr("disabled", false);
-                                }).catch((err) => {
-                                    alert(`videoSelector failed: ${err.message}`);
-                                    videoSelector.attr("disabled", false);
-                                });
-                            });
-
-                            let movingAvg = null;
-                            publisher.on('audioLevelUpdated', (event) => {
-                                if (movingAvg === null || movingAvg <= event.audioLevel) {
-                                    movingAvg = event.audioLevel;
-                                } else {
-                                    movingAvg = 0.7 * movingAvg + 0.3 * event.audioLevel;
-                                }
-
-                                // 1.5 scaling to map the -30 - 0 dBm range to [0,1]
-                                var logLevel = (Math.log(movingAvg) / Math.LN10) / 1.5 + 1;
-                                logLevel = Math.min(Math.max(logLevel, 0), 1);
-                                meter.val(logLevel);
-                            });
-                        });
-                        botones.appendChild(audio_video_settings);
-
-
                         console.log(menu);
                         console.log(document.getElementById("videos"));
-                        document.getElementById("videos").appendChild(menu);
                         document.getElementById("videos").appendChild(menu);
 
                         $("#base_modulo_Comunicación .OT_publisher .OT_mute").click(() => {
