@@ -17,17 +17,55 @@ var dataLlamada = {};
 /*
  * REPRODUCIR SONIDO AL LLEGAR NOTIFICACION
  */
-var buttonNotificacion = $("<button></button>");
-buttonNotificacion.text("Reproducir notificacion");
-$("body").append(buttonNotificacion);
-buttonNotificacion.click(() => {
+var buttonNotificacionMensaje = $("<button></button>").addClass("d-none");
+buttonNotificacionMensaje.text("Reproducir notificacion m");
+
+var buttonNotificacionLlamada = $("<button></button>").addClass("d-none");
+buttonNotificacionLlamada.text("Reproducir notificacion l");
+
+$("body").append(buttonNotificacionMensaje);
+$("body").append(buttonNotificacionLlamada);
+
+var reproduccionSonidoNotificacion = document.getElementById('sonido1');
+
+const reproduceNotificacion = (tipo) => {
     
-    let sonido = document.getElementById('sonido1');
-    if( configuracionUsuario !== null && configuracionUsuario.tono_mensaje !== undefined ){
-        sonido = document.getElementById(configuracionUsuario.tono_mensaje);
+    if( configuracionUsuario !== null && configuracionUsuario[tipo] !== undefined ){
+        
+        let tonoUsuario = configuracionUsuario[tipo];
+        
+        if(tonoUsuario !== "silenciado"){
+            reproduccionSonidoNotificacion = document.getElementById(tonoUsuario);
+        
+            reproduccionSonidoNotificacion.muted = true;
+            reproduccionSonidoNotificacion.muted = false;
+            if(tipo === "tono_llamada"){
+                reproduccionSonidoNotificacion.loop = true;
+            }
+            reproduccionSonidoNotificacion.play();
+        }
+        
+    }else{
+        reproduccionSonidoNotificacion = document.getElementById('sonido1');
+        reproduccionSonidoNotificacion.muted = true;
+        reproduccionSonidoNotificacion.muted = false;
+        if(tipo === "tono_llamada"){
+            reproduccionSonidoNotificacion.loop = true;
+        }
+        reproduccionSonidoNotificacion.play();
     }
-    sonido.muted = false;
-    sonido.play();
+    
+};
+
+buttonNotificacionMensaje.click(() => {
+    
+    reproduceNotificacion("tono_mensaje");
+    
+});
+
+buttonNotificacionLlamada.click(() => {
+    
+    reproduceNotificacion("tono_llamada");
     
 });
 
@@ -37,7 +75,7 @@ let arrayTonos = ['sonido1','sonido2', 'sonido3','sonido4','sonido5','sonido6','
 
 let contenedorConfig = $("<div></div>");
 
-let formGroupTonoMensaje = $("<div></div>").addClass("form-group");
+let formGroupTonoMensaje = $("<div></div>").addClass("form-group mb-4");
 let labelTonoMensaje = $("<label></label>");
 labelTonoMensaje.text("Tono para mensajes");
 let selectTonoMensaje = $("<select></select>").addClass("form-control custom-select");
@@ -69,13 +107,19 @@ $.each(arrayTonos, (index, tono) => {
     selectTonoLlamada.append(option);
 });
 
+selectTonoMensaje.prepend("<option value='silenciado'>Silenciar</option>");
+selectTonoLlamada.prepend("<option value='silenciado'>Silenciar</option>");
+
 contenedorConfig.append(formGroupTonoMensaje);
 contenedorConfig.append(formGroupTonoLlamada);
 
 const escuchaSonido = (sonido) => {
-    let sonidoPreview = document.getElementById(sonido);
-    sonidoPreview.muted = false;
-    sonidoPreview.play();
+    if(sonido !== "silenciado"){
+        let sonidoPreview = document.getElementById(sonido);
+        sonidoPreview.muted = true;
+        sonidoPreview.muted = false;
+        sonidoPreview.play();
+    }
 };
 
 buttonConfiguracion.click(() => {
@@ -91,11 +135,14 @@ buttonConfiguracion.click(() => {
             let data = {
                 "id360": sesion_cookie.idUsuario_Sys,
                 "tono_mensaje": $("#seleccionarTonoMensaje").val(),
-                "tono_llamada": $("#seleccionarTonoLLamada").val()
+                "tono_llamada": $("#seleccionarTonoLLamada").val(),
+                "fecha": getFecha(),
+                "hora": getHora()
             };
             
             RequestPOST("/API/empresas360/cambiaConfiguracionUsuario", data).then((response) => {
                 
+                configuracionUsuario = {};
                 configuracionUsuario.id360 = sesion_cookie.idUsuario_Sys;
                 configuracionUsuario.tono_mensaje = $("#seleccionarTonoMensaje").val();
                 configuracionUsuario.tono_llamada = $("#seleccionarTonoLLamada").val();
@@ -108,6 +155,10 @@ buttonConfiguracion.click(() => {
     });
     
 });
+
+/*
+ * FIN REPRODUCCION DE SONIDOS
+ */
 
 let array_llamar = new Array();
 agregar_menu("Comunicación",'<i class="fas fa-comments"></i>',"Trabajo");
@@ -212,7 +263,7 @@ function recibir_chat(mensaje, viejo) {
                 notificacion_mensaje("Nuevo mensaje", body, () => {
                 });
                 
-                buttonNotificacion.click();
+                buttonNotificacionMensaje.click();
                 
             }
 
@@ -1324,7 +1375,7 @@ function contacto_chat(user) {
         ul.on("drop", function (event) {
             event.preventDefault();
             event.stopPropagation();
-            alert("Dropped!");
+            console.log(event);
         });
 
         input.on('keydown', function (e) {

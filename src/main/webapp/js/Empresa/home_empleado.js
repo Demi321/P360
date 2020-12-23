@@ -1,6 +1,6 @@
 
 
-/* global RequestPOST, swal, Swal, marcador3, DEPENDENCIA, marcador5, map5, google, RequestGET, XLSX, GenerarCredenciales, Credenciales */
+/* global RequestPOST, swal, Swal, marcador3, DEPENDENCIA, marcador5, map5, google, RequestGET, XLSX, GenerarCredenciales, Credenciales, reproduccionSonidoNotificacion, buttonNotificacionLlamada */
 
 console.log("Empleado");
 var directorio_completo = null;
@@ -53,6 +53,7 @@ WebSocketGeneral.onmessage = function (message) {
             
         }
         if (mensaje.llamada_multiplataforma) {
+            buttonNotificacionLlamada.click();
             notificacion_llamada(mensaje);
             prueba_notificacion(mensaje);
         }
@@ -188,6 +189,8 @@ function notificacion_llamada(mensaje) {
         reverseButtons: true
     }).then((result) => {
         console.log(result);
+        reproduccionSonidoNotificacion.loop = false;
+        reproduccionSonidoNotificacion.pause();
         if (result.value) {
             console.log(mensaje);
             
@@ -238,6 +241,9 @@ function prueba_notificacion(mensaje) {
         var notificar = new Notification(title, extra);
         notificar.onclick = function () {
             console.log('notification.Click');
+              
+            reproduccionSonidoNotificacion.loop = false;
+            reproduccionSonidoNotificacion.pause();  
               
             Swal.fire({
                 text: '¿Cómo quieres continuar la llamada? (Selecciona ventana externa.)',
