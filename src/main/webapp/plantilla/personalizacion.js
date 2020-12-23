@@ -234,14 +234,16 @@ function agregar_enlace(nombre, url, icono) {
 //    });
 
     if (!window.location.href.includes(url)) {
-        let div_cont = $("<div></div>").addClass("p-2 float-left");
+        let div_cont = $("<div></div>").addClass("p-2");
+        div_cont.css({
+            "display": "inline-block"
+        });
         let div = document.createElement("div");
-        div.style = "background-image:url('" + PathRecursos + "Img/iconoheader/" + icono + "');background-position:center;background-size:contain;background-repeat:no-repeat;border:none;width: 50px;height: 50px;filter: invert(1);cursor: pointer;margin: auto;";
+        div.style = "background-image:url('" + PathRecursos + "Img/iconoheader/" + icono + ".png');background-position:center;background-size:contain;background-repeat:no-repeat;border:none;width: 35px;height: 35px;filter: invert(1);cursor: pointer;";
         div_cont.append(div);
-        div_cont.append(nombre);
+        div_cont.text(nombre);
         $("#collapseServicios").append(div_cont);
-        div_cont.click(()=>{
-            console.log("click acceso externo");
+        div.click(()=>{
             acceso_externo(url);
         });
 //        let li = document.createElement("li");
