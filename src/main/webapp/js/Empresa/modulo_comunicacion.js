@@ -154,7 +154,45 @@ buttonConfiguracion.click(() => {
         }
     });
     
+    vuwModelGrupoChat();
+    
 });
+
+vuewModalParticipantesGrupo = () => {
+  
+    let pa = new Array();
+    var json = Directorio;
+    vue = new Vue({
+        components: {
+            Multiselect: window.VueMultiselect.default
+        },
+        data: {
+
+            value: [
+            ],
+            options: json
+
+
+        },
+        methods: {
+            customLabel(option) {
+                return  option.nombre + " " + option.apellido_paterno + " " + option.apellido_materno;
+            },
+            onSelect(op) {
+                pa.push(op);
+            },
+            onClose() {
+                //console.info(this.value);
+            },
+            onRemove(op) {
+                var i = pa.indexOf(op);
+                pa.splice(i, 1);
+            }
+
+        }
+    }).$mount('#agregaParticipantesGrupo');
+    
+};
 
 /*
  * FIN REPRODUCCION DE SONIDOS
@@ -165,13 +203,72 @@ buttonConfiguracion.click(() => {
  */
 let contenedorAgregarGrupo = $("<div></div>");
 
+let formCreaGrupo = $("<form></form>");
+formCreaGrupo.attr("id","formCreaGrupo");
+
 let formGroupNombreGrupo = $("<div></div>").addClass("form-group");
 let labelNombreGrupo = $("<label></label>");
-labelNombreGrupo.text("Título");
+labelNombreGrupo.text("Título del grupo");
+labelNombreGrupo.attr("for","inputNombreGrupo");
+let inputNombreGrupo = $("<input>").addClass("form-control");
+inputNombreGrupo.attr("id","inputNombreGrupo");
+inputNombreGrupo.attr("type","text");
+inputNombreGrupo.attr("required","true");
+formGroupNombreGrupo.append(labelNombreGrupo);
+formGroupNombreGrupo.append(inputNombreGrupo);
+formCreaGrupo.append(formGroupNombreGrupo);
+
+let formGroupDescripcionGrupo = $("<div></div>").addClass("form-group");
+let labelDescripcionGrupo = $("<label></label>")
+labelDescripcionGrupo.text("Descripción breve");
+labelDescripcionGrupo.attr("for","inputDescripcionGrupo");
+let inputDescripcionGrupo = $("<input>").addClass("form-control");
+inputDescripcionGrupo.attr("id","inputDescripcionGrupo");
+inputDescripcionGrupo.attr("type","text");
+inputDescripcionGrupo.attr("required","true");
+formGroupDescripcionGrupo.append(labelDescripcionGrupo);
+formGroupDescripcionGrupo.append(inputDescripcionGrupo);
+formCreaGrupo.append(formGroupDescripcionGrupo);
+
+let formGroupParticipantesGrupo = $("<div></div>").addClass("form-group");
+let labelParticipantesGrupo = $("<label></label>");
+labelParticipantesGrupo.text("Participantes");
+let selectParticipantesGrupo = '<div class="col-12" id="agregaParticipantesGrupo">' +
+                                    '<multiselect ' +
+                                    'placeholder=""' +
+                                    'v-model="value" ' +
+                                    ':options="options"' +
+                                    'track-by="id360"' +
+                                    ':multiple="true"' +
+                                    ':taggable="false"' +
+                                    ':close-on-select="false"' +
+                                    ':custom-label="customLabel" ' +
+                                    ':select-label="\'Seleccionar\'" ' +
+                                    ':selected-Label="\'Seleccionado\'"' +
+                                    ':deselect-Label="\'Remover\'"' +
+                                    ':hide-selected="true"' +
+                                    '@select="onSelect"' +
+                                    '@Close="onClose"' +
+                                    '@Remove="onRemove">' +
+                                    '</multiselect>' +
+                                    '<pre class="language-json" style="display:none"><code>{{ value  }}</code></pre>' +
+                                '</div>';
+formGroupParticipantesGrupo.append(labelParticipantesGrupo);
+formGroupParticipantesGrupo.append(selectParticipantesGrupo);
+formCreaGrupo.append(formGroupParticipantesGrupo);
+
+contenedorAgregarGrupo.append(formCreaGrupo);
 
 $("#addGroup").click(() => {
     
+    Swal.fire({
+        html: contenedorAgregarGrupo,
+        showCancelButton: true,
+        showConfirmButton: false,
+        cancelButtonText: 'Cancelar'
+    });
     
+    vuewModalParticipantesGrupo();
     
 });
 /*
