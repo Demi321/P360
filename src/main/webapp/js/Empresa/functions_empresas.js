@@ -23,6 +23,14 @@ RequestPOST("/API/ConsultarDirectorio", {
 }).then((response) => {
     directorio_completo = response.directorio;
 });
+
+var configuracionUsuario = null;
+RequestPOST("/API/empresas360/configuracionUsuario", {id360:JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario}).then((response) => {
+    if(response.length>0){
+        configuracionUsuario = response[0];
+    }
+});
+
 //var sesion_cookie = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
 AWS.config.update({
     region: bucketRegion,

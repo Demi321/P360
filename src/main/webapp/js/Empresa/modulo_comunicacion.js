@@ -6,13 +6,108 @@
 
 
 
-/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal */
+/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal, configuracionEmpleado, configuracionUsuario */
 //jQuery.event.props.push('dataTransfer');
 
 var NotificacionesActivadas = false;
 var CantidadMensajesPorChat = {};
 
 var dataLlamada = {};
+
+/*
+ * REPRODUCIR SONIDO AL LLEGAR NOTIFICACION
+ */
+var buttonNotificacion = $("<button></button>");
+buttonNotificacion.text("Reproducir notificacion");
+$("body").append(buttonNotificacion);
+buttonNotificacion.click(() => {
+    
+    let sonido = document.getElementById('sonido1');
+    if( configuracionUsuario !== null && configuracionUsuario.tono_mensaje !== undefined ){
+        sonido = document.getElementById(configuracionUsuario.tono_mensaje);
+    }
+    sonido.muted = false;
+    sonido.play();
+    
+});
+
+let buttonConfiguracion = $("#settings");
+
+let arrayTonos = ['sonido1','sonido2', 'sonido3','sonido4','sonido5','sonido6','sonido7', 'sonido8', 'sonido9', 'sonido10'];
+
+let contenedorConfig = $("<div></div>");
+
+let formGroupTonoMensaje = $("<div></div>").addClass("form-group");
+let labelTonoMensaje = $("<label></label>");
+labelTonoMensaje.text("Tono para mensajes");
+let selectTonoMensaje = $("<select></select>").addClass("form-control custom-select");
+selectTonoMensaje.attr("id","seleccionarTonoMensaje");
+selectTonoMensaje.attr("onchange", "escuchaSonido(this.value)");
+formGroupTonoMensaje.append(labelTonoMensaje);
+formGroupTonoMensaje.append(selectTonoMensaje);
+
+let formGroupTonoLlamada = $("<div></div>").addClass("form-group");
+let labelTonoLlamada = $("<label></label>");
+labelTonoLlamada.text("Tono para llamadas");
+let selectTonoLlamada = $("<select></select>").addClass("form-control custom-select");
+selectTonoLlamada.attr("id","seleccionarTonoLLamada");
+selectTonoLlamada.attr("onchange", "escuchaSonido(this.value)");
+formGroupTonoLlamada.append(labelTonoLlamada);
+formGroupTonoLlamada.append(selectTonoLlamada);
+
+$.each(arrayTonos, (index, tono) => {
+    let option = $("<option></option>");
+    option.attr("value",tono);
+    option.text("Tono " + (index+1));
+    selectTonoMensaje.append(option);
+});
+
+$.each(arrayTonos, (index, tono) => {
+    let option = $("<option></option>");
+    option.attr("value",tono);
+    option.text("Tono " + (index+1));
+    selectTonoLlamada.append(option);
+});
+
+contenedorConfig.append(formGroupTonoMensaje);
+contenedorConfig.append(formGroupTonoLlamada);
+
+const escuchaSonido = (sonido) => {
+    let sonidoPreview = document.getElementById(sonido);
+    sonidoPreview.muted = false;
+    sonidoPreview.play();
+};
+
+buttonConfiguracion.click(() => {
+    
+    Swal.fire({
+        html: contenedorConfig,
+        showCancelButton: true,
+        confirmButtonText: 'Aplicar cambios!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.value) {
+
+            let data = {
+                "id360": sesion_cookie.idUsuario_Sys,
+                "tono_mensaje": $("#seleccionarTonoMensaje").val(),
+                "tono_llamada": $("#seleccionarTonoLLamada").val()
+            };
+            
+            RequestPOST("/API/empresas360/cambiaConfiguracionUsuario", data).then((response) => {
+                
+                configuracionUsuario.id360 = sesion_cookie.idUsuario_Sys;
+                configuracionUsuario.tono_mensaje = $("#seleccionarTonoMensaje").val();
+                configuracionUsuario.tono_llamada = $("#seleccionarTonoLLamada").val();
+                
+                swal.fire({text:'Se ha guardado tu configuracion exitosamente'});
+                
+            });
+ 
+        }
+    });
+    
+});
 
 let array_llamar = new Array();
 agregar_menu("Comunicación",'<i class="fas fa-comments"></i>',"Trabajo");
@@ -116,7 +211,9 @@ function recibir_chat(mensaje, viejo) {
 
                 notificacion_mensaje("Nuevo mensaje", body, () => {
                 });
-
+                
+                buttonNotificacion.click();
+                
             }
 
             agregar_chat(mensaje, user, "send", viejo);
