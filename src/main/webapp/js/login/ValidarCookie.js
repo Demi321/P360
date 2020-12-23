@@ -56,8 +56,8 @@ function getCookie(cname) {
 
 function checkCookie() {
     var user = getCookie("username_v3.1_" + DEPENDENCIA);
-    sesion_cookie=user;
-    
+    sesion_cookie = user;
+
     if (user === "") {
         //XD
         if (window.location.href.includes("/Reporte/")) {
@@ -96,7 +96,7 @@ function checkCookie() {
 
 
         } else {
-            
+
 
             if (window.location.toString().split(DEPENDENCIA)[1] !== "/Login")
             {
@@ -109,7 +109,7 @@ function checkCookie() {
 
 
     } else {
-        sesion_cookie=JSON.parse(user);//ya 
+        sesion_cookie = JSON.parse(user);//ya 
         if (!JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("modulos")) {
             deleteCookie("username_v3.1_" + DEPENDENCIA);
         }
@@ -157,6 +157,10 @@ function checkCookie() {
 
             if ($("#nombre_modal").length) {
                 $("#nombre_modal").text(u.nombre + " " + u.apellido_p + " " + u.apellido_m);
+                $("#nombre_modal").css({
+                    "color": "#da2a1c",
+                    "font-size": "18px"
+                });
             }
             if ($("#correo_modal").length) {
                 $("#correo_modal").text(u.correo);
@@ -164,11 +168,22 @@ function checkCookie() {
             if ($("#direccion_modal").length) {
                 $("#direccion_modal").text(u.direccion);
             }
-            if(user.segmento === null){
+            if (user.segmento === null) {
                 personalizar_header("empresa");
-            }else{
+            } else {
                 personalizar_header(user.segmento);
             }
+            /*Cambios fernando*/
+            if (user.hasOwnProperty("img_perfil")) {
+                $("#img_perfil_user").empty();
+                $("#img_perfil_user").css({
+                    "background-image": "url('" + user.img_perfil + "')",
+                    "background-position": "center center",
+                    "background-repeat": "no-repeat",
+                    "background-size": "cover"
+                });
+            }
+            /******************/
         }
 
         if ($("#user").length)
@@ -248,10 +263,10 @@ function agregar_enlace_estatico(nombre, url, icono) {
         div_cont.append(div);
         div_cont.text(nombre);
         $("#collapseServicios").append(div_cont);
-        div.click(()=>{
+        div.click(() => {
             acceso_externo(url);
         });
-        
+
 //        let li = document.createElement("li");
 ////    let input = document.createElement("input");
 ////    input.type="hidden";
