@@ -160,6 +160,24 @@ buttonConfiguracion.click(() => {
  * FIN REPRODUCCION DE SONIDOS
  */
 
+/*
+ * BOTON CREACION DE GRUPOS
+ */
+let contenedorAgregarGrupo = $("<div></div>");
+
+let formGroupNombreGrupo = $("<div></div>").addClass("form-group");
+let labelNombreGrupo = $("<label></label>");
+labelNombreGrupo.text("Título");
+
+$("#addGroup").click(() => {
+    
+    
+    
+});
+/*
+ * FIN CREACION DE GRUPO
+ */
+
 let array_llamar = new Array();
 agregar_menu("Comunicación",'<i class="fas fa-comments"></i>',"Trabajo");
 Vue.component("multiselect", window.VueMultiselect.default);
