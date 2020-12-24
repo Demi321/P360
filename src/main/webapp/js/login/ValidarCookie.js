@@ -34,7 +34,15 @@ function deleteCookie(cname) {
     var expires = "expires=" + d.toGMTString();
     document.cookie = cname + "=" + "value" + ";" + expires + ";path=/";
     //deleteAllCookies();
-    window.location.reload();
+
+    //usar servicio para dar de baja la sesion 
+    RequestPOST("/API/cuenta360/logout_sesion", {
+        "id_sesion": sesion_cookie.id_sesion
+    }).then(() => {
+        //redirigir a claro360
+        window.location.href="https://claro360.com";
+    });
+
 }
 
 function getCookie(cname) {
@@ -56,8 +64,8 @@ function getCookie(cname) {
 
 function checkCookie() {
     var user = getCookie("username_v3.1_" + DEPENDENCIA);
-    sesion_cookie=user;
-    
+    sesion_cookie = user;
+
     if (user === "") {
         //XD
         if (window.location.href.includes("/Reporte/")) {
@@ -96,8 +104,9 @@ function checkCookie() {
 
 
         } else {
-            
 
+             window.location.href="https://claro360.com";
+             
             if (window.location.toString().split(DEPENDENCIA)[1] !== "/Login")
             {
                 var hostdir = window.location.protocol + "//" + window.location.host;
@@ -109,7 +118,15 @@ function checkCookie() {
 
 
     } else {
-        sesion_cookie=JSON.parse(user);//ya 
+        sesion_cookie = JSON.parse(user);//ya 
+        //validar la sesion 
+        RequestPOST("/API/cuenta360/check_login",{
+            "id_sesion":sesion_cookie.id_sesion
+        }).then((response)=>{
+            if(response.failure){
+                deleteCookie("username_v3.1_" + DEPENDENCIA);
+            }
+        });
         if (!JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("modulos")) {
             deleteCookie("username_v3.1_" + DEPENDENCIA);
         }
@@ -157,6 +174,10 @@ function checkCookie() {
 
             if ($("#nombre_modal").length) {
                 $("#nombre_modal").text(u.nombre + " " + u.apellido_p + " " + u.apellido_m);
+                $("#nombre_modal").css({
+                    "color": "#da2a1c",
+                    "font-size": "18px"
+                });
             }
             if ($("#correo_modal").length) {
                 $("#correo_modal").text(u.correo);
@@ -164,11 +185,22 @@ function checkCookie() {
             if ($("#direccion_modal").length) {
                 $("#direccion_modal").text(u.direccion);
             }
-            if(user.segmento === null){
+            if (user.segmento === null) {
                 personalizar_header("empresa");
-            }else{
+            } else {
                 personalizar_header(user.segmento);
             }
+            /*Cambios fernando*/
+            if (user.hasOwnProperty("img_perfil")) {
+                $("#img_perfil_user").empty();
+                $("#img_perfil_user").css({
+                    "background-image": "url('" + user.img_perfil + "')",
+                    "background-position": "center center",
+                    "background-repeat": "no-repeat",
+                    "background-size": "cover"
+                });
+            }
+            /******************/
         }
 
         if ($("#user").length)
@@ -239,21 +271,34 @@ if ($("#menu_cerrar_sesion").length) {
 function agregar_enlace_estatico(nombre, url, icono) {
 
     if (!window.location.href.includes(url)) {
-        let li = document.createElement("li");
-//    let input = document.createElement("input");
-//    input.type="hidden";
-        let a = document.createElement("a");
-        a.href = "#";
-        a.innerHTML = nombre;
+        let div_cont = $("<div></div>").addClass("p-2");
+        div_cont.css({
+            "display": "inline-block"
+        });
         let div = document.createElement("div");
-        div.style = "background-image:url('" + PathRecursos + "Img/iconoheader/" + icono + ".png');background-position:center;background-size:contain;background-repeat:no-repeat;border:none;width: 35px;height: 35px;";
-
-        li.appendChild(a);
-        a.appendChild(div);
-        $("#collapseServicios").append(li);
-        a.addEventListener("click", function () {
+        div.style = "background-image:url('" + PathRecursos + "Img/iconoheader/" + icono + ".png');background-position:center;background-size:contain;background-repeat:no-repeat;border:none;width: 35px;height: 35px;filter: invert(1);cursor: pointer;";
+        div_cont.append(div);
+        div_cont.append(nombre);
+        $("#collapseServicios").append(div_cont);
+        div.click(() => {
             acceso_externo(url);
         });
+
+//        let li = document.createElement("li");
+////    let input = document.createElement("input");
+////    input.type="hidden";
+//        let a = document.createElement("a");
+//        a.href = "#";
+//        a.innerHTML = nombre;
+//        let div = document.createElement("div");
+//        div.style = "background-image:url('" + PathRecursos + "Img/iconoheader/" + icono + ".png');background-position:center;background-size:contain;background-repeat:no-repeat;border:none;width: 35px;height: 35px;";
+//
+//        li.appendChild(a);
+//        a.appendChild(div);
+//        $("#collapseServicios").append(li);
+//        a.addEventListener("click", function () {
+//            acceso_externo(url);
+//        });
     }
 }
 function agregar_enlace_estatico_perfil(nombre, url) {
@@ -409,4 +454,22 @@ function deleteAllCookies() {
 
         // document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
+}
+
+function RequestPOST(url, json) {
+    return Promise.resolve($.ajax({
+        type: 'POST',
+        url: '/' + DEPENDENCIA + url,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(json),
+        success: function (response) {
+            console.log(url);
+            console.log(response);
+            console.log("/*********************************************/");
+        },
+        error: function (err) {
+            console.error(err);
+        }
+    }));
 }

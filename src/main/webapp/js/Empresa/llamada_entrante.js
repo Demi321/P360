@@ -17,9 +17,57 @@ RequestPOST("/API/ConsultarDirectorio", {
     "tipo_area": "0"
 }).then((response) => {
     dataG = response;
-    initializeSession();
+    //initializeSession();
     Directorio = response.directorio;
     directorio();
+
+    swal.fire({
+        html: '<form class="">' +
+                '<h2>Configuración de hardware</h2>' +
+                '<div class="mb-3">' +
+                '<label for="audio-source-select" class="form-label">Microfono</label>' +
+                '<select id="audio-source-select" class="form-control"></select>' +
+                '</div>' +
+                '<div class="mb-3">' +
+                '<label for="video-source-select" class="form-label">Camara</label>' +
+                '<select id="video-source-select" class="form-control"></select>' +
+                '</div>' +
+                '</form>',
+        allowOutsideClick: false,
+        confirmButtonText: 'Iniciar<i class="ms-2 fas fa-arrow-circle-right"></i>',
+        preConfirm: () => {
+            return {
+                audio: $("#audio-source-select").val(),
+                video: $("#video-source-select").val()
+            };
+        }
+    }).then((result) => {
+        console.log(result);
+        initializeSession(result.value);
+
+    });
+
+
+    let audioSelector = $('#audio-source-select');
+    let videoSelector = $('#video-source-select');
+    let publishBtn = $('#publish-btn');
+    let cycleVideoBtn = $('#cycle-video-btn');
+
+    publishBtn.disabled = true;
+// We request access to Microphones and Cameras so we can get the labels
+    OT.getUserMedia().then((stream) => {
+        populateDeviceSources(audioSelector, 'audioInput');
+        populateDeviceSources(videoSelector, 'videoInput');
+        // Stop the tracks so that we stop using this camera and microphone
+        // If you don't do this then cycleVideo does not work on some Android devices
+        stream.getTracks().forEach(track => track.stop());
+    });
+    OT.getUserMedia().catch(function (err) {
+        console.log(err);
+    });
+
+
+
 });
 
 //RequestPOST("/API/empresas360/GruposPersonalizados", {
@@ -33,8 +81,34 @@ RequestPOST("/API/ConsultarDirectorio", {
 //});
 
 
+// Get the list of devices and populate the drop down lists
+function populateDeviceSources(selector, kind) {
+    OT.getDevices((err, devices) => {
+        if (err) {
+            alert('getDevices error ' + err.message);
+            return;
+        }
+        let index = 0;
+        console.log(devices);
+        for (var i in devices) {
+            let device = devices[i];
+            if (!device.label) {
+                device.label = device.kind + index;
+            }
+            if (device.kind === kind) {
+                let option = $("<option value = '" + device.deviceId + "'>" + device.label + "</option>");
+                selector.append(option);
+                index += 1;
+            }
 
-function initializeSession() {
+        }
+        console.log(selector);
+        console.log(selector.id);
+        publishBtn.disabled = false;
+    });
+}
+
+function initializeSession(settings) {
     var session = OT.initSession(data.credenciales.apikey, data.credenciales.sesion);
 
     session.on({
@@ -47,7 +121,7 @@ function initializeSession() {
 
             connectionCount--;
             if (connectionCount <= 1) {
-                session.disconnect();
+                //session.disconnect();
             }
 
 
@@ -129,8 +203,8 @@ function initializeSession() {
                 var info_user = JSON.parse(event.data);
                 CardParticipante_user_connected(info_user);
                 enviarMensajeOT(session, "user_connected2", {
-                        id360: sesion_cookie.id_usuario
-                    });
+                    id360: sesion_cookie.id_usuario
+                });
             }
             if (event.type === "signal:user_connected2") {
                 /////////Se identifico un nuevo usuario conectado 
@@ -162,7 +236,9 @@ function initializeSession() {
                 insertMode: 'replace',
                 width: '100%',
                 height: '100%',
-                name: sesion_cookie.nombre +" " +sesion_cookie.apellidos,
+                name: sesion_cookie.nombre + " " + sesion_cookie.apellidos,
+                audioSource: settings.audio,
+                videoSource: settings.video
             };
             var publisher = OT.initPublisher('publisher', publisherOptions, function initCallback(initErr) {
 
@@ -227,7 +303,7 @@ function initializeSession() {
 
 
                     var colgar = document.createElement("div");
-                    colgar.className = "col-3";
+                    colgar.className = "col";
                     colgar.id = "colgarPublisher";
                     colgar.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;color:red;cursor:pointer;border-right:solid 1px #6c757d;";
                     colgar.innerHTML = '<i class="fas fa-phone-slash"></i>';
@@ -243,7 +319,7 @@ function initializeSession() {
 
                     //////////Solicitar Cambio de camara  ******
                     var activarVideo = document.createElement("div");
-                    activarVideo.className = "col-3";
+                    activarVideo.className = "col";
                     activarVideo.innerHTML = '<i class="fas fa-video"></i>';
                     activarVideo.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-right:solid 1px #6c757d;";
                     activarVideo.addEventListener("click", function () {
@@ -260,7 +336,7 @@ function initializeSession() {
 
                     //////////Solicitar Bloqueo de microfono  ******
                     var activarAudio = document.createElement("div");
-                    activarAudio.className = "col-3";
+                    activarAudio.className = "col";
                     activarAudio.innerHTML = '<i class="fas fa-microphone"></i>';
                     activarAudio.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-right:solid 1px #6c757d;";
                     activarAudio.addEventListener("click", function () {
@@ -276,7 +352,7 @@ function initializeSession() {
 
                     //////////Compartir Pantalla  ******
                     var share_screen = document.createElement("div");
-                    share_screen.className = "col-3";
+                    share_screen.className = "col";
                     share_screen.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;"
                     share_screen.innerHTML = '<i class="fas fa-external-link-alt"></i>';
                     share_screen.addEventListener("click", function () {
@@ -298,14 +374,14 @@ function initializeSession() {
                                                 // Look at error.message to see what went wrong.
                                             } else {
                                                 let stop_share = document.createElement("div");
-                                                stop_share.className = "col-3";
+                                                stop_share.className = "col";
                                                 stop_share.id = "stop_sharePublisher";
                                                 stop_share.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;color:red;cursor:pointer;border-right:solid 1px #6c757d;";
                                                 stop_share.innerHTML = '<i class="far fa-times-circle"></i>';
                                                 stop_share.addEventListener("click", function () {
                                                     session.unpublish(publisher_screen);
-                                                    share_screen.className = "col-3";
-                                                    stop_share.className = "col-3 d-none";
+                                                    share_screen.className = "col";
+                                                    stop_share.className = "col d-none";
                                                     $("#maximizarVideo").removeClass("active");
                                                     $("aside").removeAttr('style');
                                                     $("header").removeAttr('style');
@@ -326,7 +402,7 @@ function initializeSession() {
                                                     showToggle();
                                                 });
                                                 botones.appendChild(stop_share);
-                                                share_screen.className = "col-3 d-none";
+                                                share_screen.className = "col d-none";
                                                 $("#maximizarVideo").click();
                                                 session.publish(publisher_screen, function (error) {
                                                     if (error) {
@@ -358,20 +434,112 @@ function initializeSession() {
 
                     });
                     botones.appendChild(share_screen);
+
+
+                    /*****************Settings audio and video publisher *****************/
+
+                    var audio_video_settings = document.createElement("div");
+                    audio_video_settings.className = "col";
+                    audio_video_settings.innerHTML = '<i class="fas fa-cog" id="settings"></i>';
+                    audio_video_settings.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-left:solid 1px #6c757d;";
+                    audio_video_settings.addEventListener("click", function () {
+                        swal.fire({
+                            html: '<form class="">' +
+                                    '<h2>Configuración de hardware</h2>' +
+                                    '<div class="mb-3">' +
+                                    '<label for="audio-source-select" class="form-label">Microfono</label>' +
+                                    '<select id="audio-source-select" class="form-control"></select>' +
+                                    '</div>' +
+                                    '<div class="mb-3" id="audio-meter">' +
+                                    '<label for="audio-source-select" class="form-label">Nivel del microfono</label>' +
+                                    '<meter min="0" max="1" low=".25" optimum=".55" high=".85"></meter>' +
+                                    '</div>' +
+                                    '<div class="mb-3">' +
+                                    '<label for="video-source-select" class="form-label">Camara</label>' +
+                                    '<select id="video-source-select" class="form-control"></select>' +
+                                    '</div>' +
+                                    '</form>',
+                            confirmButtonText: 'Aceptar',
+                        }).then((result) => {
+                            console.log(result);
+                        });
+
+                        let audioSelector = $('#audio-source-select');
+                        let videoSelector = $('#video-source-select');
+                        let audioLevel = $('#audio-meter');
+                        let meter = $('#audio-meter meter');
+
+
+                        OT.getUserMedia().then((stream) => {
+                            populateDeviceSources(audioSelector, 'audioInput');
+                            populateDeviceSources(videoSelector, 'videoInput');
+                            // Stop the tracks so that we stop using this camera and microphone
+                            // If you don't do this then cycleVideo does not work on some Android devices
+                            stream.getTracks().forEach(track => track.stop());
+                        });
+                        OT.getUserMedia().catch(function (err) {
+                            console.log(err);
+                        });
+
+                        audioSelector.attr("disabled", false);
+
+                        // When the audio selector changes we update the audio source
+                        audioSelector.on('change', () => {
+                            console.log(event.target);
+                            audioSelector.attr("disabled", true);
+                            publisher.setAudioSource(event.target.value).then(() => {
+                                audioSelector.attr("disabled", false);
+                            }).catch((err) => {
+                                alert(`setAudioSource failed: ${err.message}`);
+                                audioSelector.attr("disabled", false);
+                            });
+                        });
+
+                        videoSelector.attr("disabled", false);
+
+                        // When the audio selector changes we update the audio source
+                        videoSelector.on('change', () => {
+                            console.log(event.target);
+                            videoSelector.attr("disabled", true);
+                            publisher.cycleVideo(event.target.value).then(() => {
+                                videoSelector.attr("disabled", false);
+                            }).catch((err) => {
+                                alert(`videoSelector failed: ${err.message}`);
+                                videoSelector.attr("disabled", false);
+                            });
+                        });
+
+                        let movingAvg = null;
+                        publisher.on('audioLevelUpdated', (event) => {
+                            if (movingAvg === null || movingAvg <= event.audioLevel) {
+                                movingAvg = event.audioLevel;
+                            } else {
+                                movingAvg = 0.7 * movingAvg + 0.3 * event.audioLevel;
+                            }
+
+                            // 1.5 scaling to map the -30 - 0 dBm range to [0,1]
+                            var logLevel = (Math.log(movingAvg) / Math.LN10) / 1.5 + 1;
+                            logLevel = Math.min(Math.max(logLevel, 0), 1);
+                            meter.val(logLevel);
+                        });
+                    });
+                    botones.appendChild(audio_video_settings);
+
+
                     console.log(menu);
                     console.log(document.getElementById("videos"));
                     document.getElementById("videos").appendChild(menu);
-                     $(".OT_publisher .OT_mute").click(() => {
-                            activarAudio.click();
-                        });
+                    $(".OT_publisher .OT_mute").click(() => {
+                        activarAudio.click();
+                    });
 
-                        $(".OT_publisher .OT_mute").css({
-                            "outline": "none"
-                        });
+                    $(".OT_publisher .OT_mute").css({
+                        "outline": "none"
+                    });
 
-                        $(".OT_subscriber .OT_mute").css({
-                            "outline": "none"
-                        });
+                    $(".OT_subscriber .OT_mute").css({
+                        "outline": "none"
+                    });
 //                    var colgar = document.createElement("input");
 //                    colgar.className = "colgarPublisher";
 //                    colgar.id = "colgarPublisher";

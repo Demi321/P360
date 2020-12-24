@@ -526,3 +526,20 @@ function getTime(zone, success) {
 //    alert( 'The time in London is ' + formatted );
 //});
 
+function RequestPOST(url, json) {
+    return Promise.resolve($.ajax({
+        type: 'POST',
+        url: '/' + DEPENDENCIA + url,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(json),
+        success: function (response) {
+            console.log(url);
+            console.log(response);
+            console.log("/*********************************************/");
+        },
+        error: function (err) {
+            console.error(err);
+        }
+    }));
+}

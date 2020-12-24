@@ -632,7 +632,14 @@ function agregarVideo(session, stream) {
         insertMode: 'replace',
         fitMode: "contain"
     };
-
+    if (stream.videoType === "screen") {
+        subscriberOptions = {
+            insertMode: 'replace',
+            fitMode: "contain",
+            publishAudio: true,
+            publishVideo: false
+        };
+    }
     var pos = NuevaUbicacion();
     session.subscribe(stream, pos, subscriberOptions, function callback(error) {
         if (error)
@@ -652,7 +659,7 @@ function agregarVideo(session, stream) {
                     }
                 });
             });
-            
+
             document.getElementById(pos).appendChild(event);
             //////////Colgar la llamada   ******
             var usrDesconectado = false;
@@ -718,10 +725,50 @@ function agregarVideo(session, stream) {
 
 
         }
-        if(stream.videoType==="screen"){
-                event.click();
-                $("#maximizarVideo").click();
-            }
+        if (stream.videoType === "screen") {
+            event.click();
+            //$("#maximizarVideo").click();
+            $("aside").css({
+                "display": "none"
+            });
+            $("header").css({
+                "display": "none"
+            });
+            $("footer").css({
+                "display": "none"
+            });
+            $("section").css({
+                "height": "100%",
+                "width": "100%",
+                "top": "0",
+                "left": "0",
+                "background": "black"
+            });
+            $("#side1").css({
+                "display": "none"
+            });
+            $("#hamburgerMenu").parent().css({
+                "display": "none"
+            });
+            $("#side2").css({
+                "width": "100%",
+                "padding": "0",
+                "height": "100%"
+            });
+            $("#publishers").css({
+                "display": "none"
+            });
+            $("#GRID").css({
+                "height": "100%"
+            });
+            $("#loading").css({
+                "position": "absolute",
+                "height": "20%",
+                "width": "10%",
+                "left": "45%",
+                "top": "30%"
+            });
+        }
     });
 
 }
@@ -732,7 +779,7 @@ function agregarVideo_target(session, stream, target) {
     };
 
     var pos = NuevaUbicacion_target(target);
-    var subscriber =session.subscribe(stream, pos, subscriberOptions, function callback(error) {
+    var subscriber = session.subscribe(stream, pos, subscriberOptions, function callback(error) {
         if (error)
         {
             console.error('There was an error publishing: ', error.name, error.message);
@@ -816,7 +863,7 @@ function agregarVideo_target(session, stream, target) {
 
         }
     });
-    
+
     return subscriber;
 
 }
@@ -1217,11 +1264,11 @@ function mosaico(metodo, id360) {
         }
         return clase;
     } else if (metodo === "remover") {
-        
-        if(id360 !== undefined && id360 !== null){
-            $("#participantes #card"+id360).remove();
+
+        if (id360 !== undefined && id360 !== null) {
+            $("#participantes #card" + id360).remove();
         }
-        
+
         count--;
 
         var x = $("#GRID *");
@@ -1986,21 +2033,21 @@ function ArchiveSession() {
 function initMap() {
     if ($("#map").length) {
         console.log("inicializando mapa");
-        map = new google.maps.Map(document.getElementById('map'), { zoom: 5, center: { lat: 19.503329, lng: -99.185714 } /*,mapTypeId:'satellite'*/ , styles: [{ featureType: 'administrative', elementType: 'geometry', stylers: [{ visibility: "off" }, { "weight": 1 }] }, { featureType: 'administrative', elementType: 'geometry.fill', stylers: [{ visibility: "on" }] }, { featureType: 'administrative', elementType: 'geometry.stroke', stylers: [{ visibility: "off" }] }, { featureType: 'administrative', elementType: 'labels', stylers: [{ color: '#000000' }, { visibility: "off" }] }, { featureType: 'administrative.country', elementType: 'geometry', stylers: [{ color: '#a6a6a6' }, { visibility: "on" }, { "weight": 1.5 }] }, { featureType: 'administrative.country', elementType: 'labels', stylers: [{ visibility: "off" }] }, { featureType: 'administrative.country', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'administrative.land_parcel', elementType: 'geometry', stylers: [{ visibility: "on" }] }, { featureType: 'administrative.land_parcel', elementType: 'labels', stylers: [{ visibility: "on" }] }, { featureType: 'administrative.land_parcel', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'administrative.locality', elementType: 'geometry', stylers: [{ visibility: "on" }] }, { featureType: 'administrative.locality', elementType: 'labels', stylers: [{ visibility: "off" }] }, { featureType: 'administrative.locality', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'administrative.neighborhood', elementType: 'geometry', stylers: [{ visibility: "on" }] }, { featureType: 'administrative.neighborhood', elementType: 'labels', stylers: [{ color: '#696969' }, { visibility: "simplified" }] }, { featureType: 'administrative.neighborhood', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'administrative.province', elementType: 'geometry', stylers: [{ visibility: "on" }, { "weight": 1.5 }] }, { featureType: 'administrative.province', elementType: 'labels', stylers: [{ visibility: "off" }] }, { featureType: 'administrative.province', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: "landscape", stylers: [{ color: '#D5D8DC' }] }, { featureType: 'landscape', elementType: 'geometry', stylers: [{ color: '#D5D8DC' }] }, { featureType: 'landscape', elementType: 'labels', stylers: [{ visibility: "off" }] }, { featureType: 'landscape', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'landscape.man_made', elementType: 'geometry', stylers: [{ color: '#526081' }, { visibility: "off" }] }, { featureType: 'landscape.natural.landcover', elementType: 'geometry', stylers: [{ visibility: "off" }] }, { featureType: 'landscape.natural.landcover', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'landscape.natural.terrain', elementType: 'geometry', stylers: [{ visibility: "off" }] }, { featureType: 'landscape.natural.terrain', elementType: 'labels', stylers: [{ visibility: "off" }] }, { featureType: 'landscape.natural.terrain', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'poi', elementType: 'geometry', stylers: [{ visibility: "off" }] }, { featureType: 'poi', elementType: 'labels', stylers: [{ visibility: "off" }] }, { featureType: 'poi', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'road', elementType: 'geometry', stylers: [{ visibility: "simplified" }] }, { featureType: 'road', elementType: 'labels', stylers: [{ visibility: "simplified" }] }, { featureType: 'road', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'transit', elementType: 'geometry', stylers: [{ visibility: "off" }] }, { featureType: 'transit', elementType: 'labels', stylers: [{ visibility: "off" }] }, { featureType: 'transit', elementType: 'labels.icon', stylers: [{ visibility: "off" }] }, { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#F2F4F4' }, { visibility: "on" }] }, { featureType: 'water', elementType: 'labels', stylers: [{ visibility: "off" }] }] });
+        map = new google.maps.Map(document.getElementById('map'), {zoom: 5, center: {lat: 19.503329, lng: -99.185714} /*,mapTypeId:'satellite'*/, styles: [{featureType: 'administrative', elementType: 'geometry', stylers: [{visibility: "off"}, {"weight": 1}]}, {featureType: 'administrative', elementType: 'geometry.fill', stylers: [{visibility: "on"}]}, {featureType: 'administrative', elementType: 'geometry.stroke', stylers: [{visibility: "off"}]}, {featureType: 'administrative', elementType: 'labels', stylers: [{color: '#000000'}, {visibility: "off"}]}, {featureType: 'administrative.country', elementType: 'geometry', stylers: [{color: '#a6a6a6'}, {visibility: "on"}, {"weight": 1.5}]}, {featureType: 'administrative.country', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.country', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.land_parcel', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.land_parcel', elementType: 'labels', stylers: [{visibility: "on"}]}, {featureType: 'administrative.land_parcel', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.locality', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.locality', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.locality', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.neighborhood', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.neighborhood', elementType: 'labels', stylers: [{color: '#696969'}, {visibility: "simplified"}]}, {featureType: 'administrative.neighborhood', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.province', elementType: 'geometry', stylers: [{visibility: "on"}, {"weight": 1.5}]}, {featureType: 'administrative.province', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.province', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: "landscape", stylers: [{color: '#D5D8DC'}]}, {featureType: 'landscape', elementType: 'geometry', stylers: [{color: '#D5D8DC'}]}, {featureType: 'landscape', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'landscape', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'landscape.man_made', elementType: 'geometry', stylers: [{color: '#526081'}, {visibility: "off"}]}, {featureType: 'landscape.natural.landcover', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.landcover', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'road', elementType: 'geometry', stylers: [{visibility: "simplified"}]}, {featureType: 'road', elementType: 'labels', stylers: [{visibility: "simplified"}]}, {featureType: 'road', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'water', elementType: 'geometry', stylers: [{color: '#F2F4F4'}, {visibility: "on"}]}, {featureType: 'water', elementType: 'labels', stylers: [{visibility: "off"}]}]});
         map.setTilt(45);
         geocoder = new google.maps.Geocoder;
-        infowindow = new google.maps.InfoWindow({ maxWidth: 300 });
-        RutaCamino = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#18478d', strokeOpacity: 0.5, strokeWeight: 4 });
-        RutaCamino0 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#18478d', strokeOpacity: 0.5, strokeWeight: 4 });
-        RutaCamino1 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#1c447f', strokeOpacity: 0.5, strokeWeight: 4 });
-        RutaCamino2 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#1f4071', strokeOpacity: 0.5, strokeWeight: 4 });
-        RutaCamino3 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#223e65', strokeOpacity: 0.5, strokeWeight: 4 });
-        RutaCamino4 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#263a57', strokeOpacity: 0.5, strokeWeight: 4 });
-        RutaCamino5 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#283851', strokeOpacity: 0.5, strokeWeight: 4 });
-        RutaCamino6 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#2a3648', strokeOpacity: 0.5, strokeWeight: 4 });
-        RutaCamino7 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#2c3441', strokeOpacity: 0.5, strokeWeight: 4 });
-        RutaCamino8 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#2f3236', strokeOpacity: 0.5, strokeWeight: 4 });
-        RutaCamino9 = new google.maps.Polyline({ path: [], geodesic: true, strokeColor: '#303132', strokeOpacity: 0.5, strokeWeight: 4 });
+        infowindow = new google.maps.InfoWindow({maxWidth: 300});
+        RutaCamino = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#18478d', strokeOpacity: 0.5, strokeWeight: 4});
+        RutaCamino0 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#18478d', strokeOpacity: 0.5, strokeWeight: 4});
+        RutaCamino1 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#1c447f', strokeOpacity: 0.5, strokeWeight: 4});
+        RutaCamino2 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#1f4071', strokeOpacity: 0.5, strokeWeight: 4});
+        RutaCamino3 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#223e65', strokeOpacity: 0.5, strokeWeight: 4});
+        RutaCamino4 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#263a57', strokeOpacity: 0.5, strokeWeight: 4});
+        RutaCamino5 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#283851', strokeOpacity: 0.5, strokeWeight: 4});
+        RutaCamino6 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#2a3648', strokeOpacity: 0.5, strokeWeight: 4});
+        RutaCamino7 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#2c3441', strokeOpacity: 0.5, strokeWeight: 4});
+        RutaCamino8 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#2f3236', strokeOpacity: 0.5, strokeWeight: 4});
+        RutaCamino9 = new google.maps.Polyline({path: [], geodesic: true, strokeColor: '#303132', strokeOpacity: 0.5, strokeWeight: 4});
 
 
         Circle = new google.maps.Circle({
@@ -2012,7 +2059,7 @@ function initMap() {
             map: null,
             radius: 0
         });
-        marcador = new google.maps.Marker({ map: map });
+        marcador = new google.maps.Marker({map: map});
         console.log("Mapa inicializado: map");
         if ($("#d_autocompletar").length) {
             let input = document.getElementById("d_autocompletar");
@@ -2089,14 +2136,14 @@ function initMap() {
                 if (place.address_components) {
                     address = [
                         (place.address_components[0] &&
-                            place.address_components[0].short_name) ||
-                        "",
+                                place.address_components[0].short_name) ||
+                                "",
                         (place.address_components[1] &&
-                            place.address_components[1].short_name) ||
-                        "",
+                                place.address_components[1].short_name) ||
+                                "",
                         (place.address_components[2] &&
-                            place.address_components[2].short_name) ||
-                        ""
+                                place.address_components[2].short_name) ||
+                                ""
                     ].join(" ");
                 }
                 for (var i = 0; i < place.address_components.length; i++) {
@@ -6182,7 +6229,8 @@ function buildJSON_Section(id) {
 function acceso_externo(url) {
     RequestPOST("/API/cuenta360/access_token", {
         "token": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).token,
-        "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys
+        "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+        "id_sesion": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_sesion
     }).then(function (response) {
         if (response.success) {
             //access_token
@@ -6193,15 +6241,16 @@ function acceso_externo(url) {
 
     });
 }
-function acceso_externo_ruta(url,ruta) {
+function acceso_externo_ruta(url, ruta) {
     RequestPOST("/API/cuenta360/access_token", {
         "token": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).token,
-        "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys
+        "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+        "id_sesion": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_sesion
     }).then(function (response) {
         if (response.success) {
             //access_token
-            ruta = ruta.replace(/\//g,"*");
-            let path = url + "API/cuenta360/access_token/" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys + "/" + response.access_token+"/"+ruta;
+            ruta = ruta.replace(/\//g, "*");
+            let path = url + "API/cuenta360/access_token/" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys + "/" + response.access_token + "/" + ruta;
             window.location.replace(path);
 //            window.open(path);
         }
@@ -6376,14 +6425,14 @@ function validarFecha(fecha) {
 }
 
 function personalizar_header(perfil) {
-    let perfiles = ["persona","empresa","corporativo","gobierno"];
-    if(perfiles.includes(perfil)){
-        for(let i=0; i<perfiles.length; i++){
+    let perfiles = ["persona", "empresa", "corporativo", "gobierno"];
+    if (perfiles.includes(perfil)) {
+        for (let i = 0; i < perfiles.length; i++) {
             $(".segmento").removeClass(perfiles[i]);
         }
         $(".segmento").addClass(perfil);
-    }else{
+    } else {
         console.error("Perfil: " + perfil + " no identificado.");
     }
-    
+
 }

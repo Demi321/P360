@@ -20,7 +20,7 @@ $("div[id^='menu_section_']").click((e) => {
     } else {
         videowall_started = false;
     }
-    console.log(e.target.id);
+    //*console.log(e.target.id);
 });
 
 // obtener Backup de los videos de empleados 
@@ -30,7 +30,7 @@ RequestPOST("/API/empresas360/modulo_videowall/stats", {
     "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
     "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
 }).then((stats) => {
-    console.log(stats);
+    //*console.log(stats);
     videowall_listado = stats;
     $("#base_modulo_VideoWallEmpleados .total_empleados").text(videowall_listado.total);
     $("#base_modulo_VideoWallEmpleados .empleados_laborando").text(videowall_listado.activos);
@@ -63,7 +63,7 @@ RequestPOST("/API/empresas360/modulo_videowall/stats", {
             $("#base_modulo_VideoWallEmpleados #user_details_retardos").text(" - ");
 
         });
-        console.log(response);
+        //*console.log(response);
         for (var i = 0; i < response.length; i++) {
             actualizacion_listado_video_empleados(response[i]);
         }
@@ -101,7 +101,7 @@ function addUserBox(empleado) {
                 "top": 60 + container_user.position().top + "px"
             });
 
-            console.log("Buscar stats");
+            //*console.log("Buscar stats");
             user_details(empleado);
         });
     }
@@ -109,7 +109,7 @@ function addUserBox(empleado) {
 }
 
 function user_details(empleado) {
-    console.log(empleado);
+    //*console.log(empleado);
 
     $("#base_modulo_VideoWallEmpleados #user_details_img").css({
         "background-image": "url(" + empleado.img + ")",
@@ -126,7 +126,7 @@ function user_details(empleado) {
     RequestPOST("/API/empresas360/estadisticos_horario_empleados", {
         id360: empleado.id360
     }).then((response) => {
-        console.log(response);
+        //*console.log(response);
         if (response.success) {
             $("#base_modulo_VideoWallEmpleados #user_details_entrada").text(response.horario_entrada);
             $("#base_modulo_VideoWallEmpleados #user_details_pentrada").text(response.promedio_entrada);
@@ -142,14 +142,14 @@ function user_details(empleado) {
 
 //funciones por socket para actualizar conexion en listado 
 function actualizacion_listado_video_empleados(mensaje) {
-    console.log("actualizacion_listado_video_empleados");
-    console.log(mensaje);
+    //*console.log("actualizacion_listado_video_empleados");
+    //*console.log(mensaje);
 
     if (lista_video_empleados[mensaje.id_usuario]) {
         //cerrar sesion....
         if (lista_video_empleados[mensaje.id_usuario].sesion) {
             if (lista_video_empleados[mensaje.id_usuario].sesion !== null) {
-                console.log("desconectando");
+                //*console.log("desconectando");
                 lista_video_empleados[mensaje.id_usuario].sesion.disconnect();
 
             }
@@ -160,7 +160,7 @@ function actualizacion_listado_video_empleados(mensaje) {
 }
 //funcion para crear una nueva sesion 
 function video_empleado(mensaje) {
-    console.log("video_empleado");
+    //*console.log("video_empleado");
 
 
     //Revisar si nos encontramos en la vista de videowall para iniciar 
@@ -179,7 +179,7 @@ function initializeSession_vw(data) {
             break;
         }
     }
-    console.log("INICIANDO SESION *********-------------------");
+    //*console.log("INICIANDO SESION *********-------------------");
     videowall_conectados++;
     $("#base_modulo_VideoWallEmpleados .empleados_conectados").text(
             videowall_conectados + "/" + $("#base_modulo_VideoWallEmpleados .empleados_laborando").text());
@@ -187,25 +187,25 @@ function initializeSession_vw(data) {
     let session = OT.initSession(data.apikey, data.idsesion);
     var subscriber;
 
-    console.log("initializeSession_vw");
+    //*console.log("initializeSession_vw");
     session.on({
         connectionCreated: function (event) {
-            console.log("connectionCreated:");
-            console.log(event);
+            //*console.log("connectionCreated:");
+            //*console.log(event);
 
         },
         connectionDestroyed: function (event) {
-            console.log("connectionDestroyed:");
-            console.log(event);
+            //*console.log("connectionDestroyed:");
+            //*console.log(event);
 
         },
         sessionConnected: function (event) {
-            console.log("sessionConnected:");
-            console.log(event);
+            //*console.log("sessionConnected:");
+            //*console.log(event);
         },
         sessionDisconnected: function (event) {
-            console.log("sessionDisconnected:");
-            console.log(event);
+            //*console.log("sessionDisconnected:");
+            //*console.log(event);
             videowall_conectados--;
             $("#base_modulo_VideoWallEmpleados .empleados_conectados").text(
                     videowall_conectados + "/" + $("#base_modulo_VideoWallEmpleados .empleados_laborando").text());
@@ -213,16 +213,16 @@ function initializeSession_vw(data) {
 
         },
         sessionReconnected: function (event) {
-            console.log("sessionReconnected:");
-            console.log(event);
+            //*console.log("sessionReconnected:");
+            //*console.log(event);
         },
         sessionReconnecting: function (event) {
-            console.log("sessionReconnecting:");
-            console.log(event);
+            //*console.log("sessionReconnecting:");
+            //*console.log(event);
         },
         streamCreated: function (event) {
-            console.log("streamCreated:");
-            console.log(event);
+            //*console.log("streamCreated:");
+            //*console.log(event);
             //subscriber = agregarVideo_target(session, event.stream, "videos_empleados");
             StreamCount++;
             var subscriberOptions = {
@@ -248,8 +248,8 @@ function initializeSession_vw(data) {
                     $(".avada_kedavra").removeClass("avada_kedavra");
                     $("#base_modulo_VideoWallEmpleados .user_datails p svg").click();
                     container_video.toggleClass("video_big");
-                    console.log("Buscar en panel:");
-                    console.log($("#user_box_" + data.id_usuario));
+                    //*console.log("Buscar en panel:");
+                    //*console.log($("#user_box_" + data.id_usuario));
 
                     $("#user_box_" + data.id_usuario).addClass("avada_kedavra");
 
@@ -264,7 +264,7 @@ function initializeSession_vw(data) {
 
             }
             $("#user_box_" + data.id_usuario).click(() => {
-                console.log($("#" + pos));
+                //*console.log($("#" + pos));
 
                 $(".avada_kedavra").removeClass("avada_kedavra");
                 $("#user_box_" + data.id_usuario).addClass("avada_kedavra");
@@ -277,9 +277,9 @@ function initializeSession_vw(data) {
 
             let subscribed = false;
             let subscriber;
-            console.log(videowall_started);
+            //*console.log(videowall_started);
             if (videowall_started) {
-                console.log("subscribiendo video");
+                //*console.log("subscribiendo video");
                 subscriber = session.subscribe(event.stream, pos, subscriberOptions, function callback(error) {
                     if (error)
                     {
@@ -296,7 +296,7 @@ function initializeSession_vw(data) {
                 if (e.target.id === "menu_section_VideoWallEmpleados") {
                     //revisar que no nos encontremo ya en la vista
                     if (!subscribed) {
-                        console.log("subscribiendo video");
+                        //*console.log("subscribiendo video");
                         subscriber = session.subscribe(event.stream, pos, subscriberOptions, function callback(error) {
                             if (error)
                             {
@@ -306,13 +306,13 @@ function initializeSession_vw(data) {
                             }
                         });
                     } else {
-                        console.log("Habilitando video");
+                        //*console.log("Habilitando video");
                         subscriber.subscribeToVideo(true);
                     }
                 } else {
                     //session.unsubscribe(subscriber);
                     if (subscribed) {
-                        console.log("deteniendo video");
+                        //*console.log("deteniendo video");
                         subscriber.subscribeToVideo(false);
                         //session.unsubscribe(subscriber);
                         //subscribed = false;
@@ -327,11 +327,11 @@ function initializeSession_vw(data) {
 
         },
         streamDestroyed: function (event) {
-            console.log("streamDestroyed:");
-            console.log(event);
+            //*console.log("streamDestroyed:");
+            //*console.log(event);
             StreamCount--;
             if (StreamCount === 0) {
-                console.log("CERRANDO SESSION ************************");
+                //*console.log("CERRANDO SESSION ************************");
                 session.disconnect();
 //                mosaico_target("remover","videos_empleados");
             }
@@ -340,8 +340,8 @@ function initializeSession_vw(data) {
         },
         signal: function (event) {
 
-            console.log("signal");
-            console.log(event);
+            //*console.log("signal");
+            //*console.log(event);
 
         }
 
@@ -368,15 +368,15 @@ function initializeSession_vw(data) {
 //                                          //notificarError(initErr.message);
 //                                          return;
 //                                    } else {
-//                                          console.log("Registrar conexion");
-//                                          console.log(empleado);
+//                                          //*console.log("Registrar conexion");
+//                                          //*console.log(empleado);
 //                                          $("#nom").val(empleado.nombre + " " + empleado.apellidos);
 //                                          $("#num").val(empleado.idUsuario_Sys);
 //                                          RegistroInicio().then(function (response) {
 //                                                empleado.fecha_ingreso = response.fecha_ingreso;
 //                                                empleado.hora_ingreso = response.hora_ingreso;
 //                                                empleado.id_registro = response.id;
-//                                                console.log(empleado);
+//                                                //*console.log(empleado);
 //                                                $("#ing").val(empleado.fecha_ingreso + " " + empleado.hora_ingreso);
 //
 //                                                //enviar credenciales 
@@ -385,10 +385,10 @@ function initializeSession_vw(data) {
 //                                                EnviarMensajePorSocket(Credenciales);
 //
 //                                                $("#guardarreporte").click(function () {
-//                                                      console.log("guardarreporte");
-//                                                      console.log(empleado.id_registro);
+//                                                      //*console.log("guardarreporte");
+//                                                      //*console.log(empleado.id_registro);
 //                                                      RegistroReporte().then(function (response) {
-//                                                            console.log(response);
+//                                                            //*console.log(response);
 //                                                            Toast.fire({
 //                                                                  title: response.mensaje,
 //                                                                  timer: 3000
@@ -396,10 +396,10 @@ function initializeSession_vw(data) {
 //                                                      });
 //                                                });
 //                                                $("#cerrarsesion").click(function () {
-//                                                      console.log("cerrarsesion");
+//                                                      //*console.log("cerrarsesion");
 //
 //                                                      Registrofin().then(function (response) {
-//                                                            console.log(response);
+//                                                            //*console.log(response);
 //                                                            Toast.fire({
 //                                                                  title: "Tu jornada laboral comenzo a la hora: " + empleado.hora_ingreso + " y esta finalizando a la hora: " + response.hora,
 //                                                                  timer: 5000
