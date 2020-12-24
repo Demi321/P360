@@ -396,7 +396,7 @@ function agregar_chat_enviado(mensaje, viejo) {
 function recibir_chat(mensaje, viejo, group) {
     if (!$("#profile_chat" + mensaje.id360).length) {
         if(group){
-            RequestPOST("/API/obten_info_grupo", mensaje.idGroup).then((response) => {
+            RequestPOST("/API/empresas360/infoGrupo", {"id_grupo":mensaje.idGroup}).then((response) => {
                 console.log(response);
             });
         }else{
@@ -409,44 +409,48 @@ function recibir_chat(mensaje, viejo, group) {
             });
         }
     } else {
-        let user = null;
-        $.each(directorio_completo, (i) => {
-            if (mensaje.id360 === directorio_completo[i].id360) {
-                user = directorio_completo[i];
-                return false;
-            }
-        });
-        if (user !== null) {
-            if (NotificacionesActivadas) {
+        if(group){
+            
+        }else{
+            let user = null;
+            $.each(directorio_completo, (i) => {
+                if (mensaje.id360 === directorio_completo[i].id360) {
+                    user = directorio_completo[i];
+                    return false;
+                }
+            });
+            if (user !== null) {
+                if (NotificacionesActivadas) {
 
-                let body = '';
-                if (mensaje.type === "text") {
-                    body = user.nombre + " " + user.apellido_paterno + " dice: " + mensaje.message;
-                } else {
-                    body = user.nombre + " " + user.apellido_paterno + " ha enviado un adjunto";
+                    let body = '';
+                    if (mensaje.type === "text") {
+                        body = user.nombre + " " + user.apellido_paterno + " dice: " + mensaje.message;
+                    } else {
+                        body = user.nombre + " " + user.apellido_paterno + " ha enviado un adjunto";
+                    }
+
+                    /*let onClickNotification = () => {
+                     $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
+                     $("#message_input_"+user.id360).focus();
+
+                     if($("#profile_chat" + value.id360).length){
+                     $("#profile_chat" + value.id360).click();
+                     }else{
+                     contacto_chat(value);
+                     $("#profile_chat" + value.id360).click();
+                     }
+
+                     };*/
+
+                    notificacion_mensaje("Nuevo mensaje", body, () => {
+                    });
+
+                    buttonNotificacionMensaje.click();
+
                 }
 
-                /*let onClickNotification = () => {
-                 $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
-                 $("#message_input_"+user.id360).focus();
-                 
-                 if($("#profile_chat" + value.id360).length){
-                 $("#profile_chat" + value.id360).click();
-                 }else{
-                 contacto_chat(value);
-                 $("#profile_chat" + value.id360).click();
-                 }
-                 
-                 };*/
-
-                notificacion_mensaje("Nuevo mensaje", body, () => {
-                });
-                
-                buttonNotificacionMensaje.click();
-                
+                agregar_chat(mensaje, user, "send", viejo);
             }
-
-            agregar_chat(mensaje, user, "send", viejo);
         }
 
     }
