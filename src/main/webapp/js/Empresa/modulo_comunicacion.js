@@ -14,6 +14,7 @@ var CantidadMensajesPorChat = {};
 var iconGroupDefault = 'https://bucketmoviles121652-dev.s3.amazonaws.com/public/MobileCard/perfil.png';
 
 var dataLlamada = {};
+var usuariosReenviaMensaje = null;
 
 /*
  * REPRODUCIR SONIDO AL LLEGAR NOTIFICACION
@@ -498,6 +499,118 @@ const swalConfirmDialog = (message, textConfirm, textCancel) => {
     });
 };
 
+vuewModalReenviaMensaje = () => {
+  
+    usuariosReenviaMensaje = new Array();
+    var json = Directorio;
+    vue = new Vue({
+        components: {
+            Multiselect: window.VueMultiselect.default
+        },
+        data: {
+
+            value: [
+            ],
+            options: json
+
+
+        },
+        methods: {
+            customLabel(option) {
+                return  option.nombre + " " + option.apellido_paterno + " " + option.apellido_materno;
+            },
+            onSelect(op) {
+                usuariosReenviaMensaje.push(op.id360);
+            },
+            onClose() {
+                //console.info(this.value);
+            },
+            onRemove(op) {
+                var i = usuariosReenviaMensaje.indexOf(op);
+                usuariosReenviaMensaje.splice(i, 1);
+            }
+
+        }
+    }).$mount('#usuariosReenviaMensaje');
+    
+};
+
+const reenviaMensaje = (mensaje) => {
+    let contenedorReenviaMensaje = $("<div></div>");
+
+    let formReenviaMensaje = $("<form></form>");
+    formReenviaMensaje.attr("id","formReenviaMensaje");
+    formReenviaMensaje.attr("autocomplete","off");
+
+    let formGroupReenviaMensaje = $("<div></div>").addClass("form-group");
+    let labelUsuariosReenvia = $("<label></label>");
+    labelUsuariosReenvia.text("Reenviar a:");
+    let selectUsuariosReenvia = '<div class="col-12" id="usuariosReenviaMensaje">' +
+                                        '<multiselect ' +
+                                        'placeholder=""' +
+                                        'v-model="value" ' +
+                                        ':options="options"' +
+                                        'track-by="id360"' +
+                                        ':multiple="true"' +
+                                        ':taggable="false"' +
+                                        ':close-on-select="false"' +
+                                        ':custom-label="customLabel" ' +
+                                        ':select-label="\'Seleccionar\'" ' +
+                                        ':selected-Label="\'Seleccionado\'"' +
+                                        ':deselect-Label="\'Remover\'"' +
+                                        ':hide-selected="true"' +
+                                        '@select="onSelect"' +
+                                        '@Close="onClose"' +
+                                        '@Remove="onRemove">' +
+                                        '</multiselect>' +
+                                        '<pre class="language-json" style="display:none"><code>{{ value  }}</code></pre>' +
+                                    '</div>';
+    formGroupReenviaMensaje.append(labelUsuariosReenvia);
+    formGroupReenviaMensaje.append(selectUsuariosReenvia);
+    formReenviaMensaje.append(formGroupParticipantesGrupo);
+
+    let buttonSubmitReenviaMensaje = $("<button></button>").addClass("btn btn-danger btn-block mt-4");
+    buttonSubmitReenviaMensaje.attr("type","submit");
+    buttonSubmitReenviaMensaje.text("Reenviar mensaje");
+    formReenviaMensaje.append(buttonSubmitReenviaMensaje);
+
+    contenedorReenviaMensaje.append(formReenviaMensaje);
+
+    Swal.fire({
+        html: contenedorReenviaMensaje,
+        showCancelButton: true,
+        showConfirmButton: false,
+        cancelButtonText: 'Cancelar',
+        allowOutsideClick: false,
+        allowEscapeKey : false
+    });
+
+    vuewModalReenviaMensaje();
+
+    $("#usuariosReenviaMensaje .multiselect__content-wrapper").css({"background-color":"#fff"});
+
+    $("#formReenviaMensaje").submit((e) => {
+
+        e.preventDefault();
+
+        if( usuariosReenviaMensaje.length ){
+
+            let cantidadU = usuariosReenviaMensaje.length;
+            for( let x = 0; x<cantidadU; x++ ){
+                
+                let input = $("<input>");
+                input.val(mensaje);
+                
+                //let ulJS = document.getElementById();
+                
+                //send_chat_messages(input, ul, preview, user, messages);
+            }
+
+        }
+
+    });
+};
+
 function agregar_chat(msj, user, type, viejo) {
     if (user.success) {
         let mensaje = msj.message;
@@ -763,6 +876,15 @@ function agregar_chat(msj, user, type, viejo) {
                     eliminaMensaje(1);
                 });
                 menuOpcionesMensaje.append(opcionEliminaMensajeMi);
+                
+                //OPCION PARA REENVIAR EL MENSAJE
+                let opcionReenviaMensaje = $("<li></li>").addClass("optionMensaje");
+                opcionReenviaMensaje.text("Reenviar mensaje");
+                opcionReenviaMensaje.click(() => {
+                    
+                    reenviaMensaje(mensaje);
+                    
+                });
 
                 //OPCION PARA EDITAR EL MENSAJE
                 let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
