@@ -121,7 +121,7 @@ function initializeSession(settings) {
 
             connectionCount--;
             if (connectionCount <= 1) {
-                session.disconnect();
+                //session.disconnect();
             }
 
 

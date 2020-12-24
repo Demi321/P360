@@ -34,7 +34,15 @@ function deleteCookie(cname) {
     var expires = "expires=" + d.toGMTString();
     document.cookie = cname + "=" + "value" + ";" + expires + ";path=/";
     //deleteAllCookies();
-    window.location.reload();
+
+    //usar servicio para dar de baja la sesion 
+    RequestPOST("/API/cuenta360/logout_sesion", {
+        "id_sesion": sesion_cookie.id_sesion
+    }).then(() => {
+        //redirigir a claro360
+        window.location.href="https://claro360.com";
+    });
+
 }
 
 function getCookie(cname) {
@@ -97,7 +105,8 @@ function checkCookie() {
 
         } else {
 
-
+             window.location.href="https://claro360.com";
+             
             if (window.location.toString().split(DEPENDENCIA)[1] !== "/Login")
             {
                 var hostdir = window.location.protocol + "//" + window.location.host;
@@ -110,6 +119,14 @@ function checkCookie() {
 
     } else {
         sesion_cookie = JSON.parse(user);//ya 
+        //validar la sesion 
+        RequestPOST("/API/cuenta360/check_login",{
+            "id_sesion":sesion_cookie.id_sesion
+        }).then((response)=>{
+            if(response.failure){
+                deleteCookie("username_v3.1_" + DEPENDENCIA);
+            }
+        });
         if (!JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("modulos")) {
             deleteCookie("username_v3.1_" + DEPENDENCIA);
         }
