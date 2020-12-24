@@ -558,8 +558,12 @@ function agregar_chat(msj, user, type, viejo) {
                 linkMensaje.css({
                     "color": "currentColor"
                 });
-                ;
                 message.html(linkMensaje);
+                
+                message.css({
+                    "word-break": "break-all"
+                });
+                
             } else {
                 message.text(mensaje);
             }
@@ -687,10 +691,6 @@ function agregar_chat(msj, user, type, viejo) {
                 }
                 message.append(fecha);
             }
-
-            message.css({
-                "word-break": "break-all"
-            });
 
             //ICONO MENU DE OPCION PARA EL MENSAJE
             if (type === "replies") {
@@ -1815,15 +1815,16 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                         linkMensaje.attr("href", mensaje);
                         linkMensaje.attr("tarjet", "_blanck");
                         message.html(linkMensaje);
+                        
+                        message.css({
+                            "word-break": "break-all"
+                        });
+                        
                     } else {
                         message.text(mensaje);
                     }
 
                 }
-
-                message.css({
-                    "word-break": "break-all"
-                });
 
                 let fecha = $("<span></span>").addClass("time");
 

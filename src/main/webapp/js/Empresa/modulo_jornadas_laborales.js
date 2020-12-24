@@ -4,11 +4,113 @@
  * and open the template in the editor.
  */
 
+/* global RequestPOST, DEPENDENCIA, directorio_completo */
+
 agregar_menu("Reporte Jornadas Laborales",'<i class="fas fa-clipboard-list"></i>','Recursos Humanos');
 
 var empleados = [],
-    empleadosEmpresa = [];
+    empleadosEmpresa = [],
+    tablaInicio;
 const botonExcel = $("#botonDescargaReporteJornada");
+const inicioJornadas = $("#inicio-reporte-jornadas-laborales");
+const botonEmpleadosEnJornada = $("#verEmpleadosEnJornada");
+
+botonEmpleadosEnJornada.click(() => {
+    $("#form_historia_jornadas")[0].reset();
+    $("#contenedor-select-sucursales").addClass("d-none");
+    $("#contenedor-select-areas").addClass("d-none");
+    $("#contenedor-select-empleados").addClass("d-none");
+    $("#botonDescargaReporteJornada").addClass("d-none");
+    inicioJornadasLaborales();
+});
+
+const enviar_mensaje_empleado_en_jornada = (id360) => {
+    $("#sidebar a:eq(3)").click();
+    $("#menu_section_Comunicación").click();
+    if (!$("#profile_chat" + id360).length) {
+        let dataUsr = {"id360":id360};
+        RequestPOST("/API/get/perfil360", dataUsr).then((response) => {
+            if (response.success) {
+                contacto_chat(response);
+                directorio_completo.push(response);
+                $("#profile_chat"+id360).click();
+            }
+        });
+    }
+};
+
+const inicioJornadasLaborales = () => {
+    
+    if(tablaInicio !== undefined && tablaInicio !== null){
+        tablaInicio.destroy();
+    }
+    
+    inicioJornadas.removeClass("d-none");
+    botonEmpleadosEnJornada.addClass("d-none");
+    $("#resultado-busqueda-jornadas").addClass("d-none");
+    
+    const tablaEmpleadosEnJornada = $("#tabla-empleados-en-jornada");
+    const cuerpoTableEmpleadosEnJornada = tablaEmpleadosEnJornada.find("tbody");
+    const conResultados = $("#con-empleados-en-jornada");
+    const sinResultados = $("#sin-empleados-en-jornada");
+    
+    conResultados.addClass("d-none");
+    sinResultados.addClass("d-none");
+    cuerpoTableEmpleadosEnJornada.empty();
+  
+    let data = new Object();
+    data.id = JSON.parse(getCookie("username_v3.1_"+DEPENDENCIA)).tipo_usuario;
+    
+    RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_ids/en_jornada",data).then( (ids) => {
+        empleadosEmpresa = ids;
+        
+        if( empleadosEmpresa.length ){
+            
+            conResultados.removeClass("d-none");
+            sinResultados.addClass("d-none");
+            
+            let tbody = "";
+            
+            RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_empleados", ids).then( (response) => {
+                
+                empleados = response;
+                
+                $.each(empleadosEmpresa, (index, empleado) => {
+                  
+                    let detalleEmpleado = infoEmpleado(empleado.id360);
+                  
+                    tbody += '<tr class="text-center" id="fila_empleado_en_jornada_'+detalleEmpleado.id360+'">';
+
+                    tbody += '  <td>'+detalleEmpleado.nombre+' '+detalleEmpleado.apellido_paterno+' '+detalleEmpleado.apellido_materno+'</td>';
+                    tbody += '  <td>'+detalleEmpleado.sucursal+'</td>';
+                    tbody += '  <td>'+detalleEmpleado.area+'</td>';
+                    tbody += '  <td>'+detalleEmpleado.hora_entrada+'</td>';
+                    tbody += '  <td><button onclick="enviar_mensaje_empleado_en_jornada('+detalleEmpleado.id360+')" class="btn btn-dark"><i class="fas fa-comment-dots"></i></button></td>';
+
+                    tbody += '</tr>';
+                });
+                
+                cuerpoTableEmpleadosEnJornada.append(tbody);
+                tablaInicio = tablaEmpleadosEnJornada.DataTable({
+                    retrieve: true,
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ]
+                });
+                
+            });
+            
+        }else{
+            conResultados.addClass("d-none");
+            sinResultados.removeClass("d-none");
+        }
+        
+    });
+    
+};
+
+inicioJornadasLaborales();
 
 const cargaEmpleados = () => {
     let data = new Object();
@@ -125,6 +227,9 @@ const consulta_historial = (fecha_inicio, fecha_final) => {
     if(tipoBusqueda === null || tipoBusqueda === undefined || tipoBusqueda === ""){
         swal.fire({text:"Seleccione un tipo de búsqueda"});
     }else{
+        
+        inicioJornadas.addClass("d-none");
+        botonEmpleadosEnJornada.removeClass("d-none");
 
         const resultInfo = $("#tablas_resultados");
         resultInfo.empty();
@@ -504,6 +609,9 @@ const infoEmpleado = (id_empleado) => {
                     empleado.area = generales.area;
                     empleado.sucursal = generales.sucursal;
                     empleado.empresa = generales.empresa;
+                    if(generales.time_created !== undefined && generales.time_created !== null){
+                        empleado.hora_entrada = generales.time_created;
+                    }
                     break;
                 }
             }
