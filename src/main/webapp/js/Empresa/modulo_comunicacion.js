@@ -11,6 +11,7 @@
 
 var NotificacionesActivadas = false;
 var CantidadMensajesPorChat = {};
+var iconGroupDefault = 'https://bucketmoviles121652-dev.s3.amazonaws.com/public/MobileCard/perfil.png';
 
 var dataLlamada = {};
 
@@ -154,13 +155,12 @@ buttonConfiguracion.click(() => {
         }
     });
     
-    vuwModelGrupoChat();
-    
 });
 
+var participantesParaGrupo = null;
 vuewModalParticipantesGrupo = () => {
   
-    let pa = new Array();
+    participantesParaGrupo = new Array();
     var json = Directorio;
     vue = new Vue({
         components: {
@@ -179,14 +179,14 @@ vuewModalParticipantesGrupo = () => {
                 return  option.nombre + " " + option.apellido_paterno + " " + option.apellido_materno;
             },
             onSelect(op) {
-                pa.push(op);
+                participantesParaGrupo.push(op.id360);
             },
             onClose() {
                 //console.info(this.value);
             },
             onRemove(op) {
-                var i = pa.indexOf(op);
-                pa.splice(i, 1);
+                var i = participantesParaGrupo.indexOf(op);
+                participantesParaGrupo.splice(i, 1);
             }
 
         }
@@ -205,6 +205,7 @@ let contenedorAgregarGrupo = $("<div></div>");
 
 let formCreaGrupo = $("<form></form>");
 formCreaGrupo.attr("id","formCreaGrupo");
+formCreaGrupo.attr("autocomplete","off");
 
 let formGroupNombreGrupo = $("<div></div>").addClass("form-group");
 let labelNombreGrupo = $("<label></label>");
@@ -257,6 +258,11 @@ formGroupParticipantesGrupo.append(labelParticipantesGrupo);
 formGroupParticipantesGrupo.append(selectParticipantesGrupo);
 formCreaGrupo.append(formGroupParticipantesGrupo);
 
+let buttonSubmitCreaGrupo = $("<button></button>").addClass("btn btn-danger btn-block mt-4");
+buttonSubmitCreaGrupo.attr("type","submit");
+buttonSubmitCreaGrupo.text("Crear Grupo");
+formCreaGrupo.append(buttonSubmitCreaGrupo);
+
 contenedorAgregarGrupo.append(formCreaGrupo);
 
 $("#addGroup").click(() => {
@@ -265,10 +271,62 @@ $("#addGroup").click(() => {
         html: contenedorAgregarGrupo,
         showCancelButton: true,
         showConfirmButton: false,
-        cancelButtonText: 'Cancelar'
+        cancelButtonText: 'Cancelar',
+        allowOutsideClick: false,
+        allowEscapeKey : false
     });
     
     vuewModalParticipantesGrupo();
+    
+    $("#agregaParticipantesGrupo .multiselect__content-wrapper").css({"background-color":"#fff"});
+    
+    $("#formCreaGrupo").submit((e) => {
+        
+        e.preventDefault();
+        let nombreGrupo = $("#inputNombreGrupo").val().trim();
+        let descripcionGrupo = $("#inputDescripcionGrupo").val().trim();
+        
+        if( participantesParaGrupo.length ){
+            
+            let dataGrupo = {
+                "idUser": sesion_cookie.idUsuario_Sys,
+                "nombre_grupo": nombreGrupo,
+                "icono_grupo": iconGroupDefault,
+                "descripcion_grupo": descripcionGrupo,
+                "fecha": getFecha(),
+                "hora": getHora(),
+                "participantes": participantesParaGrupo
+            };
+            console.log(dataGrupo);
+            RequestPOST("/API/empresas360/crear_grupo", dataGrupo).then((response) => {
+                
+                let idGrupo = response.id_grupo;
+                
+                if(response.success){
+                    Swal.close();
+                    
+                    let dataContac = {
+                        "id360": idGrupo,
+                        "nombre_grupo": nombreGrupo,
+                        "img": iconGroupDefault,
+                        "descripcion_grupo": descripcionGrupo
+                    };
+
+                    contacto_chat(dataContac, true);
+                    $("#profile_chat"+idGrupo).click();
+                    
+                    swal.fire({text: "Invitación enviada a los participantes"});
+                }
+                
+            });
+            
+        }else{
+            
+            
+            
+        }
+        
+    });
     
 });
 /*
@@ -335,15 +393,21 @@ function agregar_chat_enviado(mensaje, viejo) {
     }
 
 }
-function recibir_chat(mensaje, viejo) {
+function recibir_chat(mensaje, viejo, group) {
     if (!$("#profile_chat" + mensaje.id360).length) {
-        RequestPOST("/API/get/perfil360", mensaje).then((response) => {
-            if (response.success) {
-                contacto_chat(response);
-                directorio_completo.push(response);
-                agregar_chat(mensaje, response, "send", viejo);
-            }
-        });
+        if(group){
+            RequestPOST("/API/obten_info_grupo", mensaje.idGroup).then((response) => {
+                console.log(response);
+            });
+        }else{
+            RequestPOST("/API/get/perfil360", mensaje).then((response) => {
+                if (response.success) {
+                    contacto_chat(response);
+                    directorio_completo.push(response);
+                    agregar_chat(mensaje, response, "send", viejo);
+                }
+            });
+        }
     } else {
         let user = null;
         $.each(directorio_completo, (i) => {
@@ -1009,7 +1073,7 @@ function drop(ev) {
   removeDragData(ev);
 }
 
-function contacto_chat(user) {
+function contacto_chat(user, group) {
 
     if (!$("#profile_chat" + user.id360).length && user.id360 !== undefined) {
 
@@ -1028,7 +1092,10 @@ function contacto_chat(user) {
         });
         let meta = $("<div></div>").addClass("meta");
         let name = $("<p></p>").addClass("name");
-        name.text(user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno);
+        if(group)
+            name.text(user.nombre_grupo);
+        else
+            name.text(user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno);
         let preview = $("<p></p>").addClass("preview");
         preview.attr("id", "preview_" + user.id360);
         meta.append(name);
@@ -1115,7 +1182,10 @@ function contacto_chat(user) {
             "background-repeat": "no-repeat"
         });
         let nombre = $("<p></p>");
-        nombre.text(user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno);
+        if(group)
+            nombre.text(user.nombre_grupo);
+        else
+            nombre.text(user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno);
 
         let messages = $("<div></div>").addClass("messages");
         messages.attr("id", "messages_" + user.id360);
@@ -1530,8 +1600,15 @@ function contacto_chat(user) {
         });
 
         const clickIniciarLlamada = () => {
+            
+            let nombreLlamada;
+            if(group)
+                nombreLlamada = user.nombre_grupo;
+            else
+                nombreLlamada = user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno;
+            
             Swal.fire({
-                text: "Iniciar una llamada con: " + user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno,
+                text: "Iniciar una llamada con: " + nombreLlamada,
                 showCancelButton: true,
                 focusConfirm: true,
                 cancelButtonText: "Cancelar",
