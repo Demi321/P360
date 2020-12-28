@@ -276,7 +276,7 @@ function agregar_enlace_estatico(nombre, url, icono) {
             "display": "inline-block"
         });
         let div = document.createElement("div");
-        div.style = "background-image:url('" + PathRecursos + "Img/iconoheader/" + icono + ".png');background-position:center;background-size:contain;background-repeat:no-repeat;border:none;width: 35px;height: 35px;filter: invert(1);cursor: pointer;";
+        div.style = "background-image:url('" + PathRecursos + "Img/iconoheader/" + icono + "');background-position:center;background-size:contain;background-repeat:no-repeat;border:none;width: 35px;height: 35px;filter: invert(1);cursor: pointer;margin: auto;";
         div_cont.append(div);
         div_cont.append(nombre);
         $("#collapseServicios").append(div_cont);
