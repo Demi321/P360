@@ -5,7 +5,7 @@
  */
 
 var file_seguridad = null;
-agregar_menu("Reporte Seguridad Sanitaria");
+agregar_menu("Reporte Seguridad Sanitaria",'<i class="fas fa-file-export"></i>',"Trabajo");
 
 $("#img_reporte_seguridad").change(function (e) {
     fileReader_reporte_seguridad(e);

@@ -127,6 +127,16 @@ $( window ).on( "load", function() {
         $("#hdrstore").click(() => {
             acceso_externo_ruta("https://claro360.com/plataforma360/", "app");
         });
+        /*Cambios fernando*/
+        if (sesion_cookie.gc.toString() === "1") {
+            $("#logo360").removeClass("d-none");
+            $("#logo360").css({
+                "background-image": "url('"+sesion_cookie.logotipo_empresa+"')"
+            });
+        }else{
+            $("#logo360").removeClass("d-none");
+        }
+        /******************/
     }
 
 

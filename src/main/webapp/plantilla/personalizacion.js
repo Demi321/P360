@@ -215,41 +215,35 @@ try {
     console.log(e);
 }
 function agregar_enlace(nombre, url, icono) {
-//    let li = document.createElement("li");
-////    let input = document.createElement("input");
-////    input.type="hidden";
-//    let a = document.createElement("a");
-//    let div = document.createElement("div");
-//    let label = document.createElement("label");
-//
-//    label.innerHTML = nombre;
-//    li.appendChild(a);
-//    a.appendChild(div);
-//    a.appendChild(label);
-//    //$("#menuServicios #persona").append(li);
-//    $("#menuServicios #servicios").append(li);
-//
-//    a.addEventListener("click", function () {
-//        acceso_externo(url);
-//    });
-
     if (!window.location.href.includes(url)) {
-        let li = document.createElement("li");
-//    let input = document.createElement("input");
-//    input.type="hidden";
-        let a = document.createElement("a");
-        a.href = "#";
-        a.innerHTML = nombre;
+        let div_cont = $("<div></div>").addClass("p-2");
+        div_cont.css({
+            "display": "inline-block"
+        });
         let div = document.createElement("div");
-        div.style = "background-image:url('" + PathRecursos + "Img/iconoheader/" + icono + "');background-position:center;background-size:contain;background-repeat:no-repeat;border:none;width: 35px;height: 35px;";
-
-
-        li.appendChild(a);
-        a.appendChild(div);
-        $("#collapseServicios").append(li);
-        a.addEventListener("click", function () {
+        div.style = "background-image:url('" + PathRecursos + "Img/iconoheader/" + icono + ".png');background-position:center;background-size:contain;background-repeat:no-repeat;border:none;width: 35px;height: 35px;filter: invert(1);cursor: pointer;";
+        div_cont.append(div);
+        div_cont.append(nombre);
+        $("#collapseServicios").append(div_cont);
+        div.click(()=>{
             acceso_externo(url);
         });
+//        let li = document.createElement("li");
+////    let input = document.createElement("input");
+////    input.type="hidden";
+//        let a = document.createElement("a");
+//        a.href = "#";
+//        a.innerHTML = nombre;
+//        let div = document.createElement("div");
+//        div.style = "background-image:url('" + PathRecursos + "Img/iconoheader/" + icono + "');background-position:center;background-size:contain;background-repeat:no-repeat;border:none;width: 35px;height: 35px;";
+//
+//
+//        li.appendChild(a);
+//        a.appendChild(div);
+//        $("#collapseServicios").append(li);
+//        a.addEventListener("click", function () {
+//            acceso_externo(url);
+//        });
 
     } else {
         if ($("#cambiar_cuenta").length) {

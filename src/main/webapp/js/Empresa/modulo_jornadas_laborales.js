@@ -4,11 +4,113 @@
  * and open the template in the editor.
  */
 
-agregar_menu("Reporte Jornadas Laborales");
+/* global RequestPOST, DEPENDENCIA, directorio_completo */
+
+agregar_menu("Reporte Jornadas Laborales",'<i class="fas fa-clipboard-list"></i>','Recursos Humanos');
 
 var empleados = [],
-    empleadosEmpresa = [];
+    empleadosEmpresa = [],
+    tablaInicio;
 const botonExcel = $("#botonDescargaReporteJornada");
+const inicioJornadas = $("#inicio-reporte-jornadas-laborales");
+const botonEmpleadosEnJornada = $("#verEmpleadosEnJornada");
+
+botonEmpleadosEnJornada.click(() => {
+    $("#form_historia_jornadas")[0].reset();
+    $("#contenedor-select-sucursales").addClass("d-none");
+    $("#contenedor-select-areas").addClass("d-none");
+    $("#contenedor-select-empleados").addClass("d-none");
+    $("#botonDescargaReporteJornada").addClass("d-none");
+    inicioJornadasLaborales();
+});
+
+const enviar_mensaje_empleado_en_jornada = (id360) => {
+    $("#sidebar a:eq(3)").click();
+    $("#menu_section_Comunicación").click();
+    if (!$("#profile_chat" + id360).length) {
+        let dataUsr = {"id360":id360};
+        RequestPOST("/API/get/perfil360", dataUsr).then((response) => {
+            if (response.success) {
+                contacto_chat(response);
+                directorio_completo.push(response);
+                $("#profile_chat"+id360).click();
+            }
+        });
+    }
+};
+
+const inicioJornadasLaborales = () => {
+    
+    if(tablaInicio !== undefined && tablaInicio !== null){
+        tablaInicio.destroy();
+    }
+    
+    inicioJornadas.removeClass("d-none");
+    botonEmpleadosEnJornada.addClass("d-none");
+    $("#resultado-busqueda-jornadas").addClass("d-none");
+    
+    const tablaEmpleadosEnJornada = $("#tabla-empleados-en-jornada");
+    const cuerpoTableEmpleadosEnJornada = tablaEmpleadosEnJornada.find("tbody");
+    const conResultados = $("#con-empleados-en-jornada");
+    const sinResultados = $("#sin-empleados-en-jornada");
+    
+    conResultados.addClass("d-none");
+    sinResultados.addClass("d-none");
+    cuerpoTableEmpleadosEnJornada.empty();
+  
+    let data = new Object();
+    data.id = JSON.parse(getCookie("username_v3.1_"+DEPENDENCIA)).tipo_usuario;
+    
+    RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_ids/en_jornada",data).then( (ids) => {
+        empleadosEmpresa = ids;
+        
+        if( empleadosEmpresa.length ){
+            
+            conResultados.removeClass("d-none");
+            sinResultados.addClass("d-none");
+            
+            let tbody = "";
+            
+            RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_empleados", ids).then( (response) => {
+                
+                empleados = response;
+                
+                $.each(empleadosEmpresa, (index, empleado) => {
+                  
+                    let detalleEmpleado = infoEmpleado(empleado.id360);
+                  
+                    tbody += '<tr class="text-center" id="fila_empleado_en_jornada_'+detalleEmpleado.id360+'">';
+
+                    tbody += '  <td>'+detalleEmpleado.nombre+' '+detalleEmpleado.apellido_paterno+' '+detalleEmpleado.apellido_materno+'</td>';
+                    tbody += '  <td>'+detalleEmpleado.sucursal+'</td>';
+                    tbody += '  <td>'+detalleEmpleado.area+'</td>';
+                    tbody += '  <td>'+detalleEmpleado.hora_entrada+'</td>';
+                    tbody += '  <td><button onclick="enviar_mensaje_empleado_en_jornada('+detalleEmpleado.id360+')" class="btn btn-dark"><i class="fas fa-comment-dots"></i></button></td>';
+
+                    tbody += '</tr>';
+                });
+                
+                cuerpoTableEmpleadosEnJornada.append(tbody);
+                tablaInicio = tablaEmpleadosEnJornada.DataTable({
+                    retrieve: true,
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ]
+                });
+                
+            });
+            
+        }else{
+            conResultados.addClass("d-none");
+            sinResultados.removeClass("d-none");
+        }
+        
+    });
+    
+};
+
+inicioJornadasLaborales();
 
 const cargaEmpleados = () => {
     let data = new Object();
@@ -125,6 +227,9 @@ const consulta_historial = (fecha_inicio, fecha_final) => {
     if(tipoBusqueda === null || tipoBusqueda === undefined || tipoBusqueda === ""){
         swal.fire({text:"Seleccione un tipo de búsqueda"});
     }else{
+        
+        inicioJornadas.addClass("d-none");
+        botonEmpleadosEnJornada.removeClass("d-none");
 
         const resultInfo = $("#tablas_resultados");
         resultInfo.empty();
@@ -273,162 +378,166 @@ const consulta_historial = (fecha_inicio, fecha_final) => {
 };
 
 const despliegaInformacionJornadas = (fecha_inicio, fecha_final, jornadas) => {
-    console.log(jornadas);
     const nombresDiasSemana = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
 
     const resultInfo = $("#tablas_resultados");
 
     let emple = infoEmpleado( jornadas[0].idUsuario );
+    
+    if(emple !== null && emple !== undefined){
+        console.log("INFORMACION DEL EMPLEADO ");
+        console.log(emple);
+        let informacionEmpleado = '';
 
-    let informacionEmpleado = '';
+        informacionEmpleado += '<form class="mb-3">';
+        informacionEmpleado += '    <div class="row class="mb-2">';
+        informacionEmpleado += '        <div class="col-md-3 form-group">';
+        informacionEmpleado += '            <label style="color: black; font-style: italic;">Empleado</label>';
+        informacionEmpleado += '            <input style="font-weight: bold;" class="form-control-plaintext"  type="text" disabled value="'+emple.nombre+' '+emple.apellido_paterno+' '+ emple.apellido_materno +'" />';
+        informacionEmpleado += '        </div>';
+        informacionEmpleado += '        <div class="col-md-3 form-group">';
+        informacionEmpleado += '            <label style="color: black; font-style: italic;">Empresa</label>';
+        informacionEmpleado += '            <input style="font-weight: bold;" class="form-control-plaintext" type="text" disabled value="'+emple.empresa +'" />';
+        informacionEmpleado += '        </div>';
+        informacionEmpleado += '        <div class="col-md-3 form-group">';
+        informacionEmpleado += '            <label style="color: black; font-style: italic;">Sucursal</label>';
+        informacionEmpleado += '            <input style="font-weight: bold;" class="form-control-plaintext"  type="text" disabled value="'+emple.sucursal +'" />';
+        informacionEmpleado += '        </div>';
+        informacionEmpleado += '        <div class="col-md-3 form-group">';
+        informacionEmpleado += '            <label style="color: black; font-style: italic;">Área</label>';
+        informacionEmpleado += '            <input style="font-weight: bold;" class="form-control-plaintext"  type="text" disabled value="'+emple.area +'" />';
+        informacionEmpleado += '        </div>';
+        informacionEmpleado += '    </div>';
+        informacionEmpleado += '    <div class="row">';
+        informacionEmpleado += '        <div class="col-md-3 form-group">';
+        informacionEmpleado += '            <label style="color: black; font-style: italic;">Puesto</label>';
+        informacionEmpleado += '            <input style="font-weight: bold;" class="form-control-plaintext"  type="text" disabled value="'+emple.puesto +'" />';
+        informacionEmpleado += '        </div>';
+        informacionEmpleado += '        <div class="col-md-3 form-group">';
+        informacionEmpleado += '            <label style="color: black; font-style: italic;">Núm. Empleado</label>';
+        informacionEmpleado += '            <input style="font-weight: bold;" class="form-control-plaintext"  type="text" disabled value="'+emple.num_empleado +'" />';
+        informacionEmpleado += '        </div>';
+        informacionEmpleado += '        <div class="col-md-3 form-group">';
+        informacionEmpleado += '            <label style="color: black; font-style: italic;">Jornada</label>';
+        informacionEmpleado += '            <input style="font-weight: bold;" class="form-control-plaintext"  type="text" disabled value="'+emple.horario_entrada+' - '+emple.horario_salida+'" />';
+        informacionEmpleado += '        </div>';
+        informacionEmpleado += '    </div>';
+        informacionEmpleado += '</form>';
 
-    informacionEmpleado += '<form class="mb-3">';
-    informacionEmpleado += '    <div class="row class="mb-2">';
-    informacionEmpleado += '        <div class="col-md-3 form-group">';
-    informacionEmpleado += '            <label style="color: black; font-style: italic;">Empleado</label>';
-    informacionEmpleado += '            <input style="font-weight: bold;" class="form-control-plaintext"  type="text" disabled value="'+emple.nombre+' '+emple.apellido_paterno+' '+ emple.apellido_materno +'" />';
-    informacionEmpleado += '        </div>';
-    informacionEmpleado += '        <div class="col-md-3 form-group">';
-    informacionEmpleado += '            <label style="color: black; font-style: italic;">Empresa</label>';
-    informacionEmpleado += '            <input style="font-weight: bold;" class="form-control-plaintext" type="text" disabled value="'+emple.empresa +'" />';
-    informacionEmpleado += '        </div>';
-    informacionEmpleado += '        <div class="col-md-3 form-group">';
-    informacionEmpleado += '            <label style="color: black; font-style: italic;">Sucursal</label>';
-    informacionEmpleado += '            <input style="font-weight: bold;" class="form-control-plaintext"  type="text" disabled value="'+emple.sucursal +'" />';
-    informacionEmpleado += '        </div>';
-    informacionEmpleado += '        <div class="col-md-3 form-group">';
-    informacionEmpleado += '            <label style="color: black; font-style: italic;">Área</label>';
-    informacionEmpleado += '            <input style="font-weight: bold;" class="form-control-plaintext"  type="text" disabled value="'+emple.area +'" />';
-    informacionEmpleado += '        </div>';
-    informacionEmpleado += '    </div>';
-    informacionEmpleado += '    <div class="row">';
-    informacionEmpleado += '        <div class="col-md-3 form-group">';
-    informacionEmpleado += '            <label style="color: black; font-style: italic;">Puesto</label>';
-    informacionEmpleado += '            <input style="font-weight: bold;" class="form-control-plaintext"  type="text" disabled value="'+emple.puesto +'" />';
-    informacionEmpleado += '        </div>';
-    informacionEmpleado += '        <div class="col-md-3 form-group">';
-    informacionEmpleado += '            <label style="color: black; font-style: italic;">Núm. Empleado</label>';
-    informacionEmpleado += '            <input style="font-weight: bold;" class="form-control-plaintext"  type="text" disabled value="'+emple.num_empleado +'" />';
-    informacionEmpleado += '        </div>';
-    informacionEmpleado += '        <div class="col-md-3 form-group">';
-    informacionEmpleado += '            <label style="color: black; font-style: italic;">Jornada</label>';
-    informacionEmpleado += '            <input style="font-weight: bold;" class="form-control-plaintext"  type="text" disabled value="'+emple.horario_entrada+' - '+emple.horario_salida+'" />';
-    informacionEmpleado += '        </div>';
-    informacionEmpleado += '    </div>';
-    informacionEmpleado += '</form>';
+        let tabla = '<table class="table table-hover mb-3">';
+        tabla += '      <thead class="thead-dark"">';
+        tabla += '          <tr>';
+        tabla += '              <th>Día</th>';
+        tabla += '              <th>Fecha</th>';
+        tabla += '              <th>Hora entrada</th>';
+        tabla += '              <th>Hora salida</th>';
+        tabla += '          </tr>';
+        tabla += '      </thead>';
 
-    let tabla = '<table class="table table-hover mb-3">';
-    tabla += '      <thead class="thead-dark"">';
-    tabla += '          <tr>';
-    tabla += '              <th>Día</th>';
-    tabla += '              <th>Fecha</th>';
-    tabla += '              <th>Hora entrada</th>';
-    tabla += '              <th>Hora salida</th>';
-    tabla += '          </tr>';
-    tabla += '      </thead>';
-
-    const excel = $("#resultados-exportar-excel");
-    let tablaExcel = '<table data-nombre-empleado="'+emple.nombre+' '+emple.apellido_paterno+' '+ emple.apellido_materno+'" id="'+emple.nombre+' '+emple.apellido_paterno+' '+ emple.apellido_materno+'" class="hojaExcelJornada">';
-    tablaExcel += cabeceraReporteExcel(emple);
+        const excel = $("#resultados-exportar-excel");
+        let tablaExcel = '<table data-nombre-empleado="'+emple.nombre+' '+emple.apellido_paterno+' '+ emple.apellido_materno+'" id="'+emple.nombre+' '+emple.apellido_paterno+' '+ emple.apellido_materno+'" class="hojaExcelJornada">';
+        tablaExcel += cabeceraReporteExcel(emple);
 
 
-    let tbody = '<tbody>';
-    let tbodyExcel = '';
+        let tbody = '<tbody>';
+        let tbodyExcel = '';
 
-    let f1 = new Date( fecha_inicio );
-    f1.setDate( f1.getDate()+1 );
+        let f1 = new Date( fecha_inicio );
+        f1.setDate( f1.getDate()+1 );
 
-    let f2;
-    if(fecha_final === "")
-        f2 = f1;
-    else{
-        f2 = new Date( fecha_final );
-        f2.setDate( f2.getDate() + 1 );
-    }
-
-    while( f1.getTime() <= f2.getTime() ){
-
-        let fechaRecorre = formatDateDefault(f1);
-        let banderaAgregado = false;
-
-        if(jornadas !== null && jornadas !== undefined){
-            let cantidadJornadas = jornadas.length;
-            for(let x = 0; x < cantidadJornadas; x++)
-
-               if( jornadas[x].date_created === fechaRecorre ){
-
-                    let jornada = jornadas[x];
-                    let ff = new Date( jornada.date_created );
-
-                    tbody += '<tr class="control" style="cursor: pointer;">';
-                    tbody += '  <td>'+ nombresDiasSemana[ff.getDay()+1] +'</td>';
-                    tbody += '  <td>'+ jornada.date_created +'</td>';
-                    tbody += '  <td>'+ jornada.time_created +'</td>';
-                    tbody += '  <td>'+ jornada.time_updated +'</td>';
-                    tbody += '</tr>';
-
-                    tbodyExcel += '<tr>';
-                    tbodyExcel += '  <td>'+ nombresDiasSemana[ff.getDay()+1] +'</td>';
-                    tbodyExcel += '  <td>'+ jornada.date_created +'</td>';
-                    tbodyExcel += '  <td>'+ jornada.time_created +'</td>';
-                    tbodyExcel += '  <td>'+ jornada.time_updated +'</td>';
-                    tbodyExcel += '  <td>'+ jornada.reporte +'</td>';
-                    tbodyExcel += '</tr>';
-
-                    tbody += '<tr class="oculta" style="display: none;">';
-                    tbody += '  <td style="background-color: lightgray; padding: 15px !important;" class="text-center p-2" colspan="4">'+jornada.reporte+'</td>';
-                    tbody += '</tr>';
-
-                    banderaAgregado = true;
-                    break;
-
-               }
+        let f2;
+        if(fecha_final === "")
+            f2 = f1;
+        else{
+            f2 = new Date( fecha_final );
+            f2.setDate( f2.getDate() + 1 );
         }
 
-        if(!banderaAgregado){
-            tbody += '<tr>';
-            tbody += '  <td>'+ nombresDiasSemana[f1.getDay()] +'</td>';
-            tbody += '  <td>'+ fechaRecorre +'</td>';
-            tbody += '  <td>-- : -- : --</td>';
-            tbody += '  <td>-- : -- : --</td>';
-            tbody += '</tr>';
+        while( f1.getTime() <= f2.getTime() ){
 
-            tbodyExcel += '<tr>';
-            tbodyExcel += '  <td>'+ nombresDiasSemana[f1.getDay()] +'</td>';
-            tbodyExcel += '  <td>'+ fechaRecorre +'</td>';
-            tbodyExcel += '  <td>-- : -- : --</td>';
-            tbodyExcel += '  <td>-- : -- : --</td>';
-            tbodyExcel += '  <td>N/A</td>';
-            tbodyExcel += '</tr>';
+            let fechaRecorre = formatDateDefault(f1);
+            let banderaAgregado = false;
+
+            if(jornadas !== null && jornadas !== undefined){
+                let cantidadJornadas = jornadas.length;
+                for(let x = 0; x < cantidadJornadas; x++)
+
+                   if( jornadas[x].date_created === fechaRecorre ){
+
+                        let jornada = jornadas[x];
+                        let ff = new Date( jornada.date_created );
+
+                        tbody += '<tr class="control" style="cursor: pointer;">';
+                        tbody += '  <td>'+ nombresDiasSemana[ff.getDay()+1] +'</td>';
+                        tbody += '  <td>'+ jornada.date_created +'</td>';
+                        tbody += '  <td>'+ jornada.time_created +'</td>';
+                        tbody += '  <td>'+ jornada.time_updated +'</td>';
+                        tbody += '</tr>';
+
+                        tbodyExcel += '<tr>';
+                        tbodyExcel += '  <td>'+ nombresDiasSemana[ff.getDay()+1] +'</td>';
+                        tbodyExcel += '  <td>'+ jornada.date_created +'</td>';
+                        tbodyExcel += '  <td>'+ jornada.time_created +'</td>';
+                        tbodyExcel += '  <td>'+ jornada.time_updated +'</td>';
+                        tbodyExcel += '  <td>'+ jornada.reporte +'</td>';
+                        tbodyExcel += '</tr>';
+
+                        tbody += '<tr class="oculta" style="display: none;">';
+                        tbody += '  <td style="background-color: lightgray; padding: 15px !important;" class="text-center p-2" colspan="4">'+jornada.reporte+'</td>';
+                        tbody += '</tr>';
+
+                        banderaAgregado = true;
+                        break;
+
+                   }
+            }
+
+            if(!banderaAgregado){
+                tbody += '<tr>';
+                tbody += '  <td>'+ nombresDiasSemana[f1.getDay()] +'</td>';
+                tbody += '  <td>'+ fechaRecorre +'</td>';
+                tbody += '  <td>-- : -- : --</td>';
+                tbody += '  <td>-- : -- : --</td>';
+                tbody += '</tr>';
+
+                tbodyExcel += '<tr>';
+                tbodyExcel += '  <td>'+ nombresDiasSemana[f1.getDay()] +'</td>';
+                tbodyExcel += '  <td>'+ fechaRecorre +'</td>';
+                tbodyExcel += '  <td>-- : -- : --</td>';
+                tbodyExcel += '  <td>-- : -- : --</td>';
+                tbodyExcel += '  <td>N/A</td>';
+                tbodyExcel += '</tr>';
+            }
+
+            f1.setDate( f1.getDate() + 1 );
         }
 
-        f1.setDate( f1.getDate() + 1 );
+        tbody += '</tbody>';
+        tabla += tbody;
+        tabla += '</table>';
+
+        let card = '';
+        card += '<div class="card">';
+        card += '    <div style="background-color: white !important; text-align: left; border: none;" class="card-header" id="heading'+emple.id360+'">';
+        card += '        <h2 style="font-size: 1.13rem; text-transform: uppercase; cursor-pointer; padding: 10px; color: #343a40;" class="mb-0" data-toggle="collapse" data-target="#collapse'+emple.id360+'" aria-expanded="true" aria-controls="collapse'+emple.id360+'>';
+        card += '           <button class="btn btn-link" type="button"><i class="fas fa-chevron-down mr-3"></i>'+emple.nombre+' '+emple.apellido_paterno+' '+ emple.apellido_materno + ' / '+emple.sucursal+' / '+emple.area+'</button>';
+        card += '       </h2>';
+        card += '   </div>';
+        card += '   <div id="collapse'+emple.id360+'" class="collapse" aria-labelledby="heading'+emple.id360+'" data-parent="#tablas_resultados">';
+        card += '       <div style="background-color: white !important; border: none !important;" class="card-body">';
+        card += '           '+informacionEmpleado;
+        card += '           '+tabla;
+        card += '       </div>';
+        card += '   </div>';
+        card += '</div>';
+
+        resultInfo.append(card);
+
+        tablaExcel += tbodyExcel;
+        tablaExcel += '</table>';
+        excel.append(tablaExcel);
     }
 
-    tbody += '</tbody>';
-    tabla += tbody;
-    tabla += '</table>';
-
-    let card = '';
-    card += '<div class="card">';
-    card += '    <div style="background-color: white !important; text-align: left; border: none;" class="card-header" id="heading'+emple.id360+'">';
-    card += '        <h2 style="font-size: 1.13rem; text-transform: uppercase; cursor-pointer; padding: 10px; color: #343a40;" class="mb-0" data-toggle="collapse" data-target="#collapse'+emple.id360+'" aria-expanded="true" aria-controls="collapse'+emple.id360+'>';
-    card += '           <button class="btn btn-link" type="button"><i class="fas fa-chevron-down mr-3"></i>'+emple.nombre+' '+emple.apellido_paterno+' '+ emple.apellido_materno + ' / '+emple.sucursal+' / '+emple.area+'</button>';
-    card += '       </h2>';
-    card += '   </div>';
-    card += '   <div id="collapse'+emple.id360+'" class="collapse" aria-labelledby="heading'+emple.id360+'" data-parent="#tablas_resultados">';
-    card += '       <div style="background-color: white !important; border: none !important;" class="card-body">';
-    card += '           '+informacionEmpleado;
-    card += '           '+tabla;
-    card += '       </div>';
-    card += '   </div>';
-    card += '</div>';
-
-    resultInfo.append(card);
-
-    tablaExcel += tbodyExcel;
-    tablaExcel += '</table>';
-    excel.append(tablaExcel);
     $("#botonDescargaReporteJornada").removeClass("d-none");
 
     $("#resultado-busqueda-jornadas").removeClass("d-none");
@@ -500,8 +609,13 @@ const infoEmpleado = (id_empleado) => {
                     empleado.area = generales.area;
                     empleado.sucursal = generales.sucursal;
                     empleado.empresa = generales.empresa;
+                    if(generales.time_created !== undefined && generales.time_created !== null){
+                        empleado.hora_entrada = generales.time_created;
+                    }
+                    break;
                 }
             }
+            break;
         }
     }
     return empleado;

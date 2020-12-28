@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-agregar_menu("Monitoreo de Empleados");
+agregar_menu("Monitoreo de Empleados",'<i class="fas fa-globe-americas"></i>',"Recursos Humanos");
 
 
 /* global OT, Promise, DEPENDENCIA, hostdir, GenerarCredenciales, markers, GenerarTicket */

@@ -5,7 +5,7 @@
  */
 
 
-agregar_menu("Mi Empresa");
+agregar_menu("Mi Empresa",'<i class="fas fa-building"></i>',"Empresa");
 RequestGET("/API/lineamientos/info_empresa/" + sesion_cookie.tipo_usuario).then((response) => {
     console.log(response);
     $("#upFile_MiEmpresa_logotipo").val(response.logotipo);

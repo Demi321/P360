@@ -6,15 +6,336 @@
 
 
 
-/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal */
+/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal, configuracionEmpleado, configuracionUsuario */
+//jQuery.event.props.push('dataTransfer');
 
 var NotificacionesActivadas = false;
 var CantidadMensajesPorChat = {};
+var iconGroupDefault = 'https://bucketmoviles121652-dev.s3.amazonaws.com/public/MobileCard/perfil.png';
 
 var dataLlamada = {};
+var usuariosReenviaMensaje = null;
+
+/*
+ * REPRODUCIR SONIDO AL LLEGAR NOTIFICACION
+ */
+var buttonNotificacionMensaje = $("<button></button>").addClass("d-none");
+buttonNotificacionMensaje.text("Reproducir notificacion m");
+
+var buttonNotificacionLlamada = $("<button></button>").addClass("d-none");
+buttonNotificacionLlamada.text("Reproducir notificacion l");
+
+$("body").append(buttonNotificacionMensaje);
+$("body").append(buttonNotificacionLlamada);
+
+var reproduccionSonidoNotificacion = document.getElementById('sonido1');
+
+const reproduceNotificacion = (tipo) => {
+    
+    if( configuracionUsuario !== null && configuracionUsuario[tipo] !== undefined ){
+        
+        let tonoUsuario = configuracionUsuario[tipo];
+        
+        if(tonoUsuario !== "silenciado"){
+            reproduccionSonidoNotificacion = document.getElementById(tonoUsuario);
+        
+            reproduccionSonidoNotificacion.muted = true;
+            reproduccionSonidoNotificacion.muted = false;
+            if(tipo === "tono_llamada"){
+                reproduccionSonidoNotificacion.loop = true;
+            }
+            reproduccionSonidoNotificacion.play();
+        }
+        
+    }else{
+        reproduccionSonidoNotificacion = document.getElementById('sonido1');
+        reproduccionSonidoNotificacion.muted = true;
+        reproduccionSonidoNotificacion.muted = false;
+        if(tipo === "tono_llamada"){
+            reproduccionSonidoNotificacion.loop = true;
+        }
+        reproduccionSonidoNotificacion.play();
+    }
+    
+};
+
+buttonNotificacionMensaje.click(() => {
+    
+    reproduceNotificacion("tono_mensaje");
+    
+});
+
+buttonNotificacionLlamada.click(() => {
+    
+    reproduceNotificacion("tono_llamada");
+    
+});
+
+let buttonConfiguracion = $("#settings");
+
+let arrayTonos = ['sonido1','sonido2', 'sonido3','sonido4','sonido5','sonido6','sonido7', 'sonido8', 'sonido9', 'sonido10'];
+
+let contenedorConfig = $("<div></div>");
+
+let formGroupTonoMensaje = $("<div></div>").addClass("form-group mb-4");
+let labelTonoMensaje = $("<label></label>");
+labelTonoMensaje.text("Tono para mensajes");
+let selectTonoMensaje = $("<select></select>").addClass("form-control custom-select");
+selectTonoMensaje.attr("id","seleccionarTonoMensaje");
+selectTonoMensaje.attr("onchange", "escuchaSonido(this.value)");
+formGroupTonoMensaje.append(labelTonoMensaje);
+formGroupTonoMensaje.append(selectTonoMensaje);
+
+let formGroupTonoLlamada = $("<div></div>").addClass("form-group");
+let labelTonoLlamada = $("<label></label>");
+labelTonoLlamada.text("Tono para llamadas");
+let selectTonoLlamada = $("<select></select>").addClass("form-control custom-select");
+selectTonoLlamada.attr("id","seleccionarTonoLLamada");
+selectTonoLlamada.attr("onchange", "escuchaSonido(this.value)");
+formGroupTonoLlamada.append(labelTonoLlamada);
+formGroupTonoLlamada.append(selectTonoLlamada);
+
+$.each(arrayTonos, (index, tono) => {
+    let option = $("<option></option>");
+    option.attr("value",tono);
+    option.text("Tono " + (index+1));
+    selectTonoMensaje.append(option);
+});
+
+$.each(arrayTonos, (index, tono) => {
+    let option = $("<option></option>");
+    option.attr("value",tono);
+    option.text("Tono " + (index+1));
+    selectTonoLlamada.append(option);
+});
+
+selectTonoMensaje.prepend("<option value='silenciado'>Silenciar</option>");
+selectTonoLlamada.prepend("<option value='silenciado'>Silenciar</option>");
+
+contenedorConfig.append(formGroupTonoMensaje);
+contenedorConfig.append(formGroupTonoLlamada);
+
+const escuchaSonido = (sonido) => {
+    if(sonido !== "silenciado"){
+        let sonidoPreview = document.getElementById(sonido);
+        sonidoPreview.muted = true;
+        sonidoPreview.muted = false;
+        sonidoPreview.play();
+    }
+};
+
+buttonConfiguracion.click(() => {
+    
+    Swal.fire({
+        html: contenedorConfig,
+        showCancelButton: true,
+        confirmButtonText: 'Aplicar cambios!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.value) {
+
+            let data = {
+                "id360": sesion_cookie.idUsuario_Sys,
+                "tono_mensaje": $("#seleccionarTonoMensaje").val(),
+                "tono_llamada": $("#seleccionarTonoLLamada").val(),
+                "fecha": getFecha(),
+                "hora": getHora()
+            };
+            
+            RequestPOST("/API/empresas360/cambiaConfiguracionUsuario", data).then((response) => {
+                
+                configuracionUsuario = {};
+                configuracionUsuario.id360 = sesion_cookie.idUsuario_Sys;
+                configuracionUsuario.tono_mensaje = $("#seleccionarTonoMensaje").val();
+                configuracionUsuario.tono_llamada = $("#seleccionarTonoLLamada").val();
+                
+                swal.fire({text:'Se ha guardado tu configuracion exitosamente'});
+                
+            });
+ 
+        }
+    });
+    
+});
+
+var participantesParaGrupo = null;
+vuewModalParticipantesGrupo = () => {
+  
+    participantesParaGrupo = new Array();
+    var json = Directorio;
+    vue = new Vue({
+        components: {
+            Multiselect: window.VueMultiselect.default
+        },
+        data: {
+
+            value: [
+            ],
+            options: json
+
+
+        },
+        methods: {
+            customLabel(option) {
+                return  option.nombre + " " + option.apellido_paterno + " " + option.apellido_materno;
+            },
+            onSelect(op) {
+                participantesParaGrupo.push(op.id360);
+            },
+            onClose() {
+                //console.info(this.value);
+            },
+            onRemove(op) {
+                var i = participantesParaGrupo.indexOf(op);
+                participantesParaGrupo.splice(i, 1);
+            }
+
+        }
+    }).$mount('#agregaParticipantesGrupo');
+    
+};
+
+/*
+ * FIN REPRODUCCION DE SONIDOS
+ */
+
+/*
+ * BOTON CREACION DE GRUPOS
+ */
+let contenedorAgregarGrupo = $("<div></div>");
+
+let formCreaGrupo = $("<form></form>");
+formCreaGrupo.attr("id","formCreaGrupo");
+formCreaGrupo.attr("autocomplete","off");
+
+let formGroupNombreGrupo = $("<div></div>").addClass("form-group");
+let labelNombreGrupo = $("<label></label>");
+labelNombreGrupo.text("Título del grupo");
+labelNombreGrupo.attr("for","inputNombreGrupo");
+let inputNombreGrupo = $("<input>").addClass("form-control");
+inputNombreGrupo.attr("id","inputNombreGrupo");
+inputNombreGrupo.attr("type","text");
+inputNombreGrupo.attr("required","true");
+formGroupNombreGrupo.append(labelNombreGrupo);
+formGroupNombreGrupo.append(inputNombreGrupo);
+formCreaGrupo.append(formGroupNombreGrupo);
+
+let formGroupDescripcionGrupo = $("<div></div>").addClass("form-group");
+let labelDescripcionGrupo = $("<label></label>")
+labelDescripcionGrupo.text("Descripción breve");
+labelDescripcionGrupo.attr("for","inputDescripcionGrupo");
+let inputDescripcionGrupo = $("<input>").addClass("form-control");
+inputDescripcionGrupo.attr("id","inputDescripcionGrupo");
+inputDescripcionGrupo.attr("type","text");
+inputDescripcionGrupo.attr("required","true");
+formGroupDescripcionGrupo.append(labelDescripcionGrupo);
+formGroupDescripcionGrupo.append(inputDescripcionGrupo);
+formCreaGrupo.append(formGroupDescripcionGrupo);
+
+let formGroupParticipantesGrupo = $("<div></div>").addClass("form-group");
+let labelParticipantesGrupo = $("<label></label>");
+labelParticipantesGrupo.text("Participantes");
+let selectParticipantesGrupo = '<div class="col-12" id="agregaParticipantesGrupo">' +
+                                    '<multiselect ' +
+                                    'placeholder=""' +
+                                    'v-model="value" ' +
+                                    ':options="options"' +
+                                    'track-by="id360"' +
+                                    ':multiple="true"' +
+                                    ':taggable="false"' +
+                                    ':close-on-select="false"' +
+                                    ':custom-label="customLabel" ' +
+                                    ':select-label="\'Seleccionar\'" ' +
+                                    ':selected-Label="\'Seleccionado\'"' +
+                                    ':deselect-Label="\'Remover\'"' +
+                                    ':hide-selected="true"' +
+                                    '@select="onSelect"' +
+                                    '@Close="onClose"' +
+                                    '@Remove="onRemove">' +
+                                    '</multiselect>' +
+                                    '<pre class="language-json" style="display:none"><code>{{ value  }}</code></pre>' +
+                                '</div>';
+formGroupParticipantesGrupo.append(labelParticipantesGrupo);
+formGroupParticipantesGrupo.append(selectParticipantesGrupo);
+formCreaGrupo.append(formGroupParticipantesGrupo);
+
+let buttonSubmitCreaGrupo = $("<button></button>").addClass("btn btn-danger btn-block mt-4");
+buttonSubmitCreaGrupo.attr("type","submit");
+buttonSubmitCreaGrupo.text("Crear Grupo");
+formCreaGrupo.append(buttonSubmitCreaGrupo);
+
+contenedorAgregarGrupo.append(formCreaGrupo);
+
+$("#addGroup").click(() => {
+    
+    Swal.fire({
+        html: contenedorAgregarGrupo,
+        showCancelButton: true,
+        showConfirmButton: false,
+        cancelButtonText: 'Cancelar',
+        allowOutsideClick: false,
+        allowEscapeKey : false
+    });
+    
+    vuewModalParticipantesGrupo();
+    
+    $("#agregaParticipantesGrupo .multiselect__content-wrapper").css({"background-color":"#fff"});
+    
+    $("#formCreaGrupo").submit((e) => {
+        
+        e.preventDefault();
+        let nombreGrupo = $("#inputNombreGrupo").val().trim();
+        let descripcionGrupo = $("#inputDescripcionGrupo").val().trim();
+        
+        if( participantesParaGrupo.length ){
+            
+            let dataGrupo = {
+                "idUser": sesion_cookie.idUsuario_Sys,
+                "nombre_grupo": nombreGrupo,
+                "icono_grupo": iconGroupDefault,
+                "descripcion_grupo": descripcionGrupo,
+                "fecha": getFecha(),
+                "hora": getHora(),
+                "participantes": participantesParaGrupo
+            };
+            console.log(dataGrupo);
+            RequestPOST("/API/empresas360/crear_grupo", dataGrupo).then((response) => {
+                
+                let idGrupo = response.id_grupo;
+                
+                if(response.success){
+                    Swal.close();
+                    
+                    let dataContac = {
+                        "id360": idGrupo,
+                        "nombre_grupo": nombreGrupo,
+                        "img": iconGroupDefault,
+                        "descripcion_grupo": descripcionGrupo
+                    };
+
+                    contacto_chat(dataContac, true);
+                    $("#profile_chat"+idGrupo).click();
+                    
+                    swal.fire({text: "Invitación enviada a los participantes"});
+                }
+                
+            });
+            
+        }else{
+            
+            
+            
+        }
+        
+    });
+    
+});
+/*
+ * FIN CREACION DE GRUPO
+ */
 
 let array_llamar = new Array();
-agregar_menu("Comunicación");
+agregar_menu("Comunicación",'<i class="fas fa-comments"></i>',"Trabajo");
 Vue.component("multiselect", window.VueMultiselect.default);
 
 /*$(document).on("click",function(e) {
@@ -73,52 +394,64 @@ function agregar_chat_enviado(mensaje, viejo) {
     }
 
 }
-function recibir_chat(mensaje, viejo) {
+function recibir_chat(mensaje, viejo, group) {
     if (!$("#profile_chat" + mensaje.id360).length) {
-        RequestPOST("/API/get/perfil360", mensaje).then((response) => {
-            if (response.success) {
-                contacto_chat(response);
-                directorio_completo.push(response);
-                agregar_chat(mensaje, response, "send", viejo);
-            }
-        });
+        if(group){
+            RequestPOST("/API/empresas360/infoGrupo", {"id_grupo":mensaje.idGroup}).then((response) => {
+                console.log(response);
+            });
+        }else{
+            RequestPOST("/API/get/perfil360", mensaje).then((response) => {
+                if (response.success) {
+                    contacto_chat(response);
+                    directorio_completo.push(response);
+                    agregar_chat(mensaje, response, "send", viejo);
+                }
+            });
+        }
     } else {
-        let user = null;
-        $.each(directorio_completo, (i) => {
-            if (mensaje.id360 === directorio_completo[i].id360) {
-                user = directorio_completo[i];
-                return false;
-            }
-        });
-        if (user !== null) {
-            if (NotificacionesActivadas) {
+        if(group){
+            
+        }else{
+            let user = null;
+            $.each(directorio_completo, (i) => {
+                if (mensaje.id360 === directorio_completo[i].id360) {
+                    user = directorio_completo[i];
+                    return false;
+                }
+            });
+            if (user !== null) {
+                if (NotificacionesActivadas) {
 
-                let body = '';
-                if (mensaje.type === "text") {
-                    body = user.nombre + " " + user.apellido_paterno + " dice: " + mensaje.message;
-                } else {
-                    body = user.nombre + " " + user.apellido_paterno + " ha enviado un adjunto";
+                    let body = '';
+                    if (mensaje.type === "text") {
+                        body = user.nombre + " " + user.apellido_paterno + " dice: " + mensaje.message;
+                    } else {
+                        body = user.nombre + " " + user.apellido_paterno + " ha enviado un adjunto";
+                    }
+
+                    /*let onClickNotification = () => {
+                     $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
+                     $("#message_input_"+user.id360).focus();
+
+                     if($("#profile_chat" + value.id360).length){
+                     $("#profile_chat" + value.id360).click();
+                     }else{
+                     contacto_chat(value);
+                     $("#profile_chat" + value.id360).click();
+                     }
+
+                     };*/
+
+                    notificacion_mensaje("Nuevo mensaje", body, () => {
+                    });
+
+                    buttonNotificacionMensaje.click();
+
                 }
 
-                /*let onClickNotification = () => {
-                 $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
-                 $("#message_input_"+user.id360).focus();
-                 
-                 if($("#profile_chat" + value.id360).length){
-                 $("#profile_chat" + value.id360).click();
-                 }else{
-                 contacto_chat(value);
-                 $("#profile_chat" + value.id360).click();
-                 }
-                 
-                 };*/
-
-                notificacion_mensaje("Nuevo mensaje", body, () => {
-                });
-
+                agregar_chat(mensaje, user, "send", viejo);
             }
-
-            agregar_chat(mensaje, user, "send", viejo);
         }
 
     }
@@ -163,6 +496,127 @@ const swalConfirmDialog = (message, textConfirm, textCancel) => {
             if (result.value)
                 resolve(true);
         });
+    });
+};
+
+vuewModalReenviaMensaje = () => {
+  
+    usuariosReenviaMensaje = new Array();
+    var json = Directorio;
+    vue = new Vue({
+        components: {
+            Multiselect: window.VueMultiselect.default
+        },
+        data: {
+
+            value: [
+            ],
+            options: json
+
+
+        },
+        methods: {
+            customLabel(option) {
+                return  option.nombre + " " + option.apellido_paterno + " " + option.apellido_materno;
+            },
+            onSelect(op) {
+                usuariosReenviaMensaje.push(op.id360);
+            },
+            onClose() {
+                //console.info(this.value);
+            },
+            onRemove(op) {
+                var i = usuariosReenviaMensaje.indexOf(op);
+                usuariosReenviaMensaje.splice(i, 1);
+            }
+
+        }
+    }).$mount('#usuariosReenviaMensaje');
+    
+};
+
+const reenviaMensaje = (mensaje) => {
+    let contenedorReenviaMensaje = $("<div></div>");
+
+    let formReenviaMensaje = $("<form></form>");
+    formReenviaMensaje.attr("id","formReenviaMensaje");
+    formReenviaMensaje.attr("autocomplete","off");
+
+    let formGroupReenviaMensaje = $("<div></div>").addClass("form-group");
+    let labelUsuariosReenvia = $("<label></label>");
+    labelUsuariosReenvia.text("Reenviar a:");
+    let selectUsuariosReenvia = '<div class="col-12" id="usuariosReenviaMensaje">' +
+                                        '<multiselect ' +
+                                        'placeholder=""' +
+                                        'v-model="value" ' +
+                                        ':options="options"' +
+                                        'track-by="id360"' +
+                                        ':multiple="true"' +
+                                        ':taggable="false"' +
+                                        ':close-on-select="false"' +
+                                        ':custom-label="customLabel" ' +
+                                        ':select-label="\'Seleccionar\'" ' +
+                                        ':selected-Label="\'Seleccionado\'"' +
+                                        ':deselect-Label="\'Remover\'"' +
+                                        ':hide-selected="true"' +
+                                        '@select="onSelect"' +
+                                        '@Close="onClose"' +
+                                        '@Remove="onRemove">' +
+                                        '</multiselect>' +
+                                        '<pre class="language-json" style="display:none"><code>{{ value  }}</code></pre>' +
+                                    '</div>';
+    formGroupReenviaMensaje.append(labelUsuariosReenvia);
+    formGroupReenviaMensaje.append(selectUsuariosReenvia);
+    formReenviaMensaje.append(formGroupParticipantesGrupo);
+
+    let buttonSubmitReenviaMensaje = $("<button></button>").addClass("btn btn-danger btn-block mt-4");
+    buttonSubmitReenviaMensaje.attr("type","submit");
+    buttonSubmitReenviaMensaje.text("Reenviar mensaje");
+    formReenviaMensaje.append(buttonSubmitReenviaMensaje);
+
+    contenedorReenviaMensaje.append(formReenviaMensaje);
+
+    Swal.fire({
+        html: contenedorReenviaMensaje,
+        showCancelButton: true,
+        showConfirmButton: false,
+        cancelButtonText: 'Cancelar',
+        allowOutsideClick: false,
+        allowEscapeKey : false
+    });
+
+    vuewModalReenviaMensaje();
+
+    $("#usuariosReenviaMensaje .multiselect__content-wrapper").css({"background-color":"#fff"});
+
+    $("#formReenviaMensaje").submit((e) => {
+
+        e.preventDefault();
+
+        if( usuariosReenviaMensaje.length ){
+
+            let cantidadU = usuariosReenviaMensaje.length;
+            for( let x = 0; x<cantidadU; x++ ){
+                
+                let input = $("<input>");
+                input.val(mensaje);
+                
+                let ulJS = document.getElementById("contact_messaging"+usuariosReenviaMensaje[x]);
+                let ul = $(ulJS);
+                
+                let previewJS = document.getElementById("profile_chat"+usuariosReenviaMensaje[x]);
+                let preview = $(previewJS);
+                
+                let messagesJS = document.getElementById("messages_"+usuariosReenviaMensaje[x]);
+                let messages = $(messagesJS);
+                
+                let user = {"id360":usuariosReenviaMensaje[x]};
+                
+                send_chat_messages(input, ul, preview, user, messages);
+            }
+
+        }
+
     });
 };
 
@@ -226,8 +680,12 @@ function agregar_chat(msj, user, type, viejo) {
                 linkMensaje.css({
                     "color": "currentColor"
                 });
-                ;
                 message.html(linkMensaje);
+                
+                message.css({
+                    "word-break": "break-all"
+                });
+                
             } else {
                 message.text(mensaje);
             }
@@ -356,10 +814,6 @@ function agregar_chat(msj, user, type, viejo) {
                 message.append(fecha);
             }
 
-            message.css({
-                "word-break": "break-all"
-            });
-
             //ICONO MENU DE OPCION PARA EL MENSAJE
             if (type === "replies") {
                 let iconOpciones = $("<span></span>").addClass("iconOpciones");
@@ -431,9 +885,19 @@ function agregar_chat(msj, user, type, viejo) {
                     eliminaMensaje(1);
                 });
                 menuOpcionesMensaje.append(opcionEliminaMensajeMi);
+                
+                //OPCION PARA REENVIAR EL MENSAJE
+                let opcionReenviaMensaje = $("<li></li>").addClass("optionMensaje");
+                opcionReenviaMensaje.text("Reenviar mensaje");
+                opcionReenviaMensaje.click(() => {
+                    
+                    reenviaMensaje(mensaje);
+                    
+                });
+                menuOpcionesMensaje.append(opcionReenviaMensaje);
 
                 //OPCION PARA EDITAR EL MENSAJE
-                let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
+                let opcionEditaMensaje = $("<li></li>").addClass("optionMensaje");
                 opcionEditaMensaje.text("Editar mensaje");
                 opcionEditaMensaje.click(() => {
                     console.log("Editando..");
@@ -701,7 +1165,51 @@ const cargaMasMensajes = (id360) => {
     });
 };
 
-function contacto_chat(user) {
+function removeDragData(ev) {
+
+  if (ev.dataTransfer.items) {
+    // Use DataTransferItemList interface to remove the drag data
+    ev.dataTransfer.items.clear();
+  } else {
+    // Use DataTransfer interface to remove the drag data
+    ev.dataTransfer.clearData();
+  }
+  
+}
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drop(ev) {
+  console.log('Fichero(s) arrastrados');
+
+  // Evitar el comportamiendo por defecto (Evitar que el fichero se abra/ejecute)
+  ev.preventDefault();
+
+  if (ev.dataTransfer.items) {
+    // Usar la interfaz DataTransferItemList para acceder a el/los archivos)
+    for (var i = 0; i < ev.dataTransfer.items.length; i++) {
+      // Si los elementos arrastrados no son ficheros, rechazarlos
+      if (ev.dataTransfer.items[i].kind === 'file') {
+        var file = ev.dataTransfer.items[i].getAsFile();
+        console.log("1");
+        console.log(file);
+      }
+    }
+  } else {
+    // Usar la interfaz DataTransfer para acceder a el/los archivos
+    for (var i = 0; i < ev.dataTransfer.files.length; i++) {
+        console.log("2");
+        console.log(file);
+    }
+  }
+
+  // Pasar el evento a removeDragData para limpiar
+  removeDragData(ev);
+}
+
+function contacto_chat(user, group) {
 
     if (!$("#profile_chat" + user.id360).length && user.id360 !== undefined) {
 
@@ -720,7 +1228,10 @@ function contacto_chat(user) {
         });
         let meta = $("<div></div>").addClass("meta");
         let name = $("<p></p>").addClass("name");
-        name.text(user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno);
+        if(group)
+            name.text(user.nombre_grupo);
+        else
+            name.text(user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno);
         let preview = $("<p></p>").addClass("preview");
         preview.attr("id", "preview_" + user.id360);
         meta.append(name);
@@ -807,10 +1318,15 @@ function contacto_chat(user) {
             "background-repeat": "no-repeat"
         });
         let nombre = $("<p></p>");
-        nombre.text(user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno);
+        if(group)
+            nombre.text(user.nombre_grupo);
+        else
+            nombre.text(user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno);
 
         let messages = $("<div></div>").addClass("messages");
         messages.attr("id", "messages_" + user.id360);
+        messages.attr("ondragover","allowDrop(event)");
+        messages.attr("ondrop","drop(event)");
         let ul = $("<ul></ul>").addClass("p-0");
         //    ul.id = "contact_messaging" + user.id360;
         ul.attr("id", "contact_messaging" + user.id360);
@@ -1180,7 +1696,7 @@ function contacto_chat(user) {
         ul.on("drop", function (event) {
             event.preventDefault();
             event.stopPropagation();
-            alert("Dropped!");
+            console.log(event);
         });
 
         input.on('keydown', function (e) {
@@ -1220,8 +1736,15 @@ function contacto_chat(user) {
         });
 
         const clickIniciarLlamada = () => {
+            
+            let nombreLlamada;
+            if(group)
+                nombreLlamada = user.nombre_grupo;
+            else
+                nombreLlamada = user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno;
+            
             Swal.fire({
-                text: "Iniciar una llamada con: " + user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno,
+                text: "Iniciar una llamada con: " + nombreLlamada,
                 showCancelButton: true,
                 focusConfirm: true,
                 cancelButtonText: "Cancelar",
@@ -1295,7 +1818,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
     if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
         mensaje = rutaAdjunto;
 
-    if ($.trim(mensaje) == '') {
+    if ($.trim(mensaje) === '') {
         return false;
     } else {
         let json = {
@@ -1424,15 +1947,16 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                         linkMensaje.attr("href", mensaje);
                         linkMensaje.attr("tarjet", "_blanck");
                         message.html(linkMensaje);
+                        
+                        message.css({
+                            "word-break": "break-all"
+                        });
+                        
                     } else {
                         message.text(mensaje);
                     }
 
                 }
-
-                message.css({
-                    "word-break": "break-all"
-                });
 
                 let fecha = $("<span></span>").addClass("time");
 

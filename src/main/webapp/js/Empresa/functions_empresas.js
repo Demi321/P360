@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-/* global RequestPOST, swal, Swal, marcador3, DEPENDENCIA, marcador5, map5, google */
+/* global RequestPOST, swal, Swal, marcador3, DEPENDENCIA, marcador5, map5, google, buttonNotificacionLlamada, reproduccionSonidoNotificacion */
 
 console.log("Bingoooooo");
 var sesion_jornada_laboral = null;
@@ -23,6 +23,14 @@ RequestPOST("/API/ConsultarDirectorio", {
 }).then((response) => {
     directorio_completo = response.directorio;
 });
+
+var configuracionUsuario = null;
+RequestPOST("/API/empresas360/configuracionUsuario", {id360:JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario}).then((response) => {
+    if(response.length>0){
+        configuracionUsuario = response[0];
+    }
+});
+
 //var sesion_cookie = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
 AWS.config.update({
     region: bucketRegion,
@@ -44,6 +52,9 @@ WebSocketGeneral.onmessage = function (message) {
     }
     try {
 
+        if(mensaje.grupo_chat_empresarial){
+            recibir_chat(mensaje,false,true);
+        }
         if(mensaje.chat_empresarial){
             recibir_chat(mensaje);
         }
@@ -68,6 +79,7 @@ WebSocketGeneral.onmessage = function (message) {
             idSocketOperador = mensaje.idSocket;
         }
         if (mensaje.llamada_multiplataforma) {
+            buttonNotificacionLlamada.click();
             notificacion_llamada(mensaje);
             prueba_notificacion(mensaje);
         }
@@ -134,35 +146,35 @@ WebSocketGeneral.onmessage = function (message) {
 
 };
 
-function agregar_menu(nombre) {
-    let div = document.createElement("div");
-    div.className = "menu_sidebar d-flex";
-    div.innerHTML = nombre;
-    div.id = "menu_section_" + nombre.replace(/\s/g, "");
-    $("#sidebar").append(div);
-
-    let div2 = document.createElement("div");
-    div2.className = "modulo_section d-none";
-    div2.id = "modulo_section_" + nombre.replace(/\s/g, "");//quitale los espacios si llegara a tener 
-//            div2.innerHTML = nombre;
-
-    $("#contenidoSection").append(div2);
-
-    div.addEventListener("click", function () {
-        let modulos = $(".modulo_section");
-        modulos.addClass("d-none");
-        let menus = $(".menu_sidebar");
-        menus.removeClass("menu_selected");
-        $("#modulo_section_" + nombre.replace(/\s/g, "")).removeClass("d-none");
-        $("#menu_section_" + nombre.replace(/\s/g, "")).addClass("menu_selected");
-    });
-
-    if ($("#base_modulo_" + nombre.replace(/\s/g, "")).length) {
-        $("#base_modulo_" + nombre.replace(/\s/g, "")).removeClass("d-none");
-//                div2.appendChild($("#base_modulo_"+ nombre.replace(/\s/g, "")));
-        div2.appendChild(document.getElementById("base_modulo_" + nombre.replace(/\s/g, "")));
-    }
-}
+//function agregar_menu(nombre) {
+//    let div = document.createElement("div");
+//    div.className = "menu_sidebar d-flex";
+//    div.innerHTML = nombre;
+//    div.id = "menu_section_" + nombre.replace(/\s/g, "");
+//    $("#sidebar").append(div);
+//
+//    let div2 = document.createElement("div");
+//    div2.className = "modulo_section d-none";
+//    div2.id = "modulo_section_" + nombre.replace(/\s/g, "");//quitale los espacios si llegara a tener 
+////            div2.innerHTML = nombre;
+//
+//    $("#contenidoSection").append(div2);
+//
+//    div.addEventListener("click", function () {
+//        let modulos = $(".modulo_section");
+//        modulos.addClass("d-none");
+//        let menus = $(".menu_sidebar");
+//        menus.removeClass("menu_selected");
+//        $("#modulo_section_" + nombre.replace(/\s/g, "")).removeClass("d-none");
+//        $("#menu_section_" + nombre.replace(/\s/g, "")).addClass("menu_selected");
+//    });
+//
+//    if ($("#base_modulo_" + nombre.replace(/\s/g, "")).length) {
+//        $("#base_modulo_" + nombre.replace(/\s/g, "")).removeClass("d-none");
+////                div2.appendChild($("#base_modulo_"+ nombre.replace(/\s/g, "")));
+//        div2.appendChild(document.getElementById("base_modulo_" + nombre.replace(/\s/g, "")));
+//    }
+//}
 
 function agregar_menu2(nombre,fawsome) {
     let div = document.createElement("div");
@@ -1631,6 +1643,8 @@ function notificacion_llamada(mensaje) {
         reverseButtons: true
     }).then((result) => {
         console.log(result);
+        reproduccionSonidoNotificacion.loop = false;
+        reproduccionSonidoNotificacion.pause();
         if (result.value) {
             console.log(mensaje);
             
@@ -1670,7 +1684,7 @@ function prueba_notificacion(mensaje) {
         if (Notification.permission !== "granted") {
             Notification.requestPermission()
         }
-        var title = "Llamada entrante:"
+        var title = "Llamada entrante:";
         var extra = {
             icon: mensaje.emisor.img,
             body: mensaje.emisor.nombre + " " + mensaje.emisor.apellido_paterno + " " + mensaje.emisor.apellido_materno,
@@ -1681,6 +1695,9 @@ function prueba_notificacion(mensaje) {
         var notificar = new Notification(title, extra);
         notificar.onclick = function () {
             console.log('notification.Click');
+            
+            reproduccionSonidoNotificacion.loop = false;
+            reproduccionSonidoNotificacion.pause();
             
             Swal.fire({
                 text: '¿Cómo quieres continuar la llamada? (Selecciona ventana externa.)',

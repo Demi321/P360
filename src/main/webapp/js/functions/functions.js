@@ -6436,3 +6436,50 @@ function personalizar_header(perfil) {
     }
 
 }
+
+
+function agregar_menu(nombre, fawsome, collapse) {
+    //El collapse re enviara cuando deseemos enviar el menu dentro de un contenedor 
+    let root = "sidebar";
+    if (collapse !== null && collapse !== "" && collapse !== undefined) {
+        //comprobar que exista el collapse
+        if (!$("#collapse_sidebar_" + collapse.replace(/\s/g, "")).length) {
+            {
+                //en caso de que no exista lo agregamos
+                let collapse_a = $('<a data-toggle="collapse" href="#collapse_sidebar_' + collapse.replace(/\s/g, "") + '" aria-expanded="false">' + collapse + '<i class="fas fa-caret-down"></i></a>').addClass("collapse_sidebar shadow-none btn collapsed");
+                let collapse_container = $('<div id="collapse_sidebar_' + collapse.replace(/\s/g, "") + '"></div>').addClass("collapse_sidebar_cntr collapse");
+                $("#sidebar").append(collapse_a);
+                $("#sidebar").append(collapse_container);
+            }
+        }
+        root = "collapse_sidebar_" + collapse.replace(/\s/g, "");
+    }
+    let div = document.createElement("div");
+    div.className = "menu_sidebar d-flex";
+    div.innerHTML = fawsome + nombre;
+    div.id = "menu_section_" + nombre.replace(/\s/g, "");
+    $("#" + root).append(div);
+
+    let div2 = document.createElement("div");
+    div2.className = "modulo_section d-none";
+    div2.id = "modulo_section_" + nombre.replace(/\s/g, "");//quitale los espacios si llegara a tener 
+//            div2.innerHTML = nombre;
+
+    $("#contenidoSection").append(div2);
+
+    div.addEventListener("click", function () {
+        let modulos = $(".modulo_section");
+        modulos.addClass("d-none");
+        let menus = $(".menu_sidebar");
+        menus.removeClass("menu_selected");
+        $("#modulo_section_" + nombre.replace(/\s/g, "")).removeClass("d-none");
+        $("#menu_section_" + nombre.replace(/\s/g, "")).addClass("menu_selected");
+    });
+
+    if ($("#base_modulo_" + nombre.replace(/\s/g, "")).length) {
+        $("#base_modulo_" + nombre.replace(/\s/g, "")).removeClass("d-none");
+//                div2.appendChild($("#base_modulo_"+ nombre.replace(/\s/g, "")));
+        div2.appendChild(document.getElementById("base_modulo_" + nombre.replace(/\s/g, "")));
+    }
+
+}

@@ -83,6 +83,7 @@ $("#Log-in").submit(function (e) {
         }),
         success: function (response) {
             console.log(response);
+            $("#logo360").addClass("d-none");
             //setCookie("username_v3.1_" + DEPENDENCIA, JSON.stringify(response), 1000);
             if (!response.success) {
 //                Swal.fire({
@@ -103,7 +104,7 @@ $("#Log-in").submit(function (e) {
                     for (var i = 0; i < response.plataforma360.length; i++) {
                         let institucion = response.plataforma360[i];
                         console.log(institucion);
-                        if (institucion.url === window.location.protocol + "//" + window.location.host + '/' + DEPENDENCIA + '/') {
+                        if (institucion.url === window.location.protocol + "//" + window.location.host + '/' + "plataforma360" + '/') {
                             plataforma360 = true;
                             count_plataforma360++;
                             if (count_plataforma360 === 1) {
@@ -324,8 +325,16 @@ function continuar_institucion_seleccionada() {
     sesion_cookie.correo = sesion_cookie.claro360.correo;
     sesion_cookie.usuario = sesion_cookie.claro360.usuario;
     sesion_cookie.token = sesion_cookie.claro360.token;
-
-
+    
+    /*Cambios fernando*/
+    sesion_cookie.gc = institucion_seleccionada.gc;
+    if (sesion_cookie.gc.toString() === "1") {
+        $("#logo360").addClass("d-none");
+        sesion_cookie.logotipo_empresa = institucion_seleccionada.logotipo_empresa;
+    }else{
+        $("#logo360").removeClass("d-none");
+    }
+    /******************/
     let keys = Object.keys(sesion_cookie);
     let modulos_externos = new Array();
     let url_modulos = new Array();

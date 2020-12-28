@@ -6,7 +6,7 @@
 
 
 mostrar_info_perfil();
-agregar_menu("Áreas de Trabajo");
+agregar_menu("Áreas de Trabajo",'<i class="fas fa-users"></i>',"Recursos Humanos");
 RequestGET("/API/lineamientos/listado_sucursales/" + sesion_cookie.tipo_usuario).then((response) => {
 
     for (var i = 0; i < response.length; i++) {

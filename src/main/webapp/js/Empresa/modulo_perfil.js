@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-agregar_menu("Mi Perfil");
+agregar_menu("Mi Perfil",'<i class="fas fa-user-circle"></i>',"Trabajo");
 mostrar_info_perfil();
 var perfil = null;
 RequestGET("/API/empresas360/info_empresa/" + sesion_cookie.tipo_usuario).then((response) => {

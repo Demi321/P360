@@ -168,17 +168,21 @@ $(() => {
     $("#toggle div").click(() => {
         console.log("clicked");
         $("aside").toggleClass("aside_compressed");
+        $("#sidebar").toggleClass("px-1");
         $("section").toggleClass("section_compressed");
-        $("#toggle span").toggleClass("compressed");
+        $("#toggle span").toggleClass("compressed d-none");
         $("#sidebar .menu_sidebar").toggleClass("compressed");
+        $("#sidebar .collapse_sidebar_cntr").toggleClass("compressed");
         
-        /*Parche el pirata*/
-        if (window.location.href.includes("Llamada")) {
-            $("#sidebar").toggleClass("d-none");
-            $("#directorio").toggleClass("position-relative");
-            $("#toggle").toggleClass("height-fit-content");
+        if($("aside").hasClass("aside_compressed")){
+           $("#sidebar a").addClass("d-none"); 
+           $("#sidebar .collapse_sidebar_cntr.collapse").addClass("show"); 
+        }else{
+            $("#sidebar a").removeClass("d-none"); 
+            $("#sidebar .collapse_sidebar_cntr.collapse").removeClass("show"); 
         }
-        /******************/
+        
+      
         /*        aside {
          display: none;
          }

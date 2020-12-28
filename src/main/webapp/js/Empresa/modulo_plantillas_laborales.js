@@ -5,7 +5,7 @@
  */
 
 
-agregar_menu("Plantilla Laboral");
+agregar_menu("Plantilla Laboral",'<i class="fas fa-clipboard-check"></i>','Recursos Humanos');
 registro_plantilla_laboral("Plantilla Laboral");
 /* Cambios fernando */
 //agregar_menu("Mis Plantillas Laborales");

@@ -6,7 +6,7 @@
 
 
 /*********/
-    agregar_menu("Registrar y Activar Empresa");
+    agregar_menu("Registrar y Activar Empresa","");
     load_file_img("upFile_logo_nueva_empresa");
     $("#upFile_logo_nueva_empresa_logotipo_preview").click(() => {
         $("#upFile_logo_nueva_empresa").click();
