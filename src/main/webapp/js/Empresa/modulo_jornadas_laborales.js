@@ -36,6 +36,8 @@ const enviar_mensaje_empleado_en_jornada = (id360) => {
                 $("#profile_chat"+id360).click();
             }
         });
+    }else{
+        $("#profile_chat"+id360).click();
     }
 };
 
@@ -78,13 +80,37 @@ const inicioJornadasLaborales = () => {
                 $.each(empleadosEmpresa, (index, empleado) => {
                   
                     let detalleEmpleado = infoEmpleado(empleado.id360);
+                    
+                    let partesHoraEntro = detalleEmpleado.hora_entrada.split(":");
+                    let horaEntro = moment();
+                    horaEntro.set("hour",partesHoraEntro[0]);
+                    horaEntro.set("minute", partesHoraEntro[1]);
+                    horaEntro.set("second", partesHoraEntro[2]);
+                    
+                    let partesHoraTenia = detalleEmpleado.horario_entrada.split(":");
+                    let horaTenia = moment();
+                    horaTenia.set("hour",partesHoraTenia[0]);
+                    horaTenia.set("minute", partesHoraTenia[1]);
+                    horaTenia.set("second", partesHoraTenia[2]);
+                    
+                    let tipoEntrada = 'success';
+
+                    let minutosDeDiferencia = horaTenia.diff( horaEntro , 'minutes' );
+                    
+                    if( minutosDeDiferencia < -5 ){
+                        tipoEntrada = 'warning';
+                    }
+                    if( minutosDeDiferencia < -20 ){
+                        tipoEntrada = 'danger';
+                    }
                   
                     tbody += '<tr class="text-center" id="fila_empleado_en_jornada_'+detalleEmpleado.id360+'">';
 
                     tbody += '  <td>'+detalleEmpleado.nombre+' '+detalleEmpleado.apellido_paterno+' '+detalleEmpleado.apellido_materno+'</td>';
                     tbody += '  <td>'+detalleEmpleado.sucursal+'</td>';
                     tbody += '  <td>'+detalleEmpleado.area+'</td>';
-                    tbody += '  <td>'+detalleEmpleado.hora_entrada+'</td>';
+                    tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoEntrada+'">'+detalleEmpleado.horario_entrada+'</span></td>';
+                    tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoEntrada+'">'+detalleEmpleado.hora_entrada+'</span></td>';
                     tbody += '  <td><button onclick="enviar_mensaje_empleado_en_jornada('+detalleEmpleado.id360+')" class="btn btn-dark"><i class="fas fa-comment-dots"></i></button></td>';
 
                     tbody += '</tr>';
