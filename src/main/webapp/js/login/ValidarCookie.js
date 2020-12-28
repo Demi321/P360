@@ -455,3 +455,21 @@ function deleteAllCookies() {
         // document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
 }
+
+function RequestPOST(url, json) {
+    return Promise.resolve($.ajax({
+        type: 'POST',
+        url: '/' + DEPENDENCIA + url,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(json),
+        success: function (response) {
+            console.log(url);
+            console.log(response);
+            console.log("/*********************************************/");
+        },
+        error: function (err) {
+            console.error(err);
+        }
+    }));
+}
