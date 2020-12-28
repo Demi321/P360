@@ -601,9 +601,18 @@ const reenviaMensaje = (mensaje) => {
                 let input = $("<input>");
                 input.val(mensaje);
                 
-                //let ulJS = document.getElementById();
+                let ulJS = document.getElementById("contact_messaging"+usuariosReenviaMensaje[x]);
+                let ul = $(ulJS);
                 
-                //send_chat_messages(input, ul, preview, user, messages);
+                let previewJS = document.getElementById("profile_chat"+usuariosReenviaMensaje[x]);
+                let preview = $(previewJS);
+                
+                let messagesJS = document.getElementById("messages_"+usuariosReenviaMensaje[x]);
+                let messages = $(messagesJS);
+                
+                let user = {"id360":usuariosReenviaMensaje[x]};
+                
+                send_chat_messages(input, ul, preview, user, messages);
             }
 
         }
@@ -885,9 +894,10 @@ function agregar_chat(msj, user, type, viejo) {
                     reenviaMensaje(mensaje);
                     
                 });
+                menuOpcionesMensaje.append(opcionReenviaMensaje);
 
                 //OPCION PARA EDITAR EL MENSAJE
-                let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
+                let opcionEditaMensaje = $("<li></li>").addClass("optionMensaje");
                 opcionEditaMensaje.text("Editar mensaje");
                 opcionEditaMensaje.click(() => {
                     console.log("Editando..");
@@ -1808,7 +1818,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
     if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
         mensaje = rutaAdjunto;
 
-    if ($.trim(mensaje) == '') {
+    if ($.trim(mensaje) === '') {
         return false;
     } else {
         let json = {
