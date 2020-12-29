@@ -470,6 +470,7 @@ function notificacion_mensaje(title, body, onclick) {
         };
 
         var notificacion = new Notification(title, options);
+        setTimeout(notificacion.close.bind(notificacion), 15000);
 
         notificacion.onshow = function () {
             //document.getElementById('').play();
