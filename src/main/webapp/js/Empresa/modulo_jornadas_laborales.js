@@ -24,7 +24,8 @@ botonEmpleadosEnJornada.click(() => {
     inicioJornadasLaborales();
 });
 
-const enviar_mensaje_empleado_en_jornada = (id360) => {
+const initComunicacionJornadasLaborales = (id360, llamada) => {
+  
     $("#sidebar a:eq(3)").click();
     $("#menu_section_Comunicación").click();
     if (!$("#profile_chat" + id360).length) {
@@ -34,11 +35,22 @@ const enviar_mensaje_empleado_en_jornada = (id360) => {
                 contacto_chat(response);
                 directorio_completo.push(response);
                 $("#profile_chat"+id360).click();
+                if(llamada) $("#profile_chat"+id360 + " .btn-realizarLlamadaChat").click();
             }
         });
     }else{
         $("#profile_chat"+id360).click();
+        if(llamada) $("#profile_chat"+id360 + " .btn-realizarLlamadaChat").click();
     }
+    
+};
+
+const enviar_mensaje_empleado_en_jornada = (id360) => {
+    initComunicacionJornadasLaborales(id360, false);
+};
+
+const inicia_llamada_empleado_en_jornada = (id360) => {
+    initComunicacionJornadasLaborales(id360, true);
 };
 
 const inicioJornadasLaborales = () => {
@@ -46,6 +58,8 @@ const inicioJornadasLaborales = () => {
     if(tablaInicio !== undefined && tablaInicio !== null){
         tablaInicio.destroy();
     }
+    
+    let c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0;
     
     inicioJornadas.removeClass("d-none");
     botonEmpleadosEnJornada.addClass("d-none");
@@ -97,11 +111,54 @@ const inicioJornadasLaborales = () => {
 
                     let minutosDeDiferencia = horaTenia.diff( horaEntro , 'minutes' );
                     
+                    c1++;
                     if( minutosDeDiferencia < -5 ){
                         tipoEntrada = 'warning';
+                        c2++;
+                        c1--;
                     }
                     if( minutosDeDiferencia < -20 ){
                         tipoEntrada = 'danger';
+                        c3++;
+                        c2--;
+                    }
+                    
+                    let tipoSalida = 'success';
+                    let salio = '';
+                    c4++;
+                    if( detalleEmpleado.hora_salida !== undefined && detalleEmpleado.hora_salida !== null ){
+                        
+                        c4--;
+                        salio = detalleEmpleado.hora_salida;
+                        
+                        let partesHoraSalio = detalleEmpleado.hora_salida.split(":");
+                        let horaSalio = moment();
+                        horaSalio.set("hour",partesHoraSalio[0]);
+                        horaSalio.set("minute", partesHoraSalio[1]);
+                        horaSalio.set("second", partesHoraSalio[2]);
+
+                        let partesHoraTeniaSalir = detalleEmpleado.horario_salida.split(":");
+                        let horaTeniaSalir = moment();
+                        horaTeniaSalir.set("hour",partesHoraTeniaSalir[0]);
+                        horaTeniaSalir.set("minute", partesHoraTeniaSalir[1]);
+                        horaTeniaSalir.set("second", partesHoraTeniaSalir[2]);
+                        
+                        let minutosDeDiferenciaSalida = horaTeniaSalir.diff( horaSalio , 'minutes' );
+                        console.log("minutos de diferencia de salida");
+                        console.log(minutosDeDiferenciaSalida);
+                        
+                        c4++;
+                        if( minutosDeDiferenciaSalida > -5 ){
+                            tipoSalida = 'warning';
+                            c5++;
+                            c4--;
+                        }
+                        if( minutosDeDiferenciaSalida > -20 ){
+                            tipoSalida = 'danger';
+                            c6++;
+                            c5--;
+                        }
+                        
                     }
                   
                     tbody += '<tr class="text-center" id="fila_empleado_en_jornada_'+detalleEmpleado.id360+'">';
@@ -111,7 +168,11 @@ const inicioJornadasLaborales = () => {
                     tbody += '  <td>'+detalleEmpleado.area+'</td>';
                     tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoEntrada+'">'+detalleEmpleado.horario_entrada+'</span></td>';
                     tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoEntrada+'">'+detalleEmpleado.hora_entrada+'</span></td>';
+                    tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoSalida+'">'+detalleEmpleado.horario_salida+'</span></td>';
+                    tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoSalida+'">'+salio+'</span></td>';
+                    tbody += '  <td>'+detalleEmpleado.desconexiones+'</td>';
                     tbody += '  <td><button onclick="enviar_mensaje_empleado_en_jornada('+detalleEmpleado.id360+')" class="btn btn-dark"><i class="fas fa-comment-dots"></i></button></td>';
+                    tbody += '  <td><button onclick="inicia_llamada_empleado_en_jornada('+detalleEmpleado.id360+')" class="btn btn-dark"><i class="fas fa-phone"></i></button></td>';
 
                     tbody += '</tr>';
                 });
@@ -122,8 +183,17 @@ const inicioJornadasLaborales = () => {
                     dom: 'Bfrtip',
                     buttons: [
                         'copy', 'csv', 'excel', 'pdf', 'print'
-                    ]
+                    ],
+                    paging: false
                 });
+                
+                $("#contadorEnTiempo").text(c1);
+                $("#contadorRetardo").text(c2);
+                $("#contadorTarde").text(c3);
+                
+                $("#contadorEnTiempoSalida").text(c4);
+                $("#contadorRetardoSalida").text(c5);
+                $("#contadorTardeSalida").text(c6);
                 
             });
             
@@ -637,6 +707,12 @@ const infoEmpleado = (id_empleado) => {
                     empleado.empresa = generales.empresa;
                     if(generales.time_created !== undefined && generales.time_created !== null){
                         empleado.hora_entrada = generales.time_created;
+                    }
+                    if(generales.time_updated !== undefined && generales.time_updated !== null){
+                        empleado.hora_salida = generales.time_updated;
+                    }
+                    if(generales.desconexiones !== undefined && generales.desconexiones !== null){
+                        empleado.desconexiones = generales.desconexiones;
                     }
                     break;
                 }

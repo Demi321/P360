@@ -1645,7 +1645,9 @@ function initializeSessionSubscriber(data) {
                         "apikey": Credenciales.apikey,
                         "idsesion": Credenciales.idsesion,
                         "token": Credenciales.token,
-                        "id_socket": idSocketOperador
+                        "id_socket": idSocketOperador,
+                        "fecha": getFecha(),
+                        "hora": getHora()
 
                     }).then(function (response) {
                         $("#ing").val(response.date_created + " " + response.time_created);
@@ -1662,7 +1664,9 @@ function initializeSessionSubscriber(data) {
                             RequestPOST("/API/empresas360/registro/horario_laboral", {
                                 "id_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario,
                                 "id": response.id,
-                                "reporte": $("#rep").val()
+                                "reporte": $("#rep").val(),
+                                "fecha": getFecha(),
+                                "hora": getHora()
                             }).then(function (response) {
                                 $("#ing").val(response.date_created + " " + response.time_created + " - " + response.date_updated + " " + response.time_updated);
                                 swal.fire({
