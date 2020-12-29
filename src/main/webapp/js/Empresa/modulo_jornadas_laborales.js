@@ -160,6 +160,8 @@ const inicioJornadasLaborales = () => {
                         }
                         
                     }
+                    
+                    let horaDesconexion = detalleEmpleado.hora_desconexion !== undefined || detalleEmpleado.hora_desconexion !== null ? detalleEmpleado.hora_desconexion : '';
                   
                     tbody += '<tr class="text-center" id="fila_empleado_en_jornada_'+detalleEmpleado.id360+'">';
 
@@ -168,6 +170,7 @@ const inicioJornadasLaborales = () => {
                     tbody += '  <td>'+detalleEmpleado.area+'</td>';
                     tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoEntrada+'">'+detalleEmpleado.horario_entrada+'</span></td>';
                     tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoEntrada+'">'+detalleEmpleado.hora_entrada+'</span></td>';
+                    tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-light">'+horaDesconexion+'</span></td>';
                     tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoSalida+'">'+detalleEmpleado.horario_salida+'</span></td>';
                     tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoSalida+'">'+salio+'</span></td>';
                     tbody += '  <td>'+detalleEmpleado.desconexiones+'</td>';
@@ -708,8 +711,11 @@ const infoEmpleado = (id_empleado) => {
                     if(generales.time_created !== undefined && generales.time_created !== null){
                         empleado.hora_entrada = generales.time_created;
                     }
+                    if(generales.time_finished !== undefined && generales.time_finished !== null){
+                        empleado.hora_salida = generales.time_finished;
+                    }
                     if(generales.time_updated !== undefined && generales.time_updated !== null){
-                        empleado.hora_salida = generales.time_updated;
+                        empleado.hora_desconexion = generales.time_updated;
                     }
                     if(generales.desconexiones !== undefined && generales.desconexiones !== null){
                         empleado.desconexiones = generales.desconexiones;

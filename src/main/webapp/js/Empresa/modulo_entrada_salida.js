@@ -217,18 +217,13 @@ function initializeSessionEmpleado(data, aumenta) {
                         $("#guardarreporte").click(function () {
                             console.log("guardarreporte");
                             $("#mensaje-cargando-proceso").removeClass("d-none");
-                            RequestPOST("/API/empresas360/registro/horario_laboral", {
+                            RequestPOST("/API/empresas360/registro/horario_laboral_cierre", {
                                 "id_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario,
-                                "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-                                "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-                                "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area,
                                 "id": response.id,
                                 "reporte": $("#rep").val(),
-                                "activo": "0",
-                                "web": true,
                                 "fecha": getFecha(),
                                 "hora": getHora(),
-                                "aumentaConexion": 1
+                                "activo": "0"
                             }).then(function (response) {
                                 $("#ing").val(response.date_created + " " + response.time_created + " - " + response.date_updated + " " + response.time_updated);
                                 swal.fire({
@@ -289,7 +284,18 @@ function initializeSessionEmpleado(data, aumenta) {
                     activarVideo.innerHTML = '<i class="fas fa-video-slash"></i>';
                     activarVideo.addEventListener("click", function () {
                         if (publisher.stream.hasVideo) {
+                            
                             activarVideo.innerHTML = '<i class="fas fa-video"></i>';
+                            
+                            let data = {
+                                "id_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario,
+                                "fecha": getFecha()
+                            };
+                            
+                            RequestPOST("/API/empresas360/registro/horario_laboral_aumenta_desconexion", data).then((response) => {
+                                console.log(response);
+                            });
+                            
                         } else {
                             activarVideo.innerHTML = '<i class="fas fa-video-slash"></i>';
                         }
