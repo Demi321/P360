@@ -289,7 +289,8 @@ function initializeSessionEmpleado(data, aumenta) {
                             
                             let data = {
                                 "id_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario,
-                                "fecha": getFecha()
+                                "fecha": getFecha(),
+                                "hora": getHora()
                             };
                             
                             RequestPOST("/API/empresas360/registro/horario_laboral_aumenta_desconexion", data).then((response) => {
