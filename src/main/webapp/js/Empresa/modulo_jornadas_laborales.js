@@ -529,6 +529,24 @@ const despliegaInformacionJornadas = (fecha_inicio, fecha_final, jornadas) => {
         informacionEmpleado += '            <input style="font-weight: bold;" class="form-control-plaintext"  type="text" disabled value="'+emple.horario_entrada+' - '+emple.horario_salida+'" />';
         informacionEmpleado += '        </div>';
         informacionEmpleado += '    </div>';
+        informacionEmpleado += '    <div class="row">';
+        informacionEmpleado += '        <div class="col-md-3 form-group">';
+        informacionEmpleado += '            <label style="color: black; font-style: italic;">Días en tiempo</label>';
+        informacionEmpleado += '            <input id="contadorDiasEnTiempo_'+emple.id360+'" style="font-weight: bold;" class="form-control-plaintext"  type="text" disabled value="" />';
+        informacionEmpleado += '        </div>';
+        informacionEmpleado += '        <div class="col-md-3 form-group">';
+        informacionEmpleado += '            <label style="color: black; font-style: italic;">Días con retardo</label>';
+        informacionEmpleado += '            <input id="contadorDiasEnRetardo_'+emple.id360+'" style="font-weight: bold;" class="form-control-plaintext"  type="text" disabled value="" />';
+        informacionEmpleado += '        </div>';
+        informacionEmpleado += '        <div class="col-md-3 form-group">';
+        informacionEmpleado += '            <label style="color: black; font-style: italic;">Días tarde</label>';
+        informacionEmpleado += '            <input id="contadorDiasTarde_'+emple.id360+'" style="font-weight: bold;" class="form-control-plaintext"  type="text" disabled value="" />';
+        informacionEmpleado += '        </div>';
+        informacionEmpleado += '        <div class="col-md-3 form-group">';
+        informacionEmpleado += '            <label style="color: black; font-style: italic;">Días sin jornada</label>';
+        informacionEmpleado += '            <input id="contadorDiasSinJornada_'+emple.id360+'" style="font-weight: bold;" class="form-control-plaintext"  type="text" disabled value="" />';
+        informacionEmpleado += '        </div>';
+        informacionEmpleado += '    </div>';
         informacionEmpleado += '</form>';
 
         let tabla = '<table class="table table-hover mb-3">';
@@ -537,7 +555,11 @@ const despliegaInformacionJornadas = (fecha_inicio, fecha_final, jornadas) => {
         tabla += '              <th>Día</th>';
         tabla += '              <th>Fecha</th>';
         tabla += '              <th>Hora entrada</th>';
+        tabla += '              <th>Hora entrada jornada</th>';
+        tabla += '              <th>Hora última desconexión</th>';
         tabla += '              <th>Hora salida</th>';
+        tabla += '              <th>Hora salida jornada</th>';
+        tabla += '              <th>Cantidad de Desconexiones</th>';
         tabla += '          </tr>';
         tabla += '      </thead>';
 
@@ -559,6 +581,8 @@ const despliegaInformacionJornadas = (fecha_inicio, fecha_final, jornadas) => {
             f2 = new Date( fecha_final );
             f2.setDate( f2.getDate() + 1 );
         }
+        
+        let c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0, c7 = 0, c8 = 0;
 
         while( f1.getTime() <= f2.getTime() ){
 
@@ -573,24 +597,102 @@ const despliegaInformacionJornadas = (fecha_inicio, fecha_final, jornadas) => {
 
                         let jornada = jornadas[x];
                         let ff = new Date( jornada.date_created );
+                        
+                        let ultimaDesconexion = jornada.time_updated !== undefined && jornada.time_updated !== null ? jornada.time_updated : '';
+                        let salida = jornada.time_finished !== undefined && jornada.time_finished !== null ? jornada.time_finished : '';
+                        
+                        let partesHoraEntro = jornada.time_created.split(":");
+                        let horaEntro = moment();
+                        horaEntro.set("hour",partesHoraEntro[0]);
+                        horaEntro.set("minute", partesHoraEntro[1]);
+                        horaEntro.set("second", partesHoraEntro[2]);
 
+                        let partesHoraTenia = emple.horario_entrada.split(":");
+                        let horaTenia = moment();
+                        horaTenia.set("hour",partesHoraTenia[0]);
+                        horaTenia.set("minute", partesHoraTenia[1]);
+                        horaTenia.set("second", partesHoraTenia[2]);
+                        
+                        let tipoEntrada = 'success';
+
+                        let minutosDeDiferencia = horaTenia.diff( horaEntro , 'minutes' );
+
+                        c1++;
+                        if( minutosDeDiferencia < -5 ){
+                            tipoEntrada = 'warning';
+                            c2++;
+                            c1--;
+                        }
+                        if( minutosDeDiferencia < -20 ){
+                            tipoEntrada = 'danger';
+                            c3++;
+                            c2--;
+                        }
+                        
+                        let tipoSalida = 'light';
+                        c7++;
+
+                        if( jornada.time_finished !== undefined && jornada.time_finished !== null ){
+
+                            tipoSalida = 'success';
+                            c7--;
+
+                            let partesHoraSalio = jornada.time_finished.split(":");
+                            let horaSalio = moment();
+                            horaSalio.set("hour",partesHoraSalio[0]);
+                            horaSalio.set("minute", partesHoraSalio[1]);
+                            horaSalio.set("second", partesHoraSalio[2]);
+
+                            let partesHoraTeniaSalir = emple.horario_salida.split(":");
+                            let horaTeniaSalir = moment();
+                            horaTeniaSalir.set("hour",partesHoraTeniaSalir[0]);
+                            horaTeniaSalir.set("minute", partesHoraTeniaSalir[1]);
+                            horaTeniaSalir.set("second", partesHoraTeniaSalir[2]);
+
+                            let minutosDeDiferenciaSalida = horaTeniaSalir.diff( horaSalio , 'minutes' );
+                            console.log("minutos de diferencia de salida");
+                            console.log(minutosDeDiferenciaSalida);
+
+                            c4++;
+                            if( minutosDeDiferenciaSalida > -5 ){
+                                tipoSalida = 'warning';
+                                c5++;
+                                c4--;
+                            }
+                            if( minutosDeDiferenciaSalida > -20 ){
+                                tipoSalida = 'danger';
+                                c6++;
+                                c5--;
+                            }
+
+                        }
+
+                        let fechaCreacion = moment(jornada.date_created);
                         tbody += '<tr class="control" style="cursor: pointer;">';
                         tbody += '  <td>'+ nombresDiasSemana[ff.getDay()+1] +'</td>';
-                        tbody += '  <td>'+ jornada.date_created +'</td>';
-                        tbody += '  <td>'+ jornada.time_created +'</td>';
-                        tbody += '  <td>'+ jornada.time_updated +'</td>';
+                        tbody += '  <td>'+ fechaCreacion.format("DD-MMM-YYYY") +'</td>';
+                        tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoEntrada+'">'+emple.horario_entrada+'</span></td>';
+                        tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoEntrada+'">'+jornada.time_created+'</span></td>';
+                        tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-light">'+ultimaDesconexion+'</span></td>';
+                        tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoSalida+'">'+emple.horario_salida+'</span></td>';
+                        tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoSalida+'">'+salida+'</span></td>';
+                        tbody += '  <td>'+ jornada.contadorDesconexion +'</td>';
                         tbody += '</tr>';
 
                         tbodyExcel += '<tr>';
                         tbodyExcel += '  <td>'+ nombresDiasSemana[ff.getDay()+1] +'</td>';
-                        tbodyExcel += '  <td>'+ jornada.date_created +'</td>';
+                        tbodyExcel += '  <td>'+ fechaCreacion.format("DD-MMM-YYYY") +'</td>';
+                        tbodyExcel += '  <td>'+ emple.horario_entrada +'</td>';
                         tbodyExcel += '  <td>'+ jornada.time_created +'</td>';
-                        tbodyExcel += '  <td>'+ jornada.time_updated +'</td>';
+                        tbodyExcel += '  <td>'+ ultimaDesconexion +'</td>';
+                        tbodyExcel += '  <td>'+ emple.horario_salida +'</td>';
+                        tbodyExcel += '  <td>'+ salida +'</td>';
+                        tbodyExcel += '  <td>'+ jornada.contadorDesconexion +'</td>';
                         tbodyExcel += '  <td>'+ jornada.reporte +'</td>';
                         tbodyExcel += '</tr>';
 
                         tbody += '<tr class="oculta" style="display: none;">';
-                        tbody += '  <td style="background-color: lightgray; padding: 15px !important;" class="text-center p-2" colspan="4">'+jornada.reporte+'</td>';
+                        tbody += '  <td style="background-color: lightgray; padding: 15px !important;" class="text-center p-2" colspan="8">'+jornada.reporte+'</td>';
                         tbody += '</tr>';
 
                         banderaAgregado = true;
@@ -600,20 +702,34 @@ const despliegaInformacionJornadas = (fecha_inicio, fecha_final, jornadas) => {
             }
 
             if(!banderaAgregado){
+                
+                let fechaMoment = moment(fechaRecorre);
+                
                 tbody += '<tr>';
                 tbody += '  <td>'+ nombresDiasSemana[f1.getDay()] +'</td>';
-                tbody += '  <td>'+ fechaRecorre +'</td>';
+                tbody += '  <td>'+ fechaMoment.format("DD-MMM-YYYY") +'</td>';
+                tbody += '  <td>-- : -- : --</td>';
+                tbody += '  <td>-- : -- : --</td>';
+                tbody += '  <td>-- : -- : --</td>';
+                tbody += '  <td>-- : -- : --</td>';
                 tbody += '  <td>-- : -- : --</td>';
                 tbody += '  <td>-- : -- : --</td>';
                 tbody += '</tr>';
 
                 tbodyExcel += '<tr>';
                 tbodyExcel += '  <td>'+ nombresDiasSemana[f1.getDay()] +'</td>';
-                tbodyExcel += '  <td>'+ fechaRecorre +'</td>';
+                tbodyExcel += '  <td>'+ fechaMoment.format("DD-MMM-YYYY") +'</td>';
+                tbodyExcel += '  <td>-- : -- : --</td>';
+                tbodyExcel += '  <td>-- : -- : --</td>';
+                tbodyExcel += '  <td>-- : -- : --</td>';
+                tbodyExcel += '  <td>-- : -- : --</td>';
                 tbodyExcel += '  <td>-- : -- : --</td>';
                 tbodyExcel += '  <td>-- : -- : --</td>';
                 tbodyExcel += '  <td>N/A</td>';
                 tbodyExcel += '</tr>';
+                
+                c8++;
+                
             }
 
             f1.setDate( f1.getDate() + 1 );
@@ -643,6 +759,17 @@ const despliegaInformacionJornadas = (fecha_inicio, fecha_final, jornadas) => {
         tablaExcel += tbodyExcel;
         tablaExcel += '</table>';
         excel.append(tablaExcel);
+        
+        $("#contadorDiasEnTiempo_"+emple.id360).val(c1);
+        $("#contadorDiasEnRetardo_"+emple.id360).val(c2);
+        $("#contadorDiasTarde_"+emple.id360).val(c3);
+        $("#contadorDiasSinJornada_"+emple.id360).val(c8);
+        
+        $("#diasEnTiempoExcel_"+emple.id360).text(c1);
+        $("#diasConRetardoExcel_"+emple.id360).text(c2);
+        $("#diasTardeExcel_"+emple.id360).text(c3);
+        $("#diasSinJornadaExcel_"+emple.id360).text(c8);
+        
     }
 
     $("#botonDescargaReporteJornada").removeClass("d-none");
@@ -689,17 +816,19 @@ $("#botonDescargaReporteJornada").click(function(){
 
 const cabeceraReporteExcel = (empleado) => {
     let cabecera = '';
-    cabecera += '<tr><td colspan="5"><h1 style="text-align: center;">Reporte de jornadas laborales</h1></td></tr><tr></tr>';
-    cabecera += '<tr><td>Fecha de exportación</td><td>'+formatDateDefault(new Date())+'</td></tr>';
-    cabecera += '<tr><td>Periodo del reporte</td><td>'+$("#fecha_inicio_reporte").val()+'</td><td>'+$("#fecha_fin_reporte").val()+'</td></tr><tr></tr>';
-    cabecera += '<tr><td>Empleado:</td><td colspan="3">'+empleado.nombre+' '+empleado.apellido_paterno+' '+ empleado.apellido_materno+'</td></tr>';
-    cabecera += '<tr><td>Empresa</td><td colspan="3">'+empleado.empresa+'</td></tr>';
-    cabecera += '<tr><td>Sucursal</td><td colspan="3">'+empleado.sucursal+'</td></tr>';
-    cabecera += '<tr><td>Área</td><td colspan="3">'+empleado.area+'</td></tr>';
-    cabecera += '<tr><td>Puesto</td><td colspan="3">'+empleado.puesto+'</td></tr>';
-    cabecera += '<tr><td>Número de empleado</td><td>'+empleado.num_empleado+'</td></tr>';
-    cabecera += '<tr><td>Jornada</td><td>Entrada: <span>'+empleado.horario_entrada+'</span></td><td>Salida: <span>'+empleado.horario_salida+'</span></td></tr><tr></tr><tr></tr>';
-    cabecera += '<tr><th>Día</th><th>Fecha</th><th>Hora Entrada</th><th>Hora Salida</th><th>Actividad</th></tr>';
+    cabecera += '<tr><td colspan="9"><h1 style="text-align: center;">Reporte de jornadas laborales</h1></td></tr><tr></tr>';
+    cabecera += '<tr><td colspan="2">Fecha de exportación</td><td>'+moment().format("DD-MMM-YYYY")+'</td></tr>';
+    cabecera += '<tr><td colspan="2">Periodo del reporte</td><td>'+ moment( $("#fecha_inicio_reporte").val() ).format("DD-MMM-YYYY") +'</td><td>'+moment($("#fecha_fin_reporte").val()).format("DD-MMM-YYYY")+'</td></tr><tr></tr>';
+    cabecera += '<tr><td colspan="2">Empleado:</td><td colspan="3">'+empleado.nombre+' '+empleado.apellido_paterno+' '+ empleado.apellido_materno+'</td></tr>';
+    cabecera += '<tr><td colspan="2">Empresa</td><td colspan="3">'+empleado.empresa+'</td></tr>';
+    cabecera += '<tr><td colspan="2">Sucursal</td><td colspan="3">'+empleado.sucursal+'</td></tr>';
+    cabecera += '<tr><td colspan="2">Área</td><td colspan="3">'+empleado.area+'</td></tr>';
+    cabecera += '<tr><td colspan="2">Puesto</td><td colspan="3">'+empleado.puesto+'</td></tr>';
+    cabecera += '<tr><td colspan="2">Número de empleado</td><td>'+empleado.num_empleado+'</td></tr>';
+    cabecera += '<tr><td colspan="2">Jornada</td><td colspan="2">Entrada: <span>'+empleado.horario_entrada+'</span></td><td colspan="2">Salida: <span>'+empleado.horario_salida+'</span></td></tr>';
+    cabecera += '<tr> <td>Días en tiempo</td> <td id="diasEnTiempoExcel_'+empleado.id360+'"></td> <td>Días con retardo</td> <td id="diasConRetardoExcel_'+empleado.id360+'"></td> <td>Días tarde</td> <td id="diasTardeExcel_'+empleado.id360+'"></td> <td>Días sin jornada</td> <td id="diasSinJornadaExcel_'+empleado.id360+'"></td> </tr>';
+    cabecera += '<tr></tr><tr></tr>';
+    cabecera += '<tr><th>Día</th><th>Fecha</th><th>Hora Entrada</th><th>Hora entrada jornada</th><th>Hora última desconexión</th><th>Hora Salida</th><th>Hora salida jornada</th><th>Cantidad de Desconexiones</th><th>Actividad</th></tr>';
     return cabecera;
 };
 
