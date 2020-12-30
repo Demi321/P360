@@ -63,7 +63,7 @@ const inicioJornadasLaborales = () => {
         tablaInicio.destroy();
     }
     
-    let c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0, c7 = 0;
+    let c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0, c7 = 0, sumaTotal = 0;
     
     inicioJornadas.removeClass("d-none");
     botonEmpleadosEnJornada.addClass("d-none");
@@ -184,6 +184,9 @@ const inicioJornadasLaborales = () => {
                     tbody += '  <td><button onclick="inicia_llamada_empleado_en_jornada('+detalleEmpleado.id360+')" class="btn btn-dark"><i class="fas fa-phone"></i></button></td>';
 
                     tbody += '</tr>';
+                    
+                    sumaTotal++;
+                    
                 });
                 
                 cuerpoTableEmpleadosEnJornada.append(tbody);
