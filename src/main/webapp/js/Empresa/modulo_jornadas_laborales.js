@@ -53,13 +53,17 @@ const inicia_llamada_empleado_en_jornada = (id360) => {
     initComunicacionJornadasLaborales(id360, true);
 };
 
+$("#btn-refrescar-jornadas").click(() => {
+    inicioJornadasLaborales();
+});
+
 const inicioJornadasLaborales = () => {
     
     if(tablaInicio !== undefined && tablaInicio !== null){
         tablaInicio.destroy();
     }
     
-    let c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0;
+    let c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0, c7 = 0;
     
     inicioJornadas.removeClass("d-none");
     botonEmpleadosEnJornada.addClass("d-none");
@@ -123,12 +127,14 @@ const inicioJornadasLaborales = () => {
                         c2--;
                     }
                     
-                    let tipoSalida = 'success';
+                    let tipoSalida = 'light';
                     let salio = '';
-                    c4++;
+                    c7++;
+                    
                     if( detalleEmpleado.hora_salida !== undefined && detalleEmpleado.hora_salida !== null ){
                         
-                        c4--;
+                        tipoSalida = 'success';
+                        c7--;
                         salio = detalleEmpleado.hora_salida;
                         
                         let partesHoraSalio = detalleEmpleado.hora_salida.split(":");
@@ -161,7 +167,7 @@ const inicioJornadasLaborales = () => {
                         
                     }
                     
-                    let horaDesconexion = detalleEmpleado.hora_desconexion !== undefined || detalleEmpleado.hora_desconexion !== null ? detalleEmpleado.hora_desconexion : '';
+                    let horaDesconexion = detalleEmpleado.hora_desconexion !== undefined && detalleEmpleado.hora_desconexion !== null ? detalleEmpleado.hora_desconexion : '';
                   
                     tbody += '<tr class="text-center" id="fila_empleado_en_jornada_'+detalleEmpleado.id360+'">';
 
@@ -197,6 +203,8 @@ const inicioJornadasLaborales = () => {
                 $("#contadorEnTiempoSalida").text(c4);
                 $("#contadorRetardoSalida").text(c5);
                 $("#contadorTardeSalida").text(c6);
+                
+                $("#contadorAunEnJornada").text(c7);
                 
             });
             

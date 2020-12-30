@@ -223,7 +223,8 @@ function initializeSessionEmpleado(data, aumenta) {
                                 "reporte": $("#rep").val(),
                                 "fecha": getFecha(),
                                 "hora": getHora(),
-                                "activo": "0"
+                                "activo": "0",
+                                "web": true
                             }).then(function (response) {
                                 $("#ing").val(response.date_created + " " + response.time_created + " - " + response.date_updated + " " + response.time_updated);
                                 swal.fire({
