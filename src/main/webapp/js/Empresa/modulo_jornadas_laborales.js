@@ -8,21 +8,26 @@
 
 agregar_menu("Reporte Jornadas Laborales",'<i class="fas fa-clipboard-list"></i>','Recursos Humanos');
 
+$( function() {
+    $( "#tabs_jornadas_laborales" ).tabs({
+      event: "mouseover"
+    });
+} );
+
+$("#tab_en_jornada").mouseover(() => {
+    $("#tab_en_jornada").addClass("active");
+    $("#tab_reporte_jornada").removeClass("active");
+});
+
+$("#tab_reporte_jornada").mouseover(() => {
+    $("#tab_reporte_jornada").addClass("active");
+    $("#tab_en_jornada").removeClass("active");
+});
 var empleados = [],
     empleadosEmpresa = [],
     tablaInicio;
 const botonExcel = $("#botonDescargaReporteJornada");
 const inicioJornadas = $("#inicio-reporte-jornadas-laborales");
-const botonEmpleadosEnJornada = $("#verEmpleadosEnJornada");
-
-botonEmpleadosEnJornada.click(() => {
-    $("#form_historia_jornadas")[0].reset();
-    $("#contenedor-select-sucursales").addClass("d-none");
-    $("#contenedor-select-areas").addClass("d-none");
-    $("#contenedor-select-empleados").addClass("d-none");
-    $("#botonDescargaReporteJornada").addClass("d-none");
-    inicioJornadasLaborales();
-});
 
 const initComunicacionJornadasLaborales = (id360, llamada) => {
   
@@ -64,10 +69,6 @@ const inicioJornadasLaborales = () => {
     }
     
     let c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0, c7 = 0, sumaTotal;
-    
-    inicioJornadas.removeClass("d-none");
-    botonEmpleadosEnJornada.addClass("d-none");
-    $("#resultado-busqueda-jornadas").addClass("d-none");
     
     const tablaEmpleadosEnJornada = $("#tabla-empleados-en-jornada");
     const cuerpoTableEmpleadosEnJornada = tablaEmpleadosEnJornada.find("tbody");
@@ -337,10 +338,9 @@ const consulta_historial = (fecha_inicio, fecha_final) => {
     if(tipoBusqueda === null || tipoBusqueda === undefined || tipoBusqueda === ""){
         swal.fire({text:"Seleccione un tipo de búsqueda"});
     }else{
-        
-        inicioJornadas.addClass("d-none");
-        botonEmpleadosEnJornada.removeClass("d-none");
 
+        $("#inicio_jornadas_laborales").addClass("d-none");
+    
         const resultInfo = $("#tablas_resultados");
         resultInfo.empty();
         const excel = $("#resultados-exportar-excel");
