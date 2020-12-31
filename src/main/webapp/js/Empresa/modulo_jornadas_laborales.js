@@ -63,7 +63,7 @@ const inicioJornadasLaborales = () => {
         tablaInicio.destroy();
     }
     
-    let c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0, c7 = 0, sumaTotal = 0;
+    let c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0, c7 = 0, sumaTotal;
     
     inicioJornadas.removeClass("d-none");
     botonEmpleadosEnJornada.addClass("d-none");
@@ -185,8 +185,6 @@ const inicioJornadasLaborales = () => {
 
                     tbody += '</tr>';
                     
-                    sumaTotal++;
-                    
                 });
                 
                 cuerpoTableEmpleadosEnJornada.append(tbody);
@@ -199,15 +197,17 @@ const inicioJornadasLaborales = () => {
                     paging: false
                 });
                 
-                $("#contadorEnTiempo").text(c1);
-                $("#contadorRetardo").text(c2);
-                $("#contadorTarde").text(c3);
+                sumaTotal = c1 + c2 + c3;
                 
-                $("#contadorEnTiempoSalida").text(c4);
-                $("#contadorRetardoSalida").text(c5);
-                $("#contadorTardeSalida").text(c6);
+                $("#contadorEnTiempo").text(c1 + " - " + ( (c1 / sumaTotal) * 100 ).toFixed(2) + "%" );
+                $("#contadorRetardo").text(c2 + " - " + ( (c2 / sumaTotal) * 100 ).toFixed(2) + "%");
+                $("#contadorTarde").text(c3 + " - " + ( (c3 / sumaTotal) * 100 ).toFixed(2) + "%");
                 
-                $("#contadorAunEnJornada").text(c7);
+                $("#contadorEnTiempoSalida").text(c4 + " - " + ( (c4 / sumaTotal) * 100 ).toFixed(2) + "%");
+                $("#contadorRetardoSalida").text(c5 + " - " + ( (c5 / sumaTotal) * 100 ).toFixed(2) + "%");
+                $("#contadorTardeSalida").text(c6 + " - " + ( (c6 / sumaTotal) * 100 ).toFixed(2) + "%");
+                
+                $("#contadorAunEnJornada").text(c7 + " - " + ( (c7 / sumaTotal) * 100 ).toFixed(2) + "%");
                 
             });
             
@@ -585,7 +585,7 @@ const despliegaInformacionJornadas = (fecha_inicio, fecha_final, jornadas) => {
             f2.setDate( f2.getDate() + 1 );
         }
         
-        let c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0, c7 = 0, c8 = 0;
+        let c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0, c7 = 0, c8 = 0, sumaTotal;
 
         while( f1.getTime() <= f2.getTime() ){
 
@@ -763,15 +763,17 @@ const despliegaInformacionJornadas = (fecha_inicio, fecha_final, jornadas) => {
         tablaExcel += '</table>';
         excel.append(tablaExcel);
         
-        $("#contadorDiasEnTiempo_"+emple.id360).val(c1);
-        $("#contadorDiasEnRetardo_"+emple.id360).val(c2);
-        $("#contadorDiasTarde_"+emple.id360).val(c3);
-        $("#contadorDiasSinJornada_"+emple.id360).val(c8);
+        sumaTotal = c1 + c2 + c3 + c8;
         
-        $("#diasEnTiempoExcel_"+emple.id360).text(c1);
-        $("#diasConRetardoExcel_"+emple.id360).text(c2);
-        $("#diasTardeExcel_"+emple.id360).text(c3);
-        $("#diasSinJornadaExcel_"+emple.id360).text(c8);
+        $("#contadorDiasEnTiempo_"+emple.id360).val(c1 + " - " + ( (c1 / sumaTotal) * 100 ).toFixed(2) + "%" );
+        $("#contadorDiasEnRetardo_"+emple.id360).val(c2 + " - " + ( (c2 / sumaTotal) * 100 ).toFixed(2) + "%" );
+        $("#contadorDiasTarde_"+emple.id360).val(c3 + " - " + ( (c3 / sumaTotal) * 100 ).toFixed(2) + "%" );
+        $("#contadorDiasSinJornada_"+emple.id360).val(c8 + " - " + ( (c8 / sumaTotal) * 100 ).toFixed(2) + "%" );
+        
+        $("#diasEnTiempoExcel_"+emple.id360).text(c1 + " - " + ( (c1 / sumaTotal) * 100 ).toFixed(2) + "%" );
+        $("#diasConRetardoExcel_"+emple.id360).text(c2 + " - " + ( (c2 / sumaTotal) * 100 ).toFixed(2) + "%" );
+        $("#diasTardeExcel_"+emple.id360).text(c3 + " - " + ( (c3 / sumaTotal) * 100 ).toFixed(2) + "%" );
+        $("#diasSinJornadaExcel_"+emple.id360).text(c8 + " - " + ( (c8 / sumaTotal) * 100 ).toFixed(2) + "%" );
         
     }
 
