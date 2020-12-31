@@ -1477,7 +1477,7 @@ function contacto_chat(user, group) {
         rowContenidoMensajeOperaciones.attr("id","filaMensajesOperaciones_" + user.id360);
         let colContenidoMensajeOperaciones = $("<div></div>").addClass("col-12").css({"padding": "0"});
         let contenidoMensajeOperaciones = $("<p></p>").attr("id","contenidoMensajeOperaciones_" + user.id360);
-        contenidoMensajeOperaciones.txt("Editando");
+        contenidoMensajeOperaciones.text("Editando");
         contenidoMensajeOperaciones.css({
             "margin": "0",
             "background-color": "gray",
