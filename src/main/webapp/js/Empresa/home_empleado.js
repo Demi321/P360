@@ -39,6 +39,32 @@ WebSocketGeneral.onmessage = function (message) {
         if (mensaje.inicializacionSG) {
             idSocketOperador = mensaje.idSocket;
         }
+        
+        if(mensaje.edicion_mensaje_chat_empresarial){
+            let liMensaje = $("#mensaje_"+mensaje.idMensaje);
+            let pMensaje = liMensaje.find('p');
+            
+            pMensaje.empty();
+            pMensaje.text(mensaje);
+
+            let hoy = new Date();
+
+            let fechaDespliega = hoy.getDate() + "/" + (hoy.getMonth() + 1) + "/" + hoy.getFullYear();
+
+            let fecha = $("<span></span>").addClass("time");
+            fecha.text(fechaDespliega + " " + getHora());
+            let iconClock = $("<li></li>").addClass("far fa-clock");
+            let iconEdit = $("<li></li>").addClass("fas fa-edit");
+
+            fecha.prepend(iconClock);
+            fecha.prepend(iconEdit);
+            iconClock.addClass("ml-2");
+            iconEdit.addClass("ml-2");
+            
+            pMensaje.append(fecha);
+            
+        }
+        
         if(mensaje.eliminacion_mensaje_chat_empresarial){
             
             let liMensaje = $("#mensaje_"+mensaje.idMensaje);

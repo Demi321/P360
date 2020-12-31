@@ -712,13 +712,18 @@ function agregar_chat(msj, user, type, viejo) {
 
             fecha.text(fechaCorta + " " + msj.hora);
             let iconClock = $("<li></li>").addClass("far fa-clock");
-
+            let iconEdit = $("<li></li>").addClass("fas fa-edit");
+            
             if (type === "replies") {
                 fecha.append(iconClock);
+                if(msj.time_updated !== null) fecha.append(iconEdit);
                 iconClock.addClass("ml-2");
+                iconEdit.addClass("ml-2");
             } else {
                 fecha.prepend(iconClock);
+                if(msj.time_updated !== null) fecha.prepend(iconEdit);
                 iconClock.addClass("mr-2");
+                iconEdit.addClass("mr-2");
             }
 
             message.append(fecha);
@@ -881,7 +886,7 @@ function agregar_chat(msj, user, type, viejo) {
                 };
 
                 //LISTADO DE OPCIONES POR MENSAJE
-                let menuOpcionesMensaje = $("<ul></ul>").addClass("menuOpcionesMensaje");
+                let menuOpcionesMensaje = $("<ul></ul>").addClass("menuOpcionesMensaje").attr("id","menuOpcionesMensaje_" + user.id360);
 
                 //OPCION DE ELIMINAR MENSAJE
                 let opcionEliminaMensaje = $("<li></li>").addClass("opcionMensaje");
@@ -944,8 +949,9 @@ function agregar_chat(msj, user, type, viejo) {
 
                 iconOpciones.click(() => {
                     
-                    $(".menuOpcionesMensaje").removeClass("conAltura");
                     menuOpcionesMensaje.toggleClass("conAltura");
+                    //$(".menuOpcionesMensaje:not(#menuOpcionesMensaje_"+user.id360+")").removeClass("conAltura");
+               
                 });
             }
 
@@ -1898,7 +1904,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
     if(banderaEditando){
         
         let data = {
-            "mensaje": mensaje,
+            "mensaje_editado": mensaje,
             "fecha_edita": getFecha(),
             "hora_edita": getHora(),
             "idMensaje": idMensajeEditando,
@@ -1909,7 +1915,25 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
             
             if( response.success ){
                 
-                $("#mensaje_" + idMensajeEditando).find("p").text(mensaje);
+                let pMensaje = $("#mensaje_" + idMensajeEditando).find("p");
+                pMensaje.empty();
+                pMensaje.text(mensaje);
+                
+                let hoy = new Date();
+
+                let fechaDespliega = hoy.getDate() + "/" + (hoy.getMonth() + 1) + "/" + hoy.getFullYear();
+
+                let fecha = $("<span></span>").addClass("time");
+                fecha.text(fechaDespliega + " " + getHora());
+                let iconClock = $("<li></li>").addClass("far fa-clock");
+                let iconEdit = $("<li></li>").addClass("fas fa-edit");
+                
+                fecha.append(iconClock);
+                fecha.append(iconEdit);
+                iconClock.addClass("ml-2");
+                iconEdit.addClass("ml-2");
+                
+                pMensaje.append(fecha);
                 
                 apagaValores();
                 input.val("");
@@ -2126,7 +2150,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 };
 
                 //LISTADO DE OPCIONES POR MENSAJE
-                let menuOpcionesMensaje = $("<ul></ul>").addClass("menuOpcionesMensaje");
+                let menuOpcionesMensaje = $("<ul></ul>").addClass("menuOpcionesMensaje").attr("id","menuOpcionesMensaje_"+user.id360);
 
                 //OPCION DE ELIMINAR MENSAJE
                 let opcionEliminaMensaje = $("<li></li>").addClass("opcionMensaje");
