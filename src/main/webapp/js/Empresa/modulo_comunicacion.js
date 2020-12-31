@@ -16,6 +16,9 @@ var iconGroupDefault = 'https://bucketmoviles121652-dev.s3.amazonaws.com/public/
 var dataLlamada = {};
 var usuariosReenviaMensaje = null;
 
+var banderaEditando = false, banderaRespondiendo = false;
+var idMensajeEditando = null, idMensajeRespondiendo = null;
+
 /*
  * REPRODUCIR SONIDO AL LLEGAR NOTIFICACION
  */
@@ -621,6 +624,14 @@ const reenviaMensaje = (mensaje) => {
     });
 };
 
+const apagaValores = () => {
+    banderaEditando = false;
+    banderaRespondiendo = false;
+    idMensajeEditando = false;
+    idMensajeRespondiendo = false;
+    $(".filaMensajesOperaciones").addClass("d-none");
+};
+
 function agregar_chat(msj, user, type, viejo) {
     if (user.success) {
         let mensaje = msj.message;
@@ -844,6 +855,7 @@ function agregar_chat(msj, user, type, viejo) {
                             }
 
                             RequestPOST(services, dataMensaje).then((response) => {
+                                apagaValores();
                                 if (response.success) {
                                     menuOpcionesMensaje.removeClass("conAltura");
                                     if(tipo === 0){
@@ -888,7 +900,7 @@ function agregar_chat(msj, user, type, viejo) {
                 menuOpcionesMensaje.append(opcionEliminaMensajeMi);
                 
                 //OPCION PARA REENVIAR EL MENSAJE
-                let opcionReenviaMensaje = $("<li></li>").addClass("optionMensaje");
+                let opcionReenviaMensaje = $("<li></li>").addClass("opcionMensaje");
                 opcionReenviaMensaje.text("Reenviar mensaje");
                 opcionReenviaMensaje.click(() => {
                     
@@ -898,12 +910,21 @@ function agregar_chat(msj, user, type, viejo) {
                 menuOpcionesMensaje.append(opcionReenviaMensaje);
 
                 //OPCION PARA EDITAR EL MENSAJE
-                let opcionEditaMensaje = $("<li></li>").addClass("optionMensaje");
-                opcionEditaMensaje.text("Editar mensaje");
-                opcionEditaMensaje.click(() => {
-                    console.log("Editando..");
-                });
-                menuOpcionesMensaje.append(opcionEditaMensaje);
+                if (msj.type === "text") {
+                    let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
+                    opcionEditaMensaje.text("Editar mensaje");
+                    opcionEditaMensaje.click(() => {
+                        
+                        let contenedorReenvia = $("#filaMensajesOperaciones_" + user.id360);
+                        contenedorReenvia.removeClass("d-none");
+                        contenedorReenvia.find("span").text(mensaje);
+                        banderaEditando = true;
+                        idMensajeEditando = msj.id;
+                        $(".menuOpcionesMensaje").addClass("d-none");
+                        
+                    });
+                    menuOpcionesMensaje.append(opcionEditaMensaje);
+                }
 
                 //OPCION PARA RESPONDER UN MENSAJE
                 let opcionRespondeMensaje = $("<li></li>").addClass("opcionMensaje");
@@ -922,9 +943,9 @@ function agregar_chat(msj, user, type, viejo) {
                 });
 
                 iconOpciones.click(() => {
-                    console.log("despliega menu");
+                    
+                    $(".menuOpcionesMensaje").removeClass("conAltura");
                     menuOpcionesMensaje.toggleClass("conAltura");
-                    //menuOpcionesMensaje.css({"height":"auto"});
                 });
             }
 
@@ -1391,7 +1412,7 @@ function contacto_chat(user, group) {
         let buttonAttachment = $("<button></button>").addClass("btn btn-block");
         let paperclip = $(" <i class=\"fa fa-paperclip\" aria-hidden=\"true\"></i>").addClass("wrap");
         buttonAttachment.attr("type", "button");
-        buttonAttachment.attr("id", "btn-adjunto");
+        buttonAttachment.attr("id", "btn-adjunto-"+user.id360);
         buttonAttachment.append(paperclip);
         buttonAttachment.css({"background-color": "grey"});
 
@@ -1451,6 +1472,50 @@ function contacto_chat(user, group) {
         });
         colName.append(nameFile);
         rowNameFile.append(colName);
+        
+        let rowContenidoMensajeOperaciones = $("<div></div>").addClass("row filaMensajesOperaciones d-none");
+        rowContenidoMensajeOperaciones.attr("id","filaMensajesOperaciones_" + user.id360);
+        let colContenidoMensajeOperaciones = $("<div></div>").addClass("col-12").css({"padding": "0"});
+        let contenidoMensajeOperaciones = $("<p></p>").attr("id","contenidoMensajeOperaciones_" + user.id360);
+        contenidoMensajeOperaciones.txt("Editando");
+        contenidoMensajeOperaciones.css({
+            "margin": "0",
+            "background-color": "gray",
+            "color": "white",
+            "font-size": "1.3rem",
+            "padding": "10px",
+            "text-align": "left",
+            "font-style": "italic"
+        });
+        let spanContenidoMensajeOperaciones = $("<span></span>");
+        spanContenidoMensajeOperaciones.css({
+            "padding-right": "5%",
+            "display": "block"
+        });
+        let buttonCerrarContenidoMensajeOperaciones = $("<button></button>").addClass("btn");
+        buttonCerrarContenidoMensajeOperaciones.text("x");
+        buttonCerrarContenidoMensajeOperaciones.css({
+            "position":"absolute",
+            "top": "0",
+            "right": "20px",
+            "background-color":"transparent",
+            "height": "100%",
+            "padding": "10px"
+        });
+        buttonCerrarContenidoMensajeOperaciones.html('<i class="fas fa-times"></i>');
+        buttonCerrarContenidoMensajeOperaciones.click(() => {
+            rowContenidoMensajeOperaciones.addClass("d-none");
+            contenidoMensajeOperaciones.find("span").text("");
+            banderaEditando = false;
+            banderaRespondiendo = false;
+            idMensajeEditando = null;
+            idMensajeRespondiendo = null;
+        });
+        
+        contenidoMensajeOperaciones.append(spanContenidoMensajeOperaciones);
+        contenidoMensajeOperaciones.append(buttonCerrarContenidoMensajeOperaciones);
+        colContenidoMensajeOperaciones.append(contenidoMensajeOperaciones);
+        rowContenidoMensajeOperaciones.append(colContenidoMensajeOperaciones);
 
         rowChat.append(colInput);
         rowChat.append(colButtonAttachment);
@@ -1461,6 +1526,7 @@ function contacto_chat(user, group) {
         containerChat.append(rowPreview);
         containerChat.append(rowNameFile);
         containerChat.append(rowButtonAttachment);
+        containerChat.append(rowContenidoMensajeOperaciones);
         containerChat.append(rowChat);
 
         wrap.append(containerChat);
@@ -1492,6 +1558,9 @@ function contacto_chat(user, group) {
         });
 
         buttonAttachment.click(() => {
+            if(banderaEditando)
+                swal.fire({text:"Solo se permiten editar mensajes de texto"});
+            else
             inputAttachment.click();
         });
 
@@ -1704,6 +1773,13 @@ function contacto_chat(user, group) {
             if (e.which == 13) {
                 send_chat_messages(input, ul, preview, user, messages);
                 return false;
+            }else if(e.which == 27){
+                banderaEditando = false;
+                banderaRespondiendo = false;
+                idMensajeEditando = null;
+                idMensajeRespondiendo = null;
+                $(".filaMensajesOperaciones").addClass("d-none");
+                return false;
             }
         });
 
@@ -1753,6 +1829,7 @@ function contacto_chat(user, group) {
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
+                    apagaValores();
                     let id360 = {
                         id360: sesion_cookie.id_usuario
                     };
@@ -1793,6 +1870,7 @@ function contacto_chat(user, group) {
         
         opcionVaciarChat.click(() => {
             swalConfirmDialog("¿Vaciar chat?","Vaciar","Cancelar").then((response) => {
+                apagaValores();
                 if(response){
                     let dataChat = {
                         "idUser": sesion_cookie.idUsuario_Sys,
@@ -1814,7 +1892,34 @@ function contacto_chat(user, group) {
 }
 
 function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
+    
     let mensaje = input.val();
+    
+    if(banderaEditando){
+        
+        let data = {
+            "mensaje": mensaje,
+            "fecha_edita": getFecha(),
+            "hora_edita": getHora(),
+            "idMensaje": idMensajeEditando,
+            "to_id360": user.id360
+        };
+        
+        RequestPOST("/API/empresas360/edita_mensaje", data).then((response) => {
+            
+            if( response.success ){
+                
+                $("#mensaje_" + idMensajeEditando).find("p").text(mensaje);
+                
+                apagaValores();
+                input.val("");
+                
+            }
+            
+        });
+        
+        return;
+    }
 
     if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
         mensaje = rutaAdjunto;
