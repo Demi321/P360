@@ -966,11 +966,12 @@ function agregar_chat(msj, user, type, viejo) {
                     opcionEditaMensaje.click(() => {
                         
                         let contenedorReenvia = $("#filaMensajesOperaciones_" + user.id360);
-                        $("#contenidoMensajeOperaciones_" + user.id360).text("Editando");
                         contenedorReenvia.removeClass("d-none");
+                        $("#accionMensajesOpciones_" + user.id360).text("Editando");
                         $("#message_input_" + user.id360).val(mensaje);
                         $("#message_input_" + user.id360).select();
                         contenedorReenvia.find("span").text(mensaje);
+                        $("#accionMensajesOpciones_" + user.id360).text("Editando");
                         banderaEditando = true;
                         idMensajeEditando = msj.id;
                         menuOpcionesMensaje.removeClass("conAltura");
@@ -1531,15 +1532,21 @@ function contacto_chat(user, group) {
         rowContenidoMensajeOperaciones.attr("id","filaMensajesOperaciones_" + user.id360);
         let colContenidoMensajeOperaciones = $("<div></div>").addClass("col-12").css({"padding": "0"});
         let contenidoMensajeOperaciones = $("<p></p>").attr("id","contenidoMensajeOperaciones_" + user.id360);
+        
         contenidoMensajeOperaciones.css({
             "margin": "0",
             "background-color": "gray",
-            "color": "white",
-            "font-size": "1.3rem",
             "padding": "10px",
-            "text-align": "left",
+            "text-align": "left"
+        });
+        
+        let spanAccion = $("<span></span>");
+        spanAccion.attr("id","accionMensajesOpciones_" + user.id360);
+        spanAccion.css({
+            "font-size": "1.3rem",
             "font-style": "italic"
         });
+        
         let spanContenidoMensajeOperaciones = $("<span></span>");
         spanContenidoMensajeOperaciones.css({
             "padding-right": "5%",
@@ -1565,6 +1572,7 @@ function contacto_chat(user, group) {
             idMensajeRespondiendo = null;
         });
         
+        contenidoMensajeOperaciones.append(spanAccion);
         contenidoMensajeOperaciones.append(spanContenidoMensajeOperaciones);
         contenidoMensajeOperaciones.append(buttonCerrarContenidoMensajeOperaciones);
         colContenidoMensajeOperaciones.append(contenidoMensajeOperaciones);
@@ -2081,11 +2089,11 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 opcionEditaMensaje.click(() => {
 
                     let contenedorReenvia = $("#filaMensajesOperaciones_" + user.id360);
-                    $("#contenidoMensajeOperaciones_" + user.id360).text("Editando");
                     $("#message_input_" + user.id360).val(mensaje);
                     $("#message_input_" + user.id360).select();
                     contenedorReenvia.removeClass("d-none");
                     contenedorReenvia.find("span").text(mensaje);
+                    $("#accionMensajesOpciones_" + user.id360).text("Editando");
                     banderaEditando = true;
                     idMensajeEditando = id;
                     menuOpcionesMensaje.removeClass("conAltura");
@@ -2351,11 +2359,12 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
             opcionEditaMensaje.click(() => {
 
                 let contenedorReenvia = $("#filaMensajesOperaciones_" + user.id360);
-                $("#contenidoMensajeOperaciones_" + user.id360).text("Editando");
+                $("#accionMensajesOpciones_" + user.id360).text("Editando");
                 $("#message_input_" + user.id360).val(mensaje);
                 $("#message_input_" + user.id360).select();
                 contenedorReenvia.removeClass("d-none");
                 contenedorReenvia.find("span").text(mensaje);
+                $("#accionMensajesOpciones_" + user.id360).text("Editando");
                 banderaEditando = true;
                 idMensajeEditando = response.id;
                 menuOpcionesMensaje.removeClass("conAltura");
