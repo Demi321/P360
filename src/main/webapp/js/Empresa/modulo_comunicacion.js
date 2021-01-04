@@ -1968,6 +1968,7 @@ function contacto_chat(user, group) {
 function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
     
     let mensaje = input.val();
+    $(".filaMensajesOperaciones").addClass("d-none");
     
     if ($.trim(mensaje) === '') {
         return false;
@@ -2176,6 +2177,10 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
         "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
         "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
     };
+    
+    if(banderaRespondiendo){
+        json.idResponse = idMensajeRespondiendo;
+    }
 
     if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
         json.type = $("#inputAttachment" + user.id360).data("extension");
