@@ -1000,3 +1000,16 @@ ul.menuOpcionesMensaje li.opcionMensaje:hover{
 .menu_chat .opcion_menu_chat:hover{
     background-color: rgba(0,0,0,0.5);
 }
+
+small.respuesta-mensaje{
+    color: white;
+    display: block;
+    padding: 5px;
+    background-color: rgba(64,71,79,0.5);
+    border-radius: 10px;
+    border-left: 3px solid #40474f;
+    margin-bottom: 7px;
+    max-height: 35px;
+    overflow-y: hidden;
+    cursor: pointer;
+}
