@@ -6,7 +6,7 @@
 
 
 
-/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal, configuracionEmpleado, configuracionUsuario */
+/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal, configuracionEmpleado, configuracionUsuario, moment */
 //jQuery.event.props.push('dataTransfer');
 
 var NotificacionesActivadas = false;
@@ -632,6 +632,38 @@ const apagaValores = () => {
     $(".filaMensajesOperaciones").addClass("d-none");
 };
 
+const mensajeViejo = (viejo, nuevo) => {
+    
+    let div = $("<div></div>");
+    
+    let formGroupViejo = $("<div></div>").addClass("form-group");
+    let labelViejo = $("<label></label>");
+    labelViejo.text("Mensaje Anterior");
+    let inputViejo = $("<textarea>").addClass("form-control");
+    inputViejo.attr("disabled","true");
+    inputViejo.val(viejo);
+    formGroupViejo.append(labelViejo);
+    formGroupViejo.append(inputViejo);
+    
+    let formGroupNuevo = $("<div></div>").addClass("form-group");
+    let labelNuevo = $("<label></label>");
+    labelNuevo.text("Mensaje Actual");
+    let inputNuevo = $("<textarea>").addClass("form-control");
+    inputNuevo.attr("disabled","true");
+    inputNuevo.val(nuevo);
+    formGroupNuevo.append(labelNuevo);
+    formGroupNuevo.append(inputNuevo);
+    
+    div.append(formGroupViejo);
+    div.append(formGroupNuevo);
+    
+    Swal.fire({
+        html: div,
+        showConfirmButton: false
+    });
+    
+};
+
 function agregar_chat(msj, user, type, viejo) {
     if (user.success) {
         let mensaje = msj.message;
@@ -704,32 +736,45 @@ function agregar_chat(msj, user, type, viejo) {
 
             let fecha = $("<span></span>").addClass("time");
 
-            let fechaDate = new Date(msj.fecha);
-            let fechaCorta = fechaDate.getDate() + "/" + (fechaDate.getMonth() + 1) + "/" + fechaDate.getFullYear();
-            let hoy = new Date();
+            let fechaMoment = moment(msj.fecha).format("DD-MM-YY");
+            let partesHoraMensaje = msj.hora.split(":");
+            let horaMoment = moment();
+            horaMoment.set("hour",partesHoraMensaje[0]);
+            horaMoment.set("minute", partesHoraMensaje[1]);
+            horaMoment.set("second", partesHoraMensaje[2]);
 
-            fechaCorta = fechaDate.getTime() === hoy.getTime() ? "" : fechaCorta;
-
-            fecha.text(fechaCorta + " " + msj.hora);
+            fecha.text(fechaMoment + " " + horaMoment.format("hh:mm A"));
             let iconClock = $("<li></li>").addClass("far fa-clock");
+            let spanEdit = $("<span></span>");
             let iconEdit = $("<li></li>").addClass("fas fa-edit");
+            spanEdit.append(iconEdit);
+            iconEdit.attr("id","historial_ediciones_" + msj.id);
             
             if (type === "replies") {
                 fecha.append(iconClock);
-                if(msj.time_updated !== null) fecha.append(iconEdit);
+                if(msj.time_updated !== null) fecha.append(spanEdit);
                 iconClock.addClass("ml-2");
                 iconEdit.addClass("ml-2");
             } else {
                 fecha.prepend(iconClock);
-                if(msj.time_updated !== null) fecha.prepend(iconEdit);
+                if(msj.time_updated !== null) fecha.prepend(spanEdit);
                 iconClock.addClass("mr-2");
                 iconEdit.addClass("mr-2");
             }
+            
+            iconEdit.css({
+                "cursor":"pointer"
+            });
 
             message.append(fecha);
 
             li.append(img_message);
             li.append(message);
+            
+            spanEdit.click(() => {
+                console.log("boton");
+                mensajeViejo(msj.oldMessage, mensaje);
+            });
 
             let idConver = type === "replies" ? msj.to_id360 : msj.id360;
             previewMesagge = type === "replies" ? "Yo: " + mensaje : user.nombre + ": " + mensaje;
@@ -921,11 +966,14 @@ function agregar_chat(msj, user, type, viejo) {
                     opcionEditaMensaje.click(() => {
                         
                         let contenedorReenvia = $("#filaMensajesOperaciones_" + user.id360);
+                        $("#contenidoMensajeOperaciones_" + user.id360).text("Editando");
                         contenedorReenvia.removeClass("d-none");
+                        $("#message_input_" + user.id360).val(mensaje);
+                        $("#message_input_" + user.id360).select();
                         contenedorReenvia.find("span").text(mensaje);
                         banderaEditando = true;
                         idMensajeEditando = msj.id;
-                        $(".menuOpcionesMensaje").addClass("d-none");
+                        menuOpcionesMensaje.removeClass("conAltura");
                         
                     });
                     menuOpcionesMensaje.append(opcionEditaMensaje);
@@ -1483,7 +1531,6 @@ function contacto_chat(user, group) {
         rowContenidoMensajeOperaciones.attr("id","filaMensajesOperaciones_" + user.id360);
         let colContenidoMensajeOperaciones = $("<div></div>").addClass("col-12").css({"padding": "0"});
         let contenidoMensajeOperaciones = $("<p></p>").attr("id","contenidoMensajeOperaciones_" + user.id360);
-        contenidoMensajeOperaciones.text("Editando");
         contenidoMensajeOperaciones.css({
             "margin": "0",
             "background-color": "gray",
@@ -1901,13 +1948,20 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
     
     let mensaje = input.val();
     
+    if ($.trim(mensaje) === '') {
+        return false;
+    }
+    
     if(banderaEditando){
+        
+        let id = idMensajeEditando;
+        const li = $("#mensaje_" + id);
         
         let data = {
             "mensaje_editado": mensaje,
             "fecha_edita": getFecha(),
             "hora_edita": getHora(),
-            "idMensaje": idMensajeEditando,
+            "idMensaje": id,
             "to_id360": user.id360
         };
         
@@ -1915,203 +1969,44 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
             
             if( response.success ){
                 
-                let pMensaje = $("#mensaje_" + idMensajeEditando).find("p");
+                let pMensaje = $("#mensaje_" + id).find("p");
                 pMensaje.empty();
                 pMensaje.text(mensaje);
-                
-                let hoy = new Date();
 
-                let fechaDespliega = hoy.getDate() + "/" + (hoy.getMonth() + 1) + "/" + hoy.getFullYear();
+                let fechaDespliega = moment().format("DD-MMM-YY hh:mm A");
 
                 let fecha = $("<span></span>").addClass("time");
-                fecha.text(fechaDespliega + " " + getHora());
+                fecha.text(fechaDespliega);
                 let iconClock = $("<li></li>").addClass("far fa-clock");
+                let spanEdit = $("<span></span>");
                 let iconEdit = $("<li></li>").addClass("fas fa-edit");
+                spanEdit.append(iconEdit);
+                iconEdit.attr("id","historial_ediciones_" + id);
                 
                 fecha.append(iconClock);
-                fecha.append(iconEdit);
+                fecha.append(spanEdit);
                 iconClock.addClass("ml-2");
                 iconEdit.addClass("ml-2");
                 
+                iconEdit.css({
+                    "cursor":"pointer"
+                });
+                
                 pMensaje.append(fecha);
                 
-                apagaValores();
-                input.val("");
-                
-            }
-            
-        });
-        
-        return;
-    }
-
-    if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
-        mensaje = rutaAdjunto;
-
-    if ($.trim(mensaje) === '') {
-        return false;
-    } else {
-        let json = {
-            "id360": sesion_cookie.id_usuario,
-            "to_id360": user.id360,
-            "fecha": getFecha(),
-            "hora": getHora(),
-            "message": mensaje,
-            "type": "text",
-            "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-            "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
-        };
-
-        if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
-            json.type = $("#inputAttachment" + user.id360).data("extension");
-
-        RequestPOST("/API/empresas360/chat", json).then((response) => {
-            if (response.success) {
-                let idMensaje = response.id;
-//                let li = $("<li></li>").addClass("sent");
-                let li = $("<li></li>").addClass("replies");
-                li.attr("id", "mensaje_" + idMensaje);
-                li.addClass("limessage");
-                let img_message = $("<div></div>").addClass("img");
-                img_message.css({
-                    "background": "url('" + perfil.img + "')",
-                    "background-size": "cover",
-                    "background-position": "center",
-                    "background-repeat": "no-repeat"
-                });
-                let message = $("<p></p>");
-
-                if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "") {
-
-                    let extension = $("#inputAttachment" + user.id360).data("extension");
-                    let nombreCorto = $("#inputAttachment" + user.id360).data("nombreCorto");
-                    let imagenPreview = $("<img>").css({"max-width": "125px", "max-height": "75px", "margin-bottom": "10px"}).attr("src", PathRecursos + "images/icono_default.png");
-
-                    let saltoLinea = $("<br>");
-                    let nombreAdjunto = $("<span></span>").css({"font-size": "1.1rem"});
-                    nombreAdjunto.text(nombreCorto + " ");
-
-                    let buttonDownloadAttachment = $("<a></a>").addClass("btn btn-light").css({"margin-left": "10px"});
-                    buttonDownloadAttachment.attr("href", rutaAdjunto);
-                    buttonDownloadAttachment.attr("download", nombreCorto);
-                    buttonDownloadAttachment.html('<i class="fas fa-download"></i>');
-
-                    nombreAdjunto.append(buttonDownloadAttachment);
-
-                    mensaje = nombreCorto;
-
-                    switch (extension) {
-
-                        case "jpg":
-                        case "png":
-                        case "jpeg":
-                        case "gif":
-                            imagenPreview.attr("src", rutaAdjunto);
-                            break;
-
-                        case "docx":
-                        case "docm":
-                        case "dotx":
-                        case "dotm":
-                        case "doc":
-                            imagenPreview.attr("src", PathRecursos + "images/icono_word.png");
-                            break;
-
-                        case "xlsx":
-                        case "xlsm":
-                        case "xlsb":
-                        case "xltx":
-                        case "xltm":
-                        case "xls":
-                        case "xlt":
-                            imagenPreview.attr("src", PathRecursos + "images/icono_excel.png");
-                            break;
-
-                        case "pptx":
-                        case "pptm":
-                        case "ppt":
-                        case "xps":
-                        case "potx":
-                        case "ppsx":
-                            imagenPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
-                            break;
-
-                        case "pdf":
-                            imagenPreview.attr("src", PathRecursos + "images/icono_pdf.png");
-                            break;
-
-                    }
-
-                    message.empty().append(imagenPreview);
-                    message.append(saltoLinea);
-                    
-                    
-                    if (!(extension === "jpg" || extension === "png" || extension === "jpeg" || extension === "gif")) {
-                        message.append(nombreAdjunto);
-                    } else {
-                        imagenPreview.css({"cursor": "pointer", "max-width": "250px","max-height":"250px"});
-                        
-                        let imagenPreviewCopy = $("<img>");
-                        imagenPreviewCopy.attr("src", mensaje);
-                        imagenPreviewCopy.css({
-                            "max-width": "650px",
-                            "max-height":"650px"
-                        });
-                        
-                        imagenPreview.click(() => {
-                            Swal.fire({
-                                width: 700,
-                                showCancelButton: false,
-                                showConfirmButton: false,
-                                html: imagenPreviewCopy
-                            });
-                        });
-                    }
-
-                } else {
-
-                    if (mensaje.slice(0, 7) === "http://" || mensaje.slice(0, 8) === "https://" || mensaje.slice(0, 4) === "www.") {
-                        let linkMensaje = $("<a>");
-                        linkMensaje.text(mensaje);
-                        linkMensaje.attr("href", mensaje);
-                        linkMensaje.attr("tarjet", "_blanck");
-                        message.html(linkMensaje);
-                        
-                        message.css({
-                            "word-break": "break-all"
-                        });
-                        
-                    } else {
-                        message.text(mensaje);
-                    }
-
-                }
-
-                let fecha = $("<span></span>").addClass("time");
-
-                let fechaDate = new Date();
-                let fechaCorta = fechaDate.getDate() + "/" + (fechaDate.getMonth() + 1) + "/" + fechaDate.getFullYear();
-
-                let horaEnvio = fechaDate.getHours() + ":" + fechaDate.getMinutes() + ":" + fechaDate.getSeconds();
-
-                fecha.text(fechaCorta + "-" + horaEnvio);
-                let iconClock = $("<li></li>").addClass("far fa-clock ml-2");
-                fecha.append(iconClock);
-                message.append(fecha);
-
                 let iconOpciones = $("<span></span>").addClass("iconOpciones");
                 let iconDespliegaMenu = $('<i class="fas fa-chevron-down"></i>');
                 iconOpciones.append(iconDespliegaMenu);
-                message.append(iconOpciones);
+                pMensaje.append(iconOpciones);
 
                 const eliminaMensaje = (tipo) => {
                     //PEDIR CONFIRMACION DE ELIMINAR
                     swalConfirmDialog("¿Eliminar mensaje?", "Eliminar", "Cancelar").then((response) => {
                         if (response) {
                             //PROCESO DE ELIMINACION
+                            
                             let dataMensaje = {
-                                "idMensaje": idMensaje
+                                "idMensaje": id
                             };
                             
                             let services;
@@ -2126,15 +2021,16 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                             }
 
                             RequestPOST(services, dataMensaje).then((response) => {
+                                apagaValores();
                                 if (response.success) {
                                     menuOpcionesMensaje.removeClass("conAltura");
                                     if(tipo === 0){
-                                        message.empty();
-                                        message.text("Mensaje eliminado");
+                                        pMensaje.empty();
+                                        pMensaje.text("Mensaje eliminado");
                                         let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
                                         iconMensajeEliminado.css({"margin-right": "10px"});
-                                        message.prepend(iconMensajeEliminado);
-                                        message.css({
+                                        pMensaje.prepend(iconMensajeEliminado);
+                                        pMensaje.css({
                                             "background-color": "transparent",
                                             "font-style": "italic",
                                             "font-size": "1.1rem"
@@ -2142,6 +2038,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                                     }else{
                                         li.remove();
                                     }
+                                    
                                 }
                             });
 
@@ -2150,7 +2047,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 };
 
                 //LISTADO DE OPCIONES POR MENSAJE
-                let menuOpcionesMensaje = $("<ul></ul>").addClass("menuOpcionesMensaje").attr("id","menuOpcionesMensaje_"+user.id360);
+                let menuOpcionesMensaje = $("<ul></ul>").addClass("menuOpcionesMensaje").attr("id","menuOpcionesMensaje_" + user.id360);
 
                 //OPCION DE ELIMINAR MENSAJE
                 let opcionEliminaMensaje = $("<li></li>").addClass("opcionMensaje");
@@ -2167,12 +2064,32 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                     eliminaMensaje(1);
                 });
                 menuOpcionesMensaje.append(opcionEliminaMensajeMi);
+                
+                //OPCION PARA REENVIAR EL MENSAJE
+                let opcionReenviaMensaje = $("<li></li>").addClass("opcionMensaje");
+                opcionReenviaMensaje.text("Reenviar mensaje");
+                opcionReenviaMensaje.click(() => {
+                    
+                    reenviaMensaje(mensaje);
+                    
+                });
+                menuOpcionesMensaje.append(opcionReenviaMensaje);
 
                 //OPCION PARA EDITAR EL MENSAJE
                 let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
                 opcionEditaMensaje.text("Editar mensaje");
                 opcionEditaMensaje.click(() => {
-                    console.log("Editando..");
+
+                    let contenedorReenvia = $("#filaMensajesOperaciones_" + user.id360);
+                    $("#contenidoMensajeOperaciones_" + user.id360).text("Editando");
+                    $("#message_input_" + user.id360).val(mensaje);
+                    $("#message_input_" + user.id360).select();
+                    contenedorReenvia.removeClass("d-none");
+                    contenedorReenvia.find("span").text(mensaje);
+                    banderaEditando = true;
+                    idMensajeEditando = id;
+                    menuOpcionesMensaje.removeClass("conAltura");
+
                 });
                 menuOpcionesMensaje.append(opcionEditaMensaje);
 
@@ -2184,31 +2101,300 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 });
                 menuOpcionesMensaje.append(opcionRespondeMensaje);
 
-                message.append(menuOpcionesMensaje);
+                pMensaje.append(menuOpcionesMensaje);
 
-                message.mouseenter(() => {
+                pMensaje.mouseenter(() => {
                     iconOpciones.css({"display": "block"});
                 }).mouseleave(() => {
                     iconOpciones.css({"display": "none"});
                 });
 
                 iconOpciones.click(() => {
-                    console.log("despliega menu");
+                    
                     menuOpcionesMensaje.toggleClass("conAltura");
-                    //menuOpcionesMensaje.css({"height":"auto"});
+                    
                 });
-
-                li.append(img_message);
-                li.append(message);
-                ul.append(li);
+                
+                spanEdit.click(() => {
+                    mensajeViejo(response.nuevo.oldMessage, mensaje);
+                });
+                
+                apagaValores();
                 input.val("");
-                preview.text("Yo: " + mensaje);
-                $("#message_contacts").prepend(document.getElementById("profile_chat" + user.id360));
-                document.querySelector("#messages_" + user.id360 + " li.limessage:last-child").scrollIntoView();
+                
+            }
+            
+        });
+        
+        return;
+    }
+
+    if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
+        mensaje = rutaAdjunto;
+
+    let json = {
+        "id360": sesion_cookie.id_usuario,
+        "to_id360": user.id360,
+        "fecha": getFecha(),
+        "hora": getHora(),
+        "message": mensaje,
+        "type": "text",
+        "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
+        "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
+        "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
+    };
+
+    if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
+        json.type = $("#inputAttachment" + user.id360).data("extension");
+
+    RequestPOST("/API/empresas360/chat", json).then((response) => {
+        if (response.success) {
+            let idMensaje = response.id;
+//                let li = $("<li></li>").addClass("sent");
+            let li = $("<li></li>").addClass("replies");
+            li.attr("id", "mensaje_" + idMensaje);
+            li.addClass("limessage");
+            let img_message = $("<div></div>").addClass("img");
+            img_message.css({
+                "background": "url('" + perfil.img + "')",
+                "background-size": "cover",
+                "background-position": "center",
+                "background-repeat": "no-repeat"
+            });
+            let message = $("<p></p>");
+
+            if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "") {
+
+                let extension = $("#inputAttachment" + user.id360).data("extension");
+                let nombreCorto = $("#inputAttachment" + user.id360).data("nombreCorto");
+                let imagenPreview = $("<img>").css({"max-width": "125px", "max-height": "75px", "margin-bottom": "10px"}).attr("src", PathRecursos + "images/icono_default.png");
+
+                let saltoLinea = $("<br>");
+                let nombreAdjunto = $("<span></span>").css({"font-size": "1.1rem"});
+                nombreAdjunto.text(nombreCorto + " ");
+
+                let buttonDownloadAttachment = $("<a></a>").addClass("btn btn-light").css({"margin-left": "10px"});
+                buttonDownloadAttachment.attr("href", rutaAdjunto);
+                buttonDownloadAttachment.attr("download", nombreCorto);
+                buttonDownloadAttachment.html('<i class="fas fa-download"></i>');
+
+                nombreAdjunto.append(buttonDownloadAttachment);
+
+                mensaje = nombreCorto;
+
+                switch (extension) {
+
+                    case "jpg":
+                    case "png":
+                    case "jpeg":
+                    case "gif":
+                        imagenPreview.attr("src", rutaAdjunto);
+                        break;
+
+                    case "docx":
+                    case "docm":
+                    case "dotx":
+                    case "dotm":
+                    case "doc":
+                        imagenPreview.attr("src", PathRecursos + "images/icono_word.png");
+                        break;
+
+                    case "xlsx":
+                    case "xlsm":
+                    case "xlsb":
+                    case "xltx":
+                    case "xltm":
+                    case "xls":
+                    case "xlt":
+                        imagenPreview.attr("src", PathRecursos + "images/icono_excel.png");
+                        break;
+
+                    case "pptx":
+                    case "pptm":
+                    case "ppt":
+                    case "xps":
+                    case "potx":
+                    case "ppsx":
+                        imagenPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
+                        break;
+
+                    case "pdf":
+                        imagenPreview.attr("src", PathRecursos + "images/icono_pdf.png");
+                        break;
+
+                }
+
+                message.empty().append(imagenPreview);
+                message.append(saltoLinea);
+
+
+                if (!(extension === "jpg" || extension === "png" || extension === "jpeg" || extension === "gif")) {
+                    message.append(nombreAdjunto);
+                } else {
+                    imagenPreview.css({"cursor": "pointer", "max-width": "250px","max-height":"250px"});
+
+                    let imagenPreviewCopy = $("<img>");
+                    imagenPreviewCopy.attr("src", mensaje);
+                    imagenPreviewCopy.css({
+                        "max-width": "650px",
+                        "max-height":"650px"
+                    });
+
+                    imagenPreview.click(() => {
+                        Swal.fire({
+                            width: 700,
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            html: imagenPreviewCopy
+                        });
+                    });
+                }
+
+            } else {
+
+                if (mensaje.slice(0, 7) === "http://" || mensaje.slice(0, 8) === "https://" || mensaje.slice(0, 4) === "www.") {
+                    let linkMensaje = $("<a>");
+                    linkMensaje.text(mensaje);
+                    linkMensaje.attr("href", mensaje);
+                    linkMensaje.attr("tarjet", "_blanck");
+                    message.html(linkMensaje);
+
+                    message.css({
+                        "word-break": "break-all"
+                    });
+
+                } else {
+                    message.text(mensaje);
+                }
 
             }
-        });
-    }
+
+            let fecha = $("<span></span>").addClass("time");
+            let fechaDespliega = moment().format("DD-MMM-YY hh:mm A");
+
+            fecha.text(fechaDespliega);
+            let iconClock = $("<li></li>").addClass("far fa-clock ml-2");
+            fecha.append(iconClock);
+            message.append(fecha);
+
+            let iconOpciones = $("<span></span>").addClass("iconOpciones");
+            let iconDespliegaMenu = $('<i class="fas fa-chevron-down"></i>');
+            iconOpciones.append(iconDespliegaMenu);
+            message.append(iconOpciones);
+
+            const eliminaMensaje = (tipo) => {
+                //PEDIR CONFIRMACION DE ELIMINAR
+                swalConfirmDialog("¿Eliminar mensaje?", "Eliminar", "Cancelar").then((response) => {
+                    if (response) {
+                        //PROCESO DE ELIMINACION
+                        let dataMensaje = {
+                            "idMensaje": idMensaje
+                        };
+
+                        let services;
+
+                        if(tipo === 0){
+                            services = "/API/empresas360/eliminaMensaje";
+                            dataMensaje.id360 = sesion_cookie.idUsuario_Sys;
+                            dataMensaje.to_id360 = user.id360;
+                        }else{
+                            services = "/API/empresas360/eliminaMensajeParaMi";
+                            dataMensaje.idUser = sesion_cookie.idUsuario_Sys;
+                        }
+
+                        RequestPOST(services, dataMensaje).then((response) => {
+                            if (response.success) {
+                                menuOpcionesMensaje.removeClass("conAltura");
+                                if(tipo === 0){
+                                    message.empty();
+                                    message.text("Mensaje eliminado");
+                                    let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
+                                    iconMensajeEliminado.css({"margin-right": "10px"});
+                                    message.prepend(iconMensajeEliminado);
+                                    message.css({
+                                        "background-color": "transparent",
+                                        "font-style": "italic",
+                                        "font-size": "1.1rem"
+                                    });
+                                }else{
+                                    li.remove();
+                                }
+                            }
+                        });
+
+                    }
+                });
+            };
+
+            //LISTADO DE OPCIONES POR MENSAJE
+            let menuOpcionesMensaje = $("<ul></ul>").addClass("menuOpcionesMensaje").attr("id","menuOpcionesMensaje_"+user.id360);
+
+            //OPCION DE ELIMINAR MENSAJE
+            let opcionEliminaMensaje = $("<li></li>").addClass("opcionMensaje");
+            opcionEliminaMensaje.text("Eliminar para todos");
+            opcionEliminaMensaje.click(() => {
+                eliminaMensaje(0);
+            });
+            menuOpcionesMensaje.append(opcionEliminaMensaje);
+
+            //OPCION PARA ELIMINAR MENSAJE SOLO PARA MI
+            let opcionEliminaMensajeMi = $("<li></li>").addClass("opcionMensaje");
+            opcionEliminaMensajeMi.text("Eliminar para mi");
+            opcionEliminaMensajeMi.click(() => {
+                eliminaMensaje(1);
+            });
+            menuOpcionesMensaje.append(opcionEliminaMensajeMi);
+
+            //OPCION PARA EDITAR EL MENSAJE
+            let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
+            opcionEditaMensaje.text("Editar mensaje");
+            opcionEditaMensaje.click(() => {
+
+                let contenedorReenvia = $("#filaMensajesOperaciones_" + user.id360);
+                $("#contenidoMensajeOperaciones_" + user.id360).text("Editando");
+                $("#message_input_" + user.id360).val(mensaje);
+                $("#message_input_" + user.id360).select();
+                contenedorReenvia.removeClass("d-none");
+                contenedorReenvia.find("span").text(mensaje);
+                banderaEditando = true;
+                idMensajeEditando = response.id;
+                menuOpcionesMensaje.removeClass("conAltura");
+
+            });
+            menuOpcionesMensaje.append(opcionEditaMensaje);
+
+            //OPCION PARA RESPONDER UN MENSAJE
+            let opcionRespondeMensaje = $("<li></li>").addClass("opcionMensaje");
+            opcionRespondeMensaje.text("Responder mensaje");
+            opcionRespondeMensaje.click(() => {
+                console.log("Respondiendo...");
+            });
+            menuOpcionesMensaje.append(opcionRespondeMensaje);
+
+            message.append(menuOpcionesMensaje);
+
+            message.mouseenter(() => {
+                iconOpciones.css({"display": "block"});
+            }).mouseleave(() => {
+                iconOpciones.css({"display": "none"});
+            });
+
+            iconOpciones.click(() => {
+                console.log("despliega menu");
+                menuOpcionesMensaje.toggleClass("conAltura");
+                //menuOpcionesMensaje.css({"height":"auto"});
+            });
+
+            li.append(img_message);
+            li.append(message);
+            ul.append(li);
+            input.val("");
+            preview.text("Yo: " + mensaje);
+            $("#message_contacts").prepend(document.getElementById("profile_chat" + user.id360));
+            document.querySelector("#messages_" + user.id360 + " li.limessage:last-child").scrollIntoView();
+
+        }
+    });
 
 }
 
