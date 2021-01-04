@@ -591,10 +591,13 @@ and open the template in the editor.
     display: inline-block;
     clear: both;
     float: left;
-    margin: 15px 15px 5px 15px;
+    margin: 5px 15px 5px 15px;
     width: calc(100% - 25px);
     font-size: 0.9em;
     padding: 0;
+}
+#frame .content .messages ul li.respondida{
+    background-color: rgba(0,0,0,0.1);
 }
 #frame .content .messages ul li:nth-last-child(1) {
     margin-bottom: 20px;
@@ -619,6 +622,7 @@ and open the template in the editor.
     color: #434343;
     position: relative;
     padding-left: 30px;
+    margin: 10px 0;
 }
 #frame .content .messages ul li .img {
     width: 22px;
