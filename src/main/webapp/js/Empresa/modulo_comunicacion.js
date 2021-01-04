@@ -984,9 +984,21 @@ function agregar_chat(msj, user, type, viejo) {
                 let opcionRespondeMensaje = $("<li></li>").addClass("opcionMensaje");
                 opcionRespondeMensaje.text("Responder mensaje");
                 opcionRespondeMensaje.click(() => {
-                    console.log("Respondiendo...");
+                    
+                    let contenedorResponde = $("#filaMensajesOperaciones_" + user.id360);
+                    contenedorResponde.removeClass("d-none");
+                    contenedorResponde.find("span").text(mensaje);
+                    $("#accionMensajesOpciones_" + user.id360).text("Respondiendo");
+                    banderaRespondiendo = true;
+                    idMensajeRespondiendo = msj.id;
+                    menuOpcionesMensaje.removeClass("conAltura");
+                    
                 });
                 menuOpcionesMensaje.append(opcionRespondeMensaje);
+                
+                li.dblclick(() => {
+                    opcionRespondeMensaje.click();
+                });
 
                 message.append(menuOpcionesMensaje);
 
@@ -1550,7 +1562,8 @@ function contacto_chat(user, group) {
         let spanContenidoMensajeOperaciones = $("<span></span>");
         spanContenidoMensajeOperaciones.css({
             "padding-right": "5%",
-            "display": "block"
+            "display": "block",
+            "margin-top": "5px"
         });
         let buttonCerrarContenidoMensajeOperaciones = $("<button></button>").addClass("btn");
         buttonCerrarContenidoMensajeOperaciones.text("x");
@@ -2105,9 +2118,21 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 let opcionRespondeMensaje = $("<li></li>").addClass("opcionMensaje");
                 opcionRespondeMensaje.text("Responder mensaje");
                 opcionRespondeMensaje.click(() => {
-                    console.log("Respondiendo...");
+                    
+                    let contenedorResponde = $("#filaMensajesOperaciones_" + user.id360);
+                    contenedorResponde.removeClass("d-none");
+                    contenedorResponde.find("span").text(mensaje);
+                    $("#accionMensajesOpciones_" + user.id360).text("Respondiendo");
+                    banderaRespondiendo = true;
+                    idMensajeRespondiendo = id;
+                    menuOpcionesMensaje.removeClass("conAltura");
+                    
                 });
                 menuOpcionesMensaje.append(opcionRespondeMensaje);
+                
+                li.dblclick(() => {
+                    opcionRespondeMensaje.click();
+                });
 
                 pMensaje.append(menuOpcionesMensaje);
 
@@ -2376,9 +2401,21 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
             let opcionRespondeMensaje = $("<li></li>").addClass("opcionMensaje");
             opcionRespondeMensaje.text("Responder mensaje");
             opcionRespondeMensaje.click(() => {
-                console.log("Respondiendo...");
+                
+                let contenedorResponde = $("#filaMensajesOperaciones_" + user.id360);
+                contenedorResponde.removeClass("d-none");
+                contenedorResponde.find("span").text(mensaje);
+                $("#accionMensajesOpciones_" + user.id360).text("Respondiendo");
+                banderaRespondiendo = true;
+                idMensajeRespondiendo = response.id;
+                menuOpcionesMensaje.removeClass("conAltura");
+                
             });
             menuOpcionesMensaje.append(opcionRespondeMensaje);
+            
+            li.dblclick(() => {
+                opcionRespondeMensaje.click();
+            });
 
             message.append(menuOpcionesMensaje);
 
