@@ -687,7 +687,7 @@ function agregar_chat(msj, user, type, viejo) {
             });
         }
         let message = $("<p></p>");
-
+        
         let id = type === "replies" ? msj.to_id360 : msj.id360;
         let previewMesagge;
 
@@ -877,62 +877,63 @@ function agregar_chat(msj, user, type, viejo) {
             }
 
             //ICONO MENU DE OPCION PARA EL MENSAJE
-            if (type === "replies") {
-                let iconOpciones = $("<span></span>").addClass("iconOpciones");
-                let iconDespliegaMenu = $('<i class="fas fa-chevron-down"></i>');
-                iconOpciones.append(iconDespliegaMenu);
-                message.append(iconOpciones);
+            
+            let iconOpciones = $("<span></span>").addClass("iconOpciones");
+            let iconDespliegaMenu = $('<i class="fas fa-chevron-down"></i>');
+            iconOpciones.append(iconDespliegaMenu);
+            message.append(iconOpciones);
 
-                const eliminaMensaje = (tipo) => {
-                    //PEDIR CONFIRMACION DE ELIMINAR
-                    swalConfirmDialog("¿Eliminar mensaje?", "Eliminar", "Cancelar").then((response) => {
-                        if (response) {
-                            //PROCESO DE ELIMINACION
-                            
-                            let dataMensaje = {
-                                "idMensaje": msj.id
-                            };
-                            
-                            let services;
-                            
-                            if(tipo === 0){
-                                services = "/API/empresas360/eliminaMensaje";
-                                dataMensaje.id360 = sesion_cookie.idUsuario_Sys;
-                                dataMensaje.to_id360 = user.id360;
-                            }else{
-                                services = "/API/empresas360/eliminaMensajeParaMi";
-                                dataMensaje.idUser = sesion_cookie.idUsuario_Sys;
-                            }
+            const eliminaMensaje = (tipo) => {
+                //PEDIR CONFIRMACION DE ELIMINAR
+                swalConfirmDialog("¿Eliminar mensaje?", "Eliminar", "Cancelar").then((response) => {
+                    if (response) {
+                        //PROCESO DE ELIMINACION
 
-                            RequestPOST(services, dataMensaje).then((response) => {
-                                apagaValores();
-                                if (response.success) {
-                                    menuOpcionesMensaje.removeClass("conAltura");
-                                    if(tipo === 0){
-                                        message.empty();
-                                        message.text("Mensaje eliminado");
-                                        let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
-                                        iconMensajeEliminado.css({"margin-right": "10px"});
-                                        message.prepend(iconMensajeEliminado);
-                                        message.css({
-                                            "background-color": "transparent",
-                                            "font-style": "italic",
-                                            "font-size": "1.1rem"
-                                        });
-                                    }else{
-                                        li.remove();
-                                    }
-                                    
-                                }
-                            });
+                        let dataMensaje = {
+                            "idMensaje": msj.id
+                        };
 
+                        let services;
+
+                        if(tipo === 0){
+                            services = "/API/empresas360/eliminaMensaje";
+                            dataMensaje.id360 = sesion_cookie.idUsuario_Sys;
+                            dataMensaje.to_id360 = user.id360;
+                        }else{
+                            services = "/API/empresas360/eliminaMensajeParaMi";
+                            dataMensaje.idUser = sesion_cookie.idUsuario_Sys;
                         }
-                    });
-                };
 
-                //LISTADO DE OPCIONES POR MENSAJE
-                let menuOpcionesMensaje = $("<ul></ul>").addClass("menuOpcionesMensaje").attr("id","menuOpcionesMensaje_" + user.id360);
+                        RequestPOST(services, dataMensaje).then((response) => {
+                            apagaValores();
+                            if (response.success) {
+                                menuOpcionesMensaje.removeClass("conAltura");
+                                if(tipo === 0){
+                                    message.empty();
+                                    message.text("Mensaje eliminado");
+                                    let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
+                                    iconMensajeEliminado.css({"margin-right": "10px"});
+                                    message.prepend(iconMensajeEliminado);
+                                    message.css({
+                                        "background-color": "transparent",
+                                        "font-style": "italic",
+                                        "font-size": "1.1rem"
+                                    });
+                                }else{
+                                    li.remove();
+                                }
 
+                            }
+                        });
+
+                    }
+                });
+            };
+
+            //LISTADO DE OPCIONES POR MENSAJE
+            let menuOpcionesMensaje = $("<ul></ul>").addClass("menuOpcionesMensaje").attr("id","menuOpcionesMensaje_" + user.id360);
+
+            if (type === "replies") {
                 //OPCION DE ELIMINAR MENSAJE
                 let opcionEliminaMensaje = $("<li></li>").addClass("opcionMensaje");
                 opcionEliminaMensaje.text("Eliminar para todos");
@@ -949,72 +950,98 @@ function agregar_chat(msj, user, type, viejo) {
                 });
                 menuOpcionesMensaje.append(opcionEliminaMensajeMi);
                 
-                //OPCION PARA REENVIAR EL MENSAJE
-                let opcionReenviaMensaje = $("<li></li>").addClass("opcionMensaje");
-                opcionReenviaMensaje.text("Reenviar mensaje");
-                opcionReenviaMensaje.click(() => {
-                    
-                    reenviaMensaje(mensaje);
-                    
-                });
-                menuOpcionesMensaje.append(opcionReenviaMensaje);
-
                 //OPCION PARA EDITAR EL MENSAJE
-                if (msj.type === "text") {
-                    let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
-                    opcionEditaMensaje.text("Editar mensaje");
-                    opcionEditaMensaje.click(() => {
-                        
-                        let contenedorReenvia = $("#filaMensajesOperaciones_" + user.id360);
-                        contenedorReenvia.removeClass("d-none");
-                        $("#accionMensajesOpciones_" + user.id360).text("Editando");
-                        $("#message_input_" + user.id360).val(mensaje);
-                        $("#message_input_" + user.id360).select();
-                        contenedorReenvia.find("span").text(mensaje);
-                        $("#accionMensajesOpciones_" + user.id360).text("Editando");
-                        banderaEditando = true;
-                        idMensajeEditando = msj.id;
-                        menuOpcionesMensaje.removeClass("conAltura");
-                        
-                    });
-                    menuOpcionesMensaje.append(opcionEditaMensaje);
-                }
+            if (msj.type === "text") {
+                let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
+                opcionEditaMensaje.text("Editar mensaje");
+                opcionEditaMensaje.click(() => {
 
-                //OPCION PARA RESPONDER UN MENSAJE
-                let opcionRespondeMensaje = $("<li></li>").addClass("opcionMensaje");
-                opcionRespondeMensaje.text("Responder mensaje");
-                opcionRespondeMensaje.click(() => {
-                    
-                    let contenedorResponde = $("#filaMensajesOperaciones_" + user.id360);
-                    contenedorResponde.removeClass("d-none");
-                    contenedorResponde.find("span").text(mensaje);
-                    $("#accionMensajesOpciones_" + user.id360).text("Respondiendo");
-                    banderaRespondiendo = true;
-                    idMensajeRespondiendo = msj.id;
+                    let contenedorReenvia = $("#filaMensajesOperaciones_" + user.id360);
+                    contenedorReenvia.removeClass("d-none");
+                    $("#accionMensajesOpciones_" + user.id360).text("Editando");
+                    $("#message_input_" + user.id360).val(mensaje);
+                    $("#message_input_" + user.id360).select();
+                    contenedorReenvia.find("span").text(mensaje);
+                    $("#accionMensajesOpciones_" + user.id360).text("Editando");
+                    banderaEditando = true;
+                    idMensajeEditando = msj.id;
                     menuOpcionesMensaje.removeClass("conAltura");
-                    
-                });
-                menuOpcionesMensaje.append(opcionRespondeMensaje);
-                
-                li.dblclick(() => {
-                    opcionRespondeMensaje.click();
-                });
 
-                message.append(menuOpcionesMensaje);
-
-                message.mouseenter(() => {
-                    iconOpciones.css({"display": "block"});
-                }).mouseleave(() => {
-                    iconOpciones.css({"display": "none"});
                 });
-
-                iconOpciones.click(() => {
-                    
-                    menuOpcionesMensaje.toggleClass("conAltura");
-                    //$(".menuOpcionesMensaje:not(#menuOpcionesMensaje_"+user.id360+")").removeClass("conAltura");
-               
-                });
+                menuOpcionesMensaje.append(opcionEditaMensaje);
             }
+            }
+
+            //OPCION PARA REENVIAR EL MENSAJE
+            let opcionReenviaMensaje = $("<li></li>").addClass("opcionMensaje");
+            opcionReenviaMensaje.text("Reenviar mensaje");
+            opcionReenviaMensaje.click(() => {
+
+                reenviaMensaje(mensaje);
+
+            });
+            menuOpcionesMensaje.append(opcionReenviaMensaje);
+
+
+            //OPCION PARA RESPONDER UN MENSAJE
+            let opcionRespondeMensaje = $("<li></li>").addClass("opcionMensaje");
+            opcionRespondeMensaje.text("Responder mensaje");
+            opcionRespondeMensaje.click(() => {
+
+                let contenedorResponde = $("#filaMensajesOperaciones_" + user.id360);
+                contenedorResponde.removeClass("d-none");
+                contenedorResponde.find("span").text(mensaje);
+                $("#accionMensajesOpciones_" + user.id360).text("Respondiendo");
+                banderaRespondiendo = true;
+                idMensajeRespondiendo = msj.id;
+                menuOpcionesMensaje.removeClass("conAltura");
+
+            });
+            menuOpcionesMensaje.append(opcionRespondeMensaje);
+
+            li.dblclick(() => {
+                opcionRespondeMensaje.click();
+            });
+
+            message.append(menuOpcionesMensaje);
+
+            message.mouseenter(() => {
+                iconOpciones.css({"display": "block"});
+            }).mouseleave(() => {
+                iconOpciones.css({"display": "none"});
+            });
+
+            if(msj.idResponse !== null){
+
+                let mensajeRespuesta = msj.mensajeRespuesta;
+                let smallRespuesta = $("<small></small>").addClass("respuesta-mensaje");
+                smallRespuesta.text(mensajeRespuesta);
+                message.prepend(smallRespuesta);
+
+                smallRespuesta.click(() => {
+
+                    document.querySelector("#mensaje_" + msj.idResponse).scrollIntoView();
+                    let resaltar = setInterval(() => {
+                        $("#mensaje_"+ msj.idResponse).toggleClass("respondida");
+                    }, 250);
+
+                    setTimeout(() => {
+                        clearInterval(resaltar);
+                        $("#mensaje_"+ msj.idResponse).removeClass("respondida");
+                    }, 2000);
+
+                });
+
+                apagaValores();
+
+            }
+
+            iconOpciones.click(() => {
+
+                menuOpcionesMensaje.toggleClass("conAltura");
+                //$(".menuOpcionesMensaje:not(#menuOpcionesMensaje_"+user.id360+")").removeClass("conAltura");
+
+            });
 
         }
 
@@ -1848,11 +1875,7 @@ function contacto_chat(user, group) {
                 send_chat_messages(input, ul, preview, user, messages);
                 return false;
             }else if(e.which == 27){
-                banderaEditando = false;
-                banderaRespondiendo = false;
-                idMensajeEditando = null;
-                idMensajeRespondiendo = null;
-                $(".filaMensajesOperaciones").addClass("d-none");
+                apagaValores();
                 return false;
             }
         });
@@ -2435,6 +2458,32 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 menuOpcionesMensaje.toggleClass("conAltura");
                 //menuOpcionesMensaje.css({"height":"auto"});
             });
+            
+            
+            if(banderaRespondiendo){
+            
+                let mensajeRespuesta = response.mensajeRespondido.message;
+                let smallRespuesta = $("<small></small>").addClass("respuesta-mensaje");
+                smallRespuesta.text(mensajeRespuesta);
+                message.prepend(smallRespuesta);
+
+                smallRespuesta.click(() => {
+
+                    document.querySelector("#mensaje_" + response.mensajeRespondido.id).scrollIntoView();
+                    let resaltar = setInterval(() => {
+                        $("#mensaje_"+ response.mensajeRespondido.id).toggleClass("respondida");
+                    }, 250);
+
+                    setTimeout(() => {
+                        clearInterval(resaltar);
+                        $("#mensaje_"+ response.mensajeRespondido.id).removeClass("respondida");
+                    }, 2000);
+
+                });
+                
+                apagaValores();
+
+            }
 
             li.append(img_message);
             li.append(message);
