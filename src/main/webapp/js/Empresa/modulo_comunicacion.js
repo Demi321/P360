@@ -944,6 +944,14 @@ function agregar_chat(msj, user, type, viejo) {
             //LISTADO DE OPCIONES POR MENSAJE
             let menuOpcionesMensaje = $("<ul></ul>").addClass("menuOpcionesMensaje").attr("id","menuOpcionesMensaje_" + user.id360);
 
+            //OPCION PARA ELIMINAR MENSAJE SOLO PARA MI
+            let opcionEliminaMensajeMi = $("<li></li>").addClass("opcionMensaje");
+            opcionEliminaMensajeMi.text("Eliminar para mi");
+            opcionEliminaMensajeMi.click(() => {
+                eliminaMensaje(1);
+            });
+            menuOpcionesMensaje.append(opcionEliminaMensajeMi);
+
             if (type === "replies") {
                 //OPCION DE ELIMINAR MENSAJE
                 let opcionEliminaMensaje = $("<li></li>").addClass("opcionMensaje");
@@ -953,34 +961,26 @@ function agregar_chat(msj, user, type, viejo) {
                 });
                 menuOpcionesMensaje.append(opcionEliminaMensaje);
 
-                //OPCION PARA ELIMINAR MENSAJE SOLO PARA MI
-                let opcionEliminaMensajeMi = $("<li></li>").addClass("opcionMensaje");
-                opcionEliminaMensajeMi.text("Eliminar para mi");
-                opcionEliminaMensajeMi.click(() => {
-                    eliminaMensaje(1);
-                });
-                menuOpcionesMensaje.append(opcionEliminaMensajeMi);
-                
                 //OPCION PARA EDITAR EL MENSAJE
-            if (msj.type === "text") {
-                let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
-                opcionEditaMensaje.text("Editar mensaje");
-                opcionEditaMensaje.click(() => {
+                if (msj.type === "text") {
+                    let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
+                    opcionEditaMensaje.text("Editar mensaje");
+                    opcionEditaMensaje.click(() => {
 
-                    let contenedorReenvia = $("#filaMensajesOperaciones_" + user.id360);
-                    contenedorReenvia.removeClass("d-none");
-                    $("#accionMensajesOpciones_" + user.id360).text("Editando");
-                    $("#message_input_" + user.id360).val(mensaje);
-                    $("#message_input_" + user.id360).select();
-                    contenedorReenvia.find("span").text(mensaje);
-                    $("#accionMensajesOpciones_" + user.id360).text("Editando");
-                    banderaEditando = true;
-                    idMensajeEditando = msj.id;
-                    menuOpcionesMensaje.removeClass("conAltura");
+                        let contenedorReenvia = $("#filaMensajesOperaciones_" + user.id360);
+                        contenedorReenvia.removeClass("d-none");
+                        $("#accionMensajesOpciones_" + user.id360).text("Editando");
+                        $("#message_input_" + user.id360).val(mensaje);
+                        $("#message_input_" + user.id360).select();
+                        contenedorReenvia.find("span").text(mensaje);
+                        $("#accionMensajesOpciones_" + user.id360).text("Editando");
+                        banderaEditando = true;
+                        idMensajeEditando = msj.id;
+                        menuOpcionesMensaje.removeClass("conAltura");
 
-                });
-                menuOpcionesMensaje.append(opcionEditaMensaje);
-            }
+                    });
+                    menuOpcionesMensaje.append(opcionEditaMensaje);
+                }
             }
 
             //OPCION PARA REENVIAR EL MENSAJE
