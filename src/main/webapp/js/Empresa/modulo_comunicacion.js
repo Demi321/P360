@@ -461,6 +461,18 @@ function recibir_chat(mensaje, viejo, group) {
 
 }
 
+const ToastError = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer);
+      toast.addEventListener('mouseleave', Swal.resumeTimer);
+    }
+});
+
 function notificacion_mensaje(title, body, onclick) {
     if (Notification.permission !== "granted") {
         Notification.requestPermission();
@@ -1019,16 +1031,24 @@ function agregar_chat(msj, user, type, viejo) {
                 message.prepend(smallRespuesta);
 
                 smallRespuesta.click(() => {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                    if( $("#mensaje_" + msj.idResponse).length ){
+                        
+                        document.querySelector("#mensaje_" + msj.idResponse).scrollIntoView();
+                        let resaltar = setInterval(() => {
+                            $("#mensaje_"+ msj.idResponse).toggleClass("respondida");
+                        }, 250);
 
-                    document.querySelector("#mensaje_" + msj.idResponse).scrollIntoView();
-                    let resaltar = setInterval(() => {
-                        $("#mensaje_"+ msj.idResponse).toggleClass("respondida");
-                    }, 250);
-
-                    setTimeout(() => {
-                        clearInterval(resaltar);
-                        $("#mensaje_"+ msj.idResponse).removeClass("respondida");
-                    }, 2000);
+                        setTimeout(() => {
+                            clearInterval(resaltar);
+                            $("#mensaje_"+ msj.idResponse).removeClass("respondida");
+                        }, 2000);
+                        
+                    }else{
+                        ToastError.fire({
+                            title: 'No se ha encontrado el mensaje'
+                        });
+                    }
 
                 });
 
@@ -2469,15 +2489,23 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
 
                 smallRespuesta.click(() => {
 
-                    document.querySelector("#mensaje_" + response.mensajeRespondido.id).scrollIntoView();
-                    let resaltar = setInterval(() => {
-                        $("#mensaje_"+ response.mensajeRespondido.id).toggleClass("respondida");
-                    }, 250);
+                    if( $("#mensaje_" + response.mensajeRespondido.id).length ){
+                        
+                        document.querySelector("#mensaje_" + response.mensajeRespondido.id).scrollIntoView();
+                        let resaltar = setInterval(() => {
+                            $("#mensaje_"+ response.mensajeRespondido.id).toggleClass("respondida");
+                        }, 250);
 
-                    setTimeout(() => {
-                        clearInterval(resaltar);
-                        $("#mensaje_"+ response.mensajeRespondido.id).removeClass("respondida");
-                    }, 2000);
+                        setTimeout(() => {
+                            clearInterval(resaltar);
+                            $("#mensaje_"+ response.mensajeRespondido.id).removeClass("respondida");
+                        }, 2000);
+                        
+                    }else{
+                        ToastError.fire({
+                            title: 'No se ha encontrado el mensaje'
+                        });
+                    }
 
                 });
                 
