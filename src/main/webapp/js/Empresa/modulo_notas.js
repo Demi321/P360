@@ -80,15 +80,15 @@ function inserta_nota(info_nota) {
     let card = $('<div class="card m-2" style="width: 18rem;" id="nota_' + info_nota.id_nota + '"></div>');
     let card_body = $('<div class="card-body card-body-nota"></div>');
     if (info_nota.titulo.replace(/ /g, "").length > 0) {
-        let card_title = $('<input class="card-title card-title-nota" disabled="true" value="' + info_nota.titulo + '">');
+        let card_title = $('<input class="card-title card-title-nota" id="card_title_' + info_nota.id_nota + '" disabled="true" value="' + info_nota.titulo + '">');
         card_body.append(card_title);
     }
-    let card_nota = $('<textarea class="card-text" disabled="true"></textarea>');
+    let card_nota = $('<textarea class="card-text" id="card_note_' + info_nota.id_nota + '" disabled="true"></textarea>');
     card_nota.val(info_nota.nota);
     let card_footer = $('<div class="col-12 card-footer-nota"></div>');
-    let card_edit = $('<i class="fas fa-edit card-footer-nota-edit" id="card_edit" title="Editar Nota"></i>');
-    let card_accept = $('<i class="far fa-check-square card-footer-nota-edit d-none" id="card_accept" title="Guardar Cambio"></i>');
-    let card_delete = $('<i class="fas fa-trash-alt card-footer-nota-delete" id="card_delete" title="Eliminar Nota"></i>');
+    let card_edit = $('<i class="fas fa-edit card-footer-nota-edit" id="card_edit_' + info_nota.id_nota + '" title="Editar Nota" onclick="edit_note(' + info_nota.id_nota + ')"></i>');
+    let card_accept = $('<i class="far fa-check-square card-footer-nota-edit d-none" id="card_accept_' + info_nota.id_nota + '" title="Guardar Cambio" onclick="save_note(' + info_nota.id_nota + ')"></i>');
+    let card_delete = $('<i class="fas fa-trash-alt card-footer-nota-delete" id="card_delete_' + info_nota.id_nota + '" title="Eliminar Nota" onclick="delete_note(' + info_nota.id_nota + ')"></i>');
     card_footer.append(card_edit);
     card_footer.append(card_accept);
     card_footer.append(card_delete);
@@ -97,39 +97,72 @@ function inserta_nota(info_nota) {
 
     card.append(card_body);
     $("#contenido_cards").append(card);
-
+    //agregar_listeners_card(info_nota.id_nota);
     //Añadir listeners para editar y eliminar una card
-    card_edit.click(() => {
-        //habilitar el titulo y la nota, asi como el boton para validar los cambios
-        if (card_title.length) {
-            card_title.removeAttr("disabled");
-        }
-        card_nota.removeAttr("disabled");
-        card_edit.addClass("d-none");
-        card_accept.removeClass("d-none");
-    });
-    card_accept.click(() => {
-        let json = {
-            id_nota: info_nota.id_nota,
-            nota: card_nota.val()
-        };
-        if (card_title.length) {
-            json.titulo = card_title.val();
-        }
-        RequestPOST("/API/empresas360/edit_note", json).then((response) => {
-            console.log(response);
-            swal.fire({
-                text: response.mensaje
-            }).then(() => {
-                if (response.success) {
-                    if (card_title.length) {
-                        card_title.attr("disabled", "true");
-                    }
-                    card_nota.attr("disabled", "true");
-                    card_edit.removeClass("d-none");
-                    card_accept.addClass("d-none");
+
+}
+function edit_note(id_nota) {
+    console.log("editando nota");
+    console.log(id_nota);
+    if ($("#card_title_" + id_nota).length) {
+        $("#card_title_" + id_nota).removeAttr("disabled");
+    }
+    $("#card_note_" + id_nota).removeAttr("disabled");
+    $("#card_edit_" + id_nota).addClass("d-none");
+    $("#card_accept_" + id_nota).removeClass("d-none");
+}
+function save_note(id_nota) {
+    console.log("editando nota");
+    console.log(id_nota);
+    let json = {
+        id_nota: id_nota,
+        nota: $("#card_note_" + id_nota).val()
+    };
+    if ($("#card_title_" + id_nota).length) {
+        titulo = $("#card_title_" + id_nota).val();
+    }
+    RequestPOST("/API/empresas360/edit_note", json).then((response) => {
+        console.log(response);
+        swal.fire({
+            text: response.mensaje
+        }).then(() => {
+            if (response.success) {
+                if ($("#card_title_" + id_nota).length) {
+                    $("#card_title_" + id_nota).attr("disabled", "true");
                 }
-            });
+                $("#card_note_" + id_nota).attr("disabled", "true");
+                $("#card_edit_" + id_nota).removeClass("d-none");
+                $("#card_accept_" + id_nota).addClass("d-none");
+            }
         });
+    });
+}
+function delete_note(id_nota) {
+    console.log("editando nota");
+    console.log(id_nota);
+    swal.fire({
+        title: "Eliminar nota",
+        text: "¿Seguro que desea eliminar esta nota?",
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText: "Eliminar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        console.log(result);
+        if (result.value) {
+            let json = {
+                id_nota:id_nota
+            };
+            RequestPOST("/API/empresas360/delete_note",json).then((response) => {
+                swal.fire({
+                    text:response.mensaje
+                }).then(()=>{
+                    if (response.success) {
+                        //Eliminar nota
+                        $("#nota_"+id_nota).remove();
+                    }
+                });
+            });
+        }
     });
 }
