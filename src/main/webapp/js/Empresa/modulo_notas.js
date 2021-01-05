@@ -79,9 +79,11 @@ function inserta_nota(info_nota) {
      */
     let card = $('<div class="card m-2" style="width: 18rem;" id="nota_' + info_nota.id_nota + '"></div>');
     let card_body = $('<div class="card-body card-body-nota"></div>');
-    if (info_nota.titulo.replace(/ /g, "").length > 0) {
-        let card_title = $('<input class="card-title card-title-nota" id="card_title_' + info_nota.id_nota + '" disabled="true" value="' + info_nota.titulo + '">');
-        card_body.append(card_title);
+    if (info_nota.titulo !== null) {
+        if (info_nota.titulo.replace(/ /g, "").length > 0) {
+            let card_title = $('<input class="card-title card-title-nota" id="card_title_' + info_nota.id_nota + '" disabled="true" value="' + info_nota.titulo + '">');
+            card_body.append(card_title);
+        }
     }
     let card_nota = $('<textarea class="card-text" id="card_note_' + info_nota.id_nota + '" disabled="true"></textarea>');
     card_nota.val(info_nota.nota);
