@@ -1024,7 +1024,7 @@ function agregar_chat(msj, user, type, viejo) {
 
             if(msj.idResponse !== null){
 
-                let mensajeRespuesta = msj.mensajeRespuesta;
+                let mensajeRespuesta = msj.mensajeRespuesta === undefined ? msj.mensajeRespondido.message : msj.mensajeRespuesta;
                 let smallRespuesta = $("<small></small>").addClass("respuesta-mensaje");
                 smallRespuesta.text(mensajeRespuesta);
                 message.prepend(smallRespuesta);
