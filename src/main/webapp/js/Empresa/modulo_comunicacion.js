@@ -6,7 +6,7 @@
 
 
 
-/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal, configuracionEmpleado, configuracionUsuario, moment */
+/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal, configuracionEmpleado, configuracionUsuario, moment, Promise */
 //jQuery.event.props.push('dataTransfer');
 
 var NotificacionesActivadas = false;
@@ -466,8 +466,7 @@ const ToastError = Swal.mixin({
     position: 'top-end',
     showConfirmButton: false,
     timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
+    onOpen: (toast) => {
       toast.addEventListener('mouseenter', Swal.stopTimer);
       toast.addEventListener('mouseleave', Swal.resumeTimer);
     }
@@ -1031,23 +1030,48 @@ function agregar_chat(msj, user, type, viejo) {
                 message.prepend(smallRespuesta);
 
                 smallRespuesta.click(() => {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-                    if( $("#mensaje_" + msj.idResponse).length ){
-                        
-                        document.querySelector("#mensaje_" + msj.idResponse).scrollIntoView();
+                    
+                    const remarcaMensaje = (idMensaje) => {
+                        document.querySelector("#mensaje_" + idMensaje).scrollIntoView();
                         let resaltar = setInterval(() => {
-                            $("#mensaje_"+ msj.idResponse).toggleClass("respondida");
+                            $("#mensaje_"+ idMensaje).toggleClass("respondida");
                         }, 250);
 
                         setTimeout(() => {
                             clearInterval(resaltar);
-                            $("#mensaje_"+ msj.idResponse).removeClass("respondida");
+                            $("#mensaje_"+ idMensaje).removeClass("respondida");
                         }, 2000);
+                    };
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                    if( $("#mensaje_" + msj.idResponse).length ){
+                        
+                        remarcaMensaje(msj.idResponse);
                         
                     }else{
-                        ToastError.fire({
-                            title: 'No se ha encontrado el mensaje'
-                        });
+                        
+                        const buscaMensajeRespuesta = () => {
+                            if( $("#contact_messaging" + user.id360).find(".liMasMensajes").length ){
+                                cargaMasMensajes(user.id360).then((response) => {
+                                    if( $("#mensaje_" + msj.idResponse).length ){
+                                        remarcaMensaje(msj.idResponse);
+                                    }else if(response){
+                                        buscaMensajeRespuesta();
+                                    }else{
+                                        ToastError.fire({
+                                            title: 'No se ha encontrado el mensaje'
+                                        });
+                                    }
+                                    
+                                });
+                            }else{
+                                ToastError.fire({
+                                    title: 'No se ha encontrado el mensaje'
+                                });
+                            }
+                        };
+                        
+                        buscaMensajeRespuesta();
+                        
                     }
 
                 });
@@ -1229,76 +1253,82 @@ RequestPOST("/API/ConsultarDirectorio", {
 });
 
 const cargaMasMensajes = (id360) => {
+    
+    return new Promise(function(resolve, reject) {
+        let init, limit;
 
-    let init, limit;
+        init = (CantidadMensajesPorChat[id360].cantidad - 20) < 0 ? 0 : CantidadMensajesPorChat[id360].cantidad - 20;
+        limit = (CantidadMensajesPorChat[id360].cantidad - 20) < 0 ? CantidadMensajesPorChat[id360].cantidad : 20;
 
-    init = (CantidadMensajesPorChat[id360].cantidad - 20) < 0 ? 0 : CantidadMensajesPorChat[id360].cantidad - 20;
-    limit = (CantidadMensajesPorChat[id360].cantidad - 20) < 0 ? CantidadMensajesPorChat[id360].cantidad : 20;
+        let dataMasMensajes = {
+            "id360-1": id360,
+            "id360-2": sesion_cookie.idUsuario_Sys,
+            "init": init,
+            "limit": limit
+        };
 
-    let dataMasMensajes = {
-        "id360-1": id360,
-        "id360-2": sesion_cookie.idUsuario_Sys,
-        "init": init,
-        "limit": limit
-    };
+        RequestPOST("/API/empresas360/carga_mas_mensajes_chat", dataMasMensajes).then((response) => {
 
-    RequestPOST("/API/empresas360/carga_mas_mensajes_chat", dataMasMensajes).then((response) => {
+            $('#messages_' + id360).animate({
 
-        $('#messages_' + id360).animate({
+                scrollTop: 500
 
-            scrollTop: 500
+            }, 0, "swing", () => {
 
-        }, 0, "swing", () => {
-
-            CantidadMensajesPorChat[id360].cantidad -= 20;
-            NotificacionesActivadas = false;
-            if (response.length === 1) {
-                if (response[0].id360 === sesion_cookie.id_usuario) {
-                    agregar_chat_enviado(response[0], true);
-                } else {
-
-                    recibir_chat(response[0], true);
-                }
-            } else {
-                for (var i = response.length - 1; i >= 0; i--) {
-                    if (response[i].id360 === sesion_cookie.id_usuario) {
-                        agregar_chat_enviado(response[i], true);
+                CantidadMensajesPorChat[id360].cantidad -= 20;
+                NotificacionesActivadas = false;
+                if (response.length === 1) {
+                    if (response[0].id360 === sesion_cookie.id_usuario) {
+                        agregar_chat_enviado(response[0], true);
                     } else {
-                        recibir_chat(response[i], true);
+
+                        recibir_chat(response[0], true);
+                    }
+                } else {
+                    for (var i = response.length - 1; i >= 0; i--) {
+                        if (response[i].id360 === sesion_cookie.id_usuario) {
+                            agregar_chat_enviado(response[i], true);
+                        } else {
+                            recibir_chat(response[i], true);
+                        }
                     }
                 }
-            }
-            NotificacionesActivadas = true;
+                NotificacionesActivadas = true;
 
-            let liCargaMensajesAnterior = $("#contact_messaging" + id360).find(".liMasMensajes");
+                let liCargaMensajesAnterior = $("#contact_messaging" + id360).find(".liMasMensajes");
 
-            document.querySelector("#contact_messaging" + id360 + " .liMasMensajes").scrollIntoView();
-            liCargaMensajesAnterior.remove();
+                document.querySelector("#contact_messaging" + id360 + " .liMasMensajes").scrollIntoView();
+                liCargaMensajesAnterior.remove();
 
-            if (CantidadMensajesPorChat[id360].cantidad > 0) {
-                let liMasMensajes = $("<li></li>").addClass("liMasMensajes");
-                let spanMasMensajes = $("<span></span>").addClass("spanMasMensajes");
-                let iconManMensajes = $("<li></li>").addClass("fas fa-spinner iconMasMensajes");
-                spanMasMensajes.text("Más mensajes...");
-                spanMasMensajes.prepend(iconManMensajes);
-                spanMasMensajes.data("id360-1", id360);
-                spanMasMensajes.data("id360-2", sesion_cookie.idUsuario_Sys);
-                liMasMensajes.append(spanMasMensajes);
-                $("#contact_messaging" + id360).prepend(liMasMensajes);
+                if (CantidadMensajesPorChat[id360].cantidad > 0) {
+                    let liMasMensajes = $("<li></li>").addClass("liMasMensajes");
+                    let spanMasMensajes = $("<span></span>").addClass("spanMasMensajes");
+                    let iconManMensajes = $("<li></li>").addClass("fas fa-spinner iconMasMensajes");
+                    spanMasMensajes.text("Más mensajes...");
+                    spanMasMensajes.prepend(iconManMensajes);
+                    spanMasMensajes.data("id360-1", id360);
+                    spanMasMensajes.data("id360-2", sesion_cookie.idUsuario_Sys);
+                    liMasMensajes.append(spanMasMensajes);
+                    $("#contact_messaging" + id360).prepend(liMasMensajes);
 
-                /*
-                 * EVENTO CLICK PARA CARGAR MáS MENSAJES
-                 */
+                    /*
+                     * EVENTO CLICK PARA CARGAR MáS MENSAJES
+                     */
 
-                spanMasMensajes.click(() => {
-                    cargaMasMensajes(id360);
-                });
+                    spanMasMensajes.click(() => {
+                        cargaMasMensajes(id360);
+                    });
+                    
+                    resolve(true);
 
-            }
+                }else
+                    resolve(false);
+
+            });
 
         });
-
     });
+
 };
 
 function removeDragData(ev) {
@@ -2488,23 +2518,48 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 message.prepend(smallRespuesta);
 
                 smallRespuesta.click(() => {
-
-                    if( $("#mensaje_" + response.mensajeRespondido.id).length ){
-                        
-                        document.querySelector("#mensaje_" + response.mensajeRespondido.id).scrollIntoView();
+                    
+                    const remarcaMensaje = (idMensaje) => {
+                        document.querySelector("#mensaje_" + idMensaje).scrollIntoView();
                         let resaltar = setInterval(() => {
-                            $("#mensaje_"+ response.mensajeRespondido.id).toggleClass("respondida");
+                            $("#mensaje_"+ idMensaje).toggleClass("respondida");
                         }, 250);
 
                         setTimeout(() => {
                             clearInterval(resaltar);
-                            $("#mensaje_"+ response.mensajeRespondido.id).removeClass("respondida");
+                            $("#mensaje_"+ idMensaje).removeClass("respondida");
                         }, 2000);
+                    };
+
+                    if( $("#mensaje_" + response.mensajeRespondido.id).length ){
+                        
+                        remarcaMensaje(response.mensajeRespondido.id);
                         
                     }else{
-                        ToastError.fire({
-                            title: 'No se ha encontrado el mensaje'
-                        });
+                        
+                        const buscaMensajeRespuesta = () => {
+                        if( $("#contact_messaging" + user.id360).find(".liMasMensajes").length ){
+                            cargaMasMensajes(user.id360).then((response) => {
+                                if( $("#mensaje_" + response.mensajeRespondido.id).length ){
+                                    remarcaMensaje(response.mensajeRespondido.id);
+                                }else if(response){
+                                    buscaMensajeRespuesta();
+                                }else{
+                                    ToastError.fire({
+                                        title: 'No se ha encontrado el mensaje'
+                                    });
+                                }
+
+                            });
+                        }else{
+                            ToastError.fire({
+                                title: 'No se ha encontrado el mensaje'
+                            });
+                        }
+                    };
+
+                    buscaMensajeRespuesta();
+                        
                     }
 
                 });
