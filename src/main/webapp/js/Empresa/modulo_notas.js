@@ -5,7 +5,7 @@
  */
 
 
-/* global swal, sesion_cookie, RequestPOST */
+/* global swal, sesion_cookie, RequestPOST, RequestGET */
 
 agregar_menu("Notas", '<i class="fas fa-sticky-note"></i>', "Trabajo");
 
@@ -166,3 +166,13 @@ function delete_note(id_nota) {
         }
     });
 }
+
+function get_notas(){
+    RequestGET("/API/empresas360/get_notas/"+sesion_cookie.id_usuario).then((response)=>{
+        console.log(response);
+        $.each(response,(i)=>{
+            inserta_nota(response[i]);
+        });
+    });
+}
+get_notas();
