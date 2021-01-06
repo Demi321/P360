@@ -97,7 +97,7 @@ WebSocketGeneral.onmessage = function (message) {
         }
         /*Cambios fernando*/
         if (mensaje.chat_empresarial) {
-            recibir_chat(mensaje);
+            recibir_chat(mensaje,false,false);
         }
         /********************************/
     } catch (e) {

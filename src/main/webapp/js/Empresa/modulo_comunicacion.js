@@ -398,6 +398,7 @@ function agregar_chat_enviado(mensaje, viejo) {
 
 }
 function recibir_chat(mensaje, viejo, group) {
+    console.log("Llega a recibir chat");
     if (!$("#profile_chat" + mensaje.id360).length) {
         if(group){
             RequestPOST("/API/empresas360/infoGrupo", {"id_grupo":mensaje.idGroup}).then((response) => {
@@ -763,12 +764,12 @@ function agregar_chat(msj, user, type, viejo) {
             
             if (type === "replies") {
                 fecha.append(iconClock);
-                if(msj.time_updated !== null) fecha.append(spanEdit);
+                if(msj.time_updated !== null && msj.time_updated !== undefined) fecha.append(spanEdit);
                 iconClock.addClass("ml-2");
                 iconEdit.addClass("ml-2");
             } else {
                 fecha.prepend(iconClock);
-                if(msj.time_updated !== null) fecha.prepend(spanEdit);
+                if(msj.time_updated !== null && msj.time_updated !== undefined) fecha.prepend(spanEdit);
                 iconClock.addClass("mr-2");
                 iconEdit.addClass("mr-2");
             }
@@ -783,7 +784,6 @@ function agregar_chat(msj, user, type, viejo) {
             li.append(message);
             
             spanEdit.click(() => {
-                console.log("boton");
                 mensajeViejo(msj.oldMessage, mensaje);
             });
 
@@ -860,7 +860,6 @@ function agregar_chat(msj, user, type, viejo) {
 
                 }
 
-                console.log(imagenPreview);
                 message.empty().append(imagenPreview);
                 message.append(saltoLinea);
                 if (!(extension === "jpg" || extension === "png" || extension === "jpeg" || extension === "gif")) {
@@ -1009,7 +1008,7 @@ function agregar_chat(msj, user, type, viejo) {
 
             });
             menuOpcionesMensaje.append(opcionRespondeMensaje);
-
+            
             li.dblclick(() => {
                 opcionRespondeMensaje.click();
             });
@@ -1021,9 +1020,7 @@ function agregar_chat(msj, user, type, viejo) {
             }).mouseleave(() => {
                 iconOpciones.css({"display": "none"});
             });
-
-            if(msj.idResponse !== null){
-
+            if(msj.idResponse !== null && msj.idResponse !== undefined){
                 let mensajeRespuesta = msj.mensajeRespuesta === undefined ? msj.mensajeRespondido.message : msj.mensajeRespuesta;
                 let smallRespuesta = $("<small></small>").addClass("respuesta-mensaje");
                 smallRespuesta.text(mensajeRespuesta);

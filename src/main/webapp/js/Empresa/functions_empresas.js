@@ -56,7 +56,7 @@ WebSocketGeneral.onmessage = function (message) {
             recibir_chat(mensaje,false,true);
         }
         if(mensaje.chat_empresarial){
-            recibir_chat(mensaje);
+            recibir_chat(mensaje, false, false);
         }
         
         if(mensaje.edicion_mensaje_chat_empresarial){
