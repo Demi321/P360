@@ -77,7 +77,7 @@ function inserta_nota(info_nota) {
      </div>
      </div>
      */
-    let card = $('<div class="card m-2" style="width: 18rem;" id="nota_' + info_nota.id_nota + '"></div>');
+    let card = $('<div class="card m-2 mb-5 mr-5" style="width: 18rem;" id="nota_' + info_nota.id_nota + '"></div>');
     let card_body = $('<div class="card-body card-body-nota"></div>');
     if (info_nota.titulo !== null) {
         if (info_nota.titulo.replace(/ /g, "").length > 0) {
