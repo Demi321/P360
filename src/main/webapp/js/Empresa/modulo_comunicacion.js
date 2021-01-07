@@ -6,7 +6,7 @@
 
 
 
-/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal, configuracionEmpleado, configuracionUsuario, moment, Promise */
+/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal, configuracionEmpleado, configuracionUsuario, moment, Promise, Directorio */
 //jQuery.event.props.push('dataTransfer');
 
 var NotificacionesActivadas = false;
@@ -518,7 +518,7 @@ const swalConfirmDialog = (message, textConfirm, textCancel) => {
 vuewModalReenviaMensaje = () => {
   
     usuariosReenviaMensaje = new Array();
-    var json = Directorio;
+    var json = directorio_completo;
     vue = new Vue({
         components: {
             Multiselect: window.VueMultiselect.default
@@ -536,13 +536,16 @@ vuewModalReenviaMensaje = () => {
                 return  option.nombre + " " + option.apellido_paterno + " " + option.apellido_materno;
             },
             onSelect(op) {
+                console.log("agrego a :" + op.nombre + " con id " + op.id360);
                 usuariosReenviaMensaje.push(op.id360);
             },
             onClose() {
                 //console.info(this.value);
             },
             onRemove(op) {
-                var i = usuariosReenviaMensaje.indexOf(op);
+                console.log("quito a :" + op.nombre + " con id " + op.id360);
+                var i = usuariosReenviaMensaje.indexOf(op.id360);
+                console.log(i);
                 usuariosReenviaMensaje.splice(i, 1);
             }
 
@@ -551,7 +554,7 @@ vuewModalReenviaMensaje = () => {
     
 };
 
-const reenviaMensaje = (mensaje) => {
+const reenviaMensaje = (mensaje, type) => {
     let contenedorReenviaMensaje = $("<div></div>");
 
     let formReenviaMensaje = $("<form></form>");
@@ -583,7 +586,7 @@ const reenviaMensaje = (mensaje) => {
                                     '</div>';
     formGroupReenviaMensaje.append(labelUsuariosReenvia);
     formGroupReenviaMensaje.append(selectUsuariosReenvia);
-    formReenviaMensaje.append(formGroupParticipantesGrupo);
+    formReenviaMensaje.append(formGroupReenviaMensaje);
 
     let buttonSubmitReenviaMensaje = $("<button></button>").addClass("btn btn-danger btn-block mt-4");
     buttonSubmitReenviaMensaje.attr("type","submit");
@@ -599,6 +602,10 @@ const reenviaMensaje = (mensaje) => {
         cancelButtonText: 'Cancelar',
         allowOutsideClick: false,
         allowEscapeKey : false
+    }).then((result) => {
+        if (!result.value) {
+            apagaValores();
+        }
     });
 
     vuewModalReenviaMensaje();
@@ -608,27 +615,51 @@ const reenviaMensaje = (mensaje) => {
     $("#formReenviaMensaje").submit((e) => {
 
         e.preventDefault();
-
+console.log(usuariosReenviaMensaje);
         if( usuariosReenviaMensaje.length ){
+            
+            Swal.close();
+            
+            const buscaYreenvia = (id) => {
+                RequestPOST("/API/get/perfil360", {id360: id}).then((response) => {
+                    if (response.success) {
+                        contacto_chat(response);
+                        enviaElMensaje(id);
+                    }
+                });
+            };
+            
+            const enviaElMensaje = (id) => {
+                let input = $("<input>");
+                input.val(mensaje);
+
+                let ulJS = document.getElementById("contact_messaging"+id);
+                let ul = $(ulJS);
+
+                let previewJS = document.getElementById("preview_"+id);
+                let preview = $(previewJS);
+
+                let messagesJS = document.getElementById("messages_"+id);
+                let messages = $(messagesJS);
+
+                let user = {"id360":id};
+
+                let rutaAdjunto = null;
+                if(type !== "text") rutaAdjunto = mensaje;
+
+                send_chat_messages(input, ul, preview, user, messages, rutaAdjunto);
+            };
 
             let cantidadU = usuariosReenviaMensaje.length;
             for( let x = 0; x<cantidadU; x++ ){
+                let id = usuariosReenviaMensaje[x];
+                console.log(id);
+                if (!$("#profile_chat" + id).length) {
+                    buscaYreenvia(id);
+                } else {
+                    enviaElMensaje(id);
+                }
                 
-                let input = $("<input>");
-                input.val(mensaje);
-                
-                let ulJS = document.getElementById("contact_messaging"+usuariosReenviaMensaje[x]);
-                let ul = $(ulJS);
-                
-                let previewJS = document.getElementById("profile_chat"+usuariosReenviaMensaje[x]);
-                let preview = $(previewJS);
-                
-                let messagesJS = document.getElementById("messages_"+usuariosReenviaMensaje[x]);
-                let messages = $(messagesJS);
-                
-                let user = {"id360":usuariosReenviaMensaje[x]};
-                
-                send_chat_messages(input, ul, preview, user, messages);
             }
 
         }
@@ -987,7 +1018,8 @@ function agregar_chat(msj, user, type, viejo) {
             opcionReenviaMensaje.text("Reenviar mensaje");
             opcionReenviaMensaje.click(() => {
 
-                reenviaMensaje(mensaje);
+                menuOpcionesMensaje.removeClass("conAltura");
+                reenviaMensaje(mensaje, msj.type);
 
             });
             menuOpcionesMensaje.append(opcionReenviaMensaje);
@@ -1373,7 +1405,7 @@ function drop(ev) {
 }
 
 function contacto_chat(user, group) {
-
+console.log("Empieza a crear los componentes de contacto");
     if (!$("#profile_chat" + user.id360).length && user.id360 !== undefined) {
 
         let li = $("<li></li>").addClass("contact");
@@ -2032,7 +2064,7 @@ function contacto_chat(user, group) {
             });
         });
     }
-
+console.log("Termina de crear los componentes de contacto");
 }
 
 function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
@@ -2162,7 +2194,8 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 opcionReenviaMensaje.text("Reenviar mensaje");
                 opcionReenviaMensaje.click(() => {
                     
-                    reenviaMensaje(mensaje);
+                    menuOpcionesMensaje.removeClass("conAltura");
+                    reenviaMensaje(mensaje, "text");
                     
                 });
                 menuOpcionesMensaje.append(opcionReenviaMensaje);
@@ -2254,7 +2287,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
 
     if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
         json.type = $("#inputAttachment" + user.id360).data("extension");
-
+console.log(json);
     RequestPOST("/API/empresas360/chat", json).then((response) => {
         if (response.success) {
             let idMensaje = response.id;
@@ -2270,10 +2303,13 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 "background-repeat": "no-repeat"
             });
             let message = $("<p></p>");
+            
+            let type = "text";
 
             if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "") {
 
                 let extension = $("#inputAttachment" + user.id360).data("extension");
+                type = extension;
                 let nombreCorto = $("#inputAttachment" + user.id360).data("nombreCorto");
                 let imagenPreview = $("<img>").css({"max-width": "125px", "max-height": "75px", "margin-bottom": "10px"}).attr("src", PathRecursos + "images/icono_default.png");
 
@@ -2471,6 +2507,17 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
 
             });
             menuOpcionesMensaje.append(opcionEditaMensaje);
+            
+            //OPCION PARA REENVIAR EL MENSAJE
+            let opcionReenviaMensaje = $("<li></li>").addClass("opcionMensaje");
+            opcionReenviaMensaje.text("Reenviar mensaje");
+            opcionReenviaMensaje.click(() => {
+
+                menuOpcionesMensaje.removeClass("conAltura");
+                reenviaMensaje(mensaje, json.type);
+
+            });
+            menuOpcionesMensaje.append(opcionReenviaMensaje);
 
             //OPCION PARA RESPONDER UN MENSAJE
             let opcionRespondeMensaje = $("<li></li>").addClass("opcionMensaje");
