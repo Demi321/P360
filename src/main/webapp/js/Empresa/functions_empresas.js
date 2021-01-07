@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-/* global RequestPOST, swal, Swal, marcador3, DEPENDENCIA, marcador5, map5, google, buttonNotificacionLlamada, reproduccionSonidoNotificacion, moment, swalConfirmDialog, sesion_cookie */
+/* global RequestPOST, swal, Swal, marcador3, DEPENDENCIA, marcador5, map5, google, buttonNotificacionLlamada, reproduccionSonidoNotificacion, moment, swalConfirmDialog, sesion_cookie, NotificacionToas */
 
 console.log("Bingoooooo");
 var sesion_jornada_laboral = null;
@@ -53,10 +53,24 @@ WebSocketGeneral.onmessage = function (message) {
     try {
 
         if(mensaje.grupo_chat_empresarial){
-            recibir_chat(mensaje,false,true);
+            let participantesParaGrupo = mensaje.participantes;
+            participantesParaGrupo.push( mensaje.idUser );
+            let dataContac = {
+                "id360": mensaje.id_grupo,
+                "nombre_grupo": mensaje.nombre_grupo,
+                "img": mensaje.icono_grupo,
+                "descripcion_grupo": mensaje.descripcion_grupo,
+                "participantes": participantesParaGrupo.toString()
+            };
+            contacto_chat(dataContac, true);
+            $("#profile_chat"+mensaje.id_grupo).click();
+            NotificacionToas.fire({
+                title: 'Bienvenido al grupo ' + mensaje.nombre_grupo
+            });
         }
         if(mensaje.chat_empresarial){
-            recibir_chat(mensaje, false, false);
+            let group = mensaje.idGroup !== undefined && mensaje.idGroup !== null ? true: false;
+            recibir_chat(mensaje, false, group);
         }
         
         if(mensaje.edicion_mensaje_chat_empresarial){

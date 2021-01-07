@@ -165,7 +165,7 @@ var participantesParaGrupo = null;
 vuewModalParticipantesGrupo = () => {
   
     participantesParaGrupo = new Array();
-    var json = Directorio;
+    var json = directorio_completo;
     vue = new Vue({
         components: {
             Multiselect: window.VueMultiselect.default
@@ -189,7 +189,7 @@ vuewModalParticipantesGrupo = () => {
                 //console.info(this.value);
             },
             onRemove(op) {
-                var i = participantesParaGrupo.indexOf(op);
+                var i = participantesParaGrupo.indexOf(op.id360);
                 participantesParaGrupo.splice(i, 1);
             }
 
@@ -224,7 +224,7 @@ formGroupNombreGrupo.append(inputNombreGrupo);
 formCreaGrupo.append(formGroupNombreGrupo);
 
 let formGroupDescripcionGrupo = $("<div></div>").addClass("form-group");
-let labelDescripcionGrupo = $("<label></label>")
+let labelDescripcionGrupo = $("<label></label>");
 labelDescripcionGrupo.text("Descripción breve");
 labelDescripcionGrupo.attr("for","inputDescripcionGrupo");
 let inputDescripcionGrupo = $("<input>").addClass("form-control");
@@ -269,6 +269,28 @@ formCreaGrupo.append(buttonSubmitCreaGrupo);
 
 contenedorAgregarGrupo.append(formCreaGrupo);
 
+const mensajeSistema = (mensaje, id) => {
+  
+    let input = $("<input>");
+    input.val(mensaje);
+
+    let ulJS = document.getElementById("contact_messaging"+id);
+    let ul = $(ulJS);
+
+    let previewJS = document.getElementById("preview_"+id);
+    let preview = $(previewJS);
+
+    let messagesJS = document.getElementById("messages_"+id);
+    let messages = $(messagesJS);
+
+    let user = {"id360":id, "mensajeSistema":true};
+
+    let rutaAdjunto = null;
+
+    send_chat_messages(input, ul, preview, user, messages, rutaAdjunto);
+  
+};
+
 $("#addGroup").click(() => {
     
     Swal.fire({
@@ -301,23 +323,29 @@ $("#addGroup").click(() => {
                 "hora": getHora(),
                 "participantes": participantesParaGrupo
             };
-            console.log(dataGrupo);
+            
             RequestPOST("/API/empresas360/crear_grupo", dataGrupo).then((response) => {
                 
-                let idGrupo = response.id_grupo;
-                
                 if(response.success){
+                    
+                    let idGrupo = response.id_grupo;
+                    
                     Swal.close();
+                    participantesParaGrupo.push(sesion_cookie.idUsuario_Sys);
                     
                     let dataContac = {
                         "id360": idGrupo,
                         "nombre_grupo": nombreGrupo,
                         "img": iconGroupDefault,
-                        "descripcion_grupo": descripcionGrupo
+                        "descripcion_grupo": descripcionGrupo,
+                        "participantes": participantesParaGrupo.toString()
                     };
 
                     contacto_chat(dataContac, true);
                     $("#profile_chat"+idGrupo).click();
+                    
+                    let mensajeBienvenida = sesion_cookie.nombre + " " + sesion_cookie.apellidos + " ha creado este grupo";
+                    mensajeSistema(mensajeBienvenida, idGrupo);
                     
                     swal.fire({text: "Invitación enviada a los participantes"});
                 }
@@ -414,55 +442,50 @@ function recibir_chat(mensaje, viejo, group) {
             });
         }
     } else {
-        if(group){
-            
-        }else{
-            let user = null;
-            $.each(directorio_completo, (i) => {
-                if (mensaje.id360 === directorio_completo[i].id360) {
-                    user = directorio_completo[i];
-                    return false;
-                }
-            });
-            if (user !== null) {
-                if (NotificacionesActivadas) {
-
-                    let body = '';
-                    if (mensaje.type === "text") {
-                        body = user.nombre + " " + user.apellido_paterno + " dice: " + mensaje.message;
-                    } else {
-                        body = user.nombre + " " + user.apellido_paterno + " ha enviado un adjunto";
-                    }
-
-                    /*let onClickNotification = () => {
-                     $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
-                     $("#message_input_"+user.id360).focus();
-
-                     if($("#profile_chat" + value.id360).length){
-                     $("#profile_chat" + value.id360).click();
-                     }else{
-                     contacto_chat(value);
-                     $("#profile_chat" + value.id360).click();
-                     }
-
-                     };*/
-
-                    notificacion_mensaje("Nuevo mensaje", body, () => {
-                    });
-
-                    buttonNotificacionMensaje.click();
-
-                }
-
-                agregar_chat(mensaje, user, "send", viejo);
+        let user = null;
+        $.each(directorio_completo, (i) => {
+            if (mensaje.id360 === directorio_completo[i].id360) {
+                user = directorio_completo[i];
+                return false;
             }
-        }
+        });
+        if (user !== null) {
+            if (NotificacionesActivadas) {
 
+                let body = '';
+                if (mensaje.type === "text") {
+                    body = user.nombre + " " + user.apellido_paterno + " dice: " + mensaje.message;
+                } else {
+                    body = user.nombre + " " + user.apellido_paterno + " ha enviado un adjunto";
+                }
+
+                /*let onClickNotification = () => {
+                 $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
+                 $("#message_input_"+user.id360).focus();
+
+                 if($("#profile_chat" + value.id360).length){
+                 $("#profile_chat" + value.id360).click();
+                 }else{
+                 contacto_chat(value);
+                 $("#profile_chat" + value.id360).click();
+                 }
+
+                 };*/
+
+                notificacion_mensaje("Nuevo mensaje", body, () => {
+                });
+
+                buttonNotificacionMensaje.click();
+
+            }
+
+            agregar_chat(mensaje, user, "send", viejo);
+        }
     }
 
 }
 
-const ToastError = Swal.mixin({
+const NotificacionToas = Swal.mixin({
     toast: true,
     position: 'top-end',
     showConfirmButton: false,
@@ -731,7 +754,12 @@ function agregar_chat(msj, user, type, viejo) {
         }
         let message = $("<p></p>");
         
-        let id = type === "replies" ? msj.to_id360 : msj.id360;
+        let id = null;
+        if( msj.idGroup !== undefined && msj.idGroup !== null ){
+            id = msj.idGroup;
+        }else{
+            id = type === "replies" ? msj.to_id360 : msj.id360;
+        }
         let previewMesagge;
 
         if (msj.activo === "0") {
@@ -1086,14 +1114,14 @@ function agregar_chat(msj, user, type, viejo) {
                                     }else if(response){
                                         buscaMensajeRespuesta();
                                     }else{
-                                        ToastError.fire({
+                                        NotificacionToas.fire({
                                             title: 'No se ha encontrado el mensaje'
                                         });
                                     }
                                     
                                 });
                             }else{
-                                ToastError.fire({
+                                NotificacionToas.fire({
                                     title: 'No se ha encontrado el mensaje'
                                 });
                             }
@@ -1520,6 +1548,10 @@ console.log("Empieza a crear los componentes de contacto");
 
         let messages = $("<div></div>").addClass("messages");
         messages.attr("id", "messages_" + user.id360);
+        if(group) {
+            messages.data("grupo","true");
+            messages.data("participantes", user.participantes);
+        }
         messages.attr("ondragover","allowDrop(event)");
         messages.attr("ondrop","drop(event)");
         let ul = $("<ul></ul>").addClass("p-0");
@@ -2284,6 +2316,13 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
     if(banderaRespondiendo){
         json.idResponse = idMensajeRespondiendo;
     }
+    
+    let esGrupo = $("#messages_"+user.id360).data("grupo");
+    if(esGrupo !== undefined && esGrupo !== null && esGrupo === "true"){
+        json.idGroup = user.id360;
+        let participantes = $("#messages_"+user.id360).data("participantes").split(",");
+        json.participantes = participantes;
+    }
 
     if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
         json.type = $("#inputAttachment" + user.id360).data("extension");
@@ -2589,14 +2628,14 @@ console.log(json);
                                 }else if(response){
                                     buscaMensajeRespuesta();
                                 }else{
-                                    ToastError.fire({
+                                    NotificacionToas.fire({
                                         title: 'No se ha encontrado el mensaje'
                                     });
                                 }
 
                             });
                         }else{
-                            ToastError.fire({
+                            NotificacionToas.fire({
                                 title: 'No se ha encontrado el mensaje'
                             });
                         }
