@@ -6498,7 +6498,6 @@ function acceso_externo_seccion(url, seccion) {
     }).then(function (response) {
         if (response.success) {
             //access_token
-            ruta = ruta.replace(/\//g, "*");
             let path = url + "/API/cuenta360/access_token/"+sesion_cookie.idUsuario_Sys+"/" + response.access_token + "/section/"+seccion+"/"+sesion_cookie.tipo_usuario+"/"+sesion_cookie.tipo_servicio+"/"+sesion_cookie.tipo_area;
             window.location.replace(path);
 //            window.open(path);
