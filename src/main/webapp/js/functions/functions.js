@@ -6477,7 +6477,7 @@ function agregar_menu(nombre, fawsome, collapse, url_externa) {
         /*Cambios prueba Fernando*/
         if (url_externa !== undefined && url_externa !== null && url_externa !== "") {
             console.log("Moviendome a url externa");
-            acceso_externo(url_externa,nombre.replace(/\s/g, ""));
+            acceso_externo_seccion(url_externa,nombre.replace(/\s/g, ""));
         }
         /****************************/
     });
