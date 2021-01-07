@@ -6438,7 +6438,7 @@ function personalizar_header(perfil) {
 }
 
 
-function agregar_menu(nombre, fawsome, collapse) {
+function agregar_menu(nombre, fawsome, collapse, url_externa) {
     //El collapse re enviara cuando deseemos enviar el menu dentro de un contenedor 
     let root = "sidebar";
     if (collapse !== null && collapse !== "" && collapse !== undefined) {
@@ -6474,6 +6474,12 @@ function agregar_menu(nombre, fawsome, collapse) {
         menus.removeClass("menu_selected");
         $("#modulo_section_" + nombre.replace(/\s/g, "")).removeClass("d-none");
         $("#menu_section_" + nombre.replace(/\s/g, "")).addClass("menu_selected");
+        /*Cambios prueba Fernando*/
+        if (url_externa !== undefined && url_externa !== null && url_externa !== "") {
+            console.log("Moviendome a url externa");
+            acceso_externo(url_externa,nombre.replace(/\s/g, ""));
+        }
+        /****************************/
     });
 
     if ($("#base_modulo_" + nombre.replace(/\s/g, "")).length) {
@@ -6482,4 +6488,21 @@ function agregar_menu(nombre, fawsome, collapse) {
         div2.appendChild(document.getElementById("base_modulo_" + nombre.replace(/\s/g, "")));
     }
 
+}
+
+function acceso_externo_seccion(url, seccion) {
+    RequestPOST("/API/cuenta360/access_token", {
+        "token": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).token,
+        "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+        "id_sesion": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_sesion
+    }).then(function (response) {
+        if (response.success) {
+            //access_token
+            ruta = ruta.replace(/\//g, "*");
+            let path = url + "/API/cuenta360/access_token/"+sesion_cookie.idUsuario_Sys+"/" + response.access_token + "/section/"+seccion+"/"+sesion_cookie.tipo_usuario+"/"+sesion_cookie.tipo_servicio+"/"+sesion_cookie.tipo_area;
+            window.location.replace(path);
+//            window.open(path);
+        }
+
+    });
 }
