@@ -6,7 +6,7 @@
 
 /* global bodymovin, JSONlottie, AWS, RequestPOST, getCookie, DEPENDENCIA, google, map, infowindow, RequestGET, Swal, WebSocketGeneral, sesion_cookie */
 /*Cambios prueba Fernando*/
-let url_ext = "https://seguridadsanitaria.calro360.com/lineamientos";
+let url_ext = "https://seguridadsanitaria.claro360.com/lineamientos";
 if (sesion_cookie.tipo_servicio === "0") {
     agregar_menu("Moinitoreo de Sucursales", '<i class="fas fa-user-lock"></i>', "Seguridad Sanitaria", url_ext);
     agregar_menu("Lineamientos de Seguridad Estatales", '<i class="fas fa-user-lock"></i>', "Seguridad Sanitaria", url_ext);
