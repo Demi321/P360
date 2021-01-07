@@ -1,4 +1,4 @@
-/* global CardV, cards, Llamadas */
+/* global CardV, cards, Llamadas, sesion_cookie, DEPENDENCIA */
 
 
 //var  block = document.createElement("div");
@@ -6505,3 +6505,16 @@ function acceso_externo_seccion(url, seccion) {
 
     });
 }
+
+$(window).on("load", function () {
+    if (sesion_cookie.hasOwnProperty("seccion")) {
+        console.log(sesion_cookie.seccion);
+        if ($("#menu_section_" + sesion_cookie.seccion).length) {
+            $("#collapse_sidebar_SeguridadSanitaria").addClass("show");
+            $("#menu_section_" + sesion_cookie.seccion).addClass("menu_selected");
+            console.log("click en ------>");
+            console.log($("#menu_section_" + sesion_cookie.seccion));
+            $("#menu_section_" + sesion_cookie.seccion).click();
+        }
+    }
+});
