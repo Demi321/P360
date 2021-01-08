@@ -1253,22 +1253,28 @@ RequestPOST("/API/ConsultarDirectorio", {
         let cantidadDirectorio = directorio.length;
 
         let fueraDeDirectorio = [];
+        let grupos = []; 
 
         $.each(response, (index, contacto) => {
 
             CantidadMensajesPorChat[contacto.id360chat] = {
                 cantidad: parseInt(contacto.cantidadMensajes) - 20
             };
-            let encontrado = false;
-            for (let i = 0; i < cantidadDirectorio; i++)
-                if (directorio[i].id360 === contacto.id360chat) {
-                    encontrado = true;
-                    contacto_chat(directorio[i]);
-                    break;
-                }
+            
+            if(contacto.esGrupo === null){
+                let encontrado = false;
+                for (let i = 0; i < cantidadDirectorio; i++)
+                    if (directorio[i].id360 === contacto.id360chat) {
+                        encontrado = true;
+                        contacto_chat(directorio[i]);
+                        break;
+                    }
 
-            if (!encontrado)
-                fueraDeDirectorio.push({"id360": contacto.id360chat});
+                if (!encontrado)
+                    fueraDeDirectorio.push({"id360": contacto.id360chat});
+            }else{
+                grupos.push(contacto.id360chat);
+            }
 
         });
 
@@ -1288,6 +1294,41 @@ RequestPOST("/API/ConsultarDirectorio", {
                 NotificacionesActivadas = true;
             });
         };
+        
+        const verificaGrupos = () => {
+            if(grupos.length > 0){
+                
+                RequestPOST("/API/empresas360/informacion_grupos", {"grupos":grupos}).then((response) => {
+                    
+                    $.each(response, function (index, grupo) {
+                        //directorio.push(empleado);
+                        //directorio_completo.push(empleado);
+                        
+                        let participantesConGuion = grupo.participantes.split(",");
+                        let participantes = [];
+                        let csg = participantesConGuion.length;
+                        for(let x = 0; x<csg; x++){
+                            let partesParticipantes = participantesConGuion[x].split("-");
+                            participantes.push(partesParticipantes[0]);
+                        }
+                        
+                        let dataContac = {
+                            "id360": grupo.id_grupo,
+                            "nombre_grupo": grupo.nombre_grupo,
+                            "img": grupo.icono_grupo,
+                            "descripcion_grupo": grupo.descripcion_grupo,
+                            "participantes": participantes.toString()
+                        };
+                        contacto_chat(dataContac, true);
+                    });
+                    
+                    cargaBackUp();
+                    
+                });
+                
+            }else
+                cargaBackUp();
+        };
 
         if (fueraDeDirectorio.length > 0) {
             RequestPOST("/API/empresas360/directorio/un_usuario", fueraDeDirectorio).then((response) => {
@@ -1298,11 +1339,11 @@ RequestPOST("/API/ConsultarDirectorio", {
                         contacto_chat(empleado);
                     }
                 });
-                cargaBackUp();
+                verificaGrupos();
             });
 
         } else
-            cargaBackUp();
+            verificaGrupos();
 
     });
 
