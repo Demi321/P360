@@ -6510,7 +6510,7 @@ $(window).on("load", function () {
     if (sesion_cookie.hasOwnProperty("seccion")) {
         console.log(sesion_cookie.seccion);
         if ($("#menu_section_" + sesion_cookie.seccion).length) {
-            $("#collapse_sidebar_SeguridadSanitaria").addClass("show");
+            $("#menu_section_" + sesion_cookie.seccion).parent().addClass("show");
             $("#menu_section_" + sesion_cookie.seccion).addClass("menu_selected");
             console.log("click en ------>");
             console.log($("#menu_section_" + sesion_cookie.seccion));
