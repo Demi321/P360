@@ -6438,72 +6438,72 @@ function personalizar_header(perfil) {
 }
 
 
+//function agregar_menu(nombre, fawsome, collapse, url_externa) {
+//    //El collapse re enviara cuando deseemos enviar el menu dentro de un contenedor 
+//    let root = "sidebar";
+//    if (collapse !== null && collapse !== "" && collapse !== undefined) {
+//        //comprobar que exista el collapse
+//        if (!$("#collapse_sidebar_" + collapse.replace(/\s/g, "")).length) {
+//            {
+//                //en caso de que no exista lo agregamos
+//                let collapse_a = $('<a data-toggle="collapse" href="#collapse_sidebar_' + collapse.replace(/\s/g, "") + '" aria-expanded="false">' + collapse + '<i class="fas fa-caret-down"></i></a>').addClass("collapse_sidebar shadow-none btn collapsed");
+//                let collapse_container = $('<div id="collapse_sidebar_' + collapse.replace(/\s/g, "") + '"></div>').addClass("collapse_sidebar_cntr collapse");
+//                $("#sidebar").append(collapse_a);
+//                $("#sidebar").append(collapse_container);
+//            }
+//        }
+//        root = "collapse_sidebar_" + collapse.replace(/\s/g, "");
+//    }
+//    let div = document.createElement("div");
+//    div.className = "menu_sidebar d-flex";
+//    div.innerHTML = fawsome + nombre;
+//    div.id = "menu_section_" + nombre.replace(/\s/g, "");
+//    $("#" + root).append(div);
+//
+//    let div2 = document.createElement("div");
+//    div2.className = "modulo_section d-none";
+//    div2.id = "modulo_section_" + nombre.replace(/\s/g, "");//quitale los espacios si llegara a tener 
+////            div2.innerHTML = nombre;
+//
+//    $("#contenidoSection").append(div2);
+//
+//    div.addEventListener("click", function () {
+//        let modulos = $(".modulo_section");
+//        modulos.addClass("d-none");
+//        let menus = $(".menu_sidebar");
+//        menus.removeClass("menu_selected");
+//        $("#modulo_section_" + nombre.replace(/\s/g, "")).removeClass("d-none");
+//        $("#menu_section_" + nombre.replace(/\s/g, "")).addClass("menu_selected");
+//        /*Cambios prueba Fernando*/
+//        if (url_externa !== undefined && url_externa !== null && url_externa !== "") {
+//            console.log("Moviendome a url externa");
+//            acceso_externo_seccion(url_externa,nombre.replace(/\s/g, ""));
+//        }
+//        /****************************/
+//    });
+//
+//    if ($("#base_modulo_" + nombre.replace(/\s/g, "")).length) {
+//        $("#base_modulo_" + nombre.replace(/\s/g, "")).removeClass("d-none");
+////                div2.appendChild($("#base_modulo_"+ nombre.replace(/\s/g, "")));
+//        div2.appendChild(document.getElementById("base_modulo_" + nombre.replace(/\s/g, "")));
+//    }
+//
+//}
 function agregar_menu(nombre, fawsome, collapse, url_externa) {
     //El collapse re enviara cuando deseemos enviar el menu dentro de un contenedor 
     let root = "sidebar";
     if (collapse !== null && collapse !== "" && collapse !== undefined) {
         //comprobar que exista el collapse
-        if (!$("#collapse_sidebar_" + collapse.replace(/\s/g, "")).length) {
+        if (!$("#accordion" + collapse.replace(/\s/g, "")).length) {
             {
                 //en caso de que no exista lo agregamos
-                let collapse_a = $('<a data-toggle="collapse" href="#collapse_sidebar_' + collapse.replace(/\s/g, "") + '" aria-expanded="false">' + collapse + '<i class="fas fa-caret-down"></i></a>').addClass("collapse_sidebar shadow-none btn collapsed");
-                let collapse_container = $('<div id="collapse_sidebar_' + collapse.replace(/\s/g, "") + '"></div>').addClass("collapse_sidebar_cntr collapse");
-                $("#sidebar").append(collapse_a);
-                $("#sidebar").append(collapse_container);
-            }
-        }
-        root = "collapse_sidebar_" + collapse.replace(/\s/g, "");
-    }
-    let div = document.createElement("div");
-    div.className = "menu_sidebar d-flex";
-    div.innerHTML = fawsome + nombre;
-    div.id = "menu_section_" + nombre.replace(/\s/g, "");
-    $("#" + root).append(div);
-
-    let div2 = document.createElement("div");
-    div2.className = "modulo_section d-none";
-    div2.id = "modulo_section_" + nombre.replace(/\s/g, "");//quitale los espacios si llegara a tener 
-//            div2.innerHTML = nombre;
-
-    $("#contenidoSection").append(div2);
-
-    div.addEventListener("click", function () {
-        let modulos = $(".modulo_section");
-        modulos.addClass("d-none");
-        let menus = $(".menu_sidebar");
-        menus.removeClass("menu_selected");
-        $("#modulo_section_" + nombre.replace(/\s/g, "")).removeClass("d-none");
-        $("#menu_section_" + nombre.replace(/\s/g, "")).addClass("menu_selected");
-        /*Cambios prueba Fernando*/
-        if (url_externa !== undefined && url_externa !== null && url_externa !== "") {
-            console.log("Moviendome a url externa");
-            acceso_externo_seccion(url_externa,nombre.replace(/\s/g, ""));
-        }
-        /****************************/
-    });
-
-    if ($("#base_modulo_" + nombre.replace(/\s/g, "")).length) {
-        $("#base_modulo_" + nombre.replace(/\s/g, "")).removeClass("d-none");
-//                div2.appendChild($("#base_modulo_"+ nombre.replace(/\s/g, "")));
-        div2.appendChild(document.getElementById("base_modulo_" + nombre.replace(/\s/g, "")));
-    }
-
-}
-function agregar_menu(nombre, fawsome, collapse, url_externa) {
-    //El collapse re enviara cuando deseemos enviar el menu dentro de un contenedor 
-    let root = "sidebar";
-    if (collapse !== null && collapse !== "" && collapse !== undefined) {
-        //comprobar que exista el collapse
-        if (!$("#accordion_" + collapse.replace(/\s/g, "")).length) {
-            {
-                //en caso de que no exista lo agregamos
-                let acordion = $('<div class="accordion" id="accordion_'+collapse.replace(/\s/g, "")+'"></div>');
+                let acordion = $('<div class="accordion" id="accordion'+collapse.replace(/\s/g, "")+'"></div>');
                 let heading = $('<div class="collapse_sidebar shadow-none btn p-0" id="heading'+collapse.replace(/\s/g, "")+'"></div>');
                 let collapse_a = $('<a class="collapse_sidebar shadow-none btn collapsed" data-toggle="collapse" data-target="#collapse'+collapse.replace(/\s/g, "")+'" aria-expanded="false" aria-controls="collapse'+collapse.replace(/\s/g, "")+'">' + collapse + '<i class="fas fa-caret-down"></i></a>').addClass("collapse_sidebar shadow-none btn collapsed");
                 heading.append(collapse_a);
                 acordion.append(heading);
                 
-                let collapse_container = $('<div id="collapse'+collapse.replace(/\s/g, "")+'" class="collapse_sidebar_cntr collapse" aria-labelledby="heading'+collapse.replace(/\s/g, "")+'" style=""></div>');
+                let collapse_container = $('<div id="collapse'+collapse.replace(/\s/g, "")+'" class="collapse_sidebar_cntr collapse" aria-labelledby="heading'+collapse.replace(/\s/g, "")+'" data-parent="#accordion'+collapse.replace(/\s/g, "")+'"></div>');
                 acordion.append(collapse_container);
                 $("#sidebar").append(acordion);
 //                let collapse_a = $('<a data-toggle="collapse" href="#collapse_sidebar_' + collapse.replace(/\s/g, "") + '" aria-expanded="false">' + collapse + '<i class="fas fa-caret-down"></i></a>').addClass("collapse_sidebar shadow-none btn collapsed");
@@ -6549,6 +6549,77 @@ function agregar_menu(nombre, fawsome, collapse, url_externa) {
     }
 
 }
+//function agregar_menu(nombre, fawsome, collapse, url_externa) {
+//    //El collapse re enviara cuando deseemos enviar el menu dentro de un contenedor 
+//    let root = "sidebar";
+//    if (collapse !== null && collapse !== "" && collapse !== undefined) {
+//        //comprobar que exista el collapse
+//        if (!$("#accordion" + collapse.replace(/\s/g, "")).length) {
+//            {
+//                //en caso de que no exista lo agregamos
+//                let acordion = $('<div class="accordion" id="accordion'+collapse.replace(/\s/g, "")+'"></div>');
+//                let card = $('<div class="card"></div>');
+//                let card_header = $('<div class="card-header" id="heading'+collapse.replace(/\s/g, "")+'"></div>');
+//                let h2 = $('<h2 class="m-0"></h2>');
+//                let button = $('<button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapse'+collapse.replace(/\s/g, "")+'" aria-expanded="false" aria-controls="collapse'+collapse.replace(/\s/g, "")+'"></button>');
+//                button.text(collapse);
+//                h2.append(button);
+//                card_header.append(h2);
+//                card.append(card_header);
+//                
+//                
+////                let heading = $('<div class="collapse_sidebar shadow-none btn p-0" id="heading'+collapse.replace(/\s/g, "")+'"></div>');
+////                let collapse_a = $('<a class="collapse_sidebar shadow-none btn collapsed" data-toggle="collapse" data-target="#collapse'+collapse.replace(/\s/g, "")+'" aria-expanded="false" aria-controls="collapse'+collapse.replace(/\s/g, "")+'">' + collapse + '<i class="fas fa-caret-down"></i></a>').addClass("collapse_sidebar shadow-none btn collapsed");
+////                heading.append(collapse_a);
+////                acordion.append(heading);
+//                
+//                let collapse_container = $('<div id="collapse'+collapse.replace(/\s/g, "")+'" class="collapse_sidebar_cntr collapse" aria-labelledby="heading'+collapse.replace(/\s/g, "")+'" data-parent="#accordion'+collapse.replace(/\s/g, "")+'"></div>');
+//                card.append(collapse_container);
+//                acordion.append(card);
+//                $("#sidebar").append(acordion);
+////                let collapse_a = $('<a data-toggle="collapse" href="#collapse_sidebar_' + collapse.replace(/\s/g, "") + '" aria-expanded="false">' + collapse + '<i class="fas fa-caret-down"></i></a>').addClass("collapse_sidebar shadow-none btn collapsed");
+////                let collapse_container = $('<div id="collapse_sidebar_' + collapse.replace(/\s/g, "") + '"></div>').addClass("collapse_sidebar_cntr collapse");
+////                $("#sidebar").append(collapse_a);
+////                $("#sidebar").append(collapse_container);
+//            }
+//        }
+//        root = "collapse" + collapse.replace(/\s/g, "");
+//    }
+//    let div = document.createElement("div");
+//    div.className = "menu_sidebar d-flex";
+//    div.innerHTML = fawsome + nombre;
+//    div.id = "menu_section_" + nombre.replace(/\s/g, "");
+//    $("#" + root).append(div);
+//
+//    let div2 = document.createElement("div");
+//    div2.className = "modulo_section d-none";
+//    div2.id = "modulo_section_" + nombre.replace(/\s/g, "");//quitale los espacios si llegara a tener 
+////            div2.innerHTML = nombre;
+//
+//    $("#contenidoSection").append(div2);
+//
+//    div.addEventListener("click", function () {
+//        let modulos = $(".modulo_section");
+//        modulos.addClass("d-none");
+//        let menus = $(".menu_sidebar");
+//        menus.removeClass("menu_selected");
+//        $("#modulo_section_" + nombre.replace(/\s/g, "")).removeClass("d-none");
+//        $("#menu_section_" + nombre.replace(/\s/g, "")).addClass("menu_selected");
+//        /*Cambios prueba Fernando*/
+//        if (url_externa !== undefined && url_externa !== null && url_externa !== "") {
+//            console.log("Moviendome a url externa");
+//            acceso_externo_seccion(url_externa,nombre.replace(/\s/g, ""));
+//        }
+//        /****************************/
+//    });
+//
+//    if ($("#base_modulo_" + nombre.replace(/\s/g, "")).length) {
+//        $("#base_modulo_" + nombre.replace(/\s/g, "")).removeClass("d-none");
+////                div2.appendChild($("#base_modulo_"+ nombre.replace(/\s/g, "")));
+//        div2.appendChild(document.getElementById("base_modulo_" + nombre.replace(/\s/g, "")));
+//    }
+//
+//}
 
 function acceso_externo_seccion(url, seccion) {
     RequestPOST("/API/cuenta360/access_token", {
