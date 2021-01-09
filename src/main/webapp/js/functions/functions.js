@@ -661,6 +661,8 @@ function agregarVideo(session, stream) {
             });
 
             document.getElementById(pos).appendChild(event);
+            
+            /***************************************************************
             //////////Colgar la llamada   ******
             var usrDesconectado = false;
             var colgar = document.createElement("input");
@@ -699,7 +701,7 @@ function agregarVideo(session, stream) {
             }
 
 
-            //
+            *****************************************************/////////////
 
 
             //////////Solicitar Cambio de camara  ******
