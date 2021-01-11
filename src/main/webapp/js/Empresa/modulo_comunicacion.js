@@ -459,19 +459,6 @@ function recibir_chat(mensaje, viejo, group) {
                     body = user.nombre + " " + user.apellido_paterno + " ha enviado un adjunto";
                 }
 
-                /*let onClickNotification = () => {
-                 $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
-                 $("#message_input_"+user.id360).focus();
-
-                 if($("#profile_chat" + value.id360).length){
-                 $("#profile_chat" + value.id360).click();
-                 }else{
-                 contacto_chat(value);
-                 $("#profile_chat" + value.id360).click();
-                 }
-
-                 };*/
-
                 notificacion_mensaje("Nuevo mensaje", body, () => {
                 });
 
