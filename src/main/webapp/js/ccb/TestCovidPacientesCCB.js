@@ -68,7 +68,7 @@ function activar_calendario() {
 //        });
 //    });
     $input = $('#button__api-open-close').pickadate({
-        format: 'Resulta!dos !del !día: dddd, dd !de mmmm !de yyyy',
+        format: 'Resulta!dos !del !dÃ­a: dddd, dd !de mmmm !de yyyy',
         formatSubmit: 'yyyy-mm-dd',
         hiddenPrefix: 'prefix-',
         hiddenSuffix: '-suffix',
@@ -297,20 +297,20 @@ $("#guardarDiagnostico").on("click", function () {
             if (response.procede) {
                 Toast.fire({
                     type: 'success',
-                    title: "Información guardada correctamente."
+                    title: "InformaciÃ³n guardada correctamente."
                 });
                 $("#guardarDiagnostico").addClass("d-none");
             } else {
                 Toast.fire({
                     type: 'error',
-                    title: "Error al intentar guardar la información. Intentelo nuevamente."
+                    title: "Error al intentar guardar la informaciÃ³n. Intentelo nuevamente."
                 });
             }
         });
     } else {
         Swal.fire({
             title: 'Alto',
-            html: "<br><p style='color:white;'>Primero debes escribir un diganóstico para el paciente</p>",
+            html: "<br><p style='color:white;'>Primero debes escribir un diganÃ³stico para el paciente</p>",
             focusConfirm: false,
             showCancelButton: false,
             confirmButtonText: "Continuar"
@@ -716,10 +716,10 @@ function arreglo_fechas(fechas) {
     var arreglo = new Array();
     $.each(fechas, function (i) {
         var fecha = fechas[i].toString().split("-");
-        var año = parseInt(fecha[0]);
+        var aÃ±o = parseInt(fecha[0]);
         var mes = parseInt(fecha[1]);
         var dia = parseInt(fecha[2]);
-        var arreglo_interno = [new Date(año, mes, dia), 38000 + i];
+        var arreglo_interno = [new Date(aÃ±o, mes, dia), 38000 + i];
         arreglo.push(arreglo_interno);
     });
     console.log("Este es el arreglo que se le pasara al chartCalendar");
