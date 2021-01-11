@@ -1520,7 +1520,7 @@ function ContentInfoWindowLITE(elemento) {
             <div class=\"col-12 m-0 p-0 infWinServ\">\n\
             <h2 class=\"title infWinServText\">" + elemento.aliasServicio + "</h2></div>\n\
              <h2 class=\"title\">" + elemento.nombre + " " + elemento.apellido_paterno + " " + elemento.apellido_materno + "</h2> \n\
-            <h2 class=\"subtitle\">TelÃ©fono: " + elemento.telefono + "</h2> \n\
+            <h2 class=\"subtitle\">Teléfono: " + elemento.telefono + "</h2> \n\
             <label class=\"subtitle\">Fecha: <label class=\"text\" id=\"infowindowfecha" + elemento.idUsuarios_Movil + "\">" + elemento.gps.fecha + "</label></label>\n\
             <label class=\"subtitle\">Hora: <label class=\"text\" id=\"infowindowhora" + elemento.idUsuarios_Movil + "\">" + elemento.gps.hora + "</label></label>\n\
             <br> <input " + disabledBtnLlamar + " type=\"hidden\" class=\"" + claseBtnLlamar + "\" id=\"LlamarFirebase:" + elemento.idUsuarios_Movil + "\" value=\"" + valueBtnLlamar + "\" onclick=\"ConfirmarLlamada(" + elemento.idUsuarios_Movil + ",'" + elemento.nombre + " " + elemento.apellido_paterno + " " + elemento.apellido_materno + "')\">\n\
@@ -1557,7 +1557,7 @@ function ContentInfoWindowIntegrante(elemento) {
 <div class=\"col-12 m-0 p-0 infWinServ\">\n\
 <h2 class=\"title infWinServText\">" + elemento.aliasServicio + "</h2></div>\n\
  <h2 class=\"title\">" + elemento.nombre + " " + elemento.apellido_paterno + " " + elemento.apellido_materno + "</h2> \n\
-<h2 class=\"subtitle\">TelÃ©fono: " + elemento.telefono + "</h2> \n\
+<h2 class=\"subtitle\">Teléfono: " + elemento.telefono + "</h2> \n\
 <label class=\"subtitle\">Fecha: <label class=\"text\" id=\"infowindowfecha" + elemento.idUsuarios_Movil + "\">" + elemento.gps.fecha + "</label></label>\n\
 <label class=\"subtitle\">Hora: <label class=\"text\" id=\"infowindowhora" + elemento.idUsuarios_Movil + "\">" + elemento.gps.hora + "</label></label>\n\
 <br> <input " + disabledBtnLlamar + " type=\"button\" class=\"" + claseBtnLlamar + "\" id=\"LlamarFirebase:" + elemento.idUsuarios_Movil + "\" value=\"" + valueBtnLlamar + "\" onclick=\"enviarNotificacionIndividual('" + elemento.idUsuarios_Movil + "','" + DEPENDENCIA + "')\">\n\
@@ -1598,7 +1598,7 @@ function ContentInfoWindowIntegranteEmpresas360(elemento) {
             <div class=\"col-12 m-0 p-0 infWinServ\">\n\
             <h2 class=\"title infWinServText\">" + elemento.aliasServicio + "</h2></div>\n\
              <h2 class=\"title\">" + elemento.nombre + " " + elemento.apellido_paterno + " " + elemento.apellido_materno + "</h2> \n\
-            <h2 class=\"subtitle\">TelÃ©fono: " + elemento.telefono + "</h2> \n\
+            <h2 class=\"subtitle\">Teléfono: " + elemento.telefono + "</h2> \n\
             <label class=\"subtitle\">Fecha: <label class=\"text\" id=\"infowindowfecha" + elemento.idUsuarios_Movil + "\">" + elemento.gps.fecha + "</label></label>\n\
             <label class=\"subtitle\">Hora: <label class=\"text\" id=\"infowindowhora" + elemento.idUsuarios_Movil + "\">" + elemento.gps.hora + "</label></label>\n\
             <br> <input " + disabledBtnLlamar + " type=\"button\" class=\"" + claseBtnLlamar + "\" id=\"LlamarFirebase:" + elemento.idUsuarios_Movil + "\" value=\"" + valueBtnLlamar + "\" onclick=\"ConfirmarLlamada(" + elemento.idUsuarios_Movil + ",'" + elemento.nombre + " " + elemento.apellido_paterno + " " + elemento.apellido_materno + "')\">\n\
@@ -1637,7 +1637,7 @@ function ContentInfoWindowIntegranteMonitoreoUnidades(elemento) {
             <div class=\"col-12 m-0 p-0 infWinServ\">\n\
             <h2 class=\"title infWinServText\">" + elemento.aliasServicio + "</h2></div>\n\
              <h2 class=\"title\">" + elemento.nombre + " " + elemento.apellido_paterno + " " + elemento.apellido_materno + "</h2> \n\
-            <h2 class=\"subtitle\">TelÃ©fono: " + elemento.telefono + "</h2> \n\
+            <h2 class=\"subtitle\">Teléfono: " + elemento.telefono + "</h2> \n\
             <label class=\"subtitle\">Fecha: <label class=\"text\" id=\"infowindowfecha" + elemento.idUsuarios_Movil + "\">" + elemento.gps.fecha + "</label></label>\n\
             <label class=\"subtitle\">Hora: <label class=\"text\" id=\"infowindowhora" + elemento.idUsuarios_Movil + "\">" + elemento.gps.hora + "</label></label>\n\
             <br> <input " + disabledBtnLlamar + " type=\"button\" class=\"" + claseBtnLlamar + "\" id=\"LlamarFirebase:" + elemento.idUsuarios_Movil + "\" value=\"" + valueBtnLlamar + "\" onclick=\"ConfirmarLlamada(" + elemento.idUsuarios_Movil + ",'" + elemento.nombre + " " + elemento.apellido_paterno + " " + elemento.apellido_materno + "')\">\n\
@@ -1721,7 +1721,7 @@ width:300px;\n\
                                     <div class=\"col-5 m-0 p-0\"><div class=\"infowindow-img\" style=\"\"></div></div>\n\
                                     <div class=\"col-7 m-0 p-0 pl-2\">\n\
                                     <h2 class=\"title\">" + json.nombre + " " + json.apellido_paterno + " " + json.apellido_materno + "</h2>\n\
-                                    <h2 class=\"subtitle\">Ultima PosiciÃ³n:</h2>\n\
+                                    <h2 class=\"subtitle\">Ultima Posición:</h2>\n\
                                     <label class=\"subtitle\">Fecha: </label>\n\
                                     <label class=\"text\" id=\"infowindowfecha" + json.idUsuarios_Movil + "\">" + json.gps.fecha + "</label>\n\
                                     <br>\n\
@@ -1761,8 +1761,8 @@ function ContentInfoWindowHistoricoRuta(data, fecha) {
             <div class=\"col-12 m-0 p-0 infWinServ\">\n\
             <h2 class=\"title infWinServText\">" + data.Usuarios_Movil.aliasServicio + "</h2></div>\n\
              <h2 class=\"title\">" + data.Usuarios_Movil.nombre + " " + data.Usuarios_Movil.apellido_paterno + " " + data.Usuarios_Movil.apellido_materno + "</h2> \n\
-            <h2 class=\"subtitle\">TelÃ©fono: " + data.Usuarios_Movil.telefono + "</h2> \n\
-            <h2 class=\"subtitle\">Ultima PosiciÃ³n</h2> \n\
+            <h2 class=\"subtitle\">Teléfono: " + data.Usuarios_Movil.telefono + "</h2> \n\
+            <h2 class=\"subtitle\">Ultima Posición</h2> \n\
             <label class=\"subtitle\">Fecha: <label class=\"text\" id=\"infowindowfecha" + data.Usuarios_Movil.idUsuarios_Movil + "\">" + fecha + "</label></label>\n\
             <label class=\"subtitle\">Hora: <label class=\"text\" id=\"infowindowhora" + data.Usuarios_Movil.idUsuarios_Movil + "\">" + data.Usuarios_Movil.gps.hora + "</label></label>\n\
             <br> <input " + disabledBtnLlamar + " type=\"hidden\" class=\"" + claseBtnLlamar + "\" id=\"LlamarFirebase:" + data.Usuarios_Movil.idUsuarios_Movil + "\" value=\"" + valueBtnLlamar + "\" onclick=\"ConfirmarLlamada(" + data.Usuarios_Movil.idUsuarios_Movil + ",'" + data.Usuarios_Movil.nombre + " " + data.Usuarios_Movil.apellido_paterno + " " + data.Usuarios_Movil.apellido_materno + "')\">\n\
@@ -1911,7 +1911,7 @@ function mapeaIntegrantes(inputs, idGrupo) {
                 }
                 for (var i = 0; i < automaticos.length; i++) {
                     if (automaticos[i].idgruposUsuarioSys === id) {
-                        var auto = document.getElementById("inputGruposAutomÃ¡ticos");
+                        var auto = document.getElementById("inputGruposAutomáticos");
                         if (auto.checked) {
                             auto.checked = false;
                         }
@@ -1944,7 +1944,7 @@ function HabilitaChecks(nombre) {
     var automaticos = dataG.GruposAutomaticos;
     var personalizados = dataG.GruposPersonalizados;
     var input = document.getElementById("input" + nombre);
-    if (nombre === "GruposAutomÃ¡ticos") {
+    if (nombre === "GruposAutomáticos") {
         if (input.checked) {
             $.each(inputs, function (z) {
                 var id = inputs[z].id;
@@ -3433,7 +3433,7 @@ function ConfirmarLlamada(idUsuario_Movil, NombreUsuario) {
 
     });
     Toast.fire({
-        html: "<h1 style=\"color: #D7D7D7;\">Solicitar Llamada</h1><p style=\"color: white;font-size: 15px;\">EstÃ¡ a punto de solicitar una llamada a: <br><label style=\"color: bisque;font-size: 15px;margin: 0;\">" + NombreUsuario + "</label><br>Si desea continuar presione en llamar <br><label style=\"color: bisque;font-size: 15px;margin: 0;\"></label></p>",
+        html: "<h1 style=\"color: #D7D7D7;\">Solicitar Llamada</h1><p style=\"color: white;font-size: 15px;\">Está a punto de solicitar una llamada a: <br><label style=\"color: bisque;font-size: 15px;margin: 0;\">" + NombreUsuario + "</label><br>Si desea continuar presione en llamar <br><label style=\"color: bisque;font-size: 15px;margin: 0;\"></label></p>",
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -3497,11 +3497,11 @@ function enviarNotificacionCircle() {
             }
 
             Swal.fire({
-                title: 'NotificaciÃ³n grupal',
+                title: 'Notificación grupal',
                 html: "<label class=\"sweetAlTextLabel \">\n\
-                Esta acciÃ³n enviarÃ¡ una notificaciÃ³n a todos los elementos en el mapa que se encuentren dentro del rango establecido y aun no hayan atendido la llamada.\n\
+                Esta acción enviará una notificación a todos los elementos en el mapa que se encuentren dentro del rango establecido y aun no hayan atendido la llamada.\n\
                 <br><br>\n\
-                Â¿Desea continuar?\n\
+                ¿Desea continuar?\n\
                 </label>",
                 focusConfirm: false,
                 showCancelButton: true,
@@ -3516,12 +3516,12 @@ function enviarNotificacionCircle() {
                     if (incidente_establecido) {
                         if (FolioIncidentes) {
                             Swal.fire({
-                                title: 'NotificaciÃ³n',
+                                title: 'Notificación',
                                 html: //-------------------------TITULO
                                         '<div class="row col-12 m-0 pt-4">' +
-                                        '<label class="sweetalrtTitle" >Esta informaciÃ³n sera la que le llegue al elemento que se le envia la notificaciÃ³n</label>' +
+                                        '<label class="sweetalrtTitle" >Esta información sera la que le llegue al elemento que se le envia la notificación</label>' +
                                         //-------------------------DESCRIPCION DEL LUGAR 
-                                        '<label class="sweetalrt">DescripciÃ³n del Lugar</label>' +
+                                        '<label class="sweetalrt">Descripción del Lugar</label>' +
                                         '<input id="swal-input5" class="swal2-input swalInput" value="' + document.getElementById("DescripcionLugar").value + '">' +
                                         //-------------------------REPORTE
                                         '<label class="sweetalrt"">Reporte</label>' +
@@ -3557,7 +3557,7 @@ function enviarNotificacionCircle() {
                                 } else {
                                     //
                                     Swal.fire(
-                                            'Informacion insuficiente en "DescripciÃ³n de emergencia"',
+                                            'Informacion insuficiente en "Descripción de emergencia"',
                                             'Favor de rellenar todos los campos: <br>\n\
                                         <br>- Descripcion del lugar\n\
                                         <br>- Reporte <br><br>',
@@ -3573,7 +3573,7 @@ function enviarNotificacionCircle() {
                             let timerInterval;
                             Swal.fire({
                                 title: 'Un momento porfavor!',
-                                html: 'Se estÃ¡ solicitando un folio a la plataforma Incidentes <strong></strong> segundos.',
+                                html: 'Se está solicitando un folio a la plataforma Incidentes <strong></strong> segundos.',
                                 timer: 5000,
                                 onBeforeOpen: () => {
                                     Swal.showLoading();
@@ -3594,7 +3594,7 @@ function enviarNotificacionCircle() {
                                     //
                                     Swal.fire({
                                         title: 'Plataforma Incidentes no responde',
-                                        text: "Algo paso y no se logro generar un folio con la plataforma incidentes!<br> Â¿Enviar notificacion de todos modos?",
+                                        text: "Algo paso y no se logro generar un folio con la plataforma incidentes!<br> ¿Enviar notificacion de todos modos?",
                                         type: 'info',
                                         showCancelButton: true,
                                         confirmButtonColor: '#3085d6',
@@ -3607,12 +3607,12 @@ function enviarNotificacionCircle() {
 
 
                                             Swal.fire({
-                                                title: 'NotificaciÃ³n',
+                                                title: 'Notificación',
                                                 html: //-------------------------TITULO
                                                         '<div class="row col-12 m-0 pt-4">' +
-                                                        '<label class="sweetalrtTitle" >Esta informaciÃ³n sera la que le llegue al elemento que se le envia la notificaciÃ³n</label>' +
+                                                        '<label class="sweetalrtTitle" >Esta información sera la que le llegue al elemento que se le envia la notificación</label>' +
                                                         //-------------------------DESCRIPCION DEL LUGAR 
-                                                        '<label class="sweetalrt">DescripciÃ³n del Lugar</label>' +
+                                                        '<label class="sweetalrt">Descripción del Lugar</label>' +
                                                         '<input id="swal-input5" class="swal2-input swalInput" value="' + document.getElementById("DescripcionLugar").value + '">' +
                                                         //-------------------------REPORTE
                                                         '<label class="sweetalrt"">Reporte</label>' +
@@ -3648,7 +3648,7 @@ function enviarNotificacionCircle() {
                                                 } else {
                                                     //
                                                     Swal.fire(
-                                                            'Informacion insuficiente en "DescripciÃ³n de emergencia"',
+                                                            'Informacion insuficiente en "Descripción de emergencia"',
                                                             'Favor de rellenar todos los campos: <br>\n\
                                                         <br>- Descripcion del lugar\n\
                                                         <br>- Reporte <br><br>',
@@ -3676,12 +3676,12 @@ function enviarNotificacionCircle() {
                                     clearInterval(esperandofolio);
 
                                     Swal.fire({
-                                        title: 'NotificaciÃ³n',
+                                        title: 'Notificación',
                                         html: //-------------------------TITULO
                                                 '<div class="row col-12 m-0 pt-4">' +
-                                                '<label class="sweetalrtTitle" >Esta informaciÃ³n sera la que le llegue al elemento que se le envia la notificaciÃ³n</label>' +
+                                                '<label class="sweetalrtTitle" >Esta información sera la que le llegue al elemento que se le envia la notificación</label>' +
                                                 //-------------------------DESCRIPCION DEL LUGAR 
-                                                '<label class="sweetalrt">DescripciÃ³n del Lugar</label>' +
+                                                '<label class="sweetalrt">Descripción del Lugar</label>' +
                                                 '<input id="swal-input5" class="swal2-input swalInput" value="' + document.getElementById("DescripcionLugar").value + '">' +
                                                 //-------------------------REPORTE
                                                 '<label class="sweetalrt"">Reporte</label>' +
@@ -3717,7 +3717,7 @@ function enviarNotificacionCircle() {
                                         } else {
                                             //
                                             Swal.fire(
-                                                    'Informacion insuficiente en "DescripciÃ³n de emergencia"',
+                                                    'Informacion insuficiente en "Descripción de emergencia"',
                                                     'Favor de rellenar todos los campos: <br>\n\
                                                 <br>- Descripcion del lugar\n\
                                                 <br>- Reporte <br><br>',
@@ -3747,11 +3747,11 @@ function enviarNotificacionCircle() {
                         //
 
                         Swal.fire({
-                            title: 'NotificaciÃ³n',
+                            title: 'Notificación',
                             html: //-------------------------TITULO
                                     '<label class="sweetalrtTitle" style="text-align: center;">Para notificar a un elemento es necesario primero <br>"Establecer un incidente".</label>' +
                                     '<p style="margin: 0;color: #fe8201;font: bold 12px Arial;" >- Selecciona un incidente cercano \n\
-                    <br> Ã³ \n\
+                    <br> ó \n\
                     <br>- Establece un nuevo incidente</p>',
                             focusConfirm: false
                         });
@@ -3770,11 +3770,11 @@ function enviarNotificacionCircle() {
 }
 function enviarNotificacionIndividual(ElementoId, Dependencia) {
     Swal.fire({
-        title: 'NotificaciÃ³n individual',
+        title: 'Notificación individual',
         html: "<label class=\"sweetAlTextLabel \">\n\
-                Esta acciÃ³n enviarÃ¡ una notificaciÃ³n solo al elemento seleccionado en el mapa.\n\
+                Esta acción enviará una notificación solo al elemento seleccionado en el mapa.\n\
                 <br><br>\n\
-                Â¿Desea continuar?\n\
+                ¿Desea continuar?\n\
                 </label>",
         focusConfirm: false,
         showCancelButton: true,
@@ -3787,12 +3787,12 @@ function enviarNotificacionIndividual(ElementoId, Dependencia) {
             if (incidente_establecido) {
                 if (FolioIncidentes) {
                     Swal.fire({
-                        title: 'NotificaciÃ³n',
+                        title: 'Notificación',
                         html: //-------------------------TITULO
                                 '<div class="row col-12 m-0 pt-4">' +
-                                '<label class="sweetalrtTitle" >Esta informaciÃ³n sera la que le llegue al elemento que se le envia la notificaciÃ³n</label>' +
+                                '<label class="sweetalrtTitle" >Esta información sera la que le llegue al elemento que se le envia la notificación</label>' +
                                 //-------------------------DESCRIPCION DEL LUGAR 
-                                '<label class="sweetalrt">DescripciÃ³n del Lugar</label>' +
+                                '<label class="sweetalrt">Descripción del Lugar</label>' +
                                 '<input id="swal-input5" class="swal2-input swalInput" value="' + document.getElementById("DescripcionLugar").value + '">' +
                                 //-------------------------REPORTE
                                 '<label class="sweetalrt"">Reporte</label>' +
@@ -3828,7 +3828,7 @@ function enviarNotificacionIndividual(ElementoId, Dependencia) {
                         } else {
                             //
                             Swal.fire(
-                                    'Informacion insuficiente en "DescripciÃ³n de emergencia"',
+                                    'Informacion insuficiente en "Descripción de emergencia"',
                                     'Favor de rellenar todos los campos: <br>\n\
                                         <br>- Descripcion del lugar\n\
                                         <br>- Reporte <br><br>',
@@ -3844,7 +3844,7 @@ function enviarNotificacionIndividual(ElementoId, Dependencia) {
                     let timerInterval;
                     Swal.fire({
                         title: 'Un momento porfavor!',
-                        html: 'Se estÃ¡ solicitando un folio a la plataforma Incidentes <strong></strong> segundos.',
+                        html: 'Se está solicitando un folio a la plataforma Incidentes <strong></strong> segundos.',
                         timer: 5000,
                         onBeforeOpen: () => {
                             Swal.showLoading();
@@ -3865,7 +3865,7 @@ function enviarNotificacionIndividual(ElementoId, Dependencia) {
                             //
                             Swal.fire({
                                 title: 'Plataforma Incidentes no responde',
-                                text: "Algo paso y no se logro generar un folio con la plataforma incidentes!<br> Â¿Enviar notificacion de todos modos?",
+                                text: "Algo paso y no se logro generar un folio con la plataforma incidentes!<br> ¿Enviar notificacion de todos modos?",
                                 type: 'info',
                                 showCancelButton: true,
                                 confirmButtonColor: '#3085d6',
@@ -3878,12 +3878,12 @@ function enviarNotificacionIndividual(ElementoId, Dependencia) {
 
 
                                     Swal.fire({
-                                        title: 'NotificaciÃ³n',
+                                        title: 'Notificación',
                                         html: //-------------------------TITULO
                                                 '<div class="row col-12 m-0 pt-4">' +
-                                                '<label class="sweetalrtTitle" >Esta informaciÃ³n sera la que le llegue al elemento que se le envia la notificaciÃ³n</label>' +
+                                                '<label class="sweetalrtTitle" >Esta información sera la que le llegue al elemento que se le envia la notificación</label>' +
                                                 //-------------------------DESCRIPCION DEL LUGAR 
-                                                '<label class="sweetalrt">DescripciÃ³n del Lugar</label>' +
+                                                '<label class="sweetalrt">Descripción del Lugar</label>' +
                                                 '<input id="swal-input5" class="swal2-input swalInput" value="' + document.getElementById("DescripcionLugar").value + '">' +
                                                 //-------------------------REPORTE
                                                 '<label class="sweetalrt"">Reporte</label>' +
@@ -3919,7 +3919,7 @@ function enviarNotificacionIndividual(ElementoId, Dependencia) {
                                         } else {
                                             //
                                             Swal.fire(
-                                                    'Informacion insuficiente en "DescripciÃ³n de emergencia"',
+                                                    'Informacion insuficiente en "Descripción de emergencia"',
                                                     'Favor de rellenar todos los campos: <br>\n\
                                                         <br>- Descripcion del lugar\n\
                                                         <br>- Reporte <br><br>',
@@ -3947,12 +3947,12 @@ function enviarNotificacionIndividual(ElementoId, Dependencia) {
                             clearInterval(esperandofolio);
 
                             Swal.fire({
-                                title: 'NotificaciÃ³n',
+                                title: 'Notificación',
                                 html: //-------------------------TITULO
                                         '<div class="row col-12 m-0 pt-4">' +
-                                        '<label class="sweetalrtTitle" >Esta informaciÃ³n sera la que le llegue al elemento que se le envia la notificaciÃ³n</label>' +
+                                        '<label class="sweetalrtTitle" >Esta información sera la que le llegue al elemento que se le envia la notificación</label>' +
                                         //-------------------------DESCRIPCION DEL LUGAR 
-                                        '<label class="sweetalrt">DescripciÃ³n del Lugar</label>' +
+                                        '<label class="sweetalrt">Descripción del Lugar</label>' +
                                         '<input id="swal-input5" class="swal2-input swalInput" value="' + document.getElementById("DescripcionLugar").value + '">' +
                                         //-------------------------REPORTE
                                         '<label class="sweetalrt"">Reporte</label>' +
@@ -3988,7 +3988,7 @@ function enviarNotificacionIndividual(ElementoId, Dependencia) {
                                 } else {
                                     //
                                     Swal.fire(
-                                            'Informacion insuficiente en "DescripciÃ³n de emergencia"',
+                                            'Informacion insuficiente en "Descripción de emergencia"',
                                             'Favor de rellenar todos los campos: <br>\n\
                                                 <br>- Descripcion del lugar\n\
                                                 <br>- Reporte <br><br>',
@@ -4018,11 +4018,11 @@ function enviarNotificacionIndividual(ElementoId, Dependencia) {
                 //
 
                 Swal.fire({
-                    title: 'NotificaciÃ³n',
+                    title: 'Notificación',
                     html: //-------------------------TITULO
                             '<label class="sweetalrtTitle" style="text-align: center;">Para notificar a un elemento es necesario primero <br>"Establecer un incidente".</label>' +
                             '<p style="margin: 0;color: #fe8201;font: bold 12px Arial;" >- Selecciona un incidente cercano \n\
-                    <br> Ã³ \n\
+                    <br> ó \n\
                     <br>- Establece un nuevo incidente</p>',
                     focusConfirm: false
                 });
@@ -4042,7 +4042,7 @@ function colocarMarcadores(integrantes) {
 
     if (!integrantes.length)
     {
-        document.getElementById("span").innerHTML = "AÃ±ade un integrante para mostrarlo en el mapa";
+        document.getElementById("span").innerHTML = "Añade un integrante para mostrarlo en el mapa";
     } else {
         ZoomAndCenterLocal(integrantes);
 
@@ -4358,7 +4358,7 @@ function SetLine(ruta) {
 
     var rutaUlt = [];
     var rutaPrim = [];
-    // Filtrando el primero y el Ãºltimo punto
+    // Filtrando el primero y el último punto
     for (i = 0; i < ruta.length - 5; i++) {
         rutaUlt.push(ruta[i]);
     }
@@ -4414,7 +4414,7 @@ function SetPoints2(ruta) {
     var rutaUlt = [];
     var rutaPrim = [];
     var k = 0;
-    // Filtrando el primero y el Ãºltimo punto
+    // Filtrando el primero y el último punto
 
     var RutaArreglada = [{"lat": ruta[0].lat, "lng": ruta[0].lng, "stand": "0 segundos", "horaI": ruta[0].hora, "horaF": ruta[0].hora, "velocidad": ruta[0].velocidad, "acuary": ruta[0].acuary}];
 
@@ -4436,7 +4436,7 @@ function SetPoints2(ruta) {
 //        var t2 = new Date();
 //        t1.setHours(hora1[0], hora1[1], hora1[2]);
 //        t2.setHours(hora2[0], hora2[1], hora2[2]);
-//        //AquÃ­ hago la resta
+//        //Aquí hago la resta
 //        t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
 ////            
 ////            
@@ -4451,7 +4451,7 @@ function SetPoints2(ruta) {
             var t2 = new Date();
             t1.setHours(hora1[0], hora1[1], hora1[2]);
             t2.setHours(hora2[0], hora2[1], hora2[2]);
-            //AquÃ­ hago la resta
+            //Aquí hago la resta
             t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
             //Imprimo el resultado
             RutaArreglada[k].stand = "" + (t1.getHours() ? t1.getHours() + (t1.getHours() > 1 ? " horas, " : " hora, ") : "") + (t1.getMinutes() ? "" + t1.getMinutes() + (t1.getMinutes() > 1 ? " minutos" : " minuto") : "") + (t1.getSeconds() ? (t1.getHours() || t1.getMinutes() ? " y " : "") + t1.getSeconds() + (t1.getSeconds() > 1 ? " segundos" : " segundo") : "");
@@ -4504,7 +4504,7 @@ function SetPoints2(ruta) {
             var t2 = new Date();
             t1.setHours(hora1[0], hora1[1], hora1[2]);
             t2.setHours(hora2[0], hora2[1], hora2[2]);
-            //AquÃ­ hago la resta
+            //Aquí hago la resta
             t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
             //Imprimo el resultado
             RutaArreglada[k].stand = "" + (t1.getHours() ? t1.getHours() + (t1.getHours() > 1 ? " horas, " : " hora, ") : "") + (t1.getMinutes() ? "" + t1.getMinutes() + (t1.getMinutes() > 1 ? " minutos" : " minuto") : "") + (t1.getSeconds() ? (t1.getHours() || t1.getMinutes() ? " y " : "") + t1.getSeconds() + (t1.getSeconds() > 1 ? " segundos" : " segundo") : "");
@@ -4558,7 +4558,7 @@ function SetPoints(ruta) {
     var rutaUlt = [];
     var rutaPrim = [];
     var k = 0;
-    // Filtrando el primero y el Ãºltimo punto
+    // Filtrando el primero y el último punto
     var centerPoint = [{"lat": ruta[0].lat, "lng": ruta[0].lng, "stand": "0 segundos", "horaI": ruta[0].hora, "horaF": ruta[0].hora, "velocidad": ruta[0].velocidad, "acuary": ruta[0].acuary}];
     for (i = 1; i < ruta.length; i++) {
         var d = (6372795.477598) * Math.acos(Math.sin(ruta[i].lat * rad) * Math.sin(ruta[i - 1].lat * rad) + Math.cos(ruta[i].lat * rad) * Math.cos(ruta[i - 1].lat * rad) * Math.cos((ruta[i].lng * rad) - (ruta[i - 1].lng * rad)));
@@ -4572,7 +4572,7 @@ function SetPoints(ruta) {
             var t2 = new Date();
             t1.setHours(hora1[0], hora1[1], hora1[2]);
             t2.setHours(hora2[0], hora2[1], hora2[2]);
-//AquÃ­ hago la resta
+//Aquí hago la resta
             t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
         }
 
@@ -4592,7 +4592,7 @@ function SetPoints(ruta) {
                 var t2 = new Date();
                 t1.setHours(hora1[0], hora1[1], hora1[2]);
                 t2.setHours(hora2[0], hora2[1], hora2[2]);
-//AquÃ­ hago la resta
+//Aquí hago la resta
                 t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
 //Imprimo el resultado
                 centerPoint[k].stand = "" + (t1.getHours() ? t1.getHours() + (t1.getHours() > 1 ? " horas, " : " hora, ") : "") + (t1.getMinutes() ? "" + t1.getMinutes() + (t1.getMinutes() > 1 ? " minutos" : " minuto") : "") + (t1.getSeconds() ? (t1.getHours() || t1.getMinutes() ? " y " : "") + t1.getSeconds() + (t1.getSeconds() > 1 ? " segundos" : " segundo") : "");
@@ -4908,7 +4908,7 @@ function FireBaseKey(Elemento, TipoDeSolicitud, apikey, idsesion, token, Depende
                                     //InsertarCredencialesUsr(idUsuarios_Movil, "-1");
                                     Swal.fire(
                                             'Upsss...!',
-                                            'Algo salio mal y no pudo enviarse la notificaciÃ³n. <br>- Firebase responde:Failure:1',
+                                            'Algo salio mal y no pudo enviarse la notificación. <br>- Firebase responde:Failure:1',
                                             'error'
                                             );
 
@@ -4973,7 +4973,7 @@ function FireBaseKey(Elemento, TipoDeSolicitud, apikey, idsesion, token, Depende
 
 //                                Swal.fire(
 //                                        'Upsss...!',
-//                                        'Algo salio mal y no pudo enviarse la notificaciÃ³n',
+//                                        'Algo salio mal y no pudo enviarse la notificación',
 //                                        'error'
 //                                        );
                                         $.ajax({
@@ -5014,7 +5014,7 @@ function FireBaseKey(Elemento, TipoDeSolicitud, apikey, idsesion, token, Depende
         if (TipoDeSolicitud === 2) {
             Swal.fire(
                     'Upsss...!',
-                    'Algo salio mal y no pudo enviarse la notificaciÃ³n. <br>- Firebase-Key: No encontrada',
+                    'Algo salio mal y no pudo enviarse la notificación. <br>- Firebase-Key: No encontrada',
                     'error'
                     );
         }
@@ -5453,7 +5453,7 @@ function insertarIncidenteCercano(Incidente) {
                     new google.maps.Point(8, 8), // anchor (move to center of marker)
                     new google.maps.Size(16, 16) // scaled size (required for Retina display icon)
                     );
-        } else if (Incidente.incidente.Prioridad === "RÃ¡pida") {
+        } else if (Incidente.incidente.Prioridad === "Rápida") {
             image = new google.maps.MarkerImage(
                     PathRecursos + 'Img/IconoMap/orange_dot.png',
                     null, // size
@@ -6273,7 +6273,7 @@ function load_file_img(id) {
             if (err) {
                 console.log(err, err.stack); // an error occurred
                 swal.fire({
-                    text: "Error de conexiÃ³n con el servidor."
+                    text: "Error de conexión con el servidor."
                 });
             } else {
                 console.log(data);   // successful response
