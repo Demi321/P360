@@ -304,6 +304,25 @@ function listar_institucion(institucion) {
         continuar_institucion_seleccionada();
 
     });
+    
+    if (window.location.href.includes("access_token") && window.location.href.includes("/section/")) {
+        console.log("Iniciando sesion con access_token y una seccion en especifico");
+        let url_section = window.location.href.split("/");
+        let length_url = url_section.length;
+        let tipo_area = url_section[length_url-1];
+        let tipo_servicio = url_section[length_url-2];
+        let tipo_usuario = url_section[length_url-3];
+        console.log("Pruebas fernando ------>");
+        console.log(tipo_usuario);
+        console.log(tipo_servicio);
+        console.log(institucion.tipo_usuario);
+        console.log(institucion.tipo_servicio);
+        console.log("------------------------");
+        if (tipo_usuario === institucion.tipo_usuario && tipo_servicio === institucion.tipo_servicio) {
+            institucion_seleccionada = institucion;
+            continuar_institucion_seleccionada();
+        }
+    }
 }
 
 function continuar_institucion_seleccionada() {

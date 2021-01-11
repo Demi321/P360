@@ -6,7 +6,7 @@
 
 
 
-/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal, configuracionEmpleado, configuracionUsuario */
+/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal, configuracionEmpleado, configuracionUsuario, moment, Promise, Directorio */
 //jQuery.event.props.push('dataTransfer');
 
 var NotificacionesActivadas = false;
@@ -15,6 +15,9 @@ var iconGroupDefault = 'https://bucketmoviles121652-dev.s3.amazonaws.com/public/
 
 var dataLlamada = {};
 var usuariosReenviaMensaje = null;
+
+var banderaEditando = false, banderaRespondiendo = false;
+var idMensajeEditando = null, idMensajeRespondiendo = null;
 
 /*
  * REPRODUCIR SONIDO AL LLEGAR NOTIFICACION
@@ -162,7 +165,7 @@ var participantesParaGrupo = null;
 vuewModalParticipantesGrupo = () => {
   
     participantesParaGrupo = new Array();
-    var json = Directorio;
+    var json = directorio_completo;
     vue = new Vue({
         components: {
             Multiselect: window.VueMultiselect.default
@@ -186,7 +189,7 @@ vuewModalParticipantesGrupo = () => {
                 //console.info(this.value);
             },
             onRemove(op) {
-                var i = participantesParaGrupo.indexOf(op);
+                var i = participantesParaGrupo.indexOf(op.id360);
                 participantesParaGrupo.splice(i, 1);
             }
 
@@ -221,7 +224,7 @@ formGroupNombreGrupo.append(inputNombreGrupo);
 formCreaGrupo.append(formGroupNombreGrupo);
 
 let formGroupDescripcionGrupo = $("<div></div>").addClass("form-group");
-let labelDescripcionGrupo = $("<label></label>")
+let labelDescripcionGrupo = $("<label></label>");
 labelDescripcionGrupo.text("Descripción breve");
 labelDescripcionGrupo.attr("for","inputDescripcionGrupo");
 let inputDescripcionGrupo = $("<input>").addClass("form-control");
@@ -266,6 +269,28 @@ formCreaGrupo.append(buttonSubmitCreaGrupo);
 
 contenedorAgregarGrupo.append(formCreaGrupo);
 
+const mensajeSistema = (mensaje, id) => {
+  
+    let input = $("<input>");
+    input.val(mensaje);
+
+    let ulJS = document.getElementById("contact_messaging"+id);
+    let ul = $(ulJS);
+
+    let previewJS = document.getElementById("preview_"+id);
+    let preview = $(previewJS);
+
+    let messagesJS = document.getElementById("messages_"+id);
+    let messages = $(messagesJS);
+
+    let user = {"id360":id, "mensajeSistema":true};
+
+    let rutaAdjunto = null;
+
+    send_chat_messages(input, ul, preview, user, messages, rutaAdjunto);
+  
+};
+
 $("#addGroup").click(() => {
     
     Swal.fire({
@@ -298,23 +323,29 @@ $("#addGroup").click(() => {
                 "hora": getHora(),
                 "participantes": participantesParaGrupo
             };
-            console.log(dataGrupo);
+            
             RequestPOST("/API/empresas360/crear_grupo", dataGrupo).then((response) => {
                 
-                let idGrupo = response.id_grupo;
-                
                 if(response.success){
+                    
+                    let idGrupo = response.id_grupo;
+                    
                     Swal.close();
+                    participantesParaGrupo.push(sesion_cookie.idUsuario_Sys);
                     
                     let dataContac = {
                         "id360": idGrupo,
                         "nombre_grupo": nombreGrupo,
                         "img": iconGroupDefault,
-                        "descripcion_grupo": descripcionGrupo
+                        "descripcion_grupo": descripcionGrupo,
+                        "participantes": participantesParaGrupo.toString()
                     };
 
                     contacto_chat(dataContac, true);
                     $("#profile_chat"+idGrupo).click();
+                    
+                    let mensajeBienvenida = sesion_cookie.nombre + " " + sesion_cookie.apellidos + " ha creado este grupo";
+                    mensajeSistema(mensajeBienvenida, idGrupo);
                     
                     swal.fire({text: "Invitación enviada a los participantes"});
                 }
@@ -395,6 +426,7 @@ function agregar_chat_enviado(mensaje, viejo) {
 
 }
 function recibir_chat(mensaje, viejo, group) {
+    console.log("Llega a recibir chat");
     if (!$("#profile_chat" + mensaje.id360).length) {
         if(group){
             RequestPOST("/API/empresas360/infoGrupo", {"id_grupo":mensaje.idGroup}).then((response) => {
@@ -410,53 +442,59 @@ function recibir_chat(mensaje, viejo, group) {
             });
         }
     } else {
-        if(group){
-            
-        }else{
-            let user = null;
-            $.each(directorio_completo, (i) => {
-                if (mensaje.id360 === directorio_completo[i].id360) {
-                    user = directorio_completo[i];
-                    return false;
-                }
-            });
-            if (user !== null) {
-                if (NotificacionesActivadas) {
-
-                    let body = '';
-                    if (mensaje.type === "text") {
-                        body = user.nombre + " " + user.apellido_paterno + " dice: " + mensaje.message;
-                    } else {
-                        body = user.nombre + " " + user.apellido_paterno + " ha enviado un adjunto";
-                    }
-
-                    /*let onClickNotification = () => {
-                     $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
-                     $("#message_input_"+user.id360).focus();
-
-                     if($("#profile_chat" + value.id360).length){
-                     $("#profile_chat" + value.id360).click();
-                     }else{
-                     contacto_chat(value);
-                     $("#profile_chat" + value.id360).click();
-                     }
-
-                     };*/
-
-                    notificacion_mensaje("Nuevo mensaje", body, () => {
-                    });
-
-                    buttonNotificacionMensaje.click();
-
-                }
-
-                agregar_chat(mensaje, user, "send", viejo);
+        let user = null;
+        $.each(directorio_completo, (i) => {
+            if (mensaje.id360 === directorio_completo[i].id360) {
+                user = directorio_completo[i];
+                return false;
             }
-        }
+        });
+        if (user !== null) {
+            if (NotificacionesActivadas) {
 
+                let body = '';
+                if (mensaje.type === "text") {
+                    body = user.nombre + " " + user.apellido_paterno + " dice: " + mensaje.message;
+                } else {
+                    body = user.nombre + " " + user.apellido_paterno + " ha enviado un adjunto";
+                }
+
+                /*let onClickNotification = () => {
+                 $(".messages").animate({scrollTop: $(document).height()+100000}, "fast");
+                 $("#message_input_"+user.id360).focus();
+
+                 if($("#profile_chat" + value.id360).length){
+                 $("#profile_chat" + value.id360).click();
+                 }else{
+                 contacto_chat(value);
+                 $("#profile_chat" + value.id360).click();
+                 }
+
+                 };*/
+
+                notificacion_mensaje("Nuevo mensaje", body, () => {
+                });
+
+                buttonNotificacionMensaje.click();
+
+            }
+
+            agregar_chat(mensaje, user, "send", viejo);
+        }
     }
 
 }
+
+const NotificacionToas = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    onOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer);
+      toast.addEventListener('mouseleave', Swal.resumeTimer);
+    }
+});
 
 function notificacion_mensaje(title, body, onclick) {
     if (Notification.permission !== "granted") {
@@ -470,6 +508,7 @@ function notificacion_mensaje(title, body, onclick) {
         };
 
         var notificacion = new Notification(title, options);
+        setTimeout(notificacion.close.bind(notificacion), 15000);
 
         notificacion.onshow = function () {
             //document.getElementById('').play();
@@ -502,7 +541,7 @@ const swalConfirmDialog = (message, textConfirm, textCancel) => {
 vuewModalReenviaMensaje = () => {
   
     usuariosReenviaMensaje = new Array();
-    var json = Directorio;
+    var json = directorio_completo;
     vue = new Vue({
         components: {
             Multiselect: window.VueMultiselect.default
@@ -520,13 +559,16 @@ vuewModalReenviaMensaje = () => {
                 return  option.nombre + " " + option.apellido_paterno + " " + option.apellido_materno;
             },
             onSelect(op) {
+                console.log("agrego a :" + op.nombre + " con id " + op.id360);
                 usuariosReenviaMensaje.push(op.id360);
             },
             onClose() {
                 //console.info(this.value);
             },
             onRemove(op) {
-                var i = usuariosReenviaMensaje.indexOf(op);
+                console.log("quito a :" + op.nombre + " con id " + op.id360);
+                var i = usuariosReenviaMensaje.indexOf(op.id360);
+                console.log(i);
                 usuariosReenviaMensaje.splice(i, 1);
             }
 
@@ -535,7 +577,7 @@ vuewModalReenviaMensaje = () => {
     
 };
 
-const reenviaMensaje = (mensaje) => {
+const reenviaMensaje = (mensaje, type) => {
     let contenedorReenviaMensaje = $("<div></div>");
 
     let formReenviaMensaje = $("<form></form>");
@@ -567,7 +609,7 @@ const reenviaMensaje = (mensaje) => {
                                     '</div>';
     formGroupReenviaMensaje.append(labelUsuariosReenvia);
     formGroupReenviaMensaje.append(selectUsuariosReenvia);
-    formReenviaMensaje.append(formGroupParticipantesGrupo);
+    formReenviaMensaje.append(formGroupReenviaMensaje);
 
     let buttonSubmitReenviaMensaje = $("<button></button>").addClass("btn btn-danger btn-block mt-4");
     buttonSubmitReenviaMensaje.attr("type","submit");
@@ -583,6 +625,10 @@ const reenviaMensaje = (mensaje) => {
         cancelButtonText: 'Cancelar',
         allowOutsideClick: false,
         allowEscapeKey : false
+    }).then((result) => {
+        if (!result.value) {
+            apagaValores();
+        }
     });
 
     vuewModalReenviaMensaje();
@@ -592,32 +638,96 @@ const reenviaMensaje = (mensaje) => {
     $("#formReenviaMensaje").submit((e) => {
 
         e.preventDefault();
-
+console.log(usuariosReenviaMensaje);
         if( usuariosReenviaMensaje.length ){
+            
+            Swal.close();
+            
+            const buscaYreenvia = (id) => {
+                RequestPOST("/API/get/perfil360", {id360: id}).then((response) => {
+                    if (response.success) {
+                        contacto_chat(response);
+                        enviaElMensaje(id);
+                    }
+                });
+            };
+            
+            const enviaElMensaje = (id) => {
+                let input = $("<input>");
+                input.val(mensaje);
+
+                let ulJS = document.getElementById("contact_messaging"+id);
+                let ul = $(ulJS);
+
+                let previewJS = document.getElementById("preview_"+id);
+                let preview = $(previewJS);
+
+                let messagesJS = document.getElementById("messages_"+id);
+                let messages = $(messagesJS);
+
+                let user = {"id360":id};
+
+                let rutaAdjunto = null;
+                if(type !== "text") rutaAdjunto = mensaje;
+
+                send_chat_messages(input, ul, preview, user, messages, rutaAdjunto);
+            };
 
             let cantidadU = usuariosReenviaMensaje.length;
             for( let x = 0; x<cantidadU; x++ ){
+                let id = usuariosReenviaMensaje[x];
+                console.log(id);
+                if (!$("#profile_chat" + id).length) {
+                    buscaYreenvia(id);
+                } else {
+                    enviaElMensaje(id);
+                }
                 
-                let input = $("<input>");
-                input.val(mensaje);
-                
-                let ulJS = document.getElementById("contact_messaging"+usuariosReenviaMensaje[x]);
-                let ul = $(ulJS);
-                
-                let previewJS = document.getElementById("profile_chat"+usuariosReenviaMensaje[x]);
-                let preview = $(previewJS);
-                
-                let messagesJS = document.getElementById("messages_"+usuariosReenviaMensaje[x]);
-                let messages = $(messagesJS);
-                
-                let user = {"id360":usuariosReenviaMensaje[x]};
-                
-                send_chat_messages(input, ul, preview, user, messages);
             }
 
         }
 
     });
+};
+
+const apagaValores = () => {
+    banderaEditando = false;
+    banderaRespondiendo = false;
+    idMensajeEditando = false;
+    idMensajeRespondiendo = false;
+    $(".filaMensajesOperaciones").addClass("d-none");
+};
+
+const mensajeViejo = (viejo, nuevo) => {
+    
+    let div = $("<div></div>");
+    
+    let formGroupViejo = $("<div></div>").addClass("form-group");
+    let labelViejo = $("<label></label>");
+    labelViejo.text("Mensaje Anterior");
+    let inputViejo = $("<textarea>").addClass("form-control");
+    inputViejo.attr("disabled","true");
+    inputViejo.val(viejo);
+    formGroupViejo.append(labelViejo);
+    formGroupViejo.append(inputViejo);
+    
+    let formGroupNuevo = $("<div></div>").addClass("form-group");
+    let labelNuevo = $("<label></label>");
+    labelNuevo.text("Mensaje Actual");
+    let inputNuevo = $("<textarea>").addClass("form-control");
+    inputNuevo.attr("disabled","true");
+    inputNuevo.val(nuevo);
+    formGroupNuevo.append(labelNuevo);
+    formGroupNuevo.append(inputNuevo);
+    
+    div.append(formGroupViejo);
+    div.append(formGroupNuevo);
+    
+    Swal.fire({
+        html: div,
+        showConfirmButton: false
+    });
+    
 };
 
 function agregar_chat(msj, user, type, viejo) {
@@ -643,8 +753,13 @@ function agregar_chat(msj, user, type, viejo) {
             });
         }
         let message = $("<p></p>");
-
-        let id = type === "replies" ? msj.to_id360 : msj.id360;
+        
+        let id = null;
+        if( msj.idGroup !== undefined && msj.idGroup !== null ){
+            id = msj.idGroup;
+        }else{
+            id = type === "replies" ? msj.to_id360 : msj.id360;
+        }
         let previewMesagge;
 
         if (msj.activo === "0") {
@@ -692,27 +807,44 @@ function agregar_chat(msj, user, type, viejo) {
 
             let fecha = $("<span></span>").addClass("time");
 
-            let fechaDate = new Date(msj.fecha);
-            let fechaCorta = fechaDate.getDate() + "/" + (fechaDate.getMonth() + 1) + "/" + fechaDate.getFullYear();
-            let hoy = new Date();
+            let fechaMoment = moment(msj.fecha).format("DD-MM-YY");
+            let partesHoraMensaje = msj.hora.split(":");
+            let horaMoment = moment();
+            horaMoment.set("hour",partesHoraMensaje[0]);
+            horaMoment.set("minute", partesHoraMensaje[1]);
+            horaMoment.set("second", partesHoraMensaje[2]);
 
-            fechaCorta = fechaDate.getTime() === hoy.getTime() ? "" : fechaCorta;
-
-            fecha.text(fechaCorta + " " + msj.hora);
+            fecha.text(fechaMoment + " " + horaMoment.format("hh:mm A"));
             let iconClock = $("<li></li>").addClass("far fa-clock");
-
+            let spanEdit = $("<span></span>");
+            let iconEdit = $("<li></li>").addClass("fas fa-edit");
+            spanEdit.append(iconEdit);
+            iconEdit.attr("id","historial_ediciones_" + msj.id);
+            
             if (type === "replies") {
                 fecha.append(iconClock);
+                if(msj.time_updated !== null && msj.time_updated !== undefined) fecha.append(spanEdit);
                 iconClock.addClass("ml-2");
+                iconEdit.addClass("ml-2");
             } else {
                 fecha.prepend(iconClock);
+                if(msj.time_updated !== null && msj.time_updated !== undefined) fecha.prepend(spanEdit);
                 iconClock.addClass("mr-2");
+                iconEdit.addClass("mr-2");
             }
+            
+            iconEdit.css({
+                "cursor":"pointer"
+            });
 
             message.append(fecha);
 
             li.append(img_message);
             li.append(message);
+            
+            spanEdit.click(() => {
+                mensajeViejo(msj.oldMessage, mensaje);
+            });
 
             let idConver = type === "replies" ? msj.to_id360 : msj.id360;
             previewMesagge = type === "replies" ? "Yo: " + mensaje : user.nombre + ": " + mensaje;
@@ -787,7 +919,6 @@ function agregar_chat(msj, user, type, viejo) {
 
                 }
 
-                console.log(imagenPreview);
                 message.empty().append(imagenPreview);
                 message.append(saltoLinea);
                 if (!(extension === "jpg" || extension === "png" || extension === "jpeg" || extension === "gif")) {
@@ -815,61 +946,71 @@ function agregar_chat(msj, user, type, viejo) {
             }
 
             //ICONO MENU DE OPCION PARA EL MENSAJE
-            if (type === "replies") {
-                let iconOpciones = $("<span></span>").addClass("iconOpciones");
-                let iconDespliegaMenu = $('<i class="fas fa-chevron-down"></i>');
-                iconOpciones.append(iconDespliegaMenu);
-                message.append(iconOpciones);
+            
+            let iconOpciones = $("<span></span>").addClass("iconOpciones");
+            let iconDespliegaMenu = $('<i class="fas fa-chevron-down"></i>');
+            iconOpciones.append(iconDespliegaMenu);
+            message.append(iconOpciones);
 
-                const eliminaMensaje = (tipo) => {
-                    //PEDIR CONFIRMACION DE ELIMINAR
-                    swalConfirmDialog("¿Eliminar mensaje?", "Eliminar", "Cancelar").then((response) => {
-                        if (response) {
-                            //PROCESO DE ELIMINACION
-                            
-                            let dataMensaje = {
-                                "idMensaje": msj.id
-                            };
-                            
-                            let services;
-                            
-                            if(tipo === 0){
-                                services = "/API/empresas360/eliminaMensaje";
-                                dataMensaje.id360 = sesion_cookie.idUsuario_Sys;
-                                dataMensaje.to_id360 = user.id360;
-                            }else{
-                                services = "/API/empresas360/eliminaMensajeParaMi";
-                                dataMensaje.idUser = sesion_cookie.idUsuario_Sys;
-                            }
+            const eliminaMensaje = (tipo) => {
+                //PEDIR CONFIRMACION DE ELIMINAR
+                swalConfirmDialog("¿Eliminar mensaje?", "Eliminar", "Cancelar").then((response) => {
+                    if (response) {
+                        //PROCESO DE ELIMINACION
 
-                            RequestPOST(services, dataMensaje).then((response) => {
-                                if (response.success) {
-                                    menuOpcionesMensaje.removeClass("conAltura");
-                                    if(tipo === 0){
-                                        message.empty();
-                                        message.text("Mensaje eliminado");
-                                        let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
-                                        iconMensajeEliminado.css({"margin-right": "10px"});
-                                        message.prepend(iconMensajeEliminado);
-                                        message.css({
-                                            "background-color": "transparent",
-                                            "font-style": "italic",
-                                            "font-size": "1.1rem"
-                                        });
-                                    }else{
-                                        li.remove();
-                                    }
-                                    
-                                }
-                            });
+                        let dataMensaje = {
+                            "idMensaje": msj.id
+                        };
 
+                        let services;
+
+                        if(tipo === 0){
+                            services = "/API/empresas360/eliminaMensaje";
+                            dataMensaje.id360 = sesion_cookie.idUsuario_Sys;
+                            dataMensaje.to_id360 = user.id360;
+                        }else{
+                            services = "/API/empresas360/eliminaMensajeParaMi";
+                            dataMensaje.idUser = sesion_cookie.idUsuario_Sys;
                         }
-                    });
-                };
 
-                //LISTADO DE OPCIONES POR MENSAJE
-                let menuOpcionesMensaje = $("<ul></ul>").addClass("menuOpcionesMensaje");
+                        RequestPOST(services, dataMensaje).then((response) => {
+                            apagaValores();
+                            if (response.success) {
+                                menuOpcionesMensaje.removeClass("conAltura");
+                                if(tipo === 0){
+                                    message.empty();
+                                    message.text("Mensaje eliminado");
+                                    let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
+                                    iconMensajeEliminado.css({"margin-right": "10px"});
+                                    message.prepend(iconMensajeEliminado);
+                                    message.css({
+                                        "background-color": "transparent",
+                                        "font-style": "italic",
+                                        "font-size": "1.1rem"
+                                    });
+                                }else{
+                                    li.remove();
+                                }
 
+                            }
+                        });
+
+                    }
+                });
+            };
+
+            //LISTADO DE OPCIONES POR MENSAJE
+            let menuOpcionesMensaje = $("<ul></ul>").addClass("menuOpcionesMensaje").attr("id","menuOpcionesMensaje_" + user.id360);
+
+            //OPCION PARA ELIMINAR MENSAJE SOLO PARA MI
+            let opcionEliminaMensajeMi = $("<li></li>").addClass("opcionMensaje");
+            opcionEliminaMensajeMi.text("Eliminar para mi");
+            opcionEliminaMensajeMi.click(() => {
+                eliminaMensaje(1);
+            });
+            menuOpcionesMensaje.append(opcionEliminaMensajeMi);
+
+            if (type === "replies") {
                 //OPCION DE ELIMINAR MENSAJE
                 let opcionEliminaMensaje = $("<li></li>").addClass("opcionMensaje");
                 opcionEliminaMensaje.text("Eliminar para todos");
@@ -878,54 +1019,130 @@ function agregar_chat(msj, user, type, viejo) {
                 });
                 menuOpcionesMensaje.append(opcionEliminaMensaje);
 
-                //OPCION PARA ELIMINAR MENSAJE SOLO PARA MI
-                let opcionEliminaMensajeMi = $("<li></li>").addClass("opcionMensaje");
-                opcionEliminaMensajeMi.text("Eliminar para mi");
-                opcionEliminaMensajeMi.click(() => {
-                    eliminaMensaje(1);
-                });
-                menuOpcionesMensaje.append(opcionEliminaMensajeMi);
-                
-                //OPCION PARA REENVIAR EL MENSAJE
-                let opcionReenviaMensaje = $("<li></li>").addClass("optionMensaje");
-                opcionReenviaMensaje.text("Reenviar mensaje");
-                opcionReenviaMensaje.click(() => {
-                    
-                    reenviaMensaje(mensaje);
-                    
-                });
-                menuOpcionesMensaje.append(opcionReenviaMensaje);
-
                 //OPCION PARA EDITAR EL MENSAJE
-                let opcionEditaMensaje = $("<li></li>").addClass("optionMensaje");
-                opcionEditaMensaje.text("Editar mensaje");
-                opcionEditaMensaje.click(() => {
-                    console.log("Editando..");
-                });
-                menuOpcionesMensaje.append(opcionEditaMensaje);
+                if (msj.type === "text") {
+                    let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
+                    opcionEditaMensaje.text("Editar mensaje");
+                    opcionEditaMensaje.click(() => {
 
-                //OPCION PARA RESPONDER UN MENSAJE
-                let opcionRespondeMensaje = $("<li></li>").addClass("opcionMensaje");
-                opcionRespondeMensaje.text("Responder mensaje");
-                opcionRespondeMensaje.click(() => {
-                    console.log("Respondiendo...");
-                });
-                menuOpcionesMensaje.append(opcionRespondeMensaje);
+                        let contenedorReenvia = $("#filaMensajesOperaciones_" + user.id360);
+                        contenedorReenvia.removeClass("d-none");
+                        $("#accionMensajesOpciones_" + user.id360).text("Editando");
+                        $("#message_input_" + user.id360).val(mensaje);
+                        $("#message_input_" + user.id360).select();
+                        contenedorReenvia.find("span").text(mensaje);
+                        $("#accionMensajesOpciones_" + user.id360).text("Editando");
+                        banderaEditando = true;
+                        idMensajeEditando = msj.id;
+                        menuOpcionesMensaje.removeClass("conAltura");
 
-                message.append(menuOpcionesMensaje);
-
-                message.mouseenter(() => {
-                    iconOpciones.css({"display": "block"});
-                }).mouseleave(() => {
-                    iconOpciones.css({"display": "none"});
-                });
-
-                iconOpciones.click(() => {
-                    console.log("despliega menu");
-                    menuOpcionesMensaje.toggleClass("conAltura");
-                    //menuOpcionesMensaje.css({"height":"auto"});
-                });
+                    });
+                    menuOpcionesMensaje.append(opcionEditaMensaje);
+                }
             }
+
+            //OPCION PARA REENVIAR EL MENSAJE
+            let opcionReenviaMensaje = $("<li></li>").addClass("opcionMensaje");
+            opcionReenviaMensaje.text("Reenviar mensaje");
+            opcionReenviaMensaje.click(() => {
+
+                menuOpcionesMensaje.removeClass("conAltura");
+                reenviaMensaje(mensaje, msj.type);
+
+            });
+            menuOpcionesMensaje.append(opcionReenviaMensaje);
+
+
+            //OPCION PARA RESPONDER UN MENSAJE
+            let opcionRespondeMensaje = $("<li></li>").addClass("opcionMensaje");
+            opcionRespondeMensaje.text("Responder mensaje");
+            opcionRespondeMensaje.click(() => {
+
+                let contenedorResponde = $("#filaMensajesOperaciones_" + user.id360);
+                contenedorResponde.removeClass("d-none");
+                contenedorResponde.find("span").text(mensaje);
+                $("#accionMensajesOpciones_" + user.id360).text("Respondiendo");
+                banderaRespondiendo = true;
+                idMensajeRespondiendo = msj.id;
+                menuOpcionesMensaje.removeClass("conAltura");
+
+            });
+            menuOpcionesMensaje.append(opcionRespondeMensaje);
+            
+            li.dblclick(() => {
+                opcionRespondeMensaje.click();
+            });
+
+            message.append(menuOpcionesMensaje);
+
+            message.mouseenter(() => {
+                iconOpciones.css({"display": "block"});
+            }).mouseleave(() => {
+                iconOpciones.css({"display": "none"});
+            });
+            if(msj.idResponse !== null && msj.idResponse !== undefined){
+                let mensajeRespuesta = msj.mensajeRespuesta === undefined ? msj.mensajeRespondido.message : msj.mensajeRespuesta;
+                let smallRespuesta = $("<small></small>").addClass("respuesta-mensaje");
+                smallRespuesta.text(mensajeRespuesta);
+                message.prepend(smallRespuesta);
+
+                smallRespuesta.click(() => {
+                    
+                    const remarcaMensaje = (idMensaje) => {
+                        document.querySelector("#mensaje_" + idMensaje).scrollIntoView();
+                        let resaltar = setInterval(() => {
+                            $("#mensaje_"+ idMensaje).toggleClass("respondida");
+                        }, 250);
+
+                        setTimeout(() => {
+                            clearInterval(resaltar);
+                            $("#mensaje_"+ idMensaje).removeClass("respondida");
+                        }, 2000);
+                    };
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                    if( $("#mensaje_" + msj.idResponse).length ){
+                        
+                        remarcaMensaje(msj.idResponse);
+                        
+                    }else{
+                        
+                        const buscaMensajeRespuesta = () => {
+                            if( $("#contact_messaging" + user.id360).find(".liMasMensajes").length ){
+                                cargaMasMensajes(user.id360).then((response) => {
+                                    if( $("#mensaje_" + msj.idResponse).length ){
+                                        remarcaMensaje(msj.idResponse);
+                                    }else if(response){
+                                        buscaMensajeRespuesta();
+                                    }else{
+                                        NotificacionToas.fire({
+                                            title: 'No se ha encontrado el mensaje'
+                                        });
+                                    }
+                                    
+                                });
+                            }else{
+                                NotificacionToas.fire({
+                                    title: 'No se ha encontrado el mensaje'
+                                });
+                            }
+                        };
+                        
+                        buscaMensajeRespuesta();
+                        
+                    }
+
+                });
+
+                apagaValores();
+
+            }
+
+            iconOpciones.click(() => {
+
+                menuOpcionesMensaje.toggleClass("conAltura");
+                //$(".menuOpcionesMensaje:not(#menuOpcionesMensaje_"+user.id360+")").removeClass("conAltura");
+
+            });
 
         }
 
@@ -1036,22 +1253,28 @@ RequestPOST("/API/ConsultarDirectorio", {
         let cantidadDirectorio = directorio.length;
 
         let fueraDeDirectorio = [];
+        let grupos = []; 
 
         $.each(response, (index, contacto) => {
 
             CantidadMensajesPorChat[contacto.id360chat] = {
                 cantidad: parseInt(contacto.cantidadMensajes) - 20
             };
-            let encontrado = false;
-            for (let i = 0; i < cantidadDirectorio; i++)
-                if (directorio[i].id360 === contacto.id360chat) {
-                    encontrado = true;
-                    contacto_chat(directorio[i]);
-                    break;
-                }
+            
+            if(contacto.esGrupo === null){
+                let encontrado = false;
+                for (let i = 0; i < cantidadDirectorio; i++)
+                    if (directorio[i].id360 === contacto.id360chat) {
+                        encontrado = true;
+                        contacto_chat(directorio[i]);
+                        break;
+                    }
 
-            if (!encontrado)
-                fueraDeDirectorio.push({"id360": contacto.id360chat});
+                if (!encontrado)
+                    fueraDeDirectorio.push({"id360": contacto.id360chat});
+            }else{
+                grupos.push(contacto.id360chat);
+            }
 
         });
 
@@ -1071,6 +1294,41 @@ RequestPOST("/API/ConsultarDirectorio", {
                 NotificacionesActivadas = true;
             });
         };
+        
+        const verificaGrupos = () => {
+            if(grupos.length > 0){
+                
+                RequestPOST("/API/empresas360/informacion_grupos", {"grupos":grupos}).then((response) => {
+                    
+                    $.each(response, function (index, grupo) {
+                        //directorio.push(empleado);
+                        //directorio_completo.push(empleado);
+                        
+                        let participantesConGuion = grupo.participantes.split(",");
+                        let participantes = [];
+                        let csg = participantesConGuion.length;
+                        for(let x = 0; x<csg; x++){
+                            let partesParticipantes = participantesConGuion[x].split("-");
+                            participantes.push(partesParticipantes[0]);
+                        }
+                        
+                        let dataContac = {
+                            "id360": grupo.id_grupo,
+                            "nombre_grupo": grupo.nombre_grupo,
+                            "img": grupo.icono_grupo,
+                            "descripcion_grupo": grupo.descripcion_grupo,
+                            "participantes": participantes.toString()
+                        };
+                        contacto_chat(dataContac, true);
+                    });
+                    
+                    cargaBackUp();
+                    
+                });
+                
+            }else
+                cargaBackUp();
+        };
 
         if (fueraDeDirectorio.length > 0) {
             RequestPOST("/API/empresas360/directorio/un_usuario", fueraDeDirectorio).then((response) => {
@@ -1081,11 +1339,11 @@ RequestPOST("/API/ConsultarDirectorio", {
                         contacto_chat(empleado);
                     }
                 });
-                cargaBackUp();
+                verificaGrupos();
             });
 
         } else
-            cargaBackUp();
+            verificaGrupos();
 
     });
 
@@ -1093,76 +1351,82 @@ RequestPOST("/API/ConsultarDirectorio", {
 });
 
 const cargaMasMensajes = (id360) => {
+    
+    return new Promise(function(resolve, reject) {
+        let init, limit;
 
-    let init, limit;
+        init = (CantidadMensajesPorChat[id360].cantidad - 20) < 0 ? 0 : CantidadMensajesPorChat[id360].cantidad - 20;
+        limit = (CantidadMensajesPorChat[id360].cantidad - 20) < 0 ? CantidadMensajesPorChat[id360].cantidad : 20;
 
-    init = (CantidadMensajesPorChat[id360].cantidad - 20) < 0 ? 0 : CantidadMensajesPorChat[id360].cantidad - 20;
-    limit = (CantidadMensajesPorChat[id360].cantidad - 20) < 0 ? CantidadMensajesPorChat[id360].cantidad : 20;
+        let dataMasMensajes = {
+            "id360-1": id360,
+            "id360-2": sesion_cookie.idUsuario_Sys,
+            "init": init,
+            "limit": limit
+        };
 
-    let dataMasMensajes = {
-        "id360-1": id360,
-        "id360-2": sesion_cookie.idUsuario_Sys,
-        "init": init,
-        "limit": limit
-    };
+        RequestPOST("/API/empresas360/carga_mas_mensajes_chat", dataMasMensajes).then((response) => {
 
-    RequestPOST("/API/empresas360/carga_mas_mensajes_chat", dataMasMensajes).then((response) => {
+            $('#messages_' + id360).animate({
 
-        $('#messages_' + id360).animate({
+                scrollTop: 500
 
-            scrollTop: 500
+            }, 0, "swing", () => {
 
-        }, 0, "swing", () => {
-
-            CantidadMensajesPorChat[id360].cantidad -= 20;
-            NotificacionesActivadas = false;
-            if (response.length === 1) {
-                if (response[0].id360 === sesion_cookie.id_usuario) {
-                    agregar_chat_enviado(response[0], true);
-                } else {
-
-                    recibir_chat(response[0], true);
-                }
-            } else {
-                for (var i = response.length - 1; i >= 0; i--) {
-                    if (response[i].id360 === sesion_cookie.id_usuario) {
-                        agregar_chat_enviado(response[i], true);
+                CantidadMensajesPorChat[id360].cantidad -= 20;
+                NotificacionesActivadas = false;
+                if (response.length === 1) {
+                    if (response[0].id360 === sesion_cookie.id_usuario) {
+                        agregar_chat_enviado(response[0], true);
                     } else {
-                        recibir_chat(response[i], true);
+
+                        recibir_chat(response[0], true);
+                    }
+                } else {
+                    for (var i = response.length - 1; i >= 0; i--) {
+                        if (response[i].id360 === sesion_cookie.id_usuario) {
+                            agregar_chat_enviado(response[i], true);
+                        } else {
+                            recibir_chat(response[i], true);
+                        }
                     }
                 }
-            }
-            NotificacionesActivadas = true;
+                NotificacionesActivadas = true;
 
-            let liCargaMensajesAnterior = $("#contact_messaging" + id360).find(".liMasMensajes");
+                let liCargaMensajesAnterior = $("#contact_messaging" + id360).find(".liMasMensajes");
 
-            document.querySelector("#contact_messaging" + id360 + " .liMasMensajes").scrollIntoView();
-            liCargaMensajesAnterior.remove();
+                document.querySelector("#contact_messaging" + id360 + " .liMasMensajes").scrollIntoView();
+                liCargaMensajesAnterior.remove();
 
-            if (CantidadMensajesPorChat[id360].cantidad > 0) {
-                let liMasMensajes = $("<li></li>").addClass("liMasMensajes");
-                let spanMasMensajes = $("<span></span>").addClass("spanMasMensajes");
-                let iconManMensajes = $("<li></li>").addClass("fas fa-spinner iconMasMensajes");
-                spanMasMensajes.text("Más mensajes...");
-                spanMasMensajes.prepend(iconManMensajes);
-                spanMasMensajes.data("id360-1", id360);
-                spanMasMensajes.data("id360-2", sesion_cookie.idUsuario_Sys);
-                liMasMensajes.append(spanMasMensajes);
-                $("#contact_messaging" + id360).prepend(liMasMensajes);
+                if (CantidadMensajesPorChat[id360].cantidad > 0) {
+                    let liMasMensajes = $("<li></li>").addClass("liMasMensajes");
+                    let spanMasMensajes = $("<span></span>").addClass("spanMasMensajes");
+                    let iconManMensajes = $("<li></li>").addClass("fas fa-spinner iconMasMensajes");
+                    spanMasMensajes.text("Más mensajes...");
+                    spanMasMensajes.prepend(iconManMensajes);
+                    spanMasMensajes.data("id360-1", id360);
+                    spanMasMensajes.data("id360-2", sesion_cookie.idUsuario_Sys);
+                    liMasMensajes.append(spanMasMensajes);
+                    $("#contact_messaging" + id360).prepend(liMasMensajes);
 
-                /*
-                 * EVENTO CLICK PARA CARGAR MáS MENSAJES
-                 */
+                    /*
+                     * EVENTO CLICK PARA CARGAR MáS MENSAJES
+                     */
 
-                spanMasMensajes.click(() => {
-                    cargaMasMensajes(id360);
-                });
+                    spanMasMensajes.click(() => {
+                        cargaMasMensajes(id360);
+                    });
+                    
+                    resolve(true);
 
-            }
+                }else
+                    resolve(false);
+
+            });
 
         });
-
     });
+
 };
 
 function removeDragData(ev) {
@@ -1210,7 +1474,7 @@ function drop(ev) {
 }
 
 function contacto_chat(user, group) {
-
+console.log("Empieza a crear los componentes de contacto");
     if (!$("#profile_chat" + user.id360).length && user.id360 !== undefined) {
 
         let li = $("<li></li>").addClass("contact");
@@ -1325,6 +1589,10 @@ function contacto_chat(user, group) {
 
         let messages = $("<div></div>").addClass("messages");
         messages.attr("id", "messages_" + user.id360);
+        if(group) {
+            messages.data("grupo","true");
+            messages.data("participantes", user.participantes);
+        }
         messages.attr("ondragover","allowDrop(event)");
         messages.attr("ondrop","drop(event)");
         let ul = $("<ul></ul>").addClass("p-0");
@@ -1390,7 +1658,7 @@ function contacto_chat(user, group) {
         let buttonAttachment = $("<button></button>").addClass("btn btn-block");
         let paperclip = $(" <i class=\"fa fa-paperclip\" aria-hidden=\"true\"></i>").addClass("wrap");
         buttonAttachment.attr("type", "button");
-        buttonAttachment.attr("id", "btn-adjunto");
+        buttonAttachment.attr("id", "btn-adjunto-"+user.id360);
         buttonAttachment.append(paperclip);
         buttonAttachment.css({"background-color": "grey"});
 
@@ -1450,6 +1718,57 @@ function contacto_chat(user, group) {
         });
         colName.append(nameFile);
         rowNameFile.append(colName);
+        
+        let rowContenidoMensajeOperaciones = $("<div></div>").addClass("row filaMensajesOperaciones d-none");
+        rowContenidoMensajeOperaciones.attr("id","filaMensajesOperaciones_" + user.id360);
+        let colContenidoMensajeOperaciones = $("<div></div>").addClass("col-12").css({"padding": "0"});
+        let contenidoMensajeOperaciones = $("<p></p>").attr("id","contenidoMensajeOperaciones_" + user.id360);
+        
+        contenidoMensajeOperaciones.css({
+            "margin": "0",
+            "background-color": "gray",
+            "padding": "10px",
+            "text-align": "left"
+        });
+        
+        let spanAccion = $("<span></span>");
+        spanAccion.attr("id","accionMensajesOpciones_" + user.id360);
+        spanAccion.css({
+            "font-size": "1.3rem",
+            "font-style": "italic"
+        });
+        
+        let spanContenidoMensajeOperaciones = $("<span></span>");
+        spanContenidoMensajeOperaciones.css({
+            "padding-right": "5%",
+            "display": "block",
+            "margin-top": "5px"
+        });
+        let buttonCerrarContenidoMensajeOperaciones = $("<button></button>").addClass("btn");
+        buttonCerrarContenidoMensajeOperaciones.text("x");
+        buttonCerrarContenidoMensajeOperaciones.css({
+            "position":"absolute",
+            "top": "0",
+            "right": "20px",
+            "background-color":"transparent",
+            "height": "100%",
+            "padding": "10px"
+        });
+        buttonCerrarContenidoMensajeOperaciones.html('<i class="fas fa-times"></i>');
+        buttonCerrarContenidoMensajeOperaciones.click(() => {
+            rowContenidoMensajeOperaciones.addClass("d-none");
+            contenidoMensajeOperaciones.find("span").text("");
+            banderaEditando = false;
+            banderaRespondiendo = false;
+            idMensajeEditando = null;
+            idMensajeRespondiendo = null;
+        });
+        
+        contenidoMensajeOperaciones.append(spanAccion);
+        contenidoMensajeOperaciones.append(spanContenidoMensajeOperaciones);
+        contenidoMensajeOperaciones.append(buttonCerrarContenidoMensajeOperaciones);
+        colContenidoMensajeOperaciones.append(contenidoMensajeOperaciones);
+        rowContenidoMensajeOperaciones.append(colContenidoMensajeOperaciones);
 
         rowChat.append(colInput);
         rowChat.append(colButtonAttachment);
@@ -1460,6 +1779,7 @@ function contacto_chat(user, group) {
         containerChat.append(rowPreview);
         containerChat.append(rowNameFile);
         containerChat.append(rowButtonAttachment);
+        containerChat.append(rowContenidoMensajeOperaciones);
         containerChat.append(rowChat);
 
         wrap.append(containerChat);
@@ -1491,6 +1811,9 @@ function contacto_chat(user, group) {
         });
 
         buttonAttachment.click(() => {
+            if(banderaEditando)
+                swal.fire({text:"Solo se permiten editar mensajes de texto"});
+            else
             inputAttachment.click();
         });
 
@@ -1703,6 +2026,9 @@ function contacto_chat(user, group) {
             if (e.which == 13) {
                 send_chat_messages(input, ul, preview, user, messages);
                 return false;
+            }else if(e.which == 27){
+                apagaValores();
+                return false;
             }
         });
 
@@ -1752,6 +2078,7 @@ function contacto_chat(user, group) {
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
+                    apagaValores();
                     let id360 = {
                         id360: sesion_cookie.id_usuario
                     };
@@ -1792,6 +2119,7 @@ function contacto_chat(user, group) {
         
         opcionVaciarChat.click(() => {
             swalConfirmDialog("¿Vaciar chat?","Vaciar","Cancelar").then((response) => {
+                apagaValores();
                 if(response){
                     let dataChat = {
                         "idUser": sesion_cookie.idUsuario_Sys,
@@ -1809,179 +2137,73 @@ function contacto_chat(user, group) {
             });
         });
     }
-
+console.log("Termina de crear los componentes de contacto");
 }
 
 function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
+    
     let mensaje = input.val();
-
-    if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
-        mensaje = rutaAdjunto;
-
+    $(".filaMensajesOperaciones").addClass("d-none");
+    
     if ($.trim(mensaje) === '') {
         return false;
-    } else {
-        let json = {
-            "id360": sesion_cookie.id_usuario,
-            "to_id360": user.id360,
-            "fecha": getFecha(),
-            "hora": getHora(),
-            "message": mensaje,
-            "type": "text",
-            "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-            "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
+    }
+    
+    if(banderaEditando){
+        
+        let id = idMensajeEditando;
+        const li = $("#mensaje_" + id);
+        
+        let data = {
+            "mensaje_editado": mensaje,
+            "fecha_edita": getFecha(),
+            "hora_edita": getHora(),
+            "idMensaje": id,
+            "to_id360": user.id360
         };
+        
+        RequestPOST("/API/empresas360/edita_mensaje", data).then((response) => {
+            
+            if( response.success ){
+                
+                let pMensaje = $("#mensaje_" + id).find("p");
+                pMensaje.empty();
+                pMensaje.text(mensaje);
 
-        if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
-            json.type = $("#inputAttachment" + user.id360).data("extension");
-
-        RequestPOST("/API/empresas360/chat", json).then((response) => {
-            if (response.success) {
-                let idMensaje = response.id;
-//                let li = $("<li></li>").addClass("sent");
-                let li = $("<li></li>").addClass("replies");
-                li.attr("id", "mensaje_" + idMensaje);
-                li.addClass("limessage");
-                let img_message = $("<div></div>").addClass("img");
-                img_message.css({
-                    "background": "url('" + perfil.img + "')",
-                    "background-size": "cover",
-                    "background-position": "center",
-                    "background-repeat": "no-repeat"
-                });
-                let message = $("<p></p>");
-
-                if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "") {
-
-                    let extension = $("#inputAttachment" + user.id360).data("extension");
-                    let nombreCorto = $("#inputAttachment" + user.id360).data("nombreCorto");
-                    let imagenPreview = $("<img>").css({"max-width": "125px", "max-height": "75px", "margin-bottom": "10px"}).attr("src", PathRecursos + "images/icono_default.png");
-
-                    let saltoLinea = $("<br>");
-                    let nombreAdjunto = $("<span></span>").css({"font-size": "1.1rem"});
-                    nombreAdjunto.text(nombreCorto + " ");
-
-                    let buttonDownloadAttachment = $("<a></a>").addClass("btn btn-light").css({"margin-left": "10px"});
-                    buttonDownloadAttachment.attr("href", rutaAdjunto);
-                    buttonDownloadAttachment.attr("download", nombreCorto);
-                    buttonDownloadAttachment.html('<i class="fas fa-download"></i>');
-
-                    nombreAdjunto.append(buttonDownloadAttachment);
-
-                    mensaje = nombreCorto;
-
-                    switch (extension) {
-
-                        case "jpg":
-                        case "png":
-                        case "jpeg":
-                        case "gif":
-                            imagenPreview.attr("src", rutaAdjunto);
-                            break;
-
-                        case "docx":
-                        case "docm":
-                        case "dotx":
-                        case "dotm":
-                        case "doc":
-                            imagenPreview.attr("src", PathRecursos + "images/icono_word.png");
-                            break;
-
-                        case "xlsx":
-                        case "xlsm":
-                        case "xlsb":
-                        case "xltx":
-                        case "xltm":
-                        case "xls":
-                        case "xlt":
-                            imagenPreview.attr("src", PathRecursos + "images/icono_excel.png");
-                            break;
-
-                        case "pptx":
-                        case "pptm":
-                        case "ppt":
-                        case "xps":
-                        case "potx":
-                        case "ppsx":
-                            imagenPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
-                            break;
-
-                        case "pdf":
-                            imagenPreview.attr("src", PathRecursos + "images/icono_pdf.png");
-                            break;
-
-                    }
-
-                    message.empty().append(imagenPreview);
-                    message.append(saltoLinea);
-                    
-                    
-                    if (!(extension === "jpg" || extension === "png" || extension === "jpeg" || extension === "gif")) {
-                        message.append(nombreAdjunto);
-                    } else {
-                        imagenPreview.css({"cursor": "pointer", "max-width": "250px","max-height":"250px"});
-                        
-                        let imagenPreviewCopy = $("<img>");
-                        imagenPreviewCopy.attr("src", mensaje);
-                        imagenPreviewCopy.css({
-                            "max-width": "650px",
-                            "max-height":"650px"
-                        });
-                        
-                        imagenPreview.click(() => {
-                            Swal.fire({
-                                width: 700,
-                                showCancelButton: false,
-                                showConfirmButton: false,
-                                html: imagenPreviewCopy
-                            });
-                        });
-                    }
-
-                } else {
-
-                    if (mensaje.slice(0, 7) === "http://" || mensaje.slice(0, 8) === "https://" || mensaje.slice(0, 4) === "www.") {
-                        let linkMensaje = $("<a>");
-                        linkMensaje.text(mensaje);
-                        linkMensaje.attr("href", mensaje);
-                        linkMensaje.attr("tarjet", "_blanck");
-                        message.html(linkMensaje);
-                        
-                        message.css({
-                            "word-break": "break-all"
-                        });
-                        
-                    } else {
-                        message.text(mensaje);
-                    }
-
-                }
+                let fechaDespliega = moment().format("DD-MMM-YY hh:mm A");
 
                 let fecha = $("<span></span>").addClass("time");
-
-                let fechaDate = new Date();
-                let fechaCorta = fechaDate.getDate() + "/" + (fechaDate.getMonth() + 1) + "/" + fechaDate.getFullYear();
-
-                let horaEnvio = fechaDate.getHours() + ":" + fechaDate.getMinutes() + ":" + fechaDate.getSeconds();
-
-                fecha.text(fechaCorta + "-" + horaEnvio);
-                let iconClock = $("<li></li>").addClass("far fa-clock ml-2");
+                fecha.text(fechaDespliega);
+                let iconClock = $("<li></li>").addClass("far fa-clock");
+                let spanEdit = $("<span></span>");
+                let iconEdit = $("<li></li>").addClass("fas fa-edit");
+                spanEdit.append(iconEdit);
+                iconEdit.attr("id","historial_ediciones_" + id);
+                
                 fecha.append(iconClock);
-                message.append(fecha);
-
+                fecha.append(spanEdit);
+                iconClock.addClass("ml-2");
+                iconEdit.addClass("ml-2");
+                
+                iconEdit.css({
+                    "cursor":"pointer"
+                });
+                
+                pMensaje.append(fecha);
+                
                 let iconOpciones = $("<span></span>").addClass("iconOpciones");
                 let iconDespliegaMenu = $('<i class="fas fa-chevron-down"></i>');
                 iconOpciones.append(iconDespliegaMenu);
-                message.append(iconOpciones);
+                pMensaje.append(iconOpciones);
 
                 const eliminaMensaje = (tipo) => {
                     //PEDIR CONFIRMACION DE ELIMINAR
                     swalConfirmDialog("¿Eliminar mensaje?", "Eliminar", "Cancelar").then((response) => {
                         if (response) {
                             //PROCESO DE ELIMINACION
+                            
                             let dataMensaje = {
-                                "idMensaje": idMensaje
+                                "idMensaje": id
                             };
                             
                             let services;
@@ -1996,15 +2218,16 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                             }
 
                             RequestPOST(services, dataMensaje).then((response) => {
+                                apagaValores();
                                 if (response.success) {
                                     menuOpcionesMensaje.removeClass("conAltura");
                                     if(tipo === 0){
-                                        message.empty();
-                                        message.text("Mensaje eliminado");
+                                        pMensaje.empty();
+                                        pMensaje.text("Mensaje eliminado");
                                         let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
                                         iconMensajeEliminado.css({"margin-right": "10px"});
-                                        message.prepend(iconMensajeEliminado);
-                                        message.css({
+                                        pMensaje.prepend(iconMensajeEliminado);
+                                        pMensaje.css({
                                             "background-color": "transparent",
                                             "font-style": "italic",
                                             "font-size": "1.1rem"
@@ -2012,6 +2235,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                                     }else{
                                         li.remove();
                                     }
+                                    
                                 }
                             });
 
@@ -2020,7 +2244,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 };
 
                 //LISTADO DE OPCIONES POR MENSAJE
-                let menuOpcionesMensaje = $("<ul></ul>").addClass("menuOpcionesMensaje");
+                let menuOpcionesMensaje = $("<ul></ul>").addClass("menuOpcionesMensaje").attr("id","menuOpcionesMensaje_" + user.id360);
 
                 //OPCION DE ELIMINAR MENSAJE
                 let opcionEliminaMensaje = $("<li></li>").addClass("opcionMensaje");
@@ -2037,12 +2261,33 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                     eliminaMensaje(1);
                 });
                 menuOpcionesMensaje.append(opcionEliminaMensajeMi);
+                
+                //OPCION PARA REENVIAR EL MENSAJE
+                let opcionReenviaMensaje = $("<li></li>").addClass("opcionMensaje");
+                opcionReenviaMensaje.text("Reenviar mensaje");
+                opcionReenviaMensaje.click(() => {
+                    
+                    menuOpcionesMensaje.removeClass("conAltura");
+                    reenviaMensaje(mensaje, "text");
+                    
+                });
+                menuOpcionesMensaje.append(opcionReenviaMensaje);
 
                 //OPCION PARA EDITAR EL MENSAJE
                 let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
                 opcionEditaMensaje.text("Editar mensaje");
                 opcionEditaMensaje.click(() => {
-                    console.log("Editando..");
+
+                    let contenedorReenvia = $("#filaMensajesOperaciones_" + user.id360);
+                    $("#message_input_" + user.id360).val(mensaje);
+                    $("#message_input_" + user.id360).select();
+                    contenedorReenvia.removeClass("d-none");
+                    contenedorReenvia.find("span").text(mensaje);
+                    $("#accionMensajesOpciones_" + user.id360).text("Editando");
+                    banderaEditando = true;
+                    idMensajeEditando = id;
+                    menuOpcionesMensaje.removeClass("conAltura");
+
                 });
                 menuOpcionesMensaje.append(opcionEditaMensaje);
 
@@ -2050,35 +2295,413 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
                 let opcionRespondeMensaje = $("<li></li>").addClass("opcionMensaje");
                 opcionRespondeMensaje.text("Responder mensaje");
                 opcionRespondeMensaje.click(() => {
-                    console.log("Respondiendo...");
+                    
+                    let contenedorResponde = $("#filaMensajesOperaciones_" + user.id360);
+                    contenedorResponde.removeClass("d-none");
+                    contenedorResponde.find("span").text(mensaje);
+                    $("#accionMensajesOpciones_" + user.id360).text("Respondiendo");
+                    banderaRespondiendo = true;
+                    idMensajeRespondiendo = id;
+                    menuOpcionesMensaje.removeClass("conAltura");
+                    
                 });
                 menuOpcionesMensaje.append(opcionRespondeMensaje);
+                
+                li.dblclick(() => {
+                    opcionRespondeMensaje.click();
+                });
 
-                message.append(menuOpcionesMensaje);
+                pMensaje.append(menuOpcionesMensaje);
 
-                message.mouseenter(() => {
+                pMensaje.mouseenter(() => {
                     iconOpciones.css({"display": "block"});
                 }).mouseleave(() => {
                     iconOpciones.css({"display": "none"});
                 });
 
                 iconOpciones.click(() => {
-                    console.log("despliega menu");
+                    
                     menuOpcionesMensaje.toggleClass("conAltura");
-                    //menuOpcionesMensaje.css({"height":"auto"});
+                    
                 });
-
-                li.append(img_message);
-                li.append(message);
-                ul.append(li);
+                
+                spanEdit.click(() => {
+                    mensajeViejo(response.nuevo.oldMessage, mensaje);
+                });
+                
+                apagaValores();
                 input.val("");
-                preview.text("Yo: " + mensaje);
-                $("#message_contacts").prepend(document.getElementById("profile_chat" + user.id360));
-                document.querySelector("#messages_" + user.id360 + " li.limessage:last-child").scrollIntoView();
+                
+            }
+            
+        });
+        
+        return;
+    }
+
+    if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
+        mensaje = rutaAdjunto;
+
+    let json = {
+        "id360": sesion_cookie.id_usuario,
+        "to_id360": user.id360,
+        "fecha": getFecha(),
+        "hora": getHora(),
+        "message": mensaje,
+        "type": "text",
+        "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
+        "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
+        "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
+    };
+    
+    if(banderaRespondiendo){
+        json.idResponse = idMensajeRespondiendo;
+    }
+    
+    let esGrupo = $("#messages_"+user.id360).data("grupo");
+    if(esGrupo !== undefined && esGrupo !== null && esGrupo === "true"){
+        json.idGroup = user.id360;
+        let participantes = $("#messages_"+user.id360).data("participantes").split(",");
+        json.participantes = participantes;
+    }
+
+    if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "")
+        json.type = $("#inputAttachment" + user.id360).data("extension");
+console.log(json);
+    RequestPOST("/API/empresas360/chat", json).then((response) => {
+        if (response.success) {
+            let idMensaje = response.id;
+//                let li = $("<li></li>").addClass("sent");
+            let li = $("<li></li>").addClass("replies");
+            li.attr("id", "mensaje_" + idMensaje);
+            li.addClass("limessage");
+            let img_message = $("<div></div>").addClass("img");
+            img_message.css({
+                "background": "url('" + perfil.img + "')",
+                "background-size": "cover",
+                "background-position": "center",
+                "background-repeat": "no-repeat"
+            });
+            let message = $("<p></p>");
+            
+            let type = "text";
+
+            if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "") {
+
+                let extension = $("#inputAttachment" + user.id360).data("extension");
+                type = extension;
+                let nombreCorto = $("#inputAttachment" + user.id360).data("nombreCorto");
+                let imagenPreview = $("<img>").css({"max-width": "125px", "max-height": "75px", "margin-bottom": "10px"}).attr("src", PathRecursos + "images/icono_default.png");
+
+                let saltoLinea = $("<br>");
+                let nombreAdjunto = $("<span></span>").css({"font-size": "1.1rem"});
+                nombreAdjunto.text(nombreCorto + " ");
+
+                let buttonDownloadAttachment = $("<a></a>").addClass("btn btn-light").css({"margin-left": "10px"});
+                buttonDownloadAttachment.attr("href", rutaAdjunto);
+                buttonDownloadAttachment.attr("download", nombreCorto);
+                buttonDownloadAttachment.html('<i class="fas fa-download"></i>');
+
+                nombreAdjunto.append(buttonDownloadAttachment);
+
+                mensaje = nombreCorto;
+
+                switch (extension) {
+
+                    case "jpg":
+                    case "png":
+                    case "jpeg":
+                    case "gif":
+                        imagenPreview.attr("src", rutaAdjunto);
+                        break;
+
+                    case "docx":
+                    case "docm":
+                    case "dotx":
+                    case "dotm":
+                    case "doc":
+                        imagenPreview.attr("src", PathRecursos + "images/icono_word.png");
+                        break;
+
+                    case "xlsx":
+                    case "xlsm":
+                    case "xlsb":
+                    case "xltx":
+                    case "xltm":
+                    case "xls":
+                    case "xlt":
+                        imagenPreview.attr("src", PathRecursos + "images/icono_excel.png");
+                        break;
+
+                    case "pptx":
+                    case "pptm":
+                    case "ppt":
+                    case "xps":
+                    case "potx":
+                    case "ppsx":
+                        imagenPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
+                        break;
+
+                    case "pdf":
+                        imagenPreview.attr("src", PathRecursos + "images/icono_pdf.png");
+                        break;
+
+                }
+
+                message.empty().append(imagenPreview);
+                message.append(saltoLinea);
+
+
+                if (!(extension === "jpg" || extension === "png" || extension === "jpeg" || extension === "gif")) {
+                    message.append(nombreAdjunto);
+                } else {
+                    imagenPreview.css({"cursor": "pointer", "max-width": "250px","max-height":"250px"});
+
+                    let imagenPreviewCopy = $("<img>");
+                    imagenPreviewCopy.attr("src", mensaje);
+                    imagenPreviewCopy.css({
+                        "max-width": "650px",
+                        "max-height":"650px"
+                    });
+
+                    imagenPreview.click(() => {
+                        Swal.fire({
+                            width: 700,
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            html: imagenPreviewCopy
+                        });
+                    });
+                }
+
+            } else {
+
+                if (mensaje.slice(0, 7) === "http://" || mensaje.slice(0, 8) === "https://" || mensaje.slice(0, 4) === "www.") {
+                    let linkMensaje = $("<a>");
+                    linkMensaje.text(mensaje);
+                    linkMensaje.attr("href", mensaje);
+                    linkMensaje.attr("tarjet", "_blanck");
+                    message.html(linkMensaje);
+
+                    message.css({
+                        "word-break": "break-all"
+                    });
+
+                } else {
+                    message.text(mensaje);
+                }
 
             }
-        });
-    }
+
+            let fecha = $("<span></span>").addClass("time");
+            let fechaDespliega = moment().format("DD-MMM-YY hh:mm A");
+
+            fecha.text(fechaDespliega);
+            let iconClock = $("<li></li>").addClass("far fa-clock ml-2");
+            fecha.append(iconClock);
+            message.append(fecha);
+
+            let iconOpciones = $("<span></span>").addClass("iconOpciones");
+            let iconDespliegaMenu = $('<i class="fas fa-chevron-down"></i>');
+            iconOpciones.append(iconDespliegaMenu);
+            message.append(iconOpciones);
+
+            const eliminaMensaje = (tipo) => {
+                //PEDIR CONFIRMACION DE ELIMINAR
+                swalConfirmDialog("¿Eliminar mensaje?", "Eliminar", "Cancelar").then((response) => {
+                    if (response) {
+                        //PROCESO DE ELIMINACION
+                        let dataMensaje = {
+                            "idMensaje": idMensaje
+                        };
+
+                        let services;
+
+                        if(tipo === 0){
+                            services = "/API/empresas360/eliminaMensaje";
+                            dataMensaje.id360 = sesion_cookie.idUsuario_Sys;
+                            dataMensaje.to_id360 = user.id360;
+                        }else{
+                            services = "/API/empresas360/eliminaMensajeParaMi";
+                            dataMensaje.idUser = sesion_cookie.idUsuario_Sys;
+                        }
+
+                        RequestPOST(services, dataMensaje).then((response) => {
+                            if (response.success) {
+                                menuOpcionesMensaje.removeClass("conAltura");
+                                if(tipo === 0){
+                                    message.empty();
+                                    message.text("Mensaje eliminado");
+                                    let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
+                                    iconMensajeEliminado.css({"margin-right": "10px"});
+                                    message.prepend(iconMensajeEliminado);
+                                    message.css({
+                                        "background-color": "transparent",
+                                        "font-style": "italic",
+                                        "font-size": "1.1rem"
+                                    });
+                                }else{
+                                    li.remove();
+                                }
+                            }
+                        });
+
+                    }
+                });
+            };
+
+            //LISTADO DE OPCIONES POR MENSAJE
+            let menuOpcionesMensaje = $("<ul></ul>").addClass("menuOpcionesMensaje").attr("id","menuOpcionesMensaje_"+user.id360);
+
+            //OPCION DE ELIMINAR MENSAJE
+            let opcionEliminaMensaje = $("<li></li>").addClass("opcionMensaje");
+            opcionEliminaMensaje.text("Eliminar para todos");
+            opcionEliminaMensaje.click(() => {
+                eliminaMensaje(0);
+            });
+            menuOpcionesMensaje.append(opcionEliminaMensaje);
+
+            //OPCION PARA ELIMINAR MENSAJE SOLO PARA MI
+            let opcionEliminaMensajeMi = $("<li></li>").addClass("opcionMensaje");
+            opcionEliminaMensajeMi.text("Eliminar para mi");
+            opcionEliminaMensajeMi.click(() => {
+                eliminaMensaje(1);
+            });
+            menuOpcionesMensaje.append(opcionEliminaMensajeMi);
+
+            //OPCION PARA EDITAR EL MENSAJE
+            let opcionEditaMensaje = $("<li></li>").addClass("opcionMensaje");
+            opcionEditaMensaje.text("Editar mensaje");
+            opcionEditaMensaje.click(() => {
+
+                let contenedorReenvia = $("#filaMensajesOperaciones_" + user.id360);
+                $("#accionMensajesOpciones_" + user.id360).text("Editando");
+                $("#message_input_" + user.id360).val(mensaje);
+                $("#message_input_" + user.id360).select();
+                contenedorReenvia.removeClass("d-none");
+                contenedorReenvia.find("span").text(mensaje);
+                $("#accionMensajesOpciones_" + user.id360).text("Editando");
+                banderaEditando = true;
+                idMensajeEditando = response.id;
+                menuOpcionesMensaje.removeClass("conAltura");
+
+            });
+            menuOpcionesMensaje.append(opcionEditaMensaje);
+            
+            //OPCION PARA REENVIAR EL MENSAJE
+            let opcionReenviaMensaje = $("<li></li>").addClass("opcionMensaje");
+            opcionReenviaMensaje.text("Reenviar mensaje");
+            opcionReenviaMensaje.click(() => {
+
+                menuOpcionesMensaje.removeClass("conAltura");
+                reenviaMensaje(mensaje, json.type);
+
+            });
+            menuOpcionesMensaje.append(opcionReenviaMensaje);
+
+            //OPCION PARA RESPONDER UN MENSAJE
+            let opcionRespondeMensaje = $("<li></li>").addClass("opcionMensaje");
+            opcionRespondeMensaje.text("Responder mensaje");
+            opcionRespondeMensaje.click(() => {
+                
+                let contenedorResponde = $("#filaMensajesOperaciones_" + user.id360);
+                contenedorResponde.removeClass("d-none");
+                contenedorResponde.find("span").text(mensaje);
+                $("#accionMensajesOpciones_" + user.id360).text("Respondiendo");
+                banderaRespondiendo = true;
+                idMensajeRespondiendo = response.id;
+                menuOpcionesMensaje.removeClass("conAltura");
+                
+            });
+            menuOpcionesMensaje.append(opcionRespondeMensaje);
+            
+            li.dblclick(() => {
+                opcionRespondeMensaje.click();
+            });
+
+            message.append(menuOpcionesMensaje);
+
+            message.mouseenter(() => {
+                iconOpciones.css({"display": "block"});
+            }).mouseleave(() => {
+                iconOpciones.css({"display": "none"});
+            });
+
+            iconOpciones.click(() => {
+                console.log("despliega menu");
+                menuOpcionesMensaje.toggleClass("conAltura");
+                //menuOpcionesMensaje.css({"height":"auto"});
+            });
+            
+            
+            if(banderaRespondiendo){
+            
+                let mensajeRespuesta = response.mensajeRespondido.message;
+                let smallRespuesta = $("<small></small>").addClass("respuesta-mensaje");
+                smallRespuesta.text(mensajeRespuesta);
+                message.prepend(smallRespuesta);
+
+                smallRespuesta.click(() => {
+                    
+                    const remarcaMensaje = (idMensaje) => {
+                        document.querySelector("#mensaje_" + idMensaje).scrollIntoView();
+                        let resaltar = setInterval(() => {
+                            $("#mensaje_"+ idMensaje).toggleClass("respondida");
+                        }, 250);
+
+                        setTimeout(() => {
+                            clearInterval(resaltar);
+                            $("#mensaje_"+ idMensaje).removeClass("respondida");
+                        }, 2000);
+                    };
+
+                    if( $("#mensaje_" + response.mensajeRespondido.id).length ){
+                        
+                        remarcaMensaje(response.mensajeRespondido.id);
+                        
+                    }else{
+                        
+                        const buscaMensajeRespuesta = () => {
+                        if( $("#contact_messaging" + user.id360).find(".liMasMensajes").length ){
+                            cargaMasMensajes(user.id360).then((response) => {
+                                if( $("#mensaje_" + response.mensajeRespondido.id).length ){
+                                    remarcaMensaje(response.mensajeRespondido.id);
+                                }else if(response){
+                                    buscaMensajeRespuesta();
+                                }else{
+                                    NotificacionToas.fire({
+                                        title: 'No se ha encontrado el mensaje'
+                                    });
+                                }
+
+                            });
+                        }else{
+                            NotificacionToas.fire({
+                                title: 'No se ha encontrado el mensaje'
+                            });
+                        }
+                    };
+
+                    buscaMensajeRespuesta();
+                        
+                    }
+
+                });
+                
+                apagaValores();
+
+            }
+
+            li.append(img_message);
+            li.append(message);
+            ul.append(li);
+            input.val("");
+            preview.text("Yo: " + mensaje);
+            $("#message_contacts").prepend(document.getElementById("profile_chat" + user.id360));
+            document.querySelector("#messages_" + user.id360 + " li.limessage:last-child").scrollIntoView();
+
+        }
+    });
 
 }
 

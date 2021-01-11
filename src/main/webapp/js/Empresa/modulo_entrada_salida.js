@@ -8,15 +8,19 @@
 agregar_menu("Entrada y Salida",'<i class="fas fa-id-card-alt"></i>','Trabajo');
 
 $("#iniciar_jornada_laboral").click(() => {
+    initJornadaLaboral(false);
+});
+
+const initJornadaLaboral = (aumenta) => {
     $("#mensaje-cargando-proceso").removeClass("d-none");
     GenerarCredenciales().then(function (response) {
         console.log(response);
         Credenciales = response;
-        initializeSessionEmpleado(response);
+        initializeSessionEmpleado(response, aumenta);
     });
-});
+};
 
-function initializeSessionEmpleado(data) {
+function initializeSessionEmpleado(data, aumenta) {
     console.log("initializeSessionEmpleado");
 
     if (sesion_jornada_laboral !== null) {
@@ -185,6 +189,7 @@ function initializeSessionEmpleado(data) {
                     //console.log(empleado);
                     /*$("#nom").val(empleado.nombre + " " + empleado.apellidos);
                      $("#num").val(empleado.idUsuario_Sys);*/
+                    let aumentaInt = aumenta ? 1 : 0;
                     RequestPOST("/API/empresas360/registro/horario_laboral", {
                         "id_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario,
                         "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
@@ -195,7 +200,10 @@ function initializeSessionEmpleado(data) {
                         "token": Credenciales.token,
                         "id_socket": idSocketOperador,
                         "activo": "1",
-                        "web": true
+                        "web": true,
+                        "fecha": getFecha(),
+                        "hora": getHora(),
+                        "aumentaConexion": aumentaInt
 
                     }).then(function (response) {
                         $("#ing").val(response.date_created + " " + response.time_created);
@@ -209,13 +217,12 @@ function initializeSessionEmpleado(data) {
                         $("#guardarreporte").click(function () {
                             console.log("guardarreporte");
                             $("#mensaje-cargando-proceso").removeClass("d-none");
-                            RequestPOST("/API/empresas360/registro/horario_laboral", {
+                            RequestPOST("/API/empresas360/registro/horario_laboral_cierre", {
                                 "id_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario,
-                                "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-                                "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-                                "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area,
                                 "id": response.id,
                                 "reporte": $("#rep").val(),
+                                "fecha": getFecha(),
+                                "hora": getHora(),
                                 "activo": "0",
                                 "web": true
                             }).then(function (response) {
@@ -278,7 +285,19 @@ function initializeSessionEmpleado(data) {
                     activarVideo.innerHTML = '<i class="fas fa-video-slash"></i>';
                     activarVideo.addEventListener("click", function () {
                         if (publisher.stream.hasVideo) {
+                            
                             activarVideo.innerHTML = '<i class="fas fa-video"></i>';
+                            
+                            let data = {
+                                "id_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario,
+                                "fecha": getFecha(),
+                                "hora": getHora()
+                            };
+                            
+                            RequestPOST("/API/empresas360/registro/horario_laboral_aumenta_desconexion", data).then((response) => {
+                                console.log(response);
+                            });
+                            
                         } else {
                             activarVideo.innerHTML = '<i class="fas fa-video-slash"></i>';
                         }
@@ -642,10 +661,32 @@ if (perfil === null) {
         if (response.success) {
             perfil = response;
             if (perfil.en_jornada === "1") {
-                $("#iniciar_jornada_laboral").click();
+                initJornadaLaboral(true);
+            }else{
+                swal.fire({
+                    text: "Recuerda iniciar tu jornada laboral",
+                    showCancelButton: true,
+                    confirmButtonText: "Iniciar ahora",
+                    cancelButtonText: "Entendido"
+                }).then((result) => {
+                    if (result.value){
+                        initJornadaLaboral(false);
+                    }
+                });
             }
         }
     });
 } else if (perfil.en_jornada === "1") {
-    $("#iniciar_jornada_laboral").click();
+    initJornadaLaboral(true);
+}else{
+    swal.fire({
+        text: "Recuerda iniciar tu jornada laboral",
+        showCancelButton: true,
+        confirmButtonText: "Iniciar ahora",
+        cancelButtonText: "Entendido"
+    }).then((result) => {
+        if (result.value){
+            initJornadaLaboral(false);
+        }
+    });
 }

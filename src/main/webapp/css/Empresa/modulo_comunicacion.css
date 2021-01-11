@@ -591,10 +591,13 @@ and open the template in the editor.
     display: inline-block;
     clear: both;
     float: left;
-    margin: 15px 15px 5px 15px;
+    margin: 5px 15px 5px 15px;
     width: calc(100% - 25px);
     font-size: 0.9em;
     padding: 0;
+}
+#frame .content .messages ul li.respondida{
+    background-color: rgba(0,0,0,0.1);
 }
 #frame .content .messages ul li:nth-last-child(1) {
     margin-bottom: 20px;
@@ -619,6 +622,7 @@ and open the template in the editor.
     color: #434343;
     position: relative;
     padding-left: 30px;
+    margin: 10px 0;
 }
 #frame .content .messages ul li .img {
     width: 22px;
@@ -805,6 +809,7 @@ CARGAR MáS MENSAJES
 
 .liMasMensajes{
     color: black;
+    padding-top: 20px;
 }
 
 .spanMasMensajes{
@@ -999,4 +1004,17 @@ ul.menuOpcionesMensaje li.opcionMensaje:hover{
 
 .menu_chat .opcion_menu_chat:hover{
     background-color: rgba(0,0,0,0.5);
+}
+
+small.respuesta-mensaje{
+    color: white;
+    display: block;
+    padding: 5px;
+    background-color: rgba(64,71,79,0.5);
+    border-radius: 10px;
+    border-left: 3px solid #40474f;
+    margin-bottom: 7px;
+    max-height: 35px;
+    overflow-y: hidden;
+    cursor: pointer;
 }
