@@ -7,18 +7,18 @@
 
 /* global WebSocketGeneral, Promise, DEPENDENCIA, GenerarCredenciales, google, Swal */
 
-var msj0 = "Gracias por registrar tu estado de salud seguimos al pendiente de ti #AquíNadieSeInfecta.\n\
-Recuerda continuar con tus medidas de precaución en todo momento: \n\
-    ? Lávate las manos con frecuencia. \n\
-    ? Mantén sana distancia. \n\
+var msj0 = "Gracias por registrar tu estado de salud seguimos al pendiente de ti #AquÃ­NadieSeInfecta.\n\
+Recuerda continuar con tus medidas de precauciÃ³n en todo momento: \n\
+    ? LÃ¡vate las manos con frecuencia. \n\
+    ? MantÃ©n sana distancia. \n\
     ? Evita tocarte la cara (ojos, nariz y boca).";
 var msj1 = "Gracias por registrar tu estado de salud seguimos al pendiente de ti.\n\
-Por la presencia de tus síntomas no puedes atender pacientes. \n\
-Comunícate con Epidemiología Hospitalaria para recibir una consulta por videollamada";
+Por la presencia de tus sÃ­ntomas no puedes atender pacientes. \n\
+ComunÃ­cate con EpidemiologÃ­a Hospitalaria para recibir una consulta por videollamada";
 var msj2 = "Gracias por registrar tu estado de salud seguimos al pendiente de ti.\n\
-Por la presencia de tus síntomas no puedes atender pacientes.        \n\
-Por tener factores de riesgo para complicarte, necesitas acudir a un Centro COVID para tu atención y valorar si requieres hospitalización.  \n\
-Comunícate con Epidemiología Hospitalaria para darle seguimiento a tu caso";
+Por la presencia de tus sÃ­ntomas no puedes atender pacientes.        \n\
+Por tener factores de riesgo para complicarte, necesitas acudir a un Centro COVID para tu atenciÃ³n y valorar si requieres hospitalizaciÃ³n.  \n\
+ComunÃ­cate con EpidemiologÃ­a Hospitalaria para darle seguimiento a tu caso";
 
 modalImagenes();
 habilitarMaximizarVideo();
@@ -81,7 +81,7 @@ function activar_calendario() {
 //        });
 //    });
     $input = $('#button__api-open-close').pickadate({
-        format: 'Resulta!dos !del !día: dddd, dd !de mmmm !de yyyy',
+        format: 'Resulta!dos !del !dÃ­a: dddd, dd !de mmmm !de yyyy',
         formatSubmit: 'yyyy-mm-dd',
         hiddenPrefix: 'prefix-',
         hiddenSuffix: '-suffix',
@@ -285,18 +285,18 @@ function agregar_cards(json) {
 //        if (json.mensaje !== null) {
 //            $("#rmensaje").removeClass("d-none");
 //            /*
-//             “0”=para mesnaje 2
-//             “1”=para mensaje 1
-//             “2”=para mensaje 0*/
+//             Â“0Â”=para mesnaje 2
+//             Â“1Â”=para mensaje 1
+//             Â“2Â”=para mensaje 0*/
 //            if (json.mensaje === "0") {
-//                $("#rmensaje").text("Recomendación dada: " + msj2);
+//                $("#rmensaje").text("RecomendaciÃ³n dada: " + msj2);
 //            } else if (json.mensaje === "1") {
-//                $("#rmensaje").text("Recomendación dada: " + msj1);
+//                $("#rmensaje").text("RecomendaciÃ³n dada: " + msj1);
 //            } else {
-//                $("#rmensaje").text("Recomendación dada: " + msj0);
+//                $("#rmensaje").text("RecomendaciÃ³n dada: " + msj0);
 //            }
 //        }
-        $("#labelIngresar").text($("#nombre").val() + ", ¿Podra ingresar a la UTC-19?");
+        $("#labelIngresar").text($("#nombre").val() + ", Â¿Podra ingresar a la UTC-19?");
 
     });
 }
@@ -329,13 +329,13 @@ $("#guardarDiagnostico").on("click", function () {
                 if (response.procede) {
                     Toast.fire({
                         type: 'success',
-                        title: "Información guardada correctamente."
+                        title: "InformaciÃ³n guardada correctamente."
                     });
                     $("#guardarDiagnostico").addClass("d-none");
                 } else {
                     Toast.fire({
                         type: 'error',
-                        title: "Error al intentar guardar la información. Intentelo nuevamente."
+                        title: "Error al intentar guardar la informaciÃ³n. Intentelo nuevamente."
                     });
                 }
             });
@@ -351,7 +351,7 @@ $("#guardarDiagnostico").on("click", function () {
     } else {
         Swal.fire({
             title: 'Alto',
-            html: "<br><p style='color:white;'>Primero debes escribir un diganóstico.</p>",
+            html: "<br><p style='color:white;'>Primero debes escribir un diganÃ³stico.</p>",
             focusConfirm: false,
             showCancelButton: false,
             confirmButtonText: "Continuar"
@@ -461,7 +461,7 @@ function limpiar_info() {
     $(".divRespuesta label").text("");
     $(".textareaDiag").val("");
     $("#ingresar").val("-1");
-    $("#labelIngresar").val("¿Podra ingresar a la UTC-19?");
+    $("#labelIngresar").val("Â¿Podra ingresar a la UTC-19?");
     $("#fecha_nuevaLlamada").val("");
     $("#guardarDiagnostico").addClass("d-none");
     $("#llamar_familiar").addClass("d-none");
@@ -759,10 +759,10 @@ function arreglo_fechas(fechas) {
     var arreglo = new Array();
     $.each(fechas, function (i) {
         var fecha = fechas[i].toString().split("-");
-        var año = parseInt(fecha[0]);
+        var aÃ±o = parseInt(fecha[0]);
         var mes = parseInt(fecha[1]);
         var dia = parseInt(fecha[2]);
-        var arreglo_interno = [new Date(año, mes, dia), 38000 + i];
+        var arreglo_interno = [new Date(aÃ±o, mes, dia), 38000 + i];
         arreglo.push(arreglo_interno);
     });
     console.log("Este es el arreglo que se le pasara al chartCalendar");

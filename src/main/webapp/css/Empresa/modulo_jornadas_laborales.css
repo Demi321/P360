@@ -8,3 +8,28 @@ and open the template in the editor.
     Author     : global
 */
 
+.opciones_tabs_jornadas_laborales{
+    list-style: none;
+    display: flex;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 50px;
+}
+
+.opciones_tabs_jornadas_laborales li{
+    text-align: center;
+    width: 50%;
+    padding: 10px;
+    border-radius: 50px;
+}
+
+.opciones_tabs_jornadas_laborales li.active{
+    background-color: lightsteelblue;
+}
+
+.opciones_tabs_jornadas_laborales li a{
+    color: currentcolor;
+    font-size: 1.4rem;
+    text-decoration: none;
+    padding: 10px 15%;
+}
