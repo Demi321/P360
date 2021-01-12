@@ -8,8 +8,11 @@ var proyecto = DatosProyecto();
 
 var Directorio;
 var tel_a_agregar = new Array();
-
+checkCookie();
 if (sesion_cookie !== undefined && sesion_cookie !== null && sesion_cookie !== "") {
+
+
+
     //Usuario con cuenta 360 logueado
     RequestPOST("/API/ConsultarDirectorio", {
         "fecha": getFecha(),
@@ -73,6 +76,16 @@ if (sesion_cookie !== undefined && sesion_cookie !== null && sesion_cookie !== "
 
     });
 } else {
+    /*acondicionar la vista*/
+    $("#registro").addClass("d-none");
+    $("#ingreso").addClass("d-none");
+    $("#directorio").addClass('d-none');
+    $('#sidebar').children()[1].className += ' d-none';
+    $("#menuModalIcon").addClass("d-none");
+    $("#iconServ").addClass("d-none");
+    $("#logo360").removeClass("d-none");
+    $(".header2").addClass("d-none");
+
     //Usuario no logueado pero que se puede loguear o entrar como invitado
     swal.fire({
         html: '<button onclick="IniciarSesion()" class="btn btn-danger w-100 mb-4">Iniciar Sesion</button>\n\
@@ -104,8 +117,8 @@ function IniciarInvitado() {
             console.log(result.value.nombre_invitado);
             let nombre_invitado = result.value.nombre_invitado;
             //Inicializar la sesion
-            $("#directorio").addClass('d-none');
-            $('#sidebar').children()[1].className += ' d-none';
+            //personalizamos vista
+            document.getElementById("user").innerHTML = nombre_invitado;
             swal.fire({
                 html: '<form class="">' +
                         '<h2>Configuración de hardware</h2>' +
@@ -128,7 +141,7 @@ function IniciarInvitado() {
                 }
             }).then((result) => {
                 console.log(result);
-                result.nombre_invitado = nombre_invitado;
+                result.value.nombre_invitado = nombre_invitado;
                 initializeSession_Invitado(result.value);
 
             });
@@ -710,37 +723,7 @@ function initializeSession_Invitado(settings) {
         },
         signal: function (event) {
 
-            //Duda de si puede que llegue esta segnal
-            if (event.type === "signal:gps-signal") {
 
-                if (event.data !== undefined) {
-                    var gps_data = JSON.parse(event.data);
-
-
-                    var LatitudE = parseFloat(parseFloat(gps_data.lat).toFixed(7));
-                    var LongitudE = parseFloat(parseFloat(gps_data.lng).toFixed(7));
-                    var fechaE = gps_data.fecha;
-                    var horaE = gps_data.hora;
-
-
-                    var gpsjson = {
-                        "idUsuarios_Movil": gps_data.idUsuario_Movil,
-                        "lat": LatitudE,
-                        "lng": LongitudE,
-                        "fecha": fechaE,
-                        "hora": horaE,
-                        "ActualizaGPS": true,
-                        "gpsOTS": true,
-                        "motivo": "VLS"
-                    };
-                    EnviarMensajePorSocket(gpsjson);
-
-                    ActivarIconMapDG(gps_data);
-                    CardParticipante(gps_data);
-                    RegistrarConexion(gps_data.idUsuario_Movil, event.from.connectionId);
-                }
-
-            }
             if (event.type === "signal:msg-signal") {
                 //Sabiendo que el mensaje es de un subscriptor decodifica para saber como tratarlo 
                 if (event.from.connectionId === session.connection.connectionId) {
@@ -753,21 +736,22 @@ function initializeSession_Invitado(settings) {
 
             }
             if (event.type === "signal:idoperador-signal") {
-                enviarMensaje(session, session.connection.connectionId);
+                //enviarMensaje(session, session.connection.connectionId);
             }
             if (event.type === "signal:user_connected") {
                 /////////Se identifico un nuevo usuario conectado 
                 var info_user = JSON.parse(event.data);
                 CardParticipante_user_connected(info_user);
                 enviarMensajeOT(session, "user_connected2", {
-                    id360: connectionCount
+                    id360: null,
+                    nombre: settings.nombre_invitado,
+                    id: session.connection.id
                 });
             }
             if (event.type === "signal:user_connected2") {
                 /////////Se identifico un nuevo usuario conectado 
                 var info_user = JSON.parse(event.data);
-                info_user.nombre = settings.nombre_invitado;
-                AgregarCardParticipante_Invitado(info_user);
+                CardParticipante_user_connected(info_user);
             }
         }
 
@@ -786,7 +770,26 @@ function initializeSession_Invitado(settings) {
             // Send a signal once the user enters data in the form
             form.addEventListener('submit', function submit(event) {
                 event.preventDefault();
-                enviarMensaje(session, sesion_cookie.nombre + " " + sesion_cookie.apellido_p + "", msgTxt.value);
+                //enviarMensaje(session, settings.nombre_invitado, msgTxt.value);
+                var msj = {
+                    "value": settings.nombre_invitado + ": " + msgTxt.value,
+                    "fecha": getFecha(),
+                    "hora": getHora(),
+//                    "idUsuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+                    "username": settings.nombre_invitado,
+                    "tipo": "texto"
+                };
+                session.signal({
+                    type: 'msg-signal',
+                    data: JSON.stringify(msj)
+                }, function (error) {
+                    if (error) {
+                        console.error('Error sending signal:', error.name, error.message);
+                    } else {
+                        var msgTxt = document.querySelector('#msgTxt');
+                        msgTxt.value = "";
+                    }
+                });
 
             });
             // Initialize the publisher
@@ -794,7 +797,7 @@ function initializeSession_Invitado(settings) {
                 insertMode: 'replace',
                 width: '100%',
                 height: '100%',
-                name: sesion_cookie.nombre + " " + sesion_cookie.apellidos,
+                name: settings.nombre_invitado,
                 audioSource: settings.audio,
                 videoSource: settings.video
             };
@@ -805,9 +808,30 @@ function initializeSession_Invitado(settings) {
                     notificarError(initErr.message);
                     return;
                 } else {
-                    enviarMensaje(session, sesion_cookie.nombre + " " + sesion_cookie.apellido_p + "", MSJ);
+                    //enviarMensaje(session, sesion_cookie.nombre + " " + sesion_cookie.apellido_p + "", MSJ);
+                    var msj = {
+                        "value": settings.nombre_invitado + ": " + MSJ,
+                        "fecha": getFecha(),
+                        "hora": getHora(),
+//                    "idUsuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+                        "username": settings.nombre_invitado,
+                        "tipo": "texto"
+                    };
+                    session.signal({
+                        type: 'msg-signal',
+                        data: JSON.stringify(msj)
+                    }, function (error) {
+                        if (error) {
+                            console.error('Error sending signal:', error.name, error.message);
+                        } else {
+                            var msgTxt = document.querySelector('#msgTxt');
+                            msgTxt.value = "";
+                        }
+                    });
                     enviarMensajeOT(session, "user_connected", {
-                        id360: sesion_cookie.id_usuario
+                        id360: null,
+                        nombre: settings.nombre_invitado,
+                        id: session.connection.id
                     });
 
                     document.getElementById("msgTxt").disabled = false;
@@ -1940,7 +1964,7 @@ function directorio() {
                             icon: 'success',
                             title: 'Invitacion enviada correctamente.'
                         })
-                        //window.open('https://empresas.claro360.com/plataforma360_dev/Llamada/agregar_participante' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
+                        //window.open('https://empresas.claro360.com/plataforma360/Llamada/agregar_participante' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
                     });
                 }
             }
@@ -2111,20 +2135,32 @@ function CardParticipante(gps_data) {
 
 }
 function CardParticipante_user_connected(info_user) {
+    if (info_user.id360 !== null) {
+        if (!$("#card" + info_user.id360).length)
+        {
+            var elemento = buscarelemento_directorio(info_user.id360);
+            if (elemento !== null) {
+                AgregarCardParticipante360(elemento);
 
-    if (!$("#card" + info_user.id360).length)
-    {
-        var elemento = buscarelemento_directorio(info_user.id360);
-        if (elemento !== null) {
-            AgregarCardParticipante360(elemento);
-
-        } else {
-            console.error("El usuario no se encontro en el directorio ");
-            //Proximamente se tiene que validar el trael la informacion de un usuario que bno este en nuestro catalogo de usuarios 
+            } else {
+                console.error("El usuario no se encontro en el directorio ");
+                //Proximamente se tiene que validar el trael la informacion de un usuario que bno este en nuestro catalogo de usuarios 
+                RequestPOST("/API/empresas360/directorio/un_usuario",[info_user]).then((response)=>{
+                    console.log(response);
+                    elemento = response[0];
+                    if (elemento.success) {
+                        AgregarCardParticipante360(elemento);
+                    }
+                });
+            }
         }
+    } else {
+        if (!$("#card" + info_user.id).length)
+        {
 
+            AgregarCardParticipante_Invitado(info_user);
 
-
+        }
     }
 
 }
@@ -2166,7 +2202,7 @@ function AgregarCardParticipante360(elemento) {
 function AgregarCardParticipante_Invitado(elemento) {
 
     var container = document.createElement("div");
-    container.id = "card" + elemento.id360;
+    container.id = "card" + elemento.id;
     container.className = "row col-12 m-0 p-0";
     var img = document.createElement("div");
     img.style = "padding:12.5%;background-image:url('https://bucketmoviles121652-dev.s3.amazonaws.com/public/MobileCard/perfil.png'); background-size: cover;  background-repeat: no-repeat;  background-position: center;";
@@ -2243,13 +2279,152 @@ function buscarelemento(idUsuario_Movil) {
     }
 }
 function buscarelemento_directorio(id360) {
-    for (var i = 0; i < Directorio.length; i++) {
-        if (Directorio[i].id360 === id360) {
-            return Directorio[i];
-            break;
+    try {
+        for (var i = 0; i < Directorio.length; i++) {
+            if (Directorio[i].id360 === id360) {
+                return Directorio[i];
+                break;
+            }
         }
+    } catch (e) {
+        console.warn(e);
     }
     return null;
 }
 
 habilitarMaximizarVideo();
+
+function checkCookie() {
+    var user = getCookie("username_v3.1_" + DEPENDENCIA);
+    sesion_cookie = user;
+
+    if (user !== "") {
+        sesion_cookie = JSON.parse(user);//ya 
+        //validar la sesion 
+        RequestPOST("/API/cuenta360/check_login", {
+            "id_sesion": sesion_cookie.id_sesion
+        }).then((response) => {
+            if (response.failure) {
+                deleteCookie("username_v3.1_" + DEPENDENCIA);
+            }
+        });
+        if (!JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("modulos")) {
+            deleteCookie("username_v3.1_" + DEPENDENCIA);
+        }
+        var user = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
+        console.log(user);
+        if (user !== "") {
+            console.log("Sesion detectada por cookie");
+            /**Cambis de nueva plantilla**/
+            //Quitar style
+            $("#menu_navegacion").removeAttr("style");
+            //Quitar d-none
+            $("#menu_cerrar_sesion").removeClass("d-none");
+//            $("#menu_info_perfil").removeClass("d-none");
+//            $("#menu_servicios").removeClass("d-none");
+            //Agregar d-none
+            $("#link_registro").addClass("d-none");
+
+
+            /****************/
+
+
+
+            //Cambiar el header
+            $("#submenu").removeClass("d-none");
+            $("#menuModalIcon").removeClass("d-none");
+            $("header .header3").removeClass("unlogged");
+            $("#registro").addClass("d-none");
+            $("#ingreso").addClass("d-none");
+            $("#user").text(user.nombre);
+
+            let u = user;
+
+            if (user.img) {
+                if ($("#img_perfil_user").length) {
+                    $("#img_perfil_user").empty();
+                    $("#img_perfil_user").css({
+                        "background-image": "url('" + u.img + "')",
+                        "background-size": "contain",
+                        "background-position": "center",
+                        "background-repeat": "no-repeat"
+                    });
+                }
+            }
+
+
+            if ($("#nombre_modal").length) {
+                $("#nombre_modal").text(u.nombre + " " + u.apellido_p + " " + u.apellido_m);
+                $("#nombre_modal").css({
+                    "color": "#da2a1c",
+                    "font-size": "18px"
+                });
+            }
+            if ($("#correo_modal").length) {
+                $("#correo_modal").text(u.correo);
+            }
+            if ($("#direccion_modal").length) {
+                $("#direccion_modal").text(u.direccion);
+            }
+            if (user.segmento === null) {
+                personalizar_header("empresa");
+            } else {
+                personalizar_header(user.segmento);
+            }
+            /*Cambios fernando*/
+            if (user.hasOwnProperty("img_perfil")) {
+                $("#img_perfil_user").empty();
+                $("#img_perfil_user").css({
+                    "background-image": "url('" + user.img_perfil + "')",
+                    "background-position": "center center",
+                    "background-repeat": "no-repeat",
+                    "background-size": "cover"
+                });
+            }
+            /******************/
+        }
+
+        if ($("#user").length)
+            document.getElementById("user").innerHTML = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre;
+        if ($("#NameAdministrador").length)
+            document.getElementById("NameAdministrador").value = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre;
+        if ($("#IdAdministrador").length)
+            document.getElementById("IdAdministrador").value = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys;
+
+        var pr = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).puede_registrar;
+//console.info(pr);
+
+        if (pr === null || pr === "false") {
+            //$("#menuRegistro").style.display="none";
+            //$("#menuRegistro").css("display:none;");
+
+            if ($("#menuRegistro").length) {
+                document.getElementById("menuRegistro").style.display = "none";
+                $("#menuRegistro").remove();
+            } else {
+                //console.error("Falta menuRegistro");
+            }
+        }
+
+//        var usuar = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).usuario
+//        if (!(usuar === "supervision-sedena" || usuar === "supervision-gn" || usuar === "Global")) {
+//            document.getElementById("padronregistroLI").style.display = "none";
+//            $("#padronregistroLI").remove();
+//            $("#usuariosActivosLI").remove();
+//            $("#adminusers").remove();
+//        }
+
+        if ($("#config").length) {
+            var config = JSON.parse($("#config").val());
+            //console.log(config);
+        }
+//        var conf_personalizada = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).configuracion;
+//        console.log("*******************************");
+//        console.log("configuracion");
+//        console.log(config);
+//        console.log("personalizada");
+//        console.log(conf_personalizada);
+//        console.log("*******************************");
+
+    }
+}
