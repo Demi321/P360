@@ -1940,7 +1940,7 @@ function directorio() {
                             icon: 'success',
                             title: 'Invitacion enviada correctamente.'
                         })
-                        //window.open('https://empresas.claro360.com/plataforma360/Llamada/agregar_participante' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
+                        //window.open('https://empresas.claro360.com/plataforma360_dev/Llamada/agregar_participante' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
                     });
                 }
             }
