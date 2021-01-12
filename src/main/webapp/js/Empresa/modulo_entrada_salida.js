@@ -5,7 +5,7 @@
  */
 
 
-agregar_menu("Entrada y Salida",'<i class="fas fa-id-card-alt"></i>','Trabajo');
+agregar_menu("Entrada y Salida", '<i class="fas fa-id-card-alt"></i>', 'Trabajo');
 
 $("#iniciar_jornada_laboral").click(() => {
     initJornadaLaboral(false);
@@ -285,19 +285,19 @@ function initializeSessionEmpleado(data, aumenta) {
                     activarVideo.innerHTML = '<i class="fas fa-video-slash"></i>';
                     activarVideo.addEventListener("click", function () {
                         if (publisher.stream.hasVideo) {
-                            
+
                             activarVideo.innerHTML = '<i class="fas fa-video"></i>';
-                            
+
                             let data = {
                                 "id_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario,
                                 "fecha": getFecha(),
                                 "hora": getHora()
                             };
-                            
+
                             RequestPOST("/API/empresas360/registro/horario_laboral_aumenta_desconexion", data).then((response) => {
                                 console.log(response);
                             });
-                            
+
                         } else {
                             activarVideo.innerHTML = '<i class="fas fa-video-slash"></i>';
                         }
@@ -461,7 +461,7 @@ $("#form_historia_jornadas").submit(function (e) {
         let fecha_fin = $("#fecha_fin_reporte").val();
 
         if (fecha_fin === "")
-            consulta_historial(fecha_inicio, "");
+            consulta_historial_entrada_salida(fecha_inicio, "");
         else {
             if (validarFecha(convertDateFormat(fecha_fin))) {
 
@@ -469,7 +469,7 @@ $("#form_historia_jornadas").submit(function (e) {
                 let f2 = new Date(fecha_fin);
 
                 if (f2.getTime() >= f1.getTime())
-                    consulta_historial(fecha_inicio, fecha_fin);
+                    consulta_historial_entrada_salida(fecha_inicio, fecha_fin);
                 else
                     swal.fire({text: "La fecha final debe ser mayor que la fecha inicial"});
 
@@ -495,7 +495,7 @@ function formatDateDefault(date) {
     return dateParse = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + dia;
 }
 
-const consulta_historial = (fecha_inicio, fecha_final) => {
+const consulta_historial_entrada_salida = (fecha_inicio, fecha_final) => {
 
     const nombresDiasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
@@ -514,7 +514,7 @@ const consulta_historial = (fecha_inicio, fecha_final) => {
         const cuerpoTablaExcel = $("#resultados-exportar-excel");
         cuerpoTabla.empty();
         cuerpoTablaExcel.empty();
-        cuerpoTablaExcel.append(cabeceraReporteExcel());
+        cuerpoTablaExcel.append(cabeceraReporteExcel_entrada_salida());
 
         let jornadas = response.data;
         let cantidadJornadas = jornadas.length;
@@ -638,7 +638,7 @@ $("#botonDescargaReporteJornada").click(function () {
     return XLSX.writeFile(workbook, 'Jornadas Laborales.xlsx');
 });
 
-const cabeceraReporteExcel = () => {
+const cabeceraReporteExcel_entrada_salida = () => {
     let cabecera = '';
     cabecera += '<tr><td colspan="5"><h1 style="text-align: center;">Reporte de jornadas laborales</h1></td></tr><tr></tr>';
     cabecera += '<tr><td>Fecha de exportación</td><td id="fecha_exportacion_excel"></td></tr>';
@@ -662,31 +662,35 @@ if (perfil === null) {
             perfil = response;
             if (perfil.en_jornada === "1") {
                 initJornadaLaboral(true);
-            }else{
-                swal.fire({
-                    text: "Recuerda iniciar tu jornada laboral",
-                    showCancelButton: true,
-                    confirmButtonText: "Iniciar ahora",
-                    cancelButtonText: "Entendido"
-                }).then((result) => {
-                    if (result.value){
-                        initJornadaLaboral(false);
-                    }
-                });
+            } else {
+                if (sesion_cookie.tipo_servicio !== "0") {
+                    swal.fire({
+                        text: "Recuerda iniciar tu jornada laboral",
+                        showCancelButton: true,
+                        confirmButtonText: "Iniciar ahora",
+                        cancelButtonText: "Entendido"
+                    }).then((result) => {
+                        if (result.value) {
+                            initJornadaLaboral(false);
+                        }
+                    });
+                }
             }
         }
     });
 } else if (perfil.en_jornada === "1") {
     initJornadaLaboral(true);
-}else{
-    swal.fire({
-        text: "Recuerda iniciar tu jornada laboral",
-        showCancelButton: true,
-        confirmButtonText: "Iniciar ahora",
-        cancelButtonText: "Entendido"
-    }).then((result) => {
-        if (result.value){
-            initJornadaLaboral(false);
-        }
-    });
+} else {
+    if (sesion_cookie.tipo_servicio !== "0") {
+        swal.fire({
+            text: "Recuerda iniciar tu jornada laboral",
+            showCancelButton: true,
+            confirmButtonText: "Iniciar ahora",
+            cancelButtonText: "Entendido"
+        }).then((result) => {
+            if (result.value) {
+                initJornadaLaboral(false);
+            }
+        });
+    }
 }

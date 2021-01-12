@@ -65,7 +65,6 @@ $("#btn-refrescar-jornadas").click(() => {
 const inicioJornadasLaborales = () => {
     
     if(tablaInicio !== undefined && tablaInicio !== null){
-        tablaInicio.clear();
         tablaInicio.destroy();
     }
     

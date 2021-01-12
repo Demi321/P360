@@ -9,9 +9,9 @@
 
 var msj0 = "Gracias por registrar tu estado de salud seguimos al pendiente de ti #AquíNadieSeInfecta.\n\
 Recuerda continuar con tus medidas de precaución en todo momento: \n\
-    ? Lávate las manos con frecuencia. \n\
-    ? Mantén sana distancia. \n\
-    ? Evita tocarte la cara (ojos, nariz y boca).";
+    ◦ Lávate las manos con frecuencia. \n\
+    ◦ Mantén sana distancia. \n\
+    ◦ Evita tocarte la cara (ojos, nariz y boca).";
 var msj1 = "Gracias por registrar tu estado de salud seguimos al pendiente de ti.\n\
 Por la presencia de tus síntomas no puedes atender pacientes. \n\
 Comunícate con Epidemiología Hospitalaria para recibir una consulta por videollamada";
@@ -285,9 +285,9 @@ function agregar_cards(json) {
 //        if (json.mensaje !== null) {
 //            $("#rmensaje").removeClass("d-none");
 //            /*
-//             0=para mesnaje 2
-//             1=para mensaje 1
-//             2=para mensaje 0*/
+//             “0”=para mesnaje 2
+//             “1”=para mensaje 1
+//             “2”=para mensaje 0*/
 //            if (json.mensaje === "0") {
 //                $("#rmensaje").text("Recomendación dada: " + msj2);
 //            } else if (json.mensaje === "1") {

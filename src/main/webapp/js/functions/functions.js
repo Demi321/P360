@@ -665,7 +665,6 @@ function agregarVideo(session, stream) {
             /***************************************************************
             //////////Colgar la llamada   ******
             var usrDesconectado = false;
-            /*******************************
             var colgar = document.createElement("input");
             colgar.className = "colgar";
             colgar.value = "";
@@ -700,8 +699,7 @@ function agregarVideo(session, stream) {
                     session.forceDisconnect(stream.connection);
                 });
             }
-            
-            **********************************///////////////////////////////////////////
+
 
             *****************************************************/////////////
 

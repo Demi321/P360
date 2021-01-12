@@ -1,4 +1,4 @@
-/* global OT, API_KEY, TOKEN, SESSION_ID, SAMPLE_SERVER_BASE_URL, rectangle, Promise, markers, DEPENDENCIA, PREFIJO_ELEMENTO, CP, map, google, websocket, hostdir, ALIAS, MSJ, DEPENDENCIA_ALIAS, DEPENDENCIA_ICON, infowindow, recordRTC, INCIDENTES, direccion, USR, BackupImage */
+/* global OT, API_KEY, TOKEN, SESSION_ID, SAMPLE_SERVER_BASE_URL, rectangle, Promise, markers, DEPENDENCIA, PREFIJO_ELEMENTO, CP, map, google, websocket, hostdir, ALIAS, MSJ, DEPENDENCIA_ALIAS, DEPENDENCIA_ICON, infowindow, recordRTC, INCIDENTES, direccion, USR, BackupImage, sesion_cookie, data, RequestPOST, dataG, swal, connectionCount */
 
 
 data = JSON.parse(document.getElementById("data").value);
@@ -8,68 +8,162 @@ var proyecto = DatosProyecto();
 
 var Directorio;
 var tel_a_agregar = new Array();
-RequestPOST("/API/ConsultarDirectorio", {
-    "fecha": getFecha(),
-    "hora": getHora(),
-    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-    "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-//    "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area,
-    "tipo_area": "0"
-}).then((response) => {
-    dataG = response;
-    //initializeSession();
-    Directorio = response.directorio;
-    directorio();
 
+if (sesion_cookie !== undefined && sesion_cookie !== null && sesion_cookie !== "") {
+    //Usuario con cuenta 360 logueado
+    RequestPOST("/API/ConsultarDirectorio", {
+        "fecha": getFecha(),
+        "hora": getHora(),
+        "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
+        "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
+//    "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area,
+        "tipo_area": "0"
+    }).then((response) => {
+        dataG = response;
+        //initializeSession();
+        Directorio = response.directorio;
+        directorio();
+
+        swal.fire({
+            html: '<form class="">' +
+                    '<h2>Configuración de hardware</h2>' +
+                    '<div class="mb-3">' +
+                    '<label for="audio-source-select" class="form-label">Microfono</label>' +
+                    '<select id="audio-source-select" class="form-control"></select>' +
+                    '</div>' +
+                    '<div class="mb-3">' +
+                    '<label for="video-source-select" class="form-label">Camara</label>' +
+                    '<select id="video-source-select" class="form-control"></select>' +
+                    '</div>' +
+                    '</form>',
+            allowOutsideClick: false,
+            confirmButtonText: 'Iniciar<i class="ms-2 fas fa-arrow-circle-right"></i>',
+            preConfirm: () => {
+                return {
+                    audio: $("#audio-source-select").val(),
+                    video: $("#video-source-select").val()
+                };
+            }
+        }).then((result) => {
+            console.log(result);
+            initializeSession(result.value);
+
+        });
+
+
+        let audioSelector = $('#audio-source-select');
+        let videoSelector = $('#video-source-select');
+        let publishBtn = $('#publish-btn');
+        let cycleVideoBtn = $('#cycle-video-btn');
+
+        publishBtn.disabled = true;
+// We request access to Microphones and Cameras so we can get the labels
+        OT.getUserMedia().then((stream) => {
+            populateDeviceSources(audioSelector, 'audioInput');
+            populateDeviceSources(videoSelector, 'videoInput');
+            // Stop the tracks so that we stop using this camera and microphone
+            // If you don't do this then cycleVideo does not work on some Android devices
+            stream.getTracks().forEach(track => track.stop());
+        });
+        OT.getUserMedia().catch(function (err) {
+            console.log(err);
+        });
+
+
+
+    });
+} else {
+    //Usuario no logueado pero que se puede loguear o entrar como invitado
     swal.fire({
-        html: '<form class="">' +
-                '<h2>Configuración de hardware</h2>' +
-                '<div class="mb-3">' +
-                '<label for="audio-source-select" class="form-label">Microfono</label>' +
-                '<select id="audio-source-select" class="form-control"></select>' +
-                '</div>' +
-                '<div class="mb-3">' +
-                '<label for="video-source-select" class="form-label">Camara</label>' +
-                '<select id="video-source-select" class="form-control"></select>' +
-                '</div>' +
-                '</form>',
+        html: '<button onclick="IniciarSesion()" class="btn btn-danger w-100 mb-4">Iniciar Sesion</button>\n\
+               <button onclick="IniciarInvitado()" class="btn btn-secondary w-100">Entrar como Inivitado</button>',
+        showConfirmButton: false
+    });
+}
+
+function IniciarSesion() {
+    console.log("Inciando sesion");
+}
+
+function IniciarInvitado() {
+    console.log("Inciando como invitado");
+    swal.fire({
+        title: 'Inciando como Invitado',
+        html: '<p>Ingrese un nombre para mostrar</p>\n\
+               <input type="text" id="nombre_invitado" class="w-100" style="border-radius: 10px;height: 25px;padding-left: 10px;font: normal 13px Arial;">',
         allowOutsideClick: false,
-        confirmButtonText: 'Iniciar<i class="ms-2 fas fa-arrow-circle-right"></i>',
+        confirmButtonText: 'Iniciar<i class="ms-2 fas fa-arrow-circle-right ml-3"></i>',
         preConfirm: () => {
             return {
-                audio: $("#audio-source-select").val(),
-                video: $("#video-source-select").val()
+                nombre_invitado: $("#nombre_invitado").val()
             };
         }
     }).then((result) => {
         console.log(result);
-        initializeSession(result.value);
+        if (result.value.nombre_invitado.replaceAll(/ /g, '').length > 0) {
+            console.log(result.value.nombre_invitado);
+            let nombre_invitado = result.value.nombre_invitado;
+            //Inicializar la sesion
+            $("#directorio").addClass('d-none');
+            $('#sidebar').children()[1].className += ' d-none';
+            swal.fire({
+                html: '<form class="">' +
+                        '<h2>Configuración de hardware</h2>' +
+                        '<div class="mb-3">' +
+                        '<label for="audio-source-select" class="form-label">Microfono</label>' +
+                        '<select id="audio-source-select" class="form-control"></select>' +
+                        '</div>' +
+                        '<div class="mb-3">' +
+                        '<label for="video-source-select" class="form-label">Camara</label>' +
+                        '<select id="video-source-select" class="form-control"></select>' +
+                        '</div>' +
+                        '</form>',
+                allowOutsideClick: false,
+                confirmButtonText: 'Iniciar<i class="ms-2 fas fa-arrow-circle-right"></i>',
+                preConfirm: () => {
+                    return {
+                        audio: $("#audio-source-select").val(),
+                        video: $("#video-source-select").val()
+                    };
+                }
+            }).then((result) => {
+                console.log(result);
+                result.nombre_invitado = nombre_invitado;
+                initializeSession_Invitado(result.value);
+
+            });
+
+
+            let audioSelector = $('#audio-source-select');
+            let videoSelector = $('#video-source-select');
+            let publishBtn = $('#publish-btn');
+            let cycleVideoBtn = $('#cycle-video-btn');
+
+            publishBtn.disabled = true;
+            // We request access to Microphones and Cameras so we can get the labels
+            OT.getUserMedia().then((stream) => {
+                populateDeviceSources(audioSelector, 'audioInput');
+                populateDeviceSources(videoSelector, 'videoInput');
+                // Stop the tracks so that we stop using this camera and microphone
+                // If you don't do this then cycleVideo does not work on some Android devices
+                stream.getTracks().forEach(track => track.stop());
+            });
+            OT.getUserMedia().catch(function (err) {
+                console.log(err);
+            });
+        } else {
+            swal.fire({
+                title: 'Alto',
+                text: 'Debe colocar un nombre para entrar a la reunion',
+                confirmButtonText: 'Aceptar'
+            }).then(() => {
+                IniciarInvitado();
+            });
+        }
 
     });
 
-
-    let audioSelector = $('#audio-source-select');
-    let videoSelector = $('#video-source-select');
-    let publishBtn = $('#publish-btn');
-    let cycleVideoBtn = $('#cycle-video-btn');
-
-    publishBtn.disabled = true;
-// We request access to Microphones and Cameras so we can get the labels
-    OT.getUserMedia().then((stream) => {
-        populateDeviceSources(audioSelector, 'audioInput');
-        populateDeviceSources(videoSelector, 'videoInput');
-        // Stop the tracks so that we stop using this camera and microphone
-        // If you don't do this then cycleVideo does not work on some Android devices
-        stream.getTracks().forEach(track => track.stop());
-    });
-    OT.getUserMedia().catch(function (err) {
-        console.log(err);
-    });
-
-
-
-});
-
+}
 //RequestPOST("/API/empresas360/GruposPersonalizados", {
 //    "idUsuarioSys": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
 //    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
@@ -210,6 +304,470 @@ function initializeSession(settings) {
                 /////////Se identifico un nuevo usuario conectado 
                 var info_user = JSON.parse(event.data);
                 CardParticipante_user_connected(info_user);
+            }
+        }
+
+    });
+
+    // Connect to the session
+    session.connect(data.credenciales.token, function callback(error) {
+        // If the connection is successful, initialize a publisher and publish to the session
+        if (!error) {
+            // Text chat
+
+
+            var form = document.getElementById("chat");
+            var msgTxt = document.querySelector('#msgTxt');
+
+            // Send a signal once the user enters data in the form
+            form.addEventListener('submit', function submit(event) {
+                event.preventDefault();
+                enviarMensaje(session, sesion_cookie.nombre + " " + sesion_cookie.apellido_p + "", msgTxt.value);
+
+            });
+            // Initialize the publisher
+            var publisherOptions = {
+                insertMode: 'replace',
+                width: '100%',
+                height: '100%',
+                name: sesion_cookie.nombre + " " + sesion_cookie.apellidos,
+                audioSource: settings.audio,
+                videoSource: settings.video
+            };
+            var publisher = OT.initPublisher('publisher', publisherOptions, function initCallback(initErr) {
+
+                if (initErr) {
+                    console.error('There was an error initializing the publisher: ', initErr.name, initErr.message);
+                    notificarError(initErr.message);
+                    return;
+                } else {
+                    enviarMensaje(session, sesion_cookie.nombre + " " + sesion_cookie.apellido_p + "", MSJ);
+                    enviarMensajeOT(session, "user_connected", {
+                        id360: sesion_cookie.id_usuario
+                    });
+
+                    document.getElementById("msgTxt").disabled = false;
+                }
+            });
+
+            // If the connection is successful, publish the publisher to the session
+            session.publish(publisher, function publishCallback(publishErr) {
+                if (publishErr) {
+                    console.error('There was an error publishing: ', publishErr.name, publishErr.message);
+                } else {
+//                    data.registro_llamada.time.h_conexion_operador = getHora();
+//                    ArchiveSession().then(function (response) {
+//                        RegistrarURL(response.ruta_video);
+//                    });
+
+                    /*******Activar el menu*******/
+
+                    console.log("Publicador iniciado");
+                    var menu = document.createElement("div");
+                    menu.style = "background: #343a40; position: absolute; bottom: 0px; left: calc(50% - 100px); width: 300px;border-top-left-radius: 50px;border-top-right-radius: 50px; z-index: 103;";
+                    menu.className = "row col-12 m-0 p-0";
+                    menu.id = "menu_botones";
+                    console.log(menu);
+                    var div = document.createElement("div");
+                    div.className = "col-12";
+                    div.style = "text-align: center; font: bold 2rem Arial; color: white;cursor: pointer;";
+                    var i = document.createElement("i");
+                    i.className = "fas fa-chevron-up";
+                    console.log(i);
+                    var botones = document.createElement("div");
+                    botones.className = "row m-0 p-2 col-12 d-none";
+                    botones.style = "height: 60px;";
+
+                    console.log(botones);
+
+                    div.addEventListener("click", function () {
+                        if (botones.className === "row m-0 p-2 col-12 d-none") {
+                            botones.className = "row m-0 p-2 col-12";
+                            div.style = "text-align: center; font: bold 2rem Arial; color: white;cursor: pointer;transform: rotate(180deg);";
+                        } else {
+                            botones.className = "row m-0 p-2 col-12 d-none";
+                            div.style = "text-align: center; font: bold 2rem Arial; color: white;cursor: pointer;";
+                        }
+                    });
+
+
+                    div.appendChild(i);
+                    menu.appendChild(div);
+                    menu.appendChild(botones);
+
+
+                    var colgar = document.createElement("div");
+                    colgar.className = "col";
+                    colgar.id = "colgarPublisher";
+                    colgar.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;color:red;cursor:pointer;border-right:solid 1px #6c757d;";
+                    colgar.innerHTML = '<i class="fas fa-phone-slash"></i>';
+                    colgar.addEventListener("click", function () {
+                        window.close();
+                        session.unpublish(publisher);
+                        //session.disconnect();
+                        RegistrarDesconexionOp();
+                        menu.className = "row col-12 m-0 p-0 d-none";
+                    });
+                    console.log(colgar);
+                    botones.appendChild(colgar);
+
+                    //////////Solicitar Cambio de camara  ******
+                    var activarVideo = document.createElement("div");
+                    activarVideo.className = "col";
+                    activarVideo.innerHTML = '<i class="fas fa-video"></i>';
+                    activarVideo.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-right:solid 1px #6c757d;";
+                    activarVideo.addEventListener("click", function () {
+                        if (!publisher.stream.hasVideo) {
+                            activarVideo.innerHTML = '<i class="fas fa-video"></i>';
+                        } else {
+                            activarVideo.innerHTML = '<i class="fas fa-video-slash"></i>';
+                        }
+                        publisher.publishVideo(!publisher.stream.hasVideo);
+                    });
+                    botones.appendChild(activarVideo);
+                    console.log(activarVideo);
+
+
+                    //////////Solicitar Bloqueo de microfono  ******
+                    var activarAudio = document.createElement("div");
+                    activarAudio.className = "col";
+                    activarAudio.innerHTML = '<i class="fas fa-microphone"></i>';
+                    activarAudio.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-right:solid 1px #6c757d;";
+                    activarAudio.addEventListener("click", function () {
+                        if (!publisher.stream.hasAudio) {
+                            activarAudio.innerHTML = '<i class="fas fa-microphone"></i>';
+                        } else {
+                            activarAudio.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                        }
+                        publisher.publishAudio(!publisher.stream.hasAudio);
+                    });
+                    botones.appendChild(activarAudio);
+                    console.log(activarAudio);
+
+                    //////////Compartir Pantalla  ******
+                    var share_screen = document.createElement("div");
+                    share_screen.className = "col";
+                    share_screen.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;"
+                    share_screen.innerHTML = '<i class="fas fa-external-link-alt"></i>';
+                    share_screen.addEventListener("click", function () {
+                        OT.checkScreenSharingCapability(function (response) {
+                            if (!response.supported || response.extensionRegistered === false) {
+                                // This browser does not support screen sharing.
+                                console.log("This browser does not support screen sharing.");
+                            } else if (response.extensionInstalled === false) {
+                                // Prompt to install the extension.
+                                console.log("Prompt to install the extension.");
+                            } else {
+                                // Screen sharing is available. Publish the screen.
+//                                var pos = NuevaUbicacion();
+                                var pos = fullcontainer_screen();
+                                var publisher_screen = OT.initPublisher(pos,
+                                        {videoSource: 'screen'},
+                                        function (error) {
+                                            if (error) {
+                                                // Look at error.message to see what went wrong.
+                                            } else {
+                                                let stop_share = document.createElement("div");
+                                                stop_share.className = "col";
+                                                stop_share.id = "stop_sharePublisher";
+                                                stop_share.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;color:red;cursor:pointer;border-right:solid 1px #6c757d;";
+                                                stop_share.innerHTML = '<i class="far fa-times-circle"></i>';
+                                                stop_share.addEventListener("click", function () {
+                                                    session.unpublish(publisher_screen);
+                                                    share_screen.className = "col";
+                                                    stop_share.className = "col d-none";
+                                                    $("#maximizarVideo").removeClass("active");
+                                                    $("aside").removeAttr('style');
+                                                    $("header").removeAttr('style');
+                                                    $("footer").removeAttr('style');
+                                                    $("section").removeAttr('style');
+                                                    $("#hamburgerMenu").parent().removeAttr('style');
+                                                    $("#side1").removeAttr('style');
+                                                    $("#side2").removeAttr('style');
+                                                    $("#publishers").removeAttr('style');
+                                                    $("#GRID").removeAttr('style');
+                                                    $("#loading").css({
+                                                        "position": "absolute",
+                                                        "height": "20%",
+                                                        "width": "20%",
+                                                        "left": "40%",
+                                                        "top": "30%"
+                                                    });
+                                                    showToggle();
+                                                });
+                                                botones.appendChild(stop_share);
+                                                share_screen.className = "col d-none";
+                                                $("#maximizarVideo").click();
+                                                session.publish(publisher_screen, function (error) {
+                                                    if (error) {
+                                                        // Look error.message to see what went wrong.
+                                                        console.log(error.message);
+                                                    }
+
+                                                });
+                                            }
+                                        }
+                                );
+                                publisher_screen.on('mediaStopped', function (event) {
+                                    // The user clicked stop.
+                                    console.log("The user clicked stop.");
+                                });
+
+                                publisher_screen.on('streamDestroyed', function (event) {
+                                    if (event.reason === 'mediaStopped') {
+                                        // User clicked stop sharing
+                                        console.log("User clicked stop sharing");
+                                    } else if (event.reason === 'forceUnpublished') {
+                                        // A moderator forced the user to stop sharing.
+                                        console.log("A moderator forced the user to stop sharing.");
+                                    }
+                                    mosaico("remover");
+                                });
+                            }
+                        });
+
+                    });
+                    botones.appendChild(share_screen);
+
+
+                    /*****************Settings audio and video publisher *****************/
+
+                    var audio_video_settings = document.createElement("div");
+                    audio_video_settings.className = "col";
+                    audio_video_settings.innerHTML = '<i class="fas fa-cog" id="settings"></i>';
+                    audio_video_settings.style = "justify-content:center;align-items:center;display:flex;font:2rem Arial;cursor:pointer;border-left:solid 1px #6c757d;";
+                    audio_video_settings.addEventListener("click", function () {
+                        swal.fire({
+                            html: '<form class="">' +
+                                    '<h2>Configuración de hardware</h2>' +
+                                    '<div class="mb-3">' +
+                                    '<label for="audio-source-select" class="form-label">Microfono</label>' +
+                                    '<select id="audio-source-select" class="form-control"></select>' +
+                                    '</div>' +
+                                    '<div class="mb-3" id="audio-meter">' +
+                                    '<label for="audio-source-select" class="form-label">Nivel del microfono</label>' +
+                                    '<meter min="0" max="1" low=".25" optimum=".55" high=".85"></meter>' +
+                                    '</div>' +
+                                    '<div class="mb-3">' +
+                                    '<label for="video-source-select" class="form-label">Camara</label>' +
+                                    '<select id="video-source-select" class="form-control"></select>' +
+                                    '</div>' +
+                                    '</form>',
+                            confirmButtonText: 'Aceptar',
+                        }).then((result) => {
+                            console.log(result);
+                        });
+
+                        let audioSelector = $('#audio-source-select');
+                        let videoSelector = $('#video-source-select');
+                        let audioLevel = $('#audio-meter');
+                        let meter = $('#audio-meter meter');
+
+
+                        OT.getUserMedia().then((stream) => {
+                            populateDeviceSources(audioSelector, 'audioInput');
+                            populateDeviceSources(videoSelector, 'videoInput');
+                            // Stop the tracks so that we stop using this camera and microphone
+                            // If you don't do this then cycleVideo does not work on some Android devices
+                            stream.getTracks().forEach(track => track.stop());
+                        });
+                        OT.getUserMedia().catch(function (err) {
+                            console.log(err);
+                        });
+
+                        audioSelector.attr("disabled", false);
+
+                        // When the audio selector changes we update the audio source
+                        audioSelector.on('change', () => {
+                            console.log(event.target);
+                            audioSelector.attr("disabled", true);
+                            publisher.setAudioSource(event.target.value).then(() => {
+                                audioSelector.attr("disabled", false);
+                            }).catch((err) => {
+                                alert(`setAudioSource failed: ${err.message}`);
+                                audioSelector.attr("disabled", false);
+                            });
+                        });
+
+                        videoSelector.attr("disabled", false);
+
+                        // When the audio selector changes we update the audio source
+                        videoSelector.on('change', () => {
+                            console.log(event.target);
+                            videoSelector.attr("disabled", true);
+                            publisher.cycleVideo(event.target.value).then(() => {
+                                videoSelector.attr("disabled", false);
+                            }).catch((err) => {
+                                alert(`videoSelector failed: ${err.message}`);
+                                videoSelector.attr("disabled", false);
+                            });
+                        });
+
+                        let movingAvg = null;
+                        publisher.on('audioLevelUpdated', (event) => {
+                            if (movingAvg === null || movingAvg <= event.audioLevel) {
+                                movingAvg = event.audioLevel;
+                            } else {
+                                movingAvg = 0.7 * movingAvg + 0.3 * event.audioLevel;
+                            }
+
+                            // 1.5 scaling to map the -30 - 0 dBm range to [0,1]
+                            var logLevel = (Math.log(movingAvg) / Math.LN10) / 1.5 + 1;
+                            logLevel = Math.min(Math.max(logLevel, 0), 1);
+                            meter.val(logLevel);
+                        });
+                    });
+                    botones.appendChild(audio_video_settings);
+
+
+                    console.log(menu);
+                    console.log(document.getElementById("videos"));
+                    document.getElementById("videos").appendChild(menu);
+                    $(".OT_publisher .OT_mute").click(() => {
+                        activarAudio.click();
+                    });
+
+                    $(".OT_publisher .OT_mute").css({
+                        "outline": "none"
+                    });
+
+                    $(".OT_subscriber .OT_mute").css({
+                        "outline": "none"
+                    });
+//                    var colgar = document.createElement("input");
+//                    colgar.className = "colgarPublisher";
+//                    colgar.id = "colgarPublisher";
+//                    colgar.value = "";
+//                    colgar.addEventListener("click", function () {
+//
+//                        session.unpublish(publisher);
+//                        //session.disconnect();
+//                        RegistrarDesconexionOp();
+//                    });
+//                    document.getElementById("publisher").appendChild(colgar);
+//
+//                    //////////Solicitar Cambio de camara  ******
+//                    var activarVideo = document.createElement("input");
+//                    activarVideo.className = "activarVideoPublisher";
+//                    activarVideo.value = "";
+//                    activarVideo.addEventListener("click", function () {
+//
+//                        publisher.publishVideo(!publisher.stream.hasVideo);
+//                    });
+//                    document.getElementById("publisher").appendChild(activarVideo);
+
+
+                }
+            });
+        } else {
+            console.error('There was an error connecting to the session: ', error.name, error.message);
+        }
+    });
+
+}
+function initializeSession_Invitado(settings) {
+    var session = OT.initSession(data.credenciales.apikey, data.credenciales.sesion);
+
+    session.on({
+        connectionCreated: function (event) {
+
+            connectionCount++;
+
+        },
+        connectionDestroyed: function (event) {
+
+            connectionCount--;
+            if (connectionCount <= 1) {
+                //session.disconnect();
+            }
+
+
+        },
+        sessionConnected: function (event) {
+
+        },
+        sessionDisconnected: function (event) {
+            console.error('You were disconnected from the session.', event.reason);
+
+        },
+        sessionReconnected: function (event) {
+
+        },
+        sessionReconnecting: function (event) {
+
+        },
+        streamCreated: function (event) {
+            console.log("se detecta video:");
+            console.log(event);
+            agregarVideo(session, event.stream);
+        },
+        streamDestroyed: function (event) {
+
+            mosaico("remover");
+
+            console.log("Registrar desconexion?");
+//            RegistrarDesconexion(event.stream.connection.connectionId);
+        },
+        signal: function (event) {
+
+            //Duda de si puede que llegue esta segnal
+            if (event.type === "signal:gps-signal") {
+
+                if (event.data !== undefined) {
+                    var gps_data = JSON.parse(event.data);
+
+
+                    var LatitudE = parseFloat(parseFloat(gps_data.lat).toFixed(7));
+                    var LongitudE = parseFloat(parseFloat(gps_data.lng).toFixed(7));
+                    var fechaE = gps_data.fecha;
+                    var horaE = gps_data.hora;
+
+
+                    var gpsjson = {
+                        "idUsuarios_Movil": gps_data.idUsuario_Movil,
+                        "lat": LatitudE,
+                        "lng": LongitudE,
+                        "fecha": fechaE,
+                        "hora": horaE,
+                        "ActualizaGPS": true,
+                        "gpsOTS": true,
+                        "motivo": "VLS"
+                    };
+                    EnviarMensajePorSocket(gpsjson);
+
+                    ActivarIconMapDG(gps_data);
+                    CardParticipante(gps_data);
+                    RegistrarConexion(gps_data.idUsuario_Movil, event.from.connectionId);
+                }
+
+            }
+            if (event.type === "signal:msg-signal") {
+                //Sabiendo que el mensaje es de un subscriptor decodifica para saber como tratarlo 
+                if (event.from.connectionId === session.connection.connectionId) {
+
+                    insertarMensajePropio(event.data);
+                } else {
+
+                    insertarMensaje(event.data);
+                }
+
+            }
+            if (event.type === "signal:idoperador-signal") {
+                enviarMensaje(session, session.connection.connectionId);
+            }
+            if (event.type === "signal:user_connected") {
+                /////////Se identifico un nuevo usuario conectado 
+                var info_user = JSON.parse(event.data);
+                CardParticipante_user_connected(info_user);
+                enviarMensajeOT(session, "user_connected2", {
+                    id360: connectionCount
+                });
+            }
+            if (event.type === "signal:user_connected2") {
+                /////////Se identifico un nuevo usuario conectado 
+                var info_user = JSON.parse(event.data);
+                info_user.nombre = settings.nombre_invitado;
+                AgregarCardParticipante_Invitado(info_user);
             }
         }
 
@@ -1595,6 +2153,41 @@ function AgregarCardParticipante360(elemento) {
     card.appendChild(body);
     body.appendChild(title);
     body.appendChild(text);
+
+    document.getElementById("participantes").appendChild(container);
+
+//    card.addEventListener("click", function () {
+//
+//        map.setCenter(elemento.gps);
+//        map.setZoom(16);
+//
+//    });
+}
+function AgregarCardParticipante_Invitado(elemento) {
+
+    var container = document.createElement("div");
+    container.id = "card" + elemento.id360;
+    container.className = "row col-12 m-0 p-0";
+    var img = document.createElement("div");
+    img.style = "padding:12.5%;background-image:url('https://bucketmoviles121652-dev.s3.amazonaws.com/public/MobileCard/perfil.png'); background-size: cover;  background-repeat: no-repeat;  background-position: center;";
+    img.className = "col-3 m-0";
+    var card = document.createElement("div");
+    card.className = "card col-9 m-0 p-0";
+    card.style = "cursor:pointer";
+    var body = document.createElement("div");
+    body.className = "card-body";
+    var title = document.createElement("h5");
+    title.className = "card-title";
+    title.innerHTML = elemento.nombre;
+//    var text = document.createElement("p");
+//    text.className = "card-text";
+//    text.innerHTML = "<strong>Correo: </strong>" + elemento.correo + "<br><strong>Teléfono: </strong>" + elemento.telefono;
+
+    container.appendChild(img);
+    container.appendChild(card);
+    card.appendChild(body);
+    body.appendChild(title);
+//    body.appendChild(text);
 
     document.getElementById("participantes").appendChild(container);
 
