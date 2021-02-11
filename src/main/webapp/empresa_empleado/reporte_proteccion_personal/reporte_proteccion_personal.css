@@ -1,0 +1,546 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 25/01/2021, 12:47:44 PM
+    Author     : moises
+*/
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 25/01/2021, 12:47:44 PM
+    Author     : moises
+*/
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 25/01/2021, 12:47:44 PM
+    Author     : moises
+*/
+
+.proteccion_personal .card-header span {
+    font: bold 0.9rem Arial;
+    color: gray;
+}
+.proteccion_personal .card-header .title {
+    font: bold 1.2rem Arial;
+    color: #343a40;
+}
+.proteccion_personal #clock {
+    color: #495057;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: bold 2.2rem Arial;
+    padding: 10px;
+}
+.proteccion_personal .card {
+    background: white;
+    margin-top: 7px;
+}
+.proteccion_personal .card_contactos {
+    height: calc(100% - 7px);
+    min-height: 400px;
+}
+.proteccion_personal .card_llamadas {
+    height: calc(100% - 7px);
+    min-height: 400px;
+}
+.proteccion_personal .card .marco {
+    background: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 1px 0px 14px -2px #495057;
+    max-width: 200px;
+    max-height: 250px;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    min-width: 100px;
+}
+.proteccion_personal .card .marco div {
+    background: var(--gray-dark);
+    border-radius: 5px;
+}
+.proteccion_personal .card .card-header {
+    background: none;
+    border: none;
+}
+.proteccion_personal .card .card-body {
+    background: none;
+    border: none;
+    color: #495057;
+}
+.proteccion_personal .card .card-body hr {
+    width: 100%;
+    border-top: solid 1px #a4a2a2;
+    margin: 5px;
+    margin-bottom: 15px;
+}
+.proteccion_personal .card .card-body button {
+    color: #f5f5f5;
+    font: bold 0.82rem arial;
+    width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 250px;
+    margin: 5px 0;
+    border-radius: 15px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    margin-left: 20%;
+}
+.proteccion_personal .card .card-body .clima {
+    height: 60px;
+}
+.proteccion_personal .card .card-body .noticias {
+    height: 60px;
+}
+.proteccion_personal .progress span {
+    color: #a4a2a2;
+    position: absolute;
+    font-size: 10px;
+    top: 0px;
+    left: -1px;
+}
+.proteccion_personal .progress .state_walking_1,
+.state_walking_2,
+.state_walking_3 {
+    color: #343a40;
+    font-size: 2rem;
+    position: absolute;
+    top: -1rem;
+    left: -5px;
+}
+.proteccion_personal .progress .state_walking_4 {
+    color: #343a40;
+    font-size: 2rem;
+    position: absolute;
+    top: -1rem;
+    right: -5px;
+    left: unset;
+}
+.proteccion_personal .progress span.state1 {
+}
+.proteccion_personal .progress span.state2 {
+}
+.proteccion_personal .progress span.state3 {
+}
+.proteccion_personal .progress span.state4 {
+    position: absolute;
+    font-size: 10px;
+    top: 0px;
+    right: -1px;
+    left: unset;
+}
+.proteccion_personal .progress {
+    height: 4px;
+    font-size: 0.75rem;
+    background-color: #a4a2a2;
+    border-radius: 0;
+    margin-top: 4px;
+}
+.proteccion_personal .progress progress-bar1 {
+    width: 0%;
+}
+.proteccion_personal .progress progress-bar2 {
+    width: 0%;
+}
+.proteccion_personal .progress progress-bar3 {
+    width: 0%;
+}
+
+#directorio_contactos .multiselect {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    background: #dee2e6;
+    border-radius: 5px;
+    height: 20px;
+    max-height: 20px;
+    display: block;
+}
+#directorio_contactos .multiselect__single {
+    background: none;
+    color: #6c757d;
+    font: bold 10px arial;
+    padding: 4px 20px;
+}
+#directorio_contactos .option__image {
+    width: 30px;
+    border-radius: 5px;
+}
+
+#directorio_contactos .option__title {
+    font: bold 1rem Arial;
+    padding: 10px;
+    color: #495057;
+}
+#directorio_contactos .multiselect__option--selected.multiselect__option--highlight:after {
+    color: #0097a9;
+    background: #0097a9;
+    content: attr(data-deselect);
+    color: #fff;
+}
+#directorio_contactos .multiselect__option--selected.multiselect__option--highlight {
+    background: #0097a9;
+    color: #fff;
+}
+#cards_contactos .collapse_sidebar {
+    width: 100%;
+    height: 20px;
+    cursor: pointer;
+    background: none;
+    font: bold 0.8rem Arial;
+    align-items: center;
+    color: #495057;
+    position: relative;
+    margin: 0;
+    border-radius: 0;
+    border-bottom: solid 1px #495057;
+    padding: 0px 10px;
+}
+#cards_contactos .collapse_sidebar_cntr {
+    background: none;
+    padding: 3px 0px;
+}
+#cards_contactos .activo {
+    background: #28a745;
+    padding: 3px 0px;
+    position: absolute;
+    left: 0px;
+    height: 100%;
+    top: 0;
+    width: 10px;
+    overflow: hidden;
+    display: block;
+}
+#cards_contactos .inactivo {
+    background: #a4a2a2;
+    padding: 3px 0px;
+    position: absolute;
+    left: 0px;
+    height: 100%;
+    top: 0;
+    width: 10px;
+    overflow: hidden;
+    display: block;
+}
+#cards_contactos .action_button {
+    border: solid 1px #495057;
+    margin: 0 5px;
+    width: 28px;
+    height: 28px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    border-radius: 15px;
+    color: #6c757d;
+    font: 1rem Arial;
+}
+#cards_contactos .action_button:hover {
+    color: white;
+    background: #495057;
+}
+#cards_contactos .menu_sidebar {
+    width: 100%;
+    height: 100%;
+    border: solid 1px #495057;
+    border-radius: 10px;
+    margin: 3px 0;
+    cursor: pointer;
+    text-align: left;
+    background: none;
+    align-items: center;
+    padding: 5px 20px;
+    font: bold 0.85rem Arial;
+    position: relative;
+    overflow: hidden;
+    border-left: 0;
+}
+
+.proteccion_personal .clock {
+    background: #ececec;
+    width: 50px;
+    height: 50px;
+    /*margin: auto;*/
+    border-radius: 50%;
+    border: 3px solid #4c80b8;
+    position: relative;
+    box-shadow: 0 2vw 4vw -1vw rgba(0, 0, 0, 0.8);
+}
+
+.proteccion_personal .clock .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #ccc;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    position: absolute;
+    z-index: 10;
+    box-shadow: 0 2px 4px -1px black;
+}
+
+.proteccion_personal .clock .hour-hand {
+    position: absolute;
+    z-index: 5;
+    width: 2px;
+    height: 12px;
+    background: #333;
+    top: 11px;
+    transform-origin: 50% 12px;
+    left: 50%;
+    margin-left: -2px;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+}
+
+.proteccion_personal .clock .minute-hand {
+    position: absolute;
+    z-index: 6;
+    width: 2px;
+    height: 18px;
+    background: #666;
+    top: 4px;
+    left: 50%;
+    margin-left: -2px;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    transform-origin: 50% 19px;
+}
+
+.proteccion_personal .clock .second-hand {
+    position: absolute;
+    z-index: 7;
+    width: 2px;
+    height: 20px;
+    background: #dc3545;
+    top: 5px;
+    left: 50%;
+    margin-left: -1px;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    transform-origin: 50% 18px;
+}
+
+.proteccion_personal .clock span {
+    display: inline-block;
+    position: absolute;
+    color: #333;
+    font-size: 22px;
+    font-family: "Poiret One";
+    font-weight: 700;
+    z-index: 4;
+}
+
+.proteccion_personal .clock .h12 {
+    top: 30px;
+    left: 50%;
+    margin-left: -9px;
+}
+.proteccion_personal .clock .h3 {
+    top: 140px;
+    right: 30px;
+}
+.proteccion_personal .clock .h6 {
+    bottom: 30px;
+    left: 50%;
+    margin-left: -5px;
+}
+.proteccion_personal .clock .h9 {
+    left: 32px;
+    top: 140px;
+}
+
+.proteccion_personal .clock .diallines {
+    position: absolute;
+    z-index: 2;
+    width: 0px;
+    height: 3px;
+    background: #666;
+    left: 50%;
+    margin-left: -1px;
+    transform-origin: 50% 23px;
+}
+.proteccion_personal .clock .diallines:nth-of-type(5n) {
+    position: absolute;
+    z-index: 2;
+    width: 2px;
+    height: 5px;
+    background: #4c80b8;
+    left: 50%;
+    margin-left: -1px;
+    transform-origin: 50% 22px;
+}
+
+.proteccion_personal .clock .info {
+    position: absolute;
+    width: 120px;
+    height: 20px;
+    border-radius: 7px;
+    background: #ccc;
+    text-align: center;
+    line-height: 20px;
+    color: #000;
+    font-size: 11px;
+    top: 200px;
+    left: 50%;
+    margin-left: -60px;
+    font-family: "Poiret One";
+    font-weight: 700;
+    z-index: 3;
+    letter-spacing: 3px;
+    margin-left: -60px;
+    left: 50%;
+}
+.proteccion_personal .clock .date {
+    top: 80px;
+}
+.proteccion_personal .clock .day {
+    top: 200px;
+}
+.proteccion_personal .jornada_laboral strong {
+    font: bold 0.7rem Arial;
+    color: #6c757d;
+}
+.proteccion_personal .jornada_laboral span {
+    font: 0.7rem Arial;
+    color: #6c757d;
+}
+.proteccion_personal .text_small {
+    font: 1rem Arial;
+    color: #495057;
+}
+.proteccion_personal #intervalo_semanal {
+    font: bold 0.85rem Arial;
+    color: #495057;
+}
+.proteccion_personal .reporte {
+    height: 120px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 10px -2px #495057;
+    background: #d3d3d3;
+}
+.proteccion_personal .reporte .titulo {
+    text-align: center;
+    font: bold 0.85rem Arial;
+}
+.proteccion_personal .reporte .info {
+    font: 2rem Arial;
+    display: block;
+    text-align: center;
+    height: 60px;
+}
+.proteccion_personal .reporte .icono {
+    font: 2.5rem Arial;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+}
+.proteccion_personal .reporte .icon {
+    font-size: 22px;
+    margin: 5px 0;
+}
+.proteccion_personal .reporte .nota {
+    font: bold 1.05rem Arial;
+}
+.proteccion_personal .card .card-body .reporte button {
+    font: 0.8rem Arial;
+    margin: 0;
+    height: 15px;
+}
+.proteccion_personal #labelOverlay {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: calc(50% - 20px);
+    left: calc(50% - 25px);
+    text-align: center;
+    cursor: default;
+}
+
+.proteccion_personal #labelOverlay strong {
+    line-height: 1;
+    font-size: 8pt;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+.proteccion_personal #labelOverlay p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3px;
+}
+.proteccion_personal #labelOverlay span {
+    line-height: 1;
+    font-size: 19pt;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+.proteccion_personal .chart {
+    width: 100%;
+    min-height: 150px;
+    max-height: 150px;
+    height: 150px;
+}
+.proteccion_personal .icono_panel_llamadas {
+    border: solid 3px #a4a2a2;
+    width: 200px;
+    font: 5rem Arial;
+    height: 200px;
+    padding: 25px;
+    border-radius: 50%;
+    color: #a4a2a2;
+    position: absolute;
+    top: calc(50% - 100px);
+    left: calc(50% - 100px);
+}
+.proteccion_personal .contenido_panel_llamadas {
+    height: calc(100% - 100px);
+}
+.proteccion_personal .botones_panel_llamadas {
+    height: 60px;
+    justify-content: center;
+}
+.proteccion_personal #panel_llamadas_colgar {
+    height: 45px;
+    width: 45px;
+    background: #da291c;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 45px;
+    font: 1.5rem Arial;
+    border-radius: 50%;
+    transform: rotate(135deg);
+    margin: 0 15px;
+}
+.proteccion_personal form {
+        width: 100%;
+        padding: 10px;
+        max-width: 100%;
+        display: block;
+}
+
+

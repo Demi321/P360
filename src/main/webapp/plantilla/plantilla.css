@@ -604,11 +604,11 @@ footer{
 #sidebar .menu_sidebar{
     width: 100%;
     height: 40px;
-    border: solid 1px #2b3035;
+    border: solid 1px #40474f;
     border-radius: 3px;
     margin: 5px 0;
     cursor: pointer;
-    text-align: center;
+    text-align: left;
     background: #40474f;
     align-items: center;
     padding: 0 20px;
@@ -645,7 +645,7 @@ footer{
     margin-top: 5px;
     width: 100%;
     height: 40px;
-    border: solid 1px #495057;
+    /* border: solid 1px #333538; */
     border-radius: 3px;
     /* margin: 5px 0; */
     cursor: pointer;
@@ -656,6 +656,7 @@ footer{
     align-items: center;
     color: white;
     position: relative;
+    margin: 0;
 }
 .collapse_sidebar:hover{
     color: white;
@@ -1063,4 +1064,22 @@ input:focus , video:focus, textArea:focus{
 
 .height-fit-content{
     height: fit-content !important;
+}
+
+#base_modulo_ProtocolodeVacunaciónCOVID .form-control {
+    height: 1rem;
+}
+
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
+.over {
+  /*border: 2px dashed #000;*/
+  border-top: 2px solid blue;
 }

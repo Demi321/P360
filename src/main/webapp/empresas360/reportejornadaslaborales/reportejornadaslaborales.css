@@ -1,0 +1,35 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 24/11/2020, 01:35:11 PM
+    Author     : global
+*/
+
+.reportejornadaslaborales .opciones_tabs_jornadas_laborales{
+    list-style: none;
+    display: flex;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 50px;
+}
+
+.reportejornadaslaborales .opciones_tabs_jornadas_laborales li{
+    text-align: center;
+    width: 50%;
+    padding: 10px;
+    border-radius: 50px;
+}
+
+.reportejornadaslaborales .opciones_tabs_jornadas_laborales li.active{
+    background-color: lightsteelblue;
+}
+
+.reportejornadaslaborales .opciones_tabs_jornadas_laborales li a{
+    color: currentcolor;
+    font-size: 1.4rem;
+    text-decoration: none;
+    padding: 10px 30%;
+}

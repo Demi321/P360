@@ -1,7 +1,7 @@
 
 
 /* global RequestPOST, swal, Swal, marcador3, DEPENDENCIA, marcador5, map5, google, RequestGET, XLSX, GenerarCredenciales, Credenciales, reproduccionSonidoNotificacion, buttonNotificacionLlamada, moment, swalConfirmDialog, NotificacionToas */
-
+//alert("Hola")
 console.log("Empleado");
 var directorio_completo = null;
 RequestPOST("/API/ConsultarDirectorio", {

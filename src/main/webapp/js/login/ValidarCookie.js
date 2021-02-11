@@ -40,7 +40,7 @@ function deleteCookie(cname) {
         "id_sesion": sesion_cookie.id_sesion
     }).then(() => {
         //redirigir a claro360
-        window.location.href="https://claro360.com";
+        window.location.href = "https://claro360.com";
     });
 
 }
@@ -55,7 +55,14 @@ function getCookie(cname) {
             c = c.substring(1);
         }
         if (c.indexOf(name) === 0) {
-            return window.atob(c.substring(name.length, c.length));
+            let sesion = window.atob(c.substring(name.length, c.length));
+            if (sesion === "") {
+                var d = new Date();
+                d.setTime(d.getTime() - (1 * 24 * 60 * 60 * 1000));
+                var expires = "expires=" + d.toGMTString();
+                document.cookie = cname + "=" + "value" + ";" + expires + ";path=/";
+            }
+            return sesion;
         }
     }
     //window.location.reload();
@@ -105,8 +112,9 @@ function checkCookie() {
 
         } else {
 
-             window.location.href="https://claro360.com";
-             
+
+            window.location.href = "https://claro360.com";
+
             if (window.location.toString().split(DEPENDENCIA)[1] !== "/Login")
             {
                 var hostdir = window.location.protocol + "//" + window.location.host;
@@ -120,10 +128,10 @@ function checkCookie() {
     } else {
         sesion_cookie = JSON.parse(user);//ya 
         //validar la sesion 
-        RequestPOST("/API/cuenta360/check_login",{
-            "id_sesion":sesion_cookie.id_sesion
-        }).then((response)=>{
-            if(response.failure){
+        RequestPOST("/API/cuenta360/check_login", {
+            "id_sesion": sesion_cookie.id_sesion
+        }).then((response) => {
+            if (response.failure) {
                 deleteCookie("username_v3.1_" + DEPENDENCIA);
             }
         });
@@ -131,9 +139,9 @@ function checkCookie() {
             deleteCookie("username_v3.1_" + DEPENDENCIA);
         }
         var user = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
-        console.log(user);
+        //**console.log(user);
         if (user !== "") {
-            console.log("Sesion detectada por cookie");
+            //**console.log("Sesion detectada por cookie");
             /**Cambis de nueva plantilla**/
             //Quitar style
             $("#menu_navegacion").removeAttr("style");
@@ -235,15 +243,15 @@ function checkCookie() {
 
         if ($("#config").length) {
             var config = JSON.parse($("#config").val());
-            //console.log(config);
+            ////**console.log(config);
         }
 //        var conf_personalizada = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).configuracion;
-//        console.log("*******************************");
-//        console.log("configuracion");
-//        console.log(config);
-//        console.log("personalizada");
-//        console.log(conf_personalizada);
-//        console.log("*******************************");
+//        //**console.log("*******************************");
+//        //**console.log("configuracion");
+//        //**console.log(config);
+//        //**console.log("personalizada");
+//        //**console.log(conf_personalizada);
+//        //**console.log("*******************************");
 
     }
 }
@@ -361,7 +369,7 @@ window.onresize = function (event) {
 
 };
 $("#modulo16").click(function () {
-    console.log("usuariosregistrados");
+    //**console.log("usuariosregistrados");
     usuariosregistrados();
 });
 
@@ -401,7 +409,7 @@ function usuariosregistrados() {
 
 
 $("#modulo17").click(function () {
-    console.log("usuariosActivos");
+    //**console.log("usuariosActivos");
     UsuariosActivosPDF();
 });
 
@@ -464,9 +472,9 @@ function RequestPOST(url, json) {
         dataType: "json",
         data: JSON.stringify(json),
         success: function (response) {
-            console.log(url);
-            console.log(response);
-            console.log("/*********************************************/");
+            //**console.log(url);
+            //**console.log(response);
+            //**console.log("/*********************************************/");
         },
         error: function (err) {
             console.error(err);

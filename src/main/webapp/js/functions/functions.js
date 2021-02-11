@@ -7,7 +7,7 @@
 //$("body").append(block);
 
 $(document).ready(function () {
-    console.log("ready!");
+    //console.log("ready!");
     if ($("#block").length) {
         document.getElementById("block").style = "display: none;";
 //    block.style="width: 0; height: 0; opacity: 0.5;";
@@ -17,8 +17,8 @@ $(document).ready(function () {
 ////////////////////////Administrador***************
 
 function InsertarCardVacia(CardV) {
-    console.log("Inseertando Card vacia");
-    console.log(CardV);
+    //console.log("Inseertando Card vacia");
+    //console.log(CardV);
     var tarjeta = document.createElement("div");
     tarjeta.className = "col tarjeta";
     tarjeta.id = "card" + CardV;
@@ -338,10 +338,10 @@ function InsertarCard(data/*idUsr, modoLlamada, IDapikey, IDsesion, IDtoken, IDL
 
 
 
-        console.log(form);
+        //console.log(form);
         submit.addEventListener("click", function (e) {
-            console.log("ContestandoS");
-            console.log(data);
+            //console.log("ContestandoS");
+            //console.log(data);
             // e.preventDefault();
 
 
@@ -404,8 +404,8 @@ function EliminarCard(id) {
 //        var indice = mostrados.indexOf(id);
 //       //-
         cards--;
-        console.log("Eliminando Card: " + id);
-        console.log("InsertarCardVacia: " + CardV);
+        //console.log("Eliminando Card: " + id);
+        //console.log("InsertarCardVacia: " + CardV);
         InsertarCardVacia(CardV);
         CardV++;
 
@@ -636,7 +636,7 @@ function agregarVideo(session, stream) {
         subscriberOptions = {
             insertMode: 'replace',
             fitMode: "contain",
-            publishAudio: true,
+            publishAudio: false,
             publishVideo: false
         };
     }
@@ -661,47 +661,47 @@ function agregarVideo(session, stream) {
             });
 
             document.getElementById(pos).appendChild(event);
-            
+
             /***************************************************************
-            //////////Colgar la llamada   ******
-            var usrDesconectado = false;
-            var colgar = document.createElement("input");
-            colgar.className = "colgar";
-            colgar.value = "";
-            colgar.style.display = "none";
-            colgar.addEventListener("click", function () {
-                //
-                //session.forceUnpublish(stream, function (error) {console.error(error);  });
-                console.log(stream.connection);
-                console.log(session.connection);
-                console.log(session);
-                session.forceDisconnect(session.connection, function (error) {
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        console.log("Connection forced to disconnect: " + connection.id);
-                    }
-                });
-                session.forceDisconnect(stream.connection.connectionId, function (error) {
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        console.log("Connection forced to disconnect: " + connection.id);
-                    }
-                });
-                usrDesconectado = true;
-            });
-            document.getElementById(pos).appendChild(colgar);
-            //////////Colgar la llamada   por evento de publicador******
-            if ($("#colgarPublisher").length) {
-                $("#colgarPublisher").click(function () {
-                    session.forceUnpublish(stream, function (error) {});
-                    session.forceDisconnect(stream.connection);
-                });
-            }
-
-
-            *****************************************************/////////////
+             //////////Colgar la llamada   ******
+             var usrDesconectado = false;
+             var colgar = document.createElement("input");
+             colgar.className = "colgar";
+             colgar.value = "";
+             colgar.style.display = "none";
+             colgar.addEventListener("click", function () {
+             //
+             //session.forceUnpublish(stream, function (error) {console.error(error);  });
+             //console.log(stream.connection);
+             //console.log(session.connection);
+             //console.log(session);
+             session.forceDisconnect(session.connection, function (error) {
+             if (error) {
+             //console.log(error);
+             } else {
+             //console.log("Connection forced to disconnect: " + connection.id);
+             }
+             });
+             session.forceDisconnect(stream.connection.connectionId, function (error) {
+             if (error) {
+             //console.log(error);
+             } else {
+             //console.log("Connection forced to disconnect: " + connection.id);
+             }
+             });
+             usrDesconectado = true;
+             });
+             document.getElementById(pos).appendChild(colgar);
+             //////////Colgar la llamada   por evento de publicador******
+             if ($("#colgarPublisher").length) {
+             $("#colgarPublisher").click(function () {
+             session.forceUnpublish(stream, function (error) {});
+             session.forceDisconnect(stream.connection);
+             });
+             }
+             
+             
+             *****************************************************/////////////
 
 
             //////////Solicitar Cambio de camara  ******
@@ -772,6 +772,7 @@ function agregarVideo(session, stream) {
             });
         }
     });
+    $("#" + pos).removeAttr("style");
 
 }
 function agregarVideo_target(session, stream, target) {
@@ -809,21 +810,21 @@ function agregarVideo_target(session, stream, target) {
             colgar.addEventListener("click", function () {
                 //
                 //session.forceUnpublish(stream, function (error) {console.error(error);  });
-                console.log(stream.connection);
-                console.log(session.connection);
-                console.log(session);
+                //console.log(stream.connection);
+                //console.log(session.connection);
+                //console.log(session);
                 session.forceDisconnect(session.connection, function (error) {
                     if (error) {
-                        console.log(error);
+                        //console.log(error);
                     } else {
-                        console.log("Connection forced to disconnect: " + connection.id);
+                        //console.log("Connection forced to disconnect: " + connection.id);
                     }
                 });
                 session.forceDisconnect(stream.connection.connectionId, function (error) {
                     if (error) {
-                        console.log(error);
+                        //console.log(error);
                     } else {
-                        console.log("Connection forced to disconnect: " + connection.id);
+                        //console.log("Connection forced to disconnect: " + connection.id);
                     }
                 });
                 usrDesconectado = true;
@@ -973,7 +974,7 @@ function RegistrarDesconexion(connectionId) {
             fueRegistrado = true;
 
 
-            console.log(participantes[i]);
+            //console.log(participantes[i]);
             var elemento = BuscarIntegranteDataG(participantes[i]);
 
             var gpsjson = {
@@ -1139,7 +1140,7 @@ function insertarMensajePropio(json) {
 
 }
 function insertarMensaje(json) {
-    console.log(json);
+    //console.log(json);
     var msgHistory = document.querySelector('#history');
 
 
@@ -1172,7 +1173,7 @@ function insertarMensaje(json) {
     theirs.scrollIntoView();
 }
 function insertarImagen(json) {
-    console.log(json);
+    //console.log(json);
     var msgHistory = document.querySelector('#history');
 
 
@@ -1207,12 +1208,12 @@ function insertarImagen(json) {
     var id = msj.value.split("/");
     id = id[id.length - 1];
     id = id.split(".")[0]
-    console.log(id);
+    //console.log(id);
     msj.idFile = id;
 
     Agregar_ModalImagenes(msj);
     img.addEventListener("click", function () {
-        console.log(msj);
+        //console.log(msj);
         $("#modalImagenes").removeAttr("style");
         $(".carousel-inner div").removeClass("active");
         $("#" + msj.idFile).addClass("active");
@@ -1436,8 +1437,9 @@ function mosaico_target(metodo, target) {
 function NuevaUbicacion() {
 
     var clase = mosaico("agregar");
+    clase = "item-grid";
     var div = document.createElement("div");
-    div.className = clase + " bloque";
+    div.className = clase;
     var idDiv = 1;
     while ($("#StreamOTk" + idDiv).length) {
         idDiv++;
@@ -2034,7 +2036,7 @@ function ArchiveSession() {
 
 function initMap() {
     if ($("#map").length) {
-        console.log("inicializando mapa");
+        //console.log("inicializando mapa");
         map = new google.maps.Map(document.getElementById('map'), {zoom: 5, center: {lat: 19.503329, lng: -99.185714} /*,mapTypeId:'satellite'*/, styles: [{featureType: 'administrative', elementType: 'geometry', stylers: [{visibility: "off"}, {"weight": 1}]}, {featureType: 'administrative', elementType: 'geometry.fill', stylers: [{visibility: "on"}]}, {featureType: 'administrative', elementType: 'geometry.stroke', stylers: [{visibility: "off"}]}, {featureType: 'administrative', elementType: 'labels', stylers: [{color: '#000000'}, {visibility: "off"}]}, {featureType: 'administrative.country', elementType: 'geometry', stylers: [{color: '#a6a6a6'}, {visibility: "on"}, {"weight": 1.5}]}, {featureType: 'administrative.country', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.country', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.land_parcel', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.land_parcel', elementType: 'labels', stylers: [{visibility: "on"}]}, {featureType: 'administrative.land_parcel', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.locality', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.locality', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.locality', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.neighborhood', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.neighborhood', elementType: 'labels', stylers: [{color: '#696969'}, {visibility: "simplified"}]}, {featureType: 'administrative.neighborhood', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.province', elementType: 'geometry', stylers: [{visibility: "on"}, {"weight": 1.5}]}, {featureType: 'administrative.province', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.province', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: "landscape", stylers: [{color: '#D5D8DC'}]}, {featureType: 'landscape', elementType: 'geometry', stylers: [{color: '#D5D8DC'}]}, {featureType: 'landscape', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'landscape', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'landscape.man_made', elementType: 'geometry', stylers: [{color: '#526081'}, {visibility: "off"}]}, {featureType: 'landscape.natural.landcover', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.landcover', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'road', elementType: 'geometry', stylers: [{visibility: "simplified"}]}, {featureType: 'road', elementType: 'labels', stylers: [{visibility: "simplified"}]}, {featureType: 'road', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'water', elementType: 'geometry', stylers: [{color: '#F2F4F4'}, {visibility: "on"}]}, {featureType: 'water', elementType: 'labels', stylers: [{visibility: "off"}]}]});
         map.setTilt(45);
         geocoder = new google.maps.Geocoder;
@@ -2062,7 +2064,7 @@ function initMap() {
             radius: 0
         });
         marcador = new google.maps.Marker({map: map});
-        console.log("Mapa inicializado: map");
+        //console.log("Mapa inicializado: map");
         if ($("#d_autocompletar").length) {
             let input = document.getElementById("d_autocompletar");
             let autocomplete = new google.maps.places.Autocomplete(input);
@@ -2153,19 +2155,19 @@ function initMap() {
                     for (var j = 0; j < types.length; j++) {
                         let type = types[j];
                         if (type === "country") {
-                            console.log("Pais: " + place.address_components[i].long_name);
+                            //console.log("Pais: " + place.address_components[i].long_name);
                             if ($("#pais").length) {
                                 $("#pais").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "administrative_area_level_1") {
-                            console.log("Estado: " + place.address_components[i].long_name);
+                            //console.log("Estado: " + place.address_components[i].long_name);
                             if ($("#estado").length) {
                                 $("#estado").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "locality") {
-                            console.log("Ciudad o Municipio: " + place.address_components[i].long_name);
+                            //console.log("Ciudad o Municipio: " + place.address_components[i].long_name);
                             if ($("#ciudad_municipio").length) {
                                 $("#ciudad_municipio").val(place.address_components[i].long_name);
                             }
@@ -2174,28 +2176,28 @@ function initMap() {
                             }
                         }
                         if (type === "sublocality_level_1") {
-                            console.log("colonia: " + place.address_components[i].long_name);
+                            //console.log("colonia: " + place.address_components[i].long_name);
                             if ($("#colonia").length) {
                                 $("#colonia").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "route") {
-                            console.log("Calle: " + place.address_components[i].long_name);
+                            //console.log("Calle: " + place.address_components[i].long_name);
                             if ($("#calle").length) {
                                 $("#calle").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "postal_code") {
-                            console.log("CP: " + place.address_components[i].long_name);
+                            //console.log("CP: " + place.address_components[i].long_name);
                             if ($("#cp").length) {
                                 $("#cp").val(place.address_components[i].long_name);
                             }
                         }
                     }
                 }
-                console.log(address);
-                console.log(place);
-                console.log(infowindowContent);
+                //console.log(address);
+                //console.log(place);
+                //console.log(infowindowContent);
                 //            infowindowContent.children["place-icon"].src = place.icon;
                 //            infowindowContent.children["place-name"].textContent = place.name;
                 //            infowindowContent.children["place-address"].textContent = address;
@@ -2203,14 +2205,14 @@ function initMap() {
             });
         }
     } else {
-        console.log("No se pudo inicializar el mapa 1");
+        //console.log("No se pudo inicializar el mapa 1");
     }
 
 }
 
 function initMap2() {
     if ($("#map2").length) {
-        console.log("inicializando mapa");
+        //console.log("inicializando mapa");
         map2 = new google.maps.Map(document.getElementById('map2'), {zoom: 5, center: {lat: 19.503329, lng: -99.185714}/*,mapTypeId:'satellite'*/, styles: [{featureType: 'administrative', elementType: 'geometry', stylers: [{visibility: "off"}, {"weight": 1}]}, {featureType: 'administrative', elementType: 'geometry.fill', stylers: [{visibility: "on"}]}, {featureType: 'administrative', elementType: 'geometry.stroke', stylers: [{visibility: "off"}]}, {featureType: 'administrative', elementType: 'labels', stylers: [{color: '#000000'}, {visibility: "off"}]}, {featureType: 'administrative.country', elementType: 'geometry', stylers: [{color: '#a6a6a6'}, {visibility: "on"}, {"weight": 1.5}]}, {featureType: 'administrative.country', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.country', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.land_parcel', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.land_parcel', elementType: 'labels', stylers: [{visibility: "on"}]}, {featureType: 'administrative.land_parcel', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.locality', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.locality', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.locality', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.neighborhood', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.neighborhood', elementType: 'labels', stylers: [{color: '#696969'}, {visibility: "simplified"}]}, {featureType: 'administrative.neighborhood', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.province', elementType: 'geometry', stylers: [{visibility: "on"}, {"weight": 1.5}]}, {featureType: 'administrative.province', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.province', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: "landscape", stylers: [{color: '#D5D8DC'}]}, {featureType: 'landscape', elementType: 'geometry', stylers: [{color: '#D5D8DC'}]}, {featureType: 'landscape', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'landscape', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'landscape.man_made', elementType: 'geometry', stylers: [{color: '#526081'}, {visibility: "off"}]}, {featureType: 'landscape.natural.landcover', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.landcover', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'road', elementType: 'geometry', stylers: [{visibility: "simplified"}]}, {featureType: 'road', elementType: 'labels', stylers: [{visibility: "simplified"}]}, {featureType: 'road', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'water', elementType: 'geometry', stylers: [{color: '#F2F4F4'}, {visibility: "on"}]}, {featureType: 'water', elementType: 'labels', stylers: [{visibility: "off"}]}]});
         map2.setTilt(45);
         geocoder2 = new google.maps.Geocoder;
@@ -2219,7 +2221,7 @@ function initMap2() {
 
 
         marcador2 = new google.maps.Marker({map: map2});
-        console.log("Mapa inicializado: map");
+        //console.log("Mapa inicializado: map");
         if ($("#d_autocompletar2").length) {
             let input = document.getElementById("d_autocompletar2");
             let autocomplete = new google.maps.places.Autocomplete(input);
@@ -2311,19 +2313,19 @@ function initMap2() {
                     for (var j = 0; j < types.length; j++) {
                         let type = types[j];
                         if (type === "country") {
-                            console.log("Pais: " + place.address_components[i].long_name);
+                            //console.log("Pais: " + place.address_components[i].long_name);
                             if ($("#pais2").length) {
                                 $("#pais2").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "administrative_area_level_1") {
-                            console.log("Estado: " + place.address_components[i].long_name);
+                            //console.log("Estado: " + place.address_components[i].long_name);
                             if ($("#estado2").length) {
                                 $("#estado2").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "locality") {
-                            console.log("Ciudad o Municipio: " + place.address_components[i].long_name);
+                            //console.log("Ciudad o Municipio: " + place.address_components[i].long_name);
                             if ($("#ciudad_municipio2").length) {
                                 $("#ciudad_municipio2").val(place.address_components[i].long_name);
                             }
@@ -2332,28 +2334,28 @@ function initMap2() {
                             }
                         }
                         if (type === "sublocality_level_1") {
-                            console.log("colonia: " + place.address_components[i].long_name);
+                            //console.log("colonia: " + place.address_components[i].long_name);
                             if ($("#colonia2").length) {
                                 $("#colonia2").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "route") {
-                            console.log("Calle: " + place.address_components[i].long_name);
+                            //console.log("Calle: " + place.address_components[i].long_name);
                             if ($("#calle2").length) {
                                 $("#calle2").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "postal_code") {
-                            console.log("CP: " + place.address_components[i].long_name);
+                            //console.log("CP: " + place.address_components[i].long_name);
                             if ($("#cp2").length) {
                                 $("#cp2").val(place.address_components[i].long_name);
                             }
                         }
                     }
                 }
-                console.log(address);
-                console.log(place);
-                console.log(infowindowContent);
+                //console.log(address);
+                //console.log(place);
+                //console.log(infowindowContent);
 //            infowindowContent.children["place-icon"].src = place.icon;
 //            infowindowContent.children["place-name"].textContent = place.name;
 //            infowindowContent.children["place-address"].textContent = address;
@@ -2364,7 +2366,7 @@ function initMap2() {
 }
 function initMap3() {
     if ($("#map3").length) {
-        console.log("inicializando mapa");
+        //console.log("inicializando mapa");
         map3 = new google.maps.Map(document.getElementById('map3'), {zoom: 5, center: {lat: 19.503329, lng: -99.185714}/*,mapTypeId:'satellite'*/, styles: [{featureType: 'administrative', elementType: 'geometry', stylers: [{visibility: "off"}, {"weight": 1}]}, {featureType: 'administrative', elementType: 'geometry.fill', stylers: [{visibility: "on"}]}, {featureType: 'administrative', elementType: 'geometry.stroke', stylers: [{visibility: "off"}]}, {featureType: 'administrative', elementType: 'labels', stylers: [{color: '#000000'}, {visibility: "off"}]}, {featureType: 'administrative.country', elementType: 'geometry', stylers: [{color: '#a6a6a6'}, {visibility: "on"}, {"weight": 1.5}]}, {featureType: 'administrative.country', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.country', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.land_parcel', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.land_parcel', elementType: 'labels', stylers: [{visibility: "on"}]}, {featureType: 'administrative.land_parcel', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.locality', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.locality', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.locality', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.neighborhood', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.neighborhood', elementType: 'labels', stylers: [{color: '#696969'}, {visibility: "simplified"}]}, {featureType: 'administrative.neighborhood', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.province', elementType: 'geometry', stylers: [{visibility: "on"}, {"weight": 1.5}]}, {featureType: 'administrative.province', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.province', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: "landscape", stylers: [{color: '#D5D8DC'}]}, {featureType: 'landscape', elementType: 'geometry', stylers: [{color: '#D5D8DC'}]}, {featureType: 'landscape', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'landscape', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'landscape.man_made', elementType: 'geometry', stylers: [{color: '#526081'}, {visibility: "off"}]}, {featureType: 'landscape.natural.landcover', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.landcover', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'road', elementType: 'geometry', stylers: [{visibility: "simplified"}]}, {featureType: 'road', elementType: 'labels', stylers: [{visibility: "simplified"}]}, {featureType: 'road', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'water', elementType: 'geometry', stylers: [{color: '#F2F4F4'}, {visibility: "on"}]}, {featureType: 'water', elementType: 'labels', stylers: [{visibility: "off"}]}]});
         map3.setTilt(45);
         geocoder3 = new google.maps.Geocoder;
@@ -2373,7 +2375,7 @@ function initMap3() {
 
 
         marcador3 = new google.maps.Marker({map: map3});
-        console.log("Mapa inicializado: map");
+        //console.log("Mapa inicializado: map");
         if ($("#d_autocompletar3").length) {
             let input = document.getElementById("d_autocompletar3");
             let autocomplete = new google.maps.places.Autocomplete(input);
@@ -2465,19 +2467,19 @@ function initMap3() {
                     for (var j = 0; j < types.length; j++) {
                         let type = types[j];
                         if (type === "country") {
-                            console.log("Pais: " + place.address_components[i].long_name);
+                            //console.log("Pais: " + place.address_components[i].long_name);
                             if ($("#pais3").length) {
                                 $("#pais3").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "administrative_area_level_1") {
-                            console.log("Estado: " + place.address_components[i].long_name);
+                            //console.log("Estado: " + place.address_components[i].long_name);
                             if ($("#estado3").length) {
                                 $("#estado3").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "locality") {
-                            console.log("Ciudad o Municipio: " + place.address_components[i].long_name);
+                            //console.log("Ciudad o Municipio: " + place.address_components[i].long_name);
                             if ($("#ciudad_municipio3").length) {
                                 $("#ciudad_municipio3").val(place.address_components[i].long_name);
                             }
@@ -2486,28 +2488,28 @@ function initMap3() {
                             }
                         }
                         if (type === "sublocality_level_1") {
-                            console.log("colonia: " + place.address_components[i].long_name);
+                            //console.log("colonia: " + place.address_components[i].long_name);
                             if ($("#colonia3").length) {
                                 $("#colonia3").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "route") {
-                            console.log("Calle: " + place.address_components[i].long_name);
+                            //console.log("Calle: " + place.address_components[i].long_name);
                             if ($("#calle3").length) {
                                 $("#calle3").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "postal_code") {
-                            console.log("CP: " + place.address_components[i].long_name);
+                            //console.log("CP: " + place.address_components[i].long_name);
                             if ($("#cp3").length) {
                                 $("#cp3").val(place.address_components[i].long_name);
                             }
                         }
                     }
                 }
-                console.log(address);
-                console.log(place);
-                console.log(infowindowContent);
+                //console.log(address);
+                //console.log(place);
+                //console.log(infowindowContent);
 //            infowindowContent.children["place-icon"].src = place.icon;
 //            infowindowContent.children["place-name"].textContent = place.name;
 //            infowindowContent.children["place-address"].textContent = address;
@@ -2518,7 +2520,7 @@ function initMap3() {
 }
 function initMap4() {
     if ($("#map4").length) {
-        console.log("inicializando mapa");
+        //console.log("inicializando mapa");
         map4 = new google.maps.Map(document.getElementById('map4'), {zoom: 5, center: {lat: 19.503329, lng: -99.185714}/*,mapTypeId:'satellite'*/, styles: [{featureType: 'administrative', elementType: 'geometry', stylers: [{visibility: "off"}, {"weight": 1}]}, {featureType: 'administrative', elementType: 'geometry.fill', stylers: [{visibility: "on"}]}, {featureType: 'administrative', elementType: 'geometry.stroke', stylers: [{visibility: "off"}]}, {featureType: 'administrative', elementType: 'labels', stylers: [{color: '#000000'}, {visibility: "off"}]}, {featureType: 'administrative.country', elementType: 'geometry', stylers: [{color: '#a6a6a6'}, {visibility: "on"}, {"weight": 1.5}]}, {featureType: 'administrative.country', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.country', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.land_parcel', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.land_parcel', elementType: 'labels', stylers: [{visibility: "on"}]}, {featureType: 'administrative.land_parcel', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.locality', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.locality', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.locality', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.neighborhood', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.neighborhood', elementType: 'labels', stylers: [{color: '#696969'}, {visibility: "simplified"}]}, {featureType: 'administrative.neighborhood', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.province', elementType: 'geometry', stylers: [{visibility: "on"}, {"weight": 1.5}]}, {featureType: 'administrative.province', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.province', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: "landscape", stylers: [{color: '#D5D8DC'}]}, {featureType: 'landscape', elementType: 'geometry', stylers: [{color: '#D5D8DC'}]}, {featureType: 'landscape', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'landscape', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'landscape.man_made', elementType: 'geometry', stylers: [{color: '#526081'}, {visibility: "off"}]}, {featureType: 'landscape.natural.landcover', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.landcover', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'road', elementType: 'geometry', stylers: [{visibility: "simplified"}]}, {featureType: 'road', elementType: 'labels', stylers: [{visibility: "simplified"}]}, {featureType: 'road', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'water', elementType: 'geometry', stylers: [{color: '#F2F4F4'}, {visibility: "on"}]}, {featureType: 'water', elementType: 'labels', stylers: [{visibility: "off"}]}]});
         map4.setTilt(45);
         geocoder4 = new google.maps.Geocoder;
@@ -2527,7 +2529,7 @@ function initMap4() {
 
 
         marcador4 = new google.maps.Marker({map: map4});
-        console.log("Mapa inicializado: map");
+        //console.log("Mapa inicializado: map");
         if ($("#d_autocompletar4").length) {
             let input = document.getElementById("d_autocompletar4");
             let autocomplete = new google.maps.places.Autocomplete(input);
@@ -2619,19 +2621,19 @@ function initMap4() {
                     for (var j = 0; j < types.length; j++) {
                         let type = types[j];
                         if (type === "country") {
-                            console.log("Pais: " + place.address_components[i].long_name);
+                            //console.log("Pais: " + place.address_components[i].long_name);
                             if ($("#pais4").length) {
                                 $("#pais4").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "administrative_area_level_1") {
-                            console.log("Estado: " + place.address_components[i].long_name);
+                            //console.log("Estado: " + place.address_components[i].long_name);
                             if ($("#estado4").length) {
                                 $("#estado4").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "locality") {
-                            console.log("Ciudad o Municipio: " + place.address_components[i].long_name);
+                            //console.log("Ciudad o Municipio: " + place.address_components[i].long_name);
                             if ($("#ciudad_municipio4").length) {
                                 $("#ciudad_municipio4").val(place.address_components[i].long_name);
                             }
@@ -2640,28 +2642,28 @@ function initMap4() {
                             }
                         }
                         if (type === "sublocality_level_1") {
-                            console.log("colonia: " + place.address_components[i].long_name);
+                            //console.log("colonia: " + place.address_components[i].long_name);
                             if ($("#colonia4").length) {
                                 $("#colonia4").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "route") {
-                            console.log("Calle: " + place.address_components[i].long_name);
+                            //console.log("Calle: " + place.address_components[i].long_name);
                             if ($("#calle4").length) {
                                 $("#calle4").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "postal_code") {
-                            console.log("CP: " + place.address_components[i].long_name);
+                            //console.log("CP: " + place.address_components[i].long_name);
                             if ($("#cp4").length) {
                                 $("#cp4").val(place.address_components[i].long_name);
                             }
                         }
                     }
                 }
-                console.log(address);
-                console.log(place);
-                console.log(infowindowContent);
+                //console.log(address);
+                //console.log(place);
+                //console.log(infowindowContent);
 //            infowindowContent.children["place-icon"].src = place.icon;
 //            infowindowContent.children["place-name"].textContent = place.name;
 //            infowindowContent.children["place-address"].textContent = address;
@@ -2673,7 +2675,7 @@ function initMap4() {
 }
 function initMap5() {
     if ($("#map5").length) {
-        console.log("inicializando mapa");
+        //console.log("inicializando mapa");
         map5 = new google.maps.Map(document.getElementById('map5'), {zoom: 5, center: {lat: 19.503329, lng: -99.185714}/*,mapTypeId:'satellite'*/, styles: [{featureType: 'administrative', elementType: 'geometry', stylers: [{visibility: "off"}, {"weight": 1}]}, {featureType: 'administrative', elementType: 'geometry.fill', stylers: [{visibility: "on"}]}, {featureType: 'administrative', elementType: 'geometry.stroke', stylers: [{visibility: "off"}]}, {featureType: 'administrative', elementType: 'labels', stylers: [{color: '#000000'}, {visibility: "off"}]}, {featureType: 'administrative.country', elementType: 'geometry', stylers: [{color: '#a6a6a6'}, {visibility: "on"}, {"weight": 1.5}]}, {featureType: 'administrative.country', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.country', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.land_parcel', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.land_parcel', elementType: 'labels', stylers: [{visibility: "on"}]}, {featureType: 'administrative.land_parcel', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.locality', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.locality', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.locality', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.neighborhood', elementType: 'geometry', stylers: [{visibility: "on"}]}, {featureType: 'administrative.neighborhood', elementType: 'labels', stylers: [{color: '#696969'}, {visibility: "simplified"}]}, {featureType: 'administrative.neighborhood', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'administrative.province', elementType: 'geometry', stylers: [{visibility: "on"}, {"weight": 1.5}]}, {featureType: 'administrative.province', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'administrative.province', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: "landscape", stylers: [{color: '#D5D8DC'}]}, {featureType: 'landscape', elementType: 'geometry', stylers: [{color: '#D5D8DC'}]}, {featureType: 'landscape', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'landscape', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'landscape.man_made', elementType: 'geometry', stylers: [{color: '#526081'}, {visibility: "off"}]}, {featureType: 'landscape.natural.landcover', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.landcover', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'landscape.natural.terrain', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'poi', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'road', elementType: 'geometry', stylers: [{visibility: "simplified"}]}, {featureType: 'road', elementType: 'labels', stylers: [{visibility: "simplified"}]}, {featureType: 'road', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'geometry', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'labels', stylers: [{visibility: "off"}]}, {featureType: 'transit', elementType: 'labels.icon', stylers: [{visibility: "off"}]}, {featureType: 'water', elementType: 'geometry', stylers: [{color: '#F2F4F4'}, {visibility: "on"}]}, {featureType: 'water', elementType: 'labels', stylers: [{visibility: "off"}]}]});
         map5.setTilt(45);
         geocoder5 = new google.maps.Geocoder;
@@ -2682,7 +2684,7 @@ function initMap5() {
 
 
         marcador5 = new google.maps.Marker({map: map5});
-        console.log("Mapa inicializado: map");
+        //console.log("Mapa inicializado: map");
         if ($("#d_autocompletar5").length) {
             let input = document.getElementById("d_autocompletar5");
             let autocomplete = new google.maps.places.Autocomplete(input);
@@ -2774,19 +2776,19 @@ function initMap5() {
                     for (var j = 0; j < types.length; j++) {
                         let type = types[j];
                         if (type === "country") {
-                            console.log("Pais: " + place.address_components[i].long_name);
+                            //console.log("Pais: " + place.address_components[i].long_name);
                             if ($("#pais5").length) {
                                 $("#pais5").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "administrative_area_level_1") {
-                            console.log("Estado: " + place.address_components[i].long_name);
+                            //console.log("Estado: " + place.address_components[i].long_name);
                             if ($("#estado5").length) {
                                 $("#estado5").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "locality") {
-                            console.log("Ciudad o Municipio: " + place.address_components[i].long_name);
+                            //console.log("Ciudad o Municipio: " + place.address_components[i].long_name);
                             if ($("#ciudad_municipio5").length) {
                                 $("#ciudad_municipio5").val(place.address_components[i].long_name);
                             }
@@ -2795,28 +2797,28 @@ function initMap5() {
                             }
                         }
                         if (type === "sublocality_level_1") {
-                            console.log("colonia: " + place.address_components[i].long_name);
+                            //console.log("colonia: " + place.address_components[i].long_name);
                             if ($("#colonia5").length) {
                                 $("#colonia5").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "route") {
-                            console.log("Calle: " + place.address_components[i].long_name);
+                            //console.log("Calle: " + place.address_components[i].long_name);
                             if ($("#calle5").length) {
                                 $("#calle5").val(place.address_components[i].long_name);
                             }
                         }
                         if (type === "postal_code") {
-                            console.log("CP: " + place.address_components[i].long_name);
+                            //console.log("CP: " + place.address_components[i].long_name);
                             if ($("#cp5").length) {
                                 $("#cp5").val(place.address_components[i].long_name);
                             }
                         }
                     }
                 }
-                console.log(address);
-                console.log(place);
-                console.log(infowindowContent);
+                //console.log(address);
+                //console.log(place);
+                //console.log(infowindowContent);
 //            infowindowContent.children["place-icon"].src = place.icon;
 //            infowindowContent.children["place-name"].textContent = place.name;
 //            infowindowContent.children["place-address"].textContent = address;
@@ -4514,7 +4516,7 @@ function SetPoints2(ruta) {
         }
 
 //        
-//        //console.log(d + "  \t  " + ruta[i].acuary);
+//        ////console.log(d + "  \t  " + ruta[i].acuary);
         rutaUlt.push(ruta[i]);
     }
 //    
@@ -4618,7 +4620,7 @@ function SetPoints(ruta) {
         }
 
 //        
-//        //console.log(d + "  \t  " + ruta[i].acuary);
+//        ////console.log(d + "  \t  " + ruta[i].acuary);
         rutaUlt.push(ruta[i]);
     }
 //    
@@ -5074,7 +5076,7 @@ function FireBaseSolicitudVideo(FireBaseKey, apikey, idsesion, token, idNotifica
             'Authorization': document.getElementById("FireBaseAuthorization").value
         },
         success: function (response) {
-            console.log(response);
+            //console.log(response);
 
             if (response.failure) {
                 const Toast = Swal.mixin({
@@ -5131,7 +5133,7 @@ function FireBaseChat(FireBaseKey, mensaje) {
 
 
             if (response.failure) {
-                console.log("algo salio mal al enviar la notificacion por firebase");
+                //console.log("algo salio mal al enviar la notificacion por firebase");
 //                const Toast = Swal.mixin({
 //                    toast: true,
 //                    position: 'center',
@@ -5242,7 +5244,7 @@ function FireBaseNotificacionEmergencia(FireBaseKey, apikey, idsesion, token, id
 
     };
 
-    console.log(FireBaseKey)
+    //console.log(FireBaseKey)
     return Promise.resolve($.ajax({
         type: 'POST',
         url: 'https://fcm.googleapis.com/fcm/send',
@@ -5280,7 +5282,7 @@ function GenerarCredenciales() {
     return Promise.resolve($.ajax({
         type: 'GET',
         //type: 'POST',
-        url: 'GeneraCredenciales',
+        url: '/' + DEPENDENCIA + '/GeneraCredenciales',
         contentType: "application/json",
         dataType: "json",
         success: function (response) {
@@ -5311,7 +5313,7 @@ function directorio_pacientesCCB() {
         contentType: "application/json",
         dataType: "json",
         success: function (response) {
-            console.log(response);
+            //console.log(response);
         },
         error: function (err) {
             console.error(err);
@@ -5394,7 +5396,7 @@ function InsertaNotificacion(idLlamada, idUsuario, fecha, hora) {
 
 function insertarIncidenteCercano(Incidente) {
 
-    console.log(Incidente);
+    //console.log(Incidente);
     ArrayIncidentesCercanos.push(Incidente);
 
 
@@ -5404,7 +5406,7 @@ function insertarIncidenteCercano(Incidente) {
 
 
     if (!$("#" + Incidente.folio).length) {
-        console.log("AGREGANDO...");
+        //console.log("AGREGANDO...");
 
         var contenedor = document.createElement("div");
         contenedor.style = "height: auto; background: white; border-radius: 10px; display: inline-block; margin: 5px 10px; vertical-align: bottom; width: calc( 100% - 20px); cursor: pointer; ";
@@ -5822,9 +5824,9 @@ function geocodeLatLngDinamico(marker, geocoder, infowindow, map) {
     var GeoCodeResult;
     var direccion;
     geocoder.geocode({'location': latlng}, function (results, status) {
-//        console.log(status);
-//        console.log(results);
-//        console.log(map);
+//        //console.log(status);
+//        //console.log(results);
+//        //console.log(map);
         if (status === 'OK') {
             if (results[0]) {
                 GeoCodeResult = results[0].formatted_address;
@@ -5853,7 +5855,7 @@ function habilitarMaximizarVideo() {
     inpM.click(function () {
         inpM.toggleClass("active");
         if (inpM.hasClass("active")) {
-            console.log("Active");
+            //console.log("Active");
             $("aside").css({
                 "display": "none"
             });
@@ -5896,7 +5898,7 @@ function habilitarMaximizarVideo() {
             });
 
         } else {
-            console.log("Not Active");
+            //console.log("Not Active");
             $("aside").removeAttr('style');
             $("header").removeAttr('style');
             $("footer").removeAttr('style');
@@ -5938,7 +5940,7 @@ function mensajeIndividual(idUsuario) {
 
         if (result.value) {
             if (result.value[0] !== "") {
-                console.log(result.value[0]);
+                //console.log(result.value[0]);
                 FireBaseChat(firebase, result.value[0]);
                 const Toast = Swal.mixin({
                     toast: true,
@@ -5963,7 +5965,7 @@ function Agregar_ModalImagenes(msj) {
     $("#CntImgCarrusel").append(item);
 }
 function modalImagenes() {
-    console.log("modalImagenes");
+    //console.log("modalImagenes");
     var contenedor = document.createElement("div");
     contenedor.className = "modalImagenes";
     contenedor.id = "modalImagenes";
@@ -6034,9 +6036,9 @@ function RequestGET(url) {
         contentType: "application/json",
         dataType: "json",
         success: function (response) {
-            console.log(url);
-            console.log(response);
-            console.log("/*********************************************/");
+            //console.log(url);
+            //console.log(response);
+            //console.log("/*********************************************/");
         },
         error: function (err) {
             console.error(err);
@@ -6070,7 +6072,7 @@ function buildJSON() {
         //Revisar si la llave ya existe 
         let id = inp_text[i].id;
         if (json.id) {
-            console.log("Duplicidad de ID's'------> " + id);
+            //console.log("Duplicidad de ID's'------> " + id);
         } else {
             json[id] = inp_text[i].value;
         }
@@ -6080,7 +6082,7 @@ function buildJSON() {
         //Revisar si la llave ya existe 
         let id = inp_number[i].id;
         if (json.id) {
-            console.log("Duplicidad de ID's'------> " + id);
+            //console.log("Duplicidad de ID's'------> " + id);
         } else {
             json[id] = inp_number[i].value;
         }
@@ -6090,7 +6092,7 @@ function buildJSON() {
         //Revisar si la llave ya existe 
         let id = select[i].id;
         if (json.id) {
-            console.log("Duplicidad de ID's'------> " + id);
+            //console.log("Duplicidad de ID's'------> " + id);
         } else {
             json[id] = select[i].value;
         }
@@ -6117,7 +6119,7 @@ function buildJSON() {
                 id !== "elementos" &&
                 id !== "iconUsr") {
             if (json.id) {
-                console.log("Duplicidad de ID's'------> " + id);
+                //console.log("Duplicidad de ID's'------> " + id);
             } else {
                 json[id] = inp_hidden[i].value;
             }
@@ -6129,7 +6131,7 @@ function buildJSON() {
         //Revisar si la llave ya existe 
         let id = inp_password[i].id;
         if (json.id) {
-            console.log("Duplicidad de ID's'------> " + id);
+            //console.log("Duplicidad de ID's'------> " + id);
         } else {
             json[id] = inp_password[i].value;
         }
@@ -6145,7 +6147,10 @@ function buildJSON_Section(id) {
         //Revisar si la llave ya existe 
         let id = inp_text[i].id;
         if (json.id) {
-            console.log("Duplicidad de ID's'------> " + id);
+            //console.log("Duplicidad de ID's'------> " + id);
+        } else if (json.id === "") {
+            //console.log("input sin id ");
+            //console.log(inp_text[i]);
         } else {
             json[id] = inp_text[i].value.replace(/"/g, "&quot;");
             json[id] = json[id].replace(/'/g, "&quot;");
@@ -6156,7 +6161,10 @@ function buildJSON_Section(id) {
         //Revisar si la llave ya existe 
         let id = inp_number[i].id;
         if (json.id) {
-            console.log("Duplicidad de ID's'------> " + id);
+            //console.log("Duplicidad de ID's'------> " + id);
+        } else if (json.id === "") {
+            //console.log("input sin id ");
+            //console.log(inp_number[i]);
         } else {
             json[id] = inp_number[i].value.replace(/"/g, "&quot;");
             json[id] = json[id].replace(/'/g, "&quot;");
@@ -6167,7 +6175,10 @@ function buildJSON_Section(id) {
         //Revisar si la llave ya existe 
         let id = select[i].id;
         if (json.id) {
-            console.log("Duplicidad de ID's'------> " + id);
+            //console.log("Duplicidad de ID's'------> " + id);
+        } else if (json.id === "") {
+            //console.log("input sin id ");
+            //console.log(select[i]);
         } else {
             json[id] = select[i].value.replace(/"/g, "&quot;");
             json[id] = json[id].replace(/'/g, "&quot;");
@@ -6195,7 +6206,10 @@ function buildJSON_Section(id) {
                 id !== "elementos" &&
                 id !== "iconUsr") {
             if (json.id) {
-                console.log("Duplicidad de ID's'------> " + id);
+                //console.log("Duplicidad de ID's'------> " + id);
+            } else if (json.id === "") {
+                //console.log("input sin id ");
+                //console.log(inp_hidden[i]);
             } else {
                 json[id] = inp_hidden[i].value.replace(/"/g, "&quot;");
                 json[id] = json[id].replace(/'/g, "&quot;");
@@ -6208,10 +6222,27 @@ function buildJSON_Section(id) {
         //Revisar si la llave ya existe 
         let id = inp_password[i].id;
         if (json.id) {
-            console.log("Duplicidad de ID's'------> " + id);
+            //console.log("Duplicidad de ID's'------> " + id);
+        } else if (json.id === "") {
+            //console.log("input sin id ");
+            //console.log(inp_password[i]);
         } else {
             json[id] = inp_password[i].value.replace(/"/g, "&quot;");
             json[id] = json[id].replace(/'/g, "&quot;");
+        }
+    }
+    let inp_checkbox = $("#" + id + " input[type=checkbox]");
+    for (var i = 0; i < inp_checkbox.length; i++) {
+        //Revisar si la llave ya existe 
+        let id = inp_checkbox[i].id;
+        if (json.id) {
+            //console.log("Duplicidad de ID's'------> " + id);
+        } else if (json.id === "") {
+            //console.log("input sin id ");
+            //console.log(inp_checkbox[i]);
+        } else {
+            json[id] = inp_checkbox[i].checked ? 1 : 0;
+            //json[id] = json[id].replace(/'/g, "&quot;");
         }
     }
     let text_area = $("#" + id + " textarea");
@@ -6219,7 +6250,10 @@ function buildJSON_Section(id) {
         //Revisar si la llave ya existe 
         let id = text_area[i].id;
         if (json.id) {
-            console.log("Duplicidad de ID's'------> " + id);
+            //console.log("Duplicidad de ID's'------> " + id);
+        } else if (json.id === "") {
+            //console.log("input sin id ");
+            //console.log(text_area[i]);
         } else {
             json[id] = text_area[i].value.replace(/"/g, "");
             json[id] = json[id].replace(/'/g, "");
@@ -6271,12 +6305,12 @@ function load_file_img(id) {
         };
         s3.listObjects(params, function (err, data) {
             if (err) {
-                console.log(err, err.stack); // an error occurred
+                //console.log(err, err.stack); // an error occurred
                 swal.fire({
                     text: "Error de conexión con el servidor."
                 });
             } else {
-                console.log(data);   // successful response
+                //console.log(data);   // successful response
                 numFiles = data.Contents.length;
                 var files = evt.target.files; // FileList object
 
@@ -6292,16 +6326,16 @@ function load_file_img(id) {
                             ContentType: upFile.type
                         };
                         bucket.upload(params).on('httpUploadProgress', function (evt) {
-                            console.log(evt);
+                            //console.log(evt);
 
                         }).send(function (err, data) {
                             if (err) {
-                                console.log(err, err.stack); // an error occurred
+                                //console.log(err, err.stack); // an error occurred
                                 swal.fire({
                                     text: "Error al subir la imagen al servidor."
                                 });
                             } else {
-                                console.log(data);           // successful response
+                                //console.log(data);           // successful response
                                 //colocar el css de id+_img
 
                                 $("#" + id + "_logotipo").val(data.Location);
@@ -6478,7 +6512,7 @@ function personalizar_header(perfil) {
 //        $("#menu_section_" + nombre.replace(/\s/g, "")).addClass("menu_selected");
 //        /*Cambios prueba Fernando*/
 //        if (url_externa !== undefined && url_externa !== null && url_externa !== "") {
-//            console.log("Moviendome a url externa");
+//            //console.log("Moviendome a url externa");
 //            acceso_externo_seccion(url_externa,nombre.replace(/\s/g, ""));
 //        }
 //        /****************************/
@@ -6491,7 +6525,11 @@ function personalizar_header(perfil) {
 //    }
 //
 //}
-function agregar_menu(nombre, fawsome, collapse, url_externa) {
+function agregar_menu(id, icon_collapse, nombre,alias, fawsome, collapse, url_externa) {
+    //console.log("agregar menu");
+    //console.log(id);
+    //console.log(nombre);
+    //console.log(collapse);
     //El collapse re enviara cuando deseemos enviar el menu dentro de un contenedor 
     let root = "sidebar";
     if (collapse !== null && collapse !== "" && collapse !== undefined) {
@@ -6499,13 +6537,18 @@ function agregar_menu(nombre, fawsome, collapse, url_externa) {
         if (!$("#accordion" + collapse.replace(/\s/g, "")).length) {
             {
                 //en caso de que no exista lo agregamos
-                let acordion = $('<div class="accordion" id="accordion'+collapse.replace(/\s/g, "")+'"></div>');
-                let heading = $('<div class="collapse_sidebar shadow-none btn p-0" id="heading'+collapse.replace(/\s/g, "")+'"></div>');
-                let collapse_a = $('<a class="collapse_sidebar shadow-none btn collapsed" data-toggle="collapse" data-target="#collapse'+collapse.replace(/\s/g, "")+'" aria-expanded="false" aria-controls="collapse'+collapse.replace(/\s/g, "")+'">' + collapse + '<i class="fas fa-caret-down"></i></a>').addClass("collapse_sidebar shadow-none btn collapsed");
+                let acordion = $('<div class="accordion" id="accordion' + collapse.replace(/\s/g, "") + '"></div>');
+                let heading = $('<div class="collapse_sidebar shadow-none btn p-0" id="heading' + collapse.replace(/\s/g, "") + '"  draggable="true"></div>');
+                let collapse_a = $('<a class="p-0 collapse_sidebar shadow-none btn collapsed" data-toggle="collapse" data-target="#collapse' + collapse.replace(/\s/g, "") + '" aria-expanded="false" aria-controls="collapse' + collapse.replace(/\s/g, "") + '"></a>').addClass("collapse_sidebar shadow-none btn collapsed");
                 heading.append(collapse_a);
                 acordion.append(heading);
-                
-                let collapse_container = $('<div id="collapse'+collapse.replace(/\s/g, "")+'" class="collapse_sidebar_cntr collapse" aria-labelledby="heading'+collapse.replace(/\s/g, "")+'" data-parent="#accordion'+collapse.replace(/\s/g, "")+'"></div>');
+                let div_icon_categoria = document.createElement("div");
+                div_icon_categoria.className = "";
+                div_icon_categoria.style = "background-image: url('" + icon_collapse + "');background-size: cover;background-position: center; width: 30px;height: 30px;margin: 5px 10px;background-repeat: no-repeat;";
+                collapse_a.append(div_icon_categoria);
+                collapse_a.html(collapse_a.html()+collapse + '<i class="fas fa-caret-down"></i>');
+
+                let collapse_container = $('<div id="collapse' + collapse.replace(/\s/g, "") + '" class="collapse_sidebar_cntr collapse" aria-labelledby="heading' + collapse.replace(/\s/g, "") + '" data-parent="#accordion' + collapse.replace(/\s/g, "") + '"></div>');
                 acordion.append(collapse_container);
                 $("#sidebar").append(acordion);
 //                let collapse_a = $('<a data-toggle="collapse" href="#collapse_sidebar_' + collapse.replace(/\s/g, "") + '" aria-expanded="false">' + collapse + '<i class="fas fa-caret-down"></i></a>').addClass("collapse_sidebar shadow-none btn collapsed");
@@ -6516,38 +6559,47 @@ function agregar_menu(nombre, fawsome, collapse, url_externa) {
         }
         root = "collapse" + collapse.replace(/\s/g, "");
     }
+    let div_icon = document.createElement("div");
+    div_icon.className = "icon_menu";
+    div_icon.style = "background-image: url('" + fawsome + "');background-size: cover;background-position: center; width: 30px;height: 30px;margin:5px 10px;background-repeat: no-repeat;";
     let div = document.createElement("div");
-    div.className = "menu_sidebar d-flex";
-    div.innerHTML = fawsome + nombre;
+    div.className = "menu_sidebar modulo_menu d-flex";
+    div.appendChild(div_icon);
+    div.draggable = true;
+    if (url_externa !== undefined && url_externa !== null && url_externa !== "") {
+        div.className = "menu_sidebar d-flex";
+    }
+    div.innerHTML += alias;
     div.id = "menu_section_" + nombre.replace(/\s/g, "");
     $("#" + root).append(div);
 
     let div2 = document.createElement("div");
     div2.className = "modulo_section d-none";
-    div2.id = "modulo_section_" + nombre.replace(/\s/g, "");//quitale los espacios si llegara a tener 
+    div2.id = "modulo_section_" + id;//quitale los espacios si llegara a tener 
 //            div2.innerHTML = nombre;
 
     $("#contenidoSection").append(div2);
 
     div.addEventListener("click", function () {
+        console.log("clicked menu");
         let modulos = $(".modulo_section");
         modulos.addClass("d-none");
         let menus = $(".menu_sidebar");
         menus.removeClass("menu_selected");
-        $("#modulo_section_" + nombre.replace(/\s/g, "")).removeClass("d-none");
-        $("#menu_section_" + nombre.replace(/\s/g, "")).addClass("menu_selected");
+        $("#modulo_section_" + id).removeClass("d-none");
+        $("#menu_section_" + id).addClass("menu_selected");
         /*Cambios prueba Fernando*/
         if (url_externa !== undefined && url_externa !== null && url_externa !== "") {
-            console.log("Moviendome a url externa");
-            acceso_externo_seccion(url_externa,nombre.replace(/\s/g, ""));
+            //console.log("Moviendome a url externa");
+            acceso_externo_seccion(url_externa, nombre.replace(/\s/g, ""));
         }
         /****************************/
     });
 
-    if ($("#base_modulo_" + nombre.replace(/\s/g, "")).length) {
-        $("#base_modulo_" + nombre.replace(/\s/g, "")).removeClass("d-none");
+    if ($("#base_modulo_" + id).length) {
+        $("#base_modulo_" + id).removeClass("d-none");
 //                div2.appendChild($("#base_modulo_"+ nombre.replace(/\s/g, "")));
-        div2.appendChild(document.getElementById("base_modulo_" + nombre.replace(/\s/g, "")));
+        div2.appendChild(document.getElementById("base_modulo_" + id));
     }
 
 }
@@ -6609,7 +6661,7 @@ function agregar_menu(nombre, fawsome, collapse, url_externa) {
 //        $("#menu_section_" + nombre.replace(/\s/g, "")).addClass("menu_selected");
 //        /*Cambios prueba Fernando*/
 //        if (url_externa !== undefined && url_externa !== null && url_externa !== "") {
-//            console.log("Moviendome a url externa");
+//            //console.log("Moviendome a url externa");
 //            acceso_externo_seccion(url_externa,nombre.replace(/\s/g, ""));
 //        }
 //        /****************************/
@@ -6631,7 +6683,7 @@ function acceso_externo_seccion(url, seccion) {
     }).then(function (response) {
         if (response.success) {
             //access_token
-            let path = url + "/API/cuenta360/access_token/"+sesion_cookie.idUsuario_Sys+"/" + response.access_token + "/section/"+seccion+"/"+sesion_cookie.tipo_usuario+"/"+sesion_cookie.tipo_servicio+"/"+sesion_cookie.tipo_area;
+            let path = url + "/API/cuenta360/access_token/" + sesion_cookie.idUsuario_Sys + "/" + response.access_token + "/section/" + seccion + "/" + sesion_cookie.tipo_usuario + "/" + sesion_cookie.tipo_servicio + "/" + sesion_cookie.tipo_area;
             window.location.replace(path);
 //            window.open(path);
         }
@@ -6639,15 +6691,19 @@ function acceso_externo_seccion(url, seccion) {
     });
 }
 
+
+
 $(window).on("load", function () {
     if (sesion_cookie.hasOwnProperty("seccion")) {
-        console.log(sesion_cookie.seccion);
+        //console.log(sesion_cookie.seccion);
         if ($("#menu_section_" + sesion_cookie.seccion).length) {
             $("#menu_section_" + sesion_cookie.seccion).parent().addClass("show");
             $("#menu_section_" + sesion_cookie.seccion).addClass("menu_selected");
-            console.log("click en ------>");
-            console.log($("#menu_section_" + sesion_cookie.seccion));
+            //console.log("click en ------>");
+            //console.log($("#menu_section_" + sesion_cookie.seccion));
             $("#menu_section_" + sesion_cookie.seccion).click();
         }
     }
 });
+
+

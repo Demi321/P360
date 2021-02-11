@@ -1,0 +1,61 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 11/11/2020, 12:23:25 AM
+    Author     : moises
+*/
+
+
+#tooltip {
+    background: #333;
+    color: white;
+    font-weight: bold;
+    padding: 4px 8px;
+    font-size: 13px;
+    border-radius: 4px;
+    display: none;
+}
+
+#tooltip[data-show] {
+    display: block;
+}
+
+#arrow,
+#arrow::before {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    z-index: -1;
+}
+
+#arrow::before {
+    content: '';
+    transform: rotate(45deg);
+    background: #333;
+}
+
+#tooltip[data-popper-placement^='top'] > #arrow {
+    bottom: -4px;
+}
+
+#tooltip[data-popper-placement^='bottom'] > #arrow {
+    top: -4px;
+}
+
+#tooltip[data-popper-placement^='left'] > #arrow {
+    right: -4px;
+}
+
+#tooltip[data-popper-placement^='right'] > #arrow {
+    left: -4px;
+}
+.OT_publisher .OT_mute {
+    display: none;
+}
+.OT_publisher .OT_edge-bar-item{
+    z-index: 1;
+    display: none;
+}

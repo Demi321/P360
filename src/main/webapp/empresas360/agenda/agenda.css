@@ -1,0 +1,32 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 18/12/2020, 05:09:45 PM
+    Author     : web
+*/
+
+.agenda .modal-open .modal{
+    background-color: #231f2061;
+}
+.agenda .modal>.modal-dialog>.modal-content>.modal-header{
+    background: white;
+    padding: 0;
+    border-bottom: 1px solid #dee2e6;
+}
+.agenda .modal>.modal-dialog>.modal-content>.modal-body{
+    background: white;
+    color: black;
+}
+.agenda .modal>.modal-dialog>.modal-content>.modal-footer{
+    background: white;
+    color: black;
+}
+.agenda .modal>.modal-dialog{
+    margin: 7% auto;
+}
+.agenda .modal-content{
+    width: 100%;
+}

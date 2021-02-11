@@ -60,9 +60,10 @@ $("#toggle").click(function () {
 
 function showToggle() {
     $("aside").removeClass("aside_compressed");
-        $("section").removeClass("section_compressed");
-        $("#toggle span").removeClass("compressed");
-        $("#sidebar .menu_sidebar").removeClass("compressed");
+    $("section").removeClass("section_compressed");
+    $("#toggle span").removeClass("compressed");
+    $("#sidebar .menu_sidebar").removeClass("compressed");
+    $(".icon_menu").removeClass("mx-auto");
     $("body aside").css("transition", "unset");
     console.log(position);
     if (position.includes("portrait")) {
@@ -168,21 +169,22 @@ $(() => {
     $("#toggle div").click(() => {
         console.log("clicked");
         $("aside").toggleClass("aside_compressed");
+        $(".icon_menu").toggleClass("mx-auto");
         $("#sidebar").toggleClass("px-1");
         $("section").toggleClass("section_compressed");
         $("#toggle span").toggleClass("compressed d-none");
         $("#sidebar .menu_sidebar").toggleClass("compressed");
         $("#sidebar .collapse_sidebar_cntr").toggleClass("compressed");
-        
-        if($("aside").hasClass("aside_compressed")){
-           $("#sidebar a").addClass("d-none"); 
-           $("#sidebar .collapse_sidebar_cntr.collapse").addClass("show"); 
-        }else{
-            $("#sidebar a").removeClass("d-none"); 
-            $("#sidebar .collapse_sidebar_cntr.collapse").removeClass("show"); 
+
+        if ($("aside").hasClass("aside_compressed")) {
+            $("#sidebar a").addClass("d-none");
+            $("#sidebar .collapse_sidebar_cntr.collapse").addClass("show");
+        } else {
+            $("#sidebar a").removeClass("d-none");
+            $("#sidebar .collapse_sidebar_cntr.collapse").removeClass("show");
         }
-        
-      
+
+
         /*        aside {
          display: none;
          }

@@ -21,7 +21,7 @@ function setCookie(cname, cvalue, exdays) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 
     var user = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
-    //console.log(user);
+    ////**console.log(user);
     if (user !== "") {
         var hostdir = window.location.protocol + "//" + window.location.host;
         var path = hostdir + "/" + DEPENDENCIA + "/" + user.modulo_principal;
@@ -57,12 +57,12 @@ function getCookie(cname) {
 
 function checkCookie() {
     var user = getCookie("username_v3.1_" + DEPENDENCIA);
-    console.log(user);
+    //**console.log(user);
     if (user !== "") {
         user = JSON.parse(user);
         var hostdir = window.location.protocol + "//" + window.location.host;
         var path = hostdir + "/" + DEPENDENCIA + "/" + user.modulo_principal;
-        console.log(path);
+        //**console.log(path);
         window.location.replace(path);
     }
 }
@@ -82,7 +82,7 @@ $("#Log-in").submit(function (e) {
             "Password": document.getElementById("contra").value
         }),
         success: function (response) {
-            console.log(response);
+            //**console.log(response);
             $("#logo360").addClass("d-none");
             //setCookie("username_v3.1_" + DEPENDENCIA, JSON.stringify(response), 1000);
             if (!response.success) {
@@ -103,7 +103,7 @@ $("#Log-in").submit(function (e) {
                     let frst_id = null;
                     for (var i = 0; i < response.plataforma360.length; i++) {
                         let institucion = response.plataforma360[i];
-                        console.log(institucion);
+                        //**console.log(institucion);
                         if (institucion.url === window.location.protocol + "//" + window.location.host + '/' + "plataforma360" + '/') {
                             plataforma360 = true;
                             count_plataforma360++;
@@ -120,7 +120,7 @@ $("#Log-in").submit(function (e) {
                         }
 
                         document.getElementById("boton_seleccionar_institucion").addEventListener("click", continuar_institucion_seleccionada);
-                        console.log(count_plataforma360);
+                        //**console.log(count_plataforma360);
                         if (count_plataforma360 === 1) {
                             document.getElementById("boton_seleccionar_institucion").click();
                         }
@@ -173,7 +173,7 @@ $("#Log-in").submit(function (e) {
                                 }
                             }
                             sesion_cookie.modulos_externos = modulos_externos;
-                            console.log(sesion_cookie);
+                            //**console.log(sesion_cookie);
                             sesion_cookie.modulo_principal = "agregar_perfil";
                             sesion_cookie.modulos = "";
                             setCookie("username_v3.1_" + DEPENDENCIA, JSON.stringify(sesion_cookie), 1000);
@@ -249,7 +249,7 @@ function agregar_perfil() {
     //<option value="">Opcion 1</option>
     div.addEventListener("click", function () {
 
-        console.log("Agregar Nuevo Perfil");
+        //**console.log("Agregar Nuevo Perfil");
         $(".vista_completa").addClass("d-none");
         $("#agregar_perfil").removeClass("d-none");
 
@@ -258,7 +258,7 @@ function agregar_perfil() {
 
 
 function listar_institucion(institucion) {
-    console.log(institucion);
+    //**console.log(institucion);
     let div = document.createElement("div");
     div.className = "row col-12 institucion_listado";
     div.id = "institucions_listado" + institucion.id;
@@ -298,7 +298,7 @@ function listar_institucion(institucion) {
         div.className = "row col-12 institucion_listado institucion_seleccionada";
         institucion_seleccionada = institucion;
 
-        console.log(institucion);
+        //**console.log(institucion);
 
         //al dar click avanzar
         continuar_institucion_seleccionada();
@@ -306,18 +306,18 @@ function listar_institucion(institucion) {
     });
     
     if (window.location.href.includes("access_token") && window.location.href.includes("/section/")) {
-        console.log("Iniciando sesion con access_token y una seccion en especifico");
+        //**console.log("Iniciando sesion con access_token y una seccion en especifico");
         let url_section = window.location.href.split("/");
         let length_url = url_section.length;
         let tipo_area = url_section[length_url-1];
         let tipo_servicio = url_section[length_url-2];
         let tipo_usuario = url_section[length_url-3];
-        console.log("Pruebas fernando ------>");
-        console.log(tipo_usuario);
-        console.log(tipo_servicio);
-        console.log(institucion.tipo_usuario);
-        console.log(institucion.tipo_servicio);
-        console.log("------------------------");
+        //**console.log("Pruebas fernando ------>");
+        //**console.log(tipo_usuario);
+        //**console.log(tipo_servicio);
+        //**console.log(institucion.tipo_usuario);
+        //**console.log(institucion.tipo_servicio);
+        //**console.log("------------------------");
         if (tipo_usuario === institucion.tipo_usuario && tipo_servicio === institucion.tipo_servicio) {
             institucion_seleccionada = institucion;
             continuar_institucion_seleccionada();
@@ -326,7 +326,7 @@ function listar_institucion(institucion) {
 }
 
 function continuar_institucion_seleccionada() {
-    console.log("continuar");
+    //**console.log("continuar");
     sesion_cookie.nombre_institucion = institucion_seleccionada.nombre_institucion;
     sesion_cookie.modulos = institucion_seleccionada.modulos;
     sesion_cookie.telefono_institucion = institucion_seleccionada.telefono_institucion;
@@ -358,15 +358,15 @@ function continuar_institucion_seleccionada() {
     let modulos_externos = new Array();
     let url_modulos = new Array();
     for (let i = 0; i < keys.length; i++) {
-//            console.log(keys[i]);
-//            console.log(typeof(sesion_cookie[keys[i]]).toString());
+//            //**console.log(keys[i]);
+//            //**console.log(typeof(sesion_cookie[keys[i]]).toString());
         let a = typeof (sesion_cookie[keys[i]]);
         if (a === "object" && (sesion_cookie[keys[i]] !== null && sesion_cookie[keys[i]] !== "null" && sesion_cookie[keys[i]] !== undefined)) {
             if (sesion_cookie[keys[i]].length) {
                 for (var j = 0; j < sesion_cookie[keys[i]].length; j++) {
-                    //console.log(sesion_cookie[keys[i]][j]+" ->"+keys[i]);
-//                    console.log(keys[i]);
-//                    console.log(sesion_cookie[keys[i]][j].url);
+                    ////**console.log(sesion_cookie[keys[i]][j]+" ->"+keys[i]);
+//                    //**console.log(keys[i]);
+//                    //**console.log(sesion_cookie[keys[i]][j].url);
 //                    if (keys[i].includes("plataforma360")) {
 //                        let nuevo_modulo = [sesion_cookie[keys[i]][j].alias, sesion_cookie[keys[i]][j].url];
 //                        modulos_externos.push(nuevo_modulo);
@@ -411,7 +411,7 @@ function continuar_institucion_seleccionada() {
         }
     }
     sesion_cookie.modulos_externos = modulos_externos;
-    console.log(sesion_cookie);
+    //**console.log(sesion_cookie);
     delete sesion_cookie.app360;
     delete sesion_cookie.claro360;
     delete sesion_cookie.condicion_medica;
@@ -434,10 +434,10 @@ function continuar_institucion_seleccionada() {
  var user = getCookie("username_v3.1_" + DEPENDENCIA);
  
  if (user != "") {
- console.log("/////////");
- console.log(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario);
- console.log(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario === "21");
- console.log(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hospital);
+ //**console.log("/////////");
+ //**console.log(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario);
+ //**console.log(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario === "21");
+ //**console.log(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hospital);
  
  if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hospital) {
  
@@ -470,7 +470,7 @@ function continuar_institucion_seleccionada() {
  }else if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario === "21") {
  var hostdir = window.location.protocol + "//" + window.location.host;
  var path = hostdir + '/' + DEPENDENCIA + '/SUCRE';
- console.log(path);
+ //**console.log(path);
  window.location.replace(path);
  } else if (JSON.parse(user).tipo === "Administrador"){
  //alert("Welcome again " + user);
@@ -562,9 +562,9 @@ function RequestPOST(url, json) {
         dataType: "json",
         data: JSON.stringify(json),
         success: function (response) {
-            console.log(url);
-            console.log(response);
-            console.log("/*********************************************/");
+            //**console.log(url);
+            //**console.log(response);
+            //**console.log("/*********************************************/");
         },
         error: function (err) {
             console.error(err);

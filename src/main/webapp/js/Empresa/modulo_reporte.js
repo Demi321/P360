@@ -66,7 +66,6 @@ function fileReader_reporte_evento(oEvent) {
         file_evento = oFile;
     };
     reader.readAsDataURL(oFile);
-
 }
 
 function guardar_reporte_evento() {
