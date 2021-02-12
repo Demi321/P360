@@ -5,6 +5,8 @@
  */
 
 
+
+//
 //Obtenet la posicion del usuario 
 var location_user = null;
 getLocation();

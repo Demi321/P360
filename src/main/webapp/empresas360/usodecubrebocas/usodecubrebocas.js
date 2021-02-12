@@ -4,4 +4,7 @@
  * and open the template in the editor.
  */
 
+const init_usodecubrebocas = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) => {
+    
+};
 

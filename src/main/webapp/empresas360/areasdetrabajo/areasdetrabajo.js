@@ -111,3 +111,32 @@ const init_areasdetrabajo = (id_usuario, tipo_usuario, tipo_servicio, tipo_area)
     });
 };
 
+function agregar_area(json) {
+    //areas_registradas
+    let div = document.createElement("div");
+    div.className = "p-0 py-2 col-12";
+    let card = document.createElement("div");
+    card.className = "card";
+    let card_header = document.createElement("div");
+    card_header.className = "card-header text-dark text-left";
+    card_header.style = "background: none; font-size: 1.5rem;";
+    card_header.innerHTML = '<i class="fas fa-minus-circle"></i>';
+    card_header.innerHTML += json.nombre + " - " + json.area;
+    let card_body = document.createElement("div");
+    card_body.className = "card-body text-dark text-left px-4";
+    card_body.style = "background: no-repeat; border: none; font-size: 1.4rem;";
+    let card_body_div = document.createElement("div");
+    card_body_div.style = "font-size: 1.4rem; align-items: center; display: flex; padding: 10px 5px;";
+    card_body_div.innerHTML = 'Codigo de invitación: <strong style="font-size: 1.4rem; padding: 5px 20px;">ALG4-R482-SDF2-B254</strong><i class="fas fa-share-alt" style="font-size: 2rem;margin-left: 20px;color: #17a2b8;cursor: pointer;" tittle="Compartir Código"></i>';
+    let p = document.createElement("p");
+    p.className = "card-text";
+    p.innerHTML = 'Comparte el codigo de invitación a los encargados del area: <strong>' + json.area + '</strong>';
+
+    card_body.appendChild(card_body_div);
+    card_body.appendChild(p);
+    card.appendChild(card_header);
+    card.appendChild(card_body);
+    div.appendChild(card);
+    $("#area_jornadas").append("<option value='"+json.id+"'>"+json.nombre + " - " + json.area+"</option>");
+    $("#areas_registradas").append(div);
+}

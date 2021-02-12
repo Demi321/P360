@@ -238,7 +238,7 @@ function registro_plantilla_laboral(nombre) {
     sucursales_div_2.appendChild(label_id);
     sucursales_div_2.appendChild(label_nombre);
     sucursales_div.appendChild(sucursales_div_2);
-    $("#modulo_section_PlantillaLaboral div")[0].appendChild(sucursales_div);
+    $(".plantillalaboral div").parent()[0].appendChild(sucursales_div);
     $.each(sucursales_usuario, (i) => {
         let sucursales_div_3 = document.createElement("div");
         sucursales_div_3.className = 'col-12 m-0';
@@ -253,7 +253,7 @@ function registro_plantilla_laboral(nombre) {
         sucursales_div_3.appendChild(label_1);
         sucursales_div_3.appendChild(label_2);
         sucursales_div.appendChild(sucursales_div_3);
-        $("#modulo_section_PlantillaLaboral div")[0].appendChild(sucursales_div);
+        $(".plantillalaboral div").parent()[0].appendChild(sucursales_div);
     });
 
     //$("#menu_section_" + nombre.replace(/\s/g, "")).click();
@@ -548,6 +548,26 @@ function transforma_arreglo(arreglo) {
 function form_info(valor, id, tipo) {
     let div = document.createElement("div");
     div.className = 'form-group row m-0 p-2';
+    let label = document.createElement("label");
+    label.for = id;
+    label.className = 'col-sm-2 col-form-label';
+    label.innerHTML = valor + ":";
+    div.appendChild(label);
+    let div2 = document.createElement("div");
+    div2.className = 'col-sm-10';
+    let input = document.createElement("input");
+    input.type = tipo;
+    input.className = 'form-control-plaintext input';
+    input.id = id;
+    input.placeholder = valor;
+    div2.appendChild(input);
+    div.appendChild(div2);
+    return div;
+}
+
+function form_info_plantilla_laboral(valor, id, tipo) {
+    let div = document.createElement("div");
+    div.className = 'form-group row m-0 p-2 col-12';
     let label = document.createElement("label");
     label.for = id;
     label.className = 'col-sm-2 col-form-label';

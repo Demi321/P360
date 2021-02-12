@@ -81,3 +81,7 @@ section{
     background-color: #66666657;
     position: absolute;
 }
+
+#blockpage path{
+    fill:#1f1f1f !important;
+}

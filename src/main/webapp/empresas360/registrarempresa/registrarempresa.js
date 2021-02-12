@@ -44,3 +44,5 @@ $("#form_registro_nueva_empresa").submit((e) => {
 });
 
 /***********************************************/
+
+$(".correo_registrarempresa").val(perfil_usuario.correo);

@@ -5,10 +5,10 @@
  */
 
 const init_monitoreodeempleados = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) => {
-    
+
 }
 
- var idSys = document.getElementById("IdAdministrador").value;
+var idSys = document.getElementById("IdAdministrador").value;
 
 var Grupos = BuscarGrupos(idSys);
 var Usuarios = new Array;
@@ -28,11 +28,11 @@ DataGrupos().then(function (data) {
     dataG = data;
     numUsuarios = dataG.integrantes.length;
     for (var i = 0; i < numUsuarios; i++) {
-        //console.log(dataG.integrantes[i]);
+        ////**console.log(dataG.integrantes[i]);
         if (dataG.integrantes[i].gps.hasOwnProperty("fecha")) {
             if (dataG.integrantes[i].gps.fecha !== "" /*&& dataG.integrantes[i].gps.fecha === getFecha()*/) {
                 if (dataG.integrantes[i].gps.lat === null || dataG.integrantes[i].gps.lng === null) {
-                    //console.log(dataG.integrantes[i]);
+                    ////**console.log(dataG.integrantes[i]);
                     dataG.integrantes[i].gps.fecha = "";
                     dataG.integrantes[i].gps.hora = "";
                     dataG.integrantes[i].gps.lat = "";
@@ -78,21 +78,21 @@ DataGrupos().then(function (data) {
                 }
 
             }
-            console.log("Buscando...");
-            console.log(dataG.GruposPersonalizados[i].integrantes[j]);
-            console.log(integrante);
+            //**console.log("Buscando...");
+            //**console.log(dataG.GruposPersonalizados[i].integrantes[j]);
+            //**console.log(integrante);
             if (integrante !== undefined) {
                 if (integrante.success) {
                     InsertarIntegrante(dataG.GruposPersonalizados[i].idgruposUsuarioSys, dataG.GruposPersonalizados[i].nombre, integrante);
                 } else {
                     console.warn("usuario sin perfil");
-                    console.log(integrante);
+                    //**console.log(integrante);
                 }
             } else {
                 console.warn("Integrante no encontrado en array de integrantes...");
             }
         }
-        console.log(dataG.GruposPersonalizados[i]);
+        //**console.log(dataG.GruposPersonalizados[i]);
         flag = false;
         SeleccionarGrupo(dataG.GruposPersonalizados[i]);
         NuevoIntegrante(dataG.GruposPersonalizados[i].idgruposUsuarioSys, dataG.GruposPersonalizados[i].nombre);
@@ -130,22 +130,22 @@ DataGrupos().then(function (data) {
                     break;
                 }
             }
-            console.log("Buscando...");
-            console.log(dataG.GruposAutomaticos[i].integrantes[j]);
-            console.log(integrante);
+            //**console.log("Buscando...");
+            //**console.log(dataG.GruposAutomaticos[i].integrantes[j]);
+            //**console.log(integrante);
             if (integrante !== undefined) {
                 if (integrante.success) {
-                    console.log(dataG.GruposAutomaticos[i]);
+                    //**console.log(dataG.GruposAutomaticos[i]);
                     InsertarIntegrante(dataG.GruposAutomaticos[i].idgruposUsuarioSys, dataG.GruposAutomaticos[i].nombre, integrante);
                 } else {
                     console.warn("usuario sin perfil");
-                    console.log(integrante);
+                    //**console.log(integrante);
                 }
             } else {
                 console.warn("Integrante no encontrado en array de integrantes...");
             }
         }
-        console.log(dataG.GruposAutomaticos[i]);
+        //**console.log(dataG.GruposAutomaticos[i]);
         flag = false;
         SeleccionarGrupo(dataG.GruposAutomaticos[i]);
         //
@@ -221,7 +221,7 @@ DataGrupos().then(function (data) {
                             LlamadaGrupal(dataG.GruposPersonalizados[i].idgruposUsuarioSys + "_" + integrante.id360, firebaseArray, idUsers, JSON.stringify(jsonArray));
                         } else {
                             console.warn("usuario sin perfil");
-                            console.log(integrante);
+                            //**console.log(integrante);
                         }
                     }
                     break;
@@ -255,7 +255,7 @@ DataGrupos().then(function (data) {
                             LlamadaGrupal(dataG.GruposAutomaticos[i].idgruposUsuarioSys + "_" + integrante.id360, firebaseArray, idUsers, JSON.stringify(jsonArray));
                         } else {
                             console.warn("usuario sin perfil");
-                            console.log(integrante);
+                            //**console.log(integrante);
                         }
                     }
                     break;
@@ -264,7 +264,7 @@ DataGrupos().then(function (data) {
         }
     }
     let directorio = dataG.integrantes;
-    console.log(directorio);
+    //**console.log(directorio);
     for (var i = 0; i < directorio.length; i++) {
         if (directorio[i].failure) {
             directorio.splice(i, 1);
@@ -272,7 +272,10 @@ DataGrupos().then(function (data) {
         }
     }
     new Vue({
-        el: "#buscarContactos",
+        el: "#buscarContactos_monitoreo",
+        components: {
+            Multiselect: window.VueMultiselect.default
+        },
         data() {
             return {
                 value: [],
@@ -284,26 +287,26 @@ DataGrupos().then(function (data) {
                 return option.nombre + " " + option.apellido_paterno + " " + option.apellido_materno + " ";
             },
             onClosed(value) {
-                //console.log(value);
+                ////**console.log(value);
             },
 
             onTag(value) {
-                //console.log(value);
+                ////**console.log(value);
             },
 
             onRemove(value) {
-                //console.log(value);
+                ////**console.log(value);
             },
             onTouch(value) {
-                //console.log(value);
+                ////**console.log(value);
                 this._data.value = null;
             },
             onInput(value) {
-                console.log(value);
+                //**console.log(value);
                 $(".avada_kedavra").removeClass("avada_kedavra");
                 let element = $("#div_ga #" + value.id360);
-                console.log(element);
-                console.log(element[0]);
+                //**console.log(element);
+                //**console.log(element[0]);
                 //validar que el grupo no este ya abierto 
                 let c = element.parent().parent().parent()[0].className;
                 if (!c.includes("show")) {
@@ -322,7 +325,12 @@ DataGrupos().then(function (data) {
     });
     for (var i = 0; i < directorio.length; i++) {
         let user = directorio[i];
-        contacto_chat(user);
+        try {
+            contacto_chat(user);
+        } catch (q) {
+            console.warn(q)
+        }
+
     }
 
 });
@@ -373,7 +381,7 @@ function EditarGrupo(id_Grupo) {
 
 }
 function LlamadaGrupal(id_Grupo, firebaseArray, idUsers, jsonArray) {
-    console.log(id_Grupo);
+    //**console.log(id_Grupo);
     var div = document.createElement("div");
     div.className = "col-1 p-0 m-0 call_individual";
     div.style = "width:100%;height:33px;";
@@ -419,8 +427,8 @@ function iniciarllamada_360(idUsers) {
     $.each(idUsers, (i) => {
         array_users.push({id360: idUsers[i]});
     });
-    console.log("array users ----->");
-    console.log(array_users);
+    //**console.log("array users ----->");
+    //**console.log(array_users);
     let json = {
         "id360": sesion_cookie.id_usuario,
         "to_id360": array_users,
@@ -451,10 +459,10 @@ function iniciarllamada_360(idUsers) {
                 title: 'Solicitando llamada'
             }).then(function () {
                 RequestPOST("/API/notificacion/llamada360", json).then((response) => {
-                    console.log(response);
+                    //**console.log(response);
                     if (response.success) {
                         RegistroNotificaciones(idUsers, response.registro_llamada.idLlamada).then(function (RespuestaNotificados) {
-                            console.log(RespuestaNotificados);
+                            //**console.log(RespuestaNotificados);
                             for (var i = 0; i < response.receptores.length; i++) {
                                 if (!response.receptores[i].web && response.receptores[i].movil.success.toString() === '0') {
                                     RegistrarEnvioCancelado(RespuestaNotificados[response.receptores.id360]);
@@ -630,7 +638,7 @@ function iniciarllamada(firebaseArray, idUsers, jsonArray) {
 
 
                         RegistroNotificaciones(idUsers, IDLlamada).then(function (RespuestaNotificados) {
-                            console.log(RespuestaNotificados);
+                            //**console.log(RespuestaNotificados);
                             var idNotificados = Object.keys(RespuestaNotificados);
                             var idUsrs = Object.keys(notificados);
 
@@ -803,7 +811,7 @@ function chatGrupal(firebaseArray, idUsers, jsonArray) {
 
         if (result.value) {
             if (result.value[0] !== "") {
-                console.log(result.value[0]);
+                //**console.log(result.value[0]);
                 var idUsrs = Object.keys(notificados);
                 for (var i = 0; i < idUsrs.length; i++) {
 
@@ -1015,10 +1023,10 @@ function agregarGrupo(json) {
 
 }
 function NuevoIntegrante(id_Grupo, NombreGrupo) {
-    console.log("NuevoIntegrante");
-    console.log(id_Grupo);
-    console.log(NombreGrupo);
-    console.log("NuevoIntegrante");
+    //**console.log("NuevoIntegrante");
+    //**console.log(id_Grupo);
+    //**console.log(NombreGrupo);
+    //**console.log("NuevoIntegrante");
 //    var divnew = document.createElement("div");
 //    divnew.id = "nuevo integrante";
 //    divnew.className="col-1";
@@ -1174,9 +1182,9 @@ function agregarIntegrantesGrupo(jsonArray) {
 
 }
 function InsertarGrupo(id_Grupo, NombreGrupo, integrantes) {
-    console.log("InsertarGrupo");
-    console.log(id_Grupo);
-    console.log(NombreGrupo);
+    //**console.log("InsertarGrupo");
+    //**console.log(id_Grupo);
+    //**console.log(NombreGrupo);
 
     var div = document.createElement("div");
     div.className = "card";
@@ -1299,9 +1307,9 @@ function InsertarGrupo(id_Grupo, NombreGrupo, integrantes) {
 
 }
 function InsertarGrupoA(id_Grupo, NombreGrupo, integrantes) {
-    console.log("InsertarGrupo");
-    console.log(id_Grupo);
-    console.log(NombreGrupo);
+    //**console.log("InsertarGrupo");
+    //**console.log(id_Grupo);
+    //**console.log(NombreGrupo);
 
     var div = document.createElement("div");
     div.className = "card";
@@ -1834,7 +1842,7 @@ function Iniciar_llamada_saliente(idUsuario_Movil) {
         "tipo": "llamadaS"
     };
     RequestPOST("/API/notificacion/llamada360", json).then((response) => {
-        console.log(response);
+        //**console.log(response);
         if (response.success) {
             var idUsers = new Array();
             idUsers.push(idUsuario_Movil.toString());
@@ -2071,8 +2079,8 @@ function ConsultarDirectorio() {
             "fecha": getFecha(),
             "hora": getHora(),
             "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            "tipo_servicio":JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-            "tipo_area":JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
+            "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
+            "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
         }),
         success: function (response) {
             //console.info(response);

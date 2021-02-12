@@ -4,4 +4,6 @@
  * and open the template in the editor.
  */
 
-
+const init_misreportes = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) => {
+    
+};

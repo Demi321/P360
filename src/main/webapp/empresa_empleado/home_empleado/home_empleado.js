@@ -107,6 +107,9 @@ let card_contacto = (contacto) => {
     let div = document.createElement("div");
     div.className = "d-flex align-items-center";
     let img = document.createElement("div");
+    if (contacto.img === undefined || contacto.img === null || contacto.img === "") {
+        contacto.img = "https://bucketmoviles121652-dev.s3.amazonaws.com/public/MobileCard/perfil.png";
+    }
     img.style = "height: 30px;width: 30px;margin-right: 10px;padding:15px;border-radius: 30px;background-image:url('" + contacto.img + "'); background-size: cover;  background-repeat: no-repeat;  background-position: center;";
     let nombre = document.createElement("div");
     nombre.innerHTML = contacto.nombre + " " + contacto.apellido_paterno + " " + contacto.apellido_materno;
@@ -510,7 +513,8 @@ const init_home_empleado = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) 
         if (response.success) {
             console.log(response.info[perfil_usuario.id360]);
             let hoy = new Date();
-            let dias_trabajados = hoy.getDay();
+            let dias_trabajados = hoy.getDay();//los dias que deberian ser trabajados
+            let dias_con_registro = 
             let horas_trabajadas = dias_trabajados * 8;
             let productividad = ((response.info[perfil_usuario.id360]["total_horas_trabajadas"]) / horas_trabajadas) * 100;
             rendimiento_usuario = productividad.toFixed(2);

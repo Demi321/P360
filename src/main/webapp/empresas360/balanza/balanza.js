@@ -5,3 +5,7 @@
  */
 
 
+
+const init_balanza = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) => {
+    
+};

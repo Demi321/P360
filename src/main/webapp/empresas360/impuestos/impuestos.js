@@ -5,3 +5,6 @@
  */
 
 
+const init_impuestos = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) => {
+    
+};
