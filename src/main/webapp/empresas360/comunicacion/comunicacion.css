@@ -7,8 +7,6 @@ and open the template in the editor.
     Created on : 12/11/2020, 10:31:42 AM
     Author     : moises
 */
-
-/* Make the image fully responsive */
 .comunicacion .carousel-inner img {
     width: 100%;
     height: 100%;
@@ -69,14 +67,22 @@ and open the template in the editor.
     cursor: pointer;
 }
 
-
-
-
-.comunicacion  .OT_publisher .OT_mute{
+.comunicacion .OT_publisher .OT_mute{
     display: block !important;
 }
 
-.comunicacion .option__image {
+.comunicacion .spin-comunicacion{
+    position: absolute;
+    z-index: 999999999;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.comunicacion  .option__image {
     width: 60px;
     border-radius: 10px;
 }
@@ -188,13 +194,13 @@ and open the template in the editor.
 .comunicacion #frame #sidepanel #profile .wrap .cont-img.away {
     border: 2px solid #f1c40f;
 }
- .comunicacion #frame #sidepanel #profile .wrap .cont-img.busy {
+.comunicacion #frame #sidepanel #profile .wrap .cont-img.busy {
     border: 2px solid #e74c3c;
 }
- .comunicacion #frame #sidepanel #profile .wrap .cont-img.offline {
+.comunicacion #frame #sidepanel #profile .wrap .cont-img.offline {
     border: 2px solid #95a5a6;
 }
- .comunicacion #frame #sidepanel #profile .wrap p {
+.comunicacion #frame #sidepanel #profile .wrap p {
     float: left;
     margin-left: 15px;
     width: calc(100% - 60px);
@@ -206,11 +212,11 @@ and open the template in the editor.
     font: bold 1rem Arial;
 }
 @media screen and (max-width: 735px) {
-     .comunicacion #frame #sidepanel #profile .wrap p {
+    .comunicacion #frame #sidepanel #profile .wrap p {
         display: none;
     }
 }
- .comunicacion #frame #sidepanel #profile .wrap i.expand-button {
+.comunicacion #frame #sidepanel #profile .wrap i.expand-button {
     float: right;
     margin-top: 23px;
     font-size: 0.8em;
@@ -222,7 +228,7 @@ and open the template in the editor.
         display: none;
     }
 }
- .comunicacion #frame #sidepanel #profile .wrap #status-options {
+.comunicacion #frame #sidepanel #profile .wrap #status-options {
     position: absolute;
     opacity: 0;
     visibility: hidden;
@@ -243,7 +249,7 @@ and open the template in the editor.
         margin-top: 57px;
     }
 }
- .comunicacion #frame #sidepanel #profile .wrap #status-options.active {
+.comunicacion #frame #sidepanel #profile .wrap #status-options.active {
     opacity: 1;
     visibility: visible;
     margin: 15px 0 0 0;
@@ -253,7 +259,7 @@ and open the template in the editor.
         margin-top: 62px;
     }
 }
- .comunicacion #frame #sidepanel #profile .wrap #status-options:before {
+.comunicacion #frame #sidepanel #profile .wrap #status-options:before {
     content: '';
     position: absolute;
     width: 0;
@@ -268,11 +274,11 @@ and open the template in the editor.
         margin-left: 23px;
     }
 }
- .comunicacion #frame #sidepanel #profile .wrap #status-options ul {
+.comunicacion #frame #sidepanel #profile .wrap #status-options ul {
     overflow: hidden;
     border-radius: 6px;
 }
- .comunicacion #frame #sidepanel #profile .wrap #status-options ul li {
+.comunicacion #frame #sidepanel #profile .wrap #status-options ul li {
     padding: 15px 0 30px 18px;
     display: block;
     cursor: pointer;
@@ -282,10 +288,10 @@ and open the template in the editor.
         padding: 15px 0 35px 22px;
     }
 }
- .comunicacion #frame #sidepanel #profile .wrap #status-options ul li:hover {
+.comunicacion #frame #sidepanel #profile .wrap #status-options ul li:hover {
     background: #496886;
 }
- .comunicacion #frame #sidepanel #profile .wrap #status-options ul li span.status-circle {
+.comunicacion #frame #sidepanel #profile .wrap #status-options ul li span.status-circle {
     position: absolute;
     width: 10px;
     height: 10px;
@@ -298,7 +304,7 @@ and open the template in the editor.
         height: 14px;
     }
 }
- .comunicacion #frame #sidepanel #profile .wrap #status-options ul li span.status-circle:before {
+.comunicacion #frame #sidepanel #profile .wrap #status-options ul li span.status-circle:before {
     content: '';
     position: absolute;
     width: 14px;
@@ -314,7 +320,7 @@ and open the template in the editor.
         width: 18px;
     }
 }
- .comunicacion #frame #sidepanel #profile .wrap #status-options ul li p {
+.comunicacion #frame #sidepanel #profile .wrap #status-options ul li p {
     padding-left: 12px;
 }
 @media screen and (max-width: 735px) {
@@ -322,42 +328,42 @@ and open the template in the editor.
         display: none;
     }
 }
- .comunicacion #frame #sidepanel #profile .wrap #status-options ul li#status-online span.status-circle {
+.comunicacion #frame #sidepanel #profile .wrap #status-options ul li#status-online span.status-circle {
     background: #2ecc71;
 }
- .comunicacion #frame #sidepanel #profile .wrap #status-options ul li#status-online.active span.status-circle:before {
+.comunicacion #frame #sidepanel #profile .wrap #status-options ul li#status-online.active span.status-circle:before {
     border: 1px solid #2ecc71;
 }
- .comunicacion #frame #sidepanel #profile .wrap #status-options ul li#status-away span.status-circle {
+.comunicacion #frame #sidepanel #profile .wrap #status-options ul li#status-away span.status-circle {
     background: #f1c40f;
 }
- .comunicacion #frame #sidepanel #profile .wrap #status-options ul li#status-away.active span.status-circle:before {
+.comunicacion #frame #sidepanel #profile .wrap #status-options ul li#status-away.active span.status-circle:before {
     border: 1px solid #f1c40f;
 }
- .comunicacion #frame #sidepanel #profile .wrap #status-options ul li#status-busy span.status-circle {
+.comunicacion #frame #sidepanel #profile .wrap #status-options ul li#status-busy span.status-circle {
     background: #e74c3c;
 }
- .comunicacion #frame #sidepanel #profile .wrap #status-options ul li#status-busy.active span.status-circle:before {
+.comunicacion #frame #sidepanel #profile .wrap #status-options ul li#status-busy.active span.status-circle:before {
     border: 1px solid #e74c3c;
 }
- .comunicacion #frame #sidepanel #profile .wrap #status-options ul li#status-offline span.status-circle {
+.comunicacion #frame #sidepanel #profile .wrap #status-options ul li#status-offline span.status-circle {
     background: #95a5a6;
 }
- .comunicacion #frame #sidepanel #profile .wrap #status-options ul li#status-offline.active span.status-circle:before {
+.comunicacion #frame #sidepanel #profile .wrap #status-options ul li#status-offline.active span.status-circle:before {
     border: 1px solid #95a5a6;
 }
- .comunicacion #frame #sidepanel #profile .wrap #expanded {
+.comunicacion #frame #sidepanel #profile .wrap #expanded {
     padding: 100px 0 0 0;
     display: block;
     line-height: initial !important;
 }
- .comunicacion #frame #sidepanel #profile .wrap #expanded label {
+.comunicacion #frame #sidepanel #profile .wrap #expanded label {
     float: left;
     clear: both;
     margin: 0 8px 5px 0;
     padding: 5px 0;
 }
- .comunicacion #frame #sidepanel #profile .wrap #expanded input {
+.comunicacion #frame #sidepanel #profile .wrap #expanded input {
     border: none;
     margin-bottom: 6px;
     background: #32465a;
@@ -366,11 +372,11 @@ and open the template in the editor.
     padding: 7px;
     width: calc(100% - 43px);
 }
- .comunicacion #frame #sidepanel #profile .wrap #expanded input:focus {
+.comunicacion #frame #sidepanel #profile .wrap #expanded input:focus {
     outline: none;
     background: #435f7a;
 }
- .comunicacion #frame #sidepanel #search {
+.comunicacion #frame #sidepanel #search {
     border-top: 1px solid #32465a;
     border-bottom: 1px solid #32465a;
     font-weight: 300;
@@ -380,11 +386,11 @@ and open the template in the editor.
         display: none;
     }
 }
- .comunicacion #frame #sidepanel #search label {
+.comunicacion #frame #sidepanel #search label {
     position: absolute;
     margin: 10px 0 0 20px;
 }
- .comunicacion #frame #sidepanel #search input {
+.comunicacion #frame #sidepanel #search input {
     font-family: "proxima-nova",  "Source Sans Pro", sans-serif;
     padding: 10px 0 10px 46px;
     width: calc(100% - 25px);
@@ -392,48 +398,70 @@ and open the template in the editor.
     background: #32465a;
     color: #f5f5f5;
 }
- .comunicacion #frame #sidepanel #search input:focus {
+.comunicacion #frame #sidepanel #search input:focus {
     outline: none;
     background: #435f7a;
 }
- .comunicacion #frame #sidepanel #search input::-webkit-input-placeholder {
+.comunicacion #frame #sidepanel #search input::-webkit-input-placeholder {
     color: #f5f5f5;
 }
- .comunicacion #frame #sidepanel #search input::-moz-placeholder {
+.comunicacion #frame #sidepanel #search input::-moz-placeholder {
     color: #f5f5f5;
 }
- .comunicacion #frame #sidepanel #search input:-ms-input-placeholder {
+.comunicacion #frame #sidepanel #search input:-ms-input-placeholder {
     color: #f5f5f5;
 }
- .comunicacion #frame #sidepanel #search input:-moz-placeholder {
+.comunicacion #frame #sidepanel #search input:-moz-placeholder {
     color: #f5f5f5;
 }
- .comunicacion #frame #sidepanel #contacts {
+
+.comunicacion #frame #sidepanel #panelContactos,
+.comunicacion #frame #sidepanel #contacts,
+.comunicacion #frame #sidepanel #panelMensajesDestacados{
     height: calc(100% - 177px);
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
+.comunicacion #frame #sidepanel #panelMensajesDestacados{
+    display: none;
+}
+
+.comunicacion #panelMensajesDestacados .botoneraMensjaesDestacados{
+    padding: 10px;
+}
+
+.comunicacion #panelMensajesDestacados #eliminarTodosLosMensajesDestacados{
+    float: right;
+}
+
 @media screen and (max-width: 735px) {
-    .comunicacion #frame #sidepanel #contacts {
+    .comunicacion #frame #sidepanel #contacts,
+    .comunicacion #frame #sidepanel #panelMensajesDestacados{
         height: calc(100% - 149px);
         overflow-y: scroll;
         overflow-x: hidden;
     }
-    .comunicacion #frame #sidepanel #contacts::-webkit-scrollbar {
+    .comunicacion #frame #sidepanel #contacts::-webkit-scrollbar,
+    .comunicacion #frame #sidepanel #panelMensajesDestacados::-webkit-scrollbar{
         display: none;
     }
 }
- .comunicacion #frame #sidepanel #contacts.expanded {
+.comunicacion #frame #sidepanel #contacts.expanded,
+.comunicacion #frame #sidepanel #panelMensajesDestacados.expanded{
     height: calc(100% - 334px);
 }
- .comunicacion #frame #sidepanel #contacts::-webkit-scrollbar {
+.comunicacion #frame #sidepanel #contacts::-webkit-scrollbar,
+.comunicacion #frame #sidepanel #panelMensajesDestacados::-webkit-scrollbar{
     width: 8px;
     background: #2c3e50;
 }
- .comunicacion #frame #sidepanel #contacts::-webkit-scrollbar-thumb {
+.comunicacion #frame #sidepanel #contacts::-webkit-scrollbar-thumb,
+.comunicacion #frame #sidepanel #panelMensajesDestacados::-webkit-scrollbar-thumb{
     background-color: #243140;
 }
- .comunicacion #frame #sidepanel #contacts ul li.contact {
+.comunicacion #frame #sidepanel #contacts ul li.contact,
+.comunicacion #panelMensajesDestacados ul li.mensajeDestacado{
     position: relative;
     padding: 10px 0 15px 0;
     font-size: 0.9em;
@@ -445,17 +473,18 @@ and open the template in the editor.
         padding: 6px 0 46px 8px;
     }
 }
- .comunicacion #frame #sidepanel #contacts ul li.contact:hover {
+.comunicacion #frame #sidepanel #contacts ul li.contact:hover,
+.comunicacion #panelMensajesDestacados ul li.mensajeDestacado:hover {
     background: #32465a;
 }
- .comunicacion #frame #sidepanel #contacts ul li.contact.active {
+.comunicacion #frame #sidepanel #contacts ul li.contact.active {
     background: #32465a;
     border-right: 5px solid #435f7a;
 }
- .comunicacion #frame #sidepanel #contacts ul li.contact.active span.contact-status {
+.comunicacion #frame #sidepanel #contacts ul li.contact.active span.contact-status {
     border: 2px solid #32465a !important;
 }
- .comunicacion #frame #sidepanel #contacts ul li.contact .wrap {
+.comunicacion #frame #sidepanel #contacts ul li.contact .wrap {
     width: 88%;
     margin: 0 auto;
     position: relative;
@@ -465,7 +494,7 @@ and open the template in the editor.
         width: 100%;
     }
 }
- .comunicacion #frame #sidepanel #contacts ul li.contact .wrap span {
+.comunicacion #frame #sidepanel #contacts ul li.contact .wrap span {
     position: absolute;
     left: 0;
     margin: -2px 0 0 -2px;
@@ -475,16 +504,16 @@ and open the template in the editor.
     border: 2px solid #2c3e50;
     background: #95a5a6;
 }
- .comunicacion #frame #sidepanel #contacts ul li.contact .wrap span.online {
+.comunicacion #frame #sidepanel #contacts ul li.contact .wrap span.online {
     background: #2ecc71;
 }
- .comunicacion #frame #sidepanel #contacts ul li.contact .wrap span.away {
+.comunicacion #frame #sidepanel #contacts ul li.contact .wrap span.away {
     background: #f1c40f;
 }
- .comunicacion #frame #sidepanel #contacts ul li.contact .wrap span.busy {
+.comunicacion #frame #sidepanel #contacts ul li.contact .wrap span.busy {
     background: #e74c3c;
 }
- .comunicacion #frame #sidepanel #contacts ul li.contact .wrap .img {
+.comunicacion #frame #sidepanel #contacts ul li.contact .wrap .img {
     width: 40px;
     border-radius: 50%;
     float: left;
@@ -496,7 +525,7 @@ and open the template in the editor.
         margin-right: 0px;
     }
 }
- .comunicacion #frame #sidepanel #contacts ul li.contact .wrap .meta {
+.comunicacion #frame #sidepanel #contacts ul li.contact .wrap .meta {
     padding: 5px 0 0 0;
     position: relative;
 }
@@ -505,10 +534,10 @@ and open the template in the editor.
         display: none;
     }
 }
- .comunicacion #frame #sidepanel #contacts ul li.contact .wrap .meta .name {
+.comunicacion #frame #sidepanel #contacts ul li.contact .wrap .meta .name {
     font-weight: 600;
 }
- .comunicacion #frame #sidepanel #contacts ul li.contact .wrap .meta .preview {
+.comunicacion #frame #sidepanel #contacts ul li.contact .wrap .meta .preview {
     margin: 5px 0 0 0;
     padding: 0 0 1px;
     font-weight: 400;
@@ -520,7 +549,7 @@ and open the template in the editor.
     -webkit-transition: 1s all ease;
     transition: 1s all ease;
 }
- .comunicacion #frame #sidepanel #contacts ul li.contact .wrap .meta .preview span {
+.comunicacion #frame #sidepanel #contacts ul li.contact .wrap .meta .preview span {
     position: initial;
     border-radius: initial;
     background: none;
@@ -529,15 +558,31 @@ and open the template in the editor.
     margin: 0 0 0 1px;
     opacity: .5;
 }
- .comunicacion #frame #sidepanel #bottom-bar {
+.comunicacion #frame #sidepanel #bottom-bar {
     position: absolute;
     width: 100%;
     bottom: 0;
 }
- .comunicacion #frame #sidepanel #bottom-bar button {
+
+.comunicacion #frame #sidepanel .botoneraComunicacion{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.comunicacion #frame #sidepanel .botoneraComunicacion button,
+.comunicacion #panelMensajesDestacados .botoneraMensjaesDestacados button{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding: 10px;
+    color: white;
+}
+
+.comunicacion #frame #sidepanel #bottom-bar button {
     float: left;
     border: none;
-    width: 50%;
+    width: 33.33%;
     padding: 10px 0;
     background: #363c42;
     color: #f5f5f5;
@@ -552,10 +597,10 @@ and open the template in the editor.
         padding: 15px 0;
     }
 }
- .comunicacion #frame #sidepanel #bottom-bar button:focus {
+.comunicacion #frame #sidepanel #bottom-bar button:focus {
     outline: none;
 }
- .comunicacion #frame #sidepanel #bottom-bar button:nth-child(1) {
+.comunicacion #frame #sidepanel #bottom-bar button:nth-child(1) {
     border-right: 1px solid #2c3e50;
 }
 @media screen and (max-width: 735px) {
@@ -564,10 +609,10 @@ and open the template in the editor.
         border-bottom: 1px solid #2c3e50;
     }
 }
- .comunicacion #frame #sidepanel #bottom-bar button:hover {
+.comunicacion #frame #sidepanel #bottom-bar button:hover {
     background: #435f7a;
 }
- .comunicacion #frame #sidepanel #bottom-bar button i {
+.comunicacion #frame #sidepanel #bottom-bar button i {
     margin-right: 3px;
     font-size: 1em;
 }
@@ -581,7 +626,7 @@ and open the template in the editor.
         display: none;
     }
 }
- .comunicacion #frame .content {
+.comunicacion #frame .content {
     float: right;
     width: 60%;
     height: 100%;
@@ -599,40 +644,40 @@ and open the template in the editor.
         width: calc(100% - 340px);
     }
 }
- .comunicacion #frame .content .contact-profile {
+.comunicacion #frame .content .contact-profile {
     width: 100%;
     height: 60px;
     line-height: 60px;
     background: #f5f5f5;
 }
- .comunicacion #frame .content .contact-profile .img {
+.comunicacion #frame .content .contact-profile .img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     float: left;
     margin: 9px 12px 0 9px;
 }
- .comunicacion #frame .content .contact-profile p {
+.comunicacion #frame .content .contact-profile p {
     float: left;
     color: black;
     font: bold 1rem Arial;
     margin: 20px;
     cursor: pointer;
 }
- .comunicacion #frame .content .contact-profile .social-media {
+.comunicacion #frame .content .contact-profile .social-media {
     float: right;
 }
- .comunicacion #frame .content .contact-profile .social-media i {
+.comunicacion #frame .content .contact-profile .social-media i {
     margin-left: 14px;
     cursor: pointer;
 }
- .comunicacion #frame .content .contact-profile .social-media i:nth-last-child(1) {
+.comunicacion #frame .content .contact-profile .social-media i:nth-last-child(1) {
     margin-right: 20px;
 }
- .comunicacion #frame .content .contact-profile .social-media i:hover {
+.comunicacion #frame .content .contact-profile .social-media i:hover {
     color: #435f7a;
 }
- .comunicacion #frame .content .messages {
+.comunicacion #frame .content .messages {
     height: auto;
     min-height: calc(100% - 93px);
     max-height: calc(100% - 93px);
@@ -647,14 +692,14 @@ and open the template in the editor.
         max-height: calc(100% - 105px);
     }
 }
- .comunicacion #frame .content .messages::-webkit-scrollbar {
+.comunicacion #frame .content .messages::-webkit-scrollbar {
     width: 8px;
     background: transparent;
 }
- .comunicacion #frame .content .messages::-webkit-scrollbar-thumb {
+.comunicacion #frame .content .messages::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, 0.3);
 }
- .comunicacion #frame .content .messages ul li {
+.comunicacion #frame .content .messages ul li {
     display: inline-block;
     clear: both;
     float: left;
@@ -663,27 +708,28 @@ and open the template in the editor.
     font-size: 0.9em;
     padding: 0;
 }
- .comunicacion #frame .content .messages ul li.respondida{
+.comunicacion #frame .content .messages ul li.respondida{
     background-color: rgba(0,0,0,0.1);
 }
- .comunicacion #frame .content .messages ul li:nth-last-child(1) {
+.comunicacion #frame .content .messages ul li:nth-last-child(1) {
     margin-bottom: 20px !important;
 }
- .comunicacion #frame .content .messages ul li.send .img {
+.comunicacion #frame .content .messages ul li.send .img {
     margin: 6px 8px 0 0;
 }
- .comunicacion #frame .content .messages ul li.send p {
+#frame .content .messages ul li.send p {
     background: #0f97a9;
     color: #f5f5f5;
     float: left;
     position: relative;
     padding-right: 30px;
+    padding-left: 30px;
 }
- .comunicacion #frame .content .messages ul li.replies .img {
+.comunicacion #frame .content .messages ul li.replies .img {
     float: right;
     margin: 6px 0 0 8px;
 }
- .comunicacion #frame .content .messages ul li.replies p {
+.comunicacion #frame .content .messages ul li.replies p {
     background: #f5f5f5;
     float: right;
     color: #434343;
@@ -691,15 +737,16 @@ and open the template in the editor.
     padding-left: 30px;
     margin: 10px 0;
 }
- .comunicacion #frame .content .messages ul li .img {
+.comunicacion #frame .content .messages ul li .img {
     width: 22px;
     height: 22px;
     border-radius: 50%;
     float: left;
 }
- .comunicacion #frame .content .messages ul li p {
+.comunicacion #frame .content .messages ul li p {
     display: inline-block;
     padding: 10px 15px;
+    padding-top: 20px;
     border-radius: 20px;
     max-width: 205px;
     line-height: 130%;
@@ -709,16 +756,16 @@ and open the template in the editor.
         max-width: 300px;
     }
 }
- .comunicacion #frame .content .message-input {
+.comunicacion #frame .content .message-input {
     position: absolute;
     bottom: 0;
     width: 100%;
     z-index: 99;
 }
- .comunicacion #frame .content .message-input .wrap {
+.comunicacion #frame .content .message-input .wrap {
     position: relative;
 }
- .comunicacion #frame .content .message-input .wrap input {
+.comunicacion #frame .content .message-input .wrap input {
     font-family: "proxima-nova",  "Source Sans Pro", sans-serif;
     float: left;
     border: none;
@@ -733,10 +780,10 @@ and open the template in the editor.
         padding: 15px 32px 16px 8px;
     }
 }
- .comunicacion #frame .content .message-input .wrap input:focus {
+.comunicacion #frame .content .message-input .wrap input:focus {
     outline: none;
 }
- .comunicacion #frame .content .message-input .wrap .attachment {
+.comunicacion #frame .content .message-input .wrap .attachment {
     position: absolute;
     right: 60px;
     z-index: 4;
@@ -752,10 +799,10 @@ and open the template in the editor.
         right: 65px;
     }
 }
- .comunicacion #frame .content .message-input .wrap .attachment:hover {
+.comunicacion #frame .content .message-input .wrap .attachment:hover {
     opacity: 1;
 }
- .comunicacion #frame .content .message-input .wrap button {
+.comunicacion #frame .content .message-input .wrap button {
     float: right;
     border: none;
     padding: 12px 0;
@@ -769,10 +816,10 @@ and open the template in the editor.
         padding: 16px 0;
     }
 }
- .comunicacion #frame .content .message-input .wrap button:hover {
+.comunicacion #frame .content .message-input .wrap button:hover {
     background: #435f7a;
 }
- .comunicacion #frame .content .message-input .wrap button:focus {
+.comunicacion #frame .content .message-input .wrap button:focus {
     outline: none;
 }
 
@@ -789,7 +836,7 @@ and open the template in the editor.
     /* color: #ffffff; */
     font: bold 12px arial;
 }
- .comunicacion #frame #sidepanel #search input:focus {
+.comunicacion #frame #sidepanel #search input:focus {
     padding: 0;
     margin: 0;
     outline: none;
@@ -932,6 +979,22 @@ ESTILOS LLAMADA
     display: grid;
     height: 100%;
     grid-template-rows: 1.5fr 0.5fr;
+}
+
+.comunicacion span.iconOpciones{
+    position: absolute;
+    top: 5px;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: all 0.5s ease-out;
+}
+
+.comunicacion .replies span.iconoDestacado{
+    right: 15px;
+}
+
+.comunicacion .send span.iconoDestacado{
+    left: 15px;
 }
 
 .comunicacion span.iconOpciones{
@@ -1137,4 +1200,237 @@ ESTILOS LLAMADA
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* CONTENEDOR DE EMOJIS */
+
+.comunicacion .fg-emoji-picker {
+    /* position: fixed; */
+    position: absolute;
+    z-index: 999;
+    width: 300px;
+    min-height: 360px;
+    background-color: white;
+    box-shadow: 0px 2px 13px -2px rgba(0, 0, 0, 0.1803921568627451);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.comunicacion .fg-emoji-picker .fg-emoji-picker-all-categories {
+    height: 301px;
+    overflow-y: auto;
+    padding: 0 15px 15px 15px;
+}
+
+.comunicacion .fg-emoji-picker .fg-emoji-picker-container-title {
+    color: black;
+    margin: 10px 0;
+}
+
+.comunicacion .fg-emoji-picker * {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    color: #666;
+    font-family: sans-serif;
+}
+
+.comunicacion .fg-emoji-picker ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.comunicacion .fg-emoji-picker .fg-emoji-picker-category {
+    margin-top: 1px;
+    padding-top: 15px;
+}
+
+.comunicacion .fg-emoji-picker-grid {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.comunicacion .fg-emoji-picker-grid > li {
+    cursor: pointer;
+    flex: 0 0 calc(100% / 5);
+    max-width: calc(100% / 5);
+    height: 48px;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all .2s ease;
+    background-color: white;
+}
+
+.comunicacion .fg-emoji-picker-grid > li:hover {
+    background-color: #99c9ef;
+}
+
+.comunicacion .fg-emoji-picker-grid > li > a {
+    display: block;
+    font-size: 25px;
+    margin: 0;
+    padding: 25px 0px;
+    line-height: 0;
+}
+
+/* FILTERS */
+.comunicacion .fg-emoji-picker-categories {
+    /*padding: 0 15px;*/
+    background: #ececec;
+}
+
+.comunicacion .fg-emoji-picker-categories ul {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.comunicacion .fg-emoji-picker-categories li {
+    flex: 1;
+}
+
+.comunicacion .fg-emoji-picker-categories li.active {
+    background-color: #99c9ef;
+}
+
+.comunicacion .fg-emoji-picker-categories a {
+    padding: 12px 7px;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    transition: all .2s ease;
+}
+
+.comunicacion .fg-emoji-picker-categories a:hover {
+    background-color: #99c9ef;
+}
+
+.comunicacion .fg-emoji-picker-search {
+    position: relative;
+    height: 25px;
+}
+
+.comunicacion .fg-emoji-picker-search input {
+    position: absolute;
+    width: 85%;
+    left: 0;
+    top: 0;
+    border: none;
+    padding: 5px 30px 5px 15px;
+    outline: none;
+    background-color: #dedede;
+    font-size: 12px;
+    color: #616161;
+}
+
+.comunicacion .fg-emoji-picker-search svg {
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    right: 7px;
+    top: 5px;
+    fill: #333333;
+    pointer-events: none;
+}
+
+
+/* FOOTER */
+.comunicacion .fg-emoji-picker-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    height: 50px;
+    padding: 0 15px 15px 15px;
+}
+
+.comunicacion .fg-emoji-picker-footer-icon {
+    font-size: 30px;
+    margin-right: 8px;
+}
+
+/* SOLO FAVORITOS */
+.comunicacion #filtrarFavoritos{
+    border-bottom: 1px solid;
+}
+
+.comunicacion #filtrarFavoritos label{
+    width: 90%;
+    display: block;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    /*background: darkcyan;*/
+    margin: auto;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+.comunicacion #filtrarFavoritos label:hover{
+    background: rgba(0,0,0,0.2);
+}
+
+.comunicacion #filtrarFavoritos input{
+    display: none;
+}
+
+.comunicacion .listadoMensajesDestacados{
+    padding: 0;
+}
+
+.comunicacion .mensajeDestacado{
+    border-bottom: 0.5px solid lightslategray;
+}
+
+.comunicacion .mensajeDestacado .contenidoMensajeDestacado{
+    width: 95%;
+    margin: 0 auto;
+    position: relative;
+}
+
+.comunicacion .mensajeDestacado .contenidoMensajeDestacado .cabeceraDestacado{
+    display: grid;
+    grid-template-columns: 25px 1fr 80px;
+    align-items: center;
+    grid-gap: 10px;
+}
+
+.comunicacion .mensajeDestacado .contenidoMensajeDestacado .cabeceraDestacado img{
+    width: 100%;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.comunicacion .mensajeDestacado .contenidoMensajeDestacado .cabeceraDestacado p{
+    margin-bottom: 0;
+    font-size: 10px;
+}
+
+.comunicacion .mensajeDestacado .contenidoMensajeDestacado .cabeceraDestacado span{
+    display: block;
+    text-align: right;
+    font-size: 10px;
+}
+
+.comunicacion .mensajeDestacado .contenidoMensajeDestacado .mensaje{
+    width: calc(100% - 80px);
+    margin-left: 35px;
+    background-color: #0f97a9;
+    border-radius: 20px;
+    padding: 10px 15px;
+    word-break: break-all;
+    position: relative;
+}
+
+.comunicacion .mensajeDestacado .contenidoMensajeDestacado .mensaje.mio{
+    background-color: #f5f5f5;
+    color: black;
+}
+
+.comunicacion .mensajeDestacado .contenidoMensajeDestacado .mensaje img{
+    width: 50%;
+    margin-left: 25%;
 }
