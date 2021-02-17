@@ -228,6 +228,19 @@ console.log(json);
                     click: function () {
                         nuevoModal.toggle()
                     }
+                },
+                timeGridDay:{
+                    text:"Día"
+                },
+
+                timeGridWeek:{
+                    text:"Semana"
+                },
+                dayGridMonth:{
+                    text:"Mes"
+                },
+                today:{
+                    text:"Hoy"
                 }
             },
             dateClick: function (info) {
@@ -269,6 +282,7 @@ console.log(json);
         });
 
         calendar.setOption('locale', 'Es');
+        calendar.setOption('height', "100%");
         calendar.render();
     });
 
