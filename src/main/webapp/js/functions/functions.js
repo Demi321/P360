@@ -6526,7 +6526,7 @@ function personalizar_header(perfil) {
 //
 //}
 function agregar_menu(json) {
-    
+console.log(json);    
 //   agregar_menu("${id_menu}","${icono_categoria}","${nombre}", "${alias}", '${icono}', '${categoria}', "");
 //function agregar_menu(id, icon_collapse, nombre,alias, fawsome, collapse, url_externa) {
 let id = json.id;
