@@ -490,7 +490,7 @@ console.log("Vamos a editar");
             }
         }
     } catch (e) {
-
+ console.warn(e);
     }
 
 };
