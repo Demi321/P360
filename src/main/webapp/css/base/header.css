@@ -1642,6 +1642,7 @@ header{
         width: 80%;
         max-width: 80%;
         text-align: left;
+            display: none;
     }
     .header3, .segmento.menuServicios{
         display: none;

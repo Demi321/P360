@@ -6,7 +6,13 @@
 
 /* global sucursales_usuario, sesion_cookie, RequestPOST, swal, Swal */
 
-const init_missucursales = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) => {
+const init_missucursales = (json) => {
+    console.log(json);
+    let id = json.id;
+    let id_usuario = json.id_usuario;
+    let tipo_usuario = json.tipo_usuario;
+    let tipo_servicio = json.tipo_servicio;
+    let tipo_area = json.tipo_area;
     if (sucursales_usuario !== null && sucursales_usuario !== undefined && sucursales_usuario !== "") {
         //Este listado de sucursales es para la vista de MisSucursales
         for (var i = 0; i < sucursales_usuario.length; i++) {

@@ -8,3 +8,143 @@ and open the template in the editor.
     Author     : moises
 */
 
+
+.administracionyfinanzas .panel_estadistico{
+    min-height: 60px;
+    font: bold 1.2rem Arial;
+}
+.administracionyfinanzas .panel_estadistico > .col{
+    max-width: 20%
+}
+.administracionyfinanzas .panel_estadistico .total{
+    height: 100%;
+    background-color: #29313a;
+}
+.administracionyfinanzas .panel_estadistico .alta{
+    height: 100%;
+    background-color: #5fa728;
+}
+.administracionyfinanzas .panel_estadistico .nuevos{
+    height: 100%;
+    background-color: #ffa500;
+}
+.administracionyfinanzas .panel_estadistico .seguimiento{
+    height: 100%;
+    background-color: #0097a9;
+}
+.administracionyfinanzas .panel_estadistico .recaidos{
+    height: 100%;
+    background-color: #9C27B0;
+}
+.administracionyfinanzas .panel_estadistico .cancelados{
+    height: 100%;
+    background-color: #ffffff;
+}
+
+.administracionyfinanzas .cuadros_datos1 {
+    border: solid 2px #e5e5e6;
+    border-radius: 10px;
+    background: #e5e5e6;
+}
+.administracionyfinanzas .cuadros_datos1 .box{
+    background: #e5e5e6;
+    box-shadow: 2px 1px 15px 1px #282828;
+    border-radius: 10px;
+}
+.administracionyfinanzas .cuadros_datos1 .box .col{
+    font: 0.7rem Arial;
+}
+.administracionyfinanzas .cuadros_datos2 {
+    border: solid 2px #ffffff;
+    border-radius: 10px;
+    background: #efeff0;
+}
+.administracionyfinanzas .cuadros_datos2 .box{
+    background: #f8f9fa;
+    box-shadow: 2px 1px 15px 1px #ccc;
+    border-radius: 10px;
+    height: 100%;
+}
+.administracionyfinanzas .cuadros_datos2 .box .col{
+    font: 0.85rem Arial;
+}
+
+.administracionyfinanzas .graficas1 {
+      background: #e5e5e6;
+      border-radius: 10px;
+      border: solid 4px #fdfdfd;
+}
+.administracionyfinanzas .graficas1 .chart {
+  width: 100%; 
+  min-height: 200px;
+}
+.administracionyfinanzas .graficas2 {
+      background: #e5e5e6;
+    border-radius: 10px;
+    border: solid 4px #ffffff;
+}
+.administracionyfinanzas .graficas3 {
+      background: #e5e5e6;
+    border-radius: 10px;
+    border: solid 4px #ffffff;
+}
+.administracionyfinanzas .graficas3  label{
+         font: bold 0.8rem ARIAL;
+         color: #212529;
+}
+.administracionyfinanzas .resultados {
+      background: #e5e5e6;
+      border-radius: 10px;
+      border: solid 4px #ffffff;
+      color: #343a40;
+}
+.administracionyfinanzas p {
+}
+
+.administracionyfinanzas .graficas4 {
+      background: #e5e5e6;
+      border-radius: 10px;
+      border: solid 4px #ffffff;
+      color: #343a40;
+}
+
+.administracionyfinanzas .graficas4 .chart {
+  width: 100%; 
+  min-height: 100px;
+  max-height: 100px;
+  height: 100px;
+  /*min-width: 100px;*/
+}
+#labelOverlay {
+       width: 50px;
+       height: 50px;
+       position: absolute;
+       top: calc(50% - 15px);
+       left: calc(50% - 24px);
+       text-align: center;
+       cursor: default;
+}
+
+#labelOverlay p {
+  line-height: 1;
+  font-size: 10pt;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+
+.administracionyfinanzas .multiselect {
+    box-sizing: border-box;
+    font: bold 1rem Arial;
+}
+
+.administracionyfinanzas .multiselect__single {
+    background: none;
+    color: #495057;
+    font: bold 12px arial;
+    border-bottom: solid 2px #666;
+    border-radius: 0;
+}

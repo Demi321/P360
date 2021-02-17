@@ -31,7 +31,13 @@ let horario_entrada_reporte_trabajo = () => {
 
 
 };
-const init_reporte_actividades = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) => {
+const init_reporte_actividades = (json) => {
+    console.log(json);
+    let id = json.id;
+    let id_usuario = json.id_usuario;
+    let tipo_usuario = json.tipo_usuario;
+    let tipo_servicio = json.tipo_servicio;
+    let tipo_area = json.tipo_area;
     var meses = new Array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
     var diasSemana = new Array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado");
     var f = new Date();

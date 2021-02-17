@@ -5,6 +5,11 @@
  */
 
 
-const init_panelfinanciero = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) => {
-    
+const init_panelfinanciero = (json) => {
+    console.log(json);
+    let id = json.id;
+    let id_usuario = json.id_usuario;
+    let tipo_usuario = json.tipo_usuario;
+    let tipo_servicio = json.tipo_servicio;
+    let tipo_area = json.tipo_area;
 };

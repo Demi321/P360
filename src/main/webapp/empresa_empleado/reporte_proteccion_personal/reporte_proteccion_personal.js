@@ -3,7 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-const init_reporte_proteccion_personal = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) => {
+const init_reporte_proteccion_personal = (json) => {
+    console.log(json);
+    let id = json.id;
+    let id_usuario = json.id_usuario;
+    let tipo_usuario = json.tipo_usuario;
+    let tipo_servicio = json.tipo_servicio;
+    let tipo_area = json.tipo_area;
     let inp_checkbox = $("#reporte_proteccion_personal_form input[type=checkbox]");
     for (var i = 0; i < inp_checkbox.length; i++) {
         //Revisar si la llave ya existe 

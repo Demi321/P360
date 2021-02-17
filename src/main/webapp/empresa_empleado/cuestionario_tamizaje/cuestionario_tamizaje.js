@@ -3,7 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-const init_cuestionario_tamizaje = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) => {
+const init_cuestionario_tamizaje = (json) => {
+    console.log(json);
+    let id = json.id;
+    let id_usuario = json.id_usuario;
+    let tipo_usuario = json.tipo_usuario;
+    let tipo_servicio = json.tipo_servicio;
+    let tipo_area = json.tipo_area;
     $("#cuestionario_tamizaje_form").submit((e) => {
         e.preventDefault();
         let json = buildJSON_Section("cuestionario_tamizaje_form");

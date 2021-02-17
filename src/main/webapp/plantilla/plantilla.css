@@ -634,7 +634,7 @@ footer{
     height: 25px;
 }
 .menu_sidebar:hover, .menu_selected{
-    background: #0097a9;
+    background: #0097a9 !important;
 }
 .modulo_section{
     width: 100%;
@@ -657,6 +657,11 @@ footer{
     color: white;
     position: relative;
     margin: 0;
+}
+.collapse_sidebar p{
+    margin: 0;
+    font: bold 1.12rem Arial;
+    color: white;
 }
 .collapse_sidebar:hover{
     color: white;
@@ -1081,5 +1086,9 @@ input:focus , video:focus, textArea:focus{
 }
 .over {
   /*border: 2px dashed #000;*/
-  border-top: 2px solid blue;
+  border-top: 2px solid #ff8200;
+}
+
+section{
+    background: #f5f5f5;
 }

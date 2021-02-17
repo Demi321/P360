@@ -177,11 +177,15 @@ $(() => {
         $("#sidebar .collapse_sidebar_cntr").toggleClass("compressed");
 
         if ($("aside").hasClass("aside_compressed")) {
-            $("#sidebar a").addClass("d-none");
-            $("#sidebar .collapse_sidebar_cntr.collapse").addClass("show");
+            $("#sidebar a div").addClass("mx-auto");
+            $("#sidebar a p").addClass("d-none");
+            $("#sidebar a svg").addClass("d-none");
+            //$("#sidebar .collapse_sidebar_cntr.collapse").addClass("show");
         } else {
-            $("#sidebar a").removeClass("d-none");
-            $("#sidebar .collapse_sidebar_cntr.collapse").removeClass("show");
+            $("#sidebar a div").removeClass("mx-auto");
+            $("#sidebar a p").removeClass("d-none");
+            $("#sidebar a svg").removeClass("d-none");
+            //$("#sidebar .collapse_sidebar_cntr.collapse").removeClass("show");
         }
 
 

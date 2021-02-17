@@ -7,4 +7,152 @@ and open the template in the editor.
     Created on : 8/02/2021, 12:04:52 PM
     Author     : moises
 */
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 22/01/2021, 02:59:54 AM
+    Author     : moises
+*/
 
+.estadisticaglobal .panel_estadistico{
+    min-height: 60px;
+    font: bold 1.2rem Arial;
+}
+.estadisticaglobal .panel_estadistico > .col{
+    max-width: 20%
+}
+.estadisticaglobal .panel_estadistico .total{
+    height: 100%;
+    background-color: #29313a;
+}
+.estadisticaglobal .panel_estadistico .alta{
+    height: 100%;
+    background-color: #5fa728;
+}
+.estadisticaglobal .panel_estadistico .nuevos{
+    height: 100%;
+    background-color: #ffa500;
+}
+.estadisticaglobal .panel_estadistico .seguimiento{
+    height: 100%;
+    background-color: #0097a9;
+}
+.estadisticaglobal .panel_estadistico .recaidos{
+    height: 100%;
+    background-color: #9C27B0;
+}
+.estadisticaglobal .panel_estadistico .cancelados{
+    height: 100%;
+    background-color: #ffffff;
+}
+
+.estadisticaglobal .cuadros_datos1 {
+    border: solid 2px #e5e5e6;
+    border-radius: 10px;
+    background: #e5e5e6;
+}
+.estadisticaglobal .cuadros_datos1 .box{
+    background: #e5e5e6;
+    box-shadow: 2px 1px 15px 1px #282828;
+    border-radius: 10px;
+}
+.estadisticaglobal .cuadros_datos1 .box .col{
+    font: 0.7rem Arial;
+}
+.estadisticaglobal .cuadros_datos2 {
+    border: solid 2px #ffffff;
+    border-radius: 10px;
+    background: #efeff0;
+}
+.estadisticaglobal .cuadros_datos2 .box{
+    background: #f8f9fa;
+    box-shadow: 2px 1px 15px 1px #ccc;
+    border-radius: 10px;
+    height: 100%;
+}
+.estadisticaglobal .cuadros_datos2 .box .col{
+    font: 0.85rem Arial;
+}
+
+.estadisticaglobal .graficas1 {
+      background: #e5e5e6;
+      border-radius: 10px;
+      border: solid 4px #fdfdfd;
+}
+.estadisticaglobal .graficas1 .chart {
+  width: 100%; 
+  min-height: 200px;
+}
+.estadisticaglobal .graficas2 {
+      background: #e5e5e6;
+    border-radius: 10px;
+    border: solid 4px #ffffff;
+}
+.estadisticaglobal .graficas3 {
+      background: #e5e5e6;
+    border-radius: 10px;
+    border: solid 4px #ffffff;
+}
+.estadisticaglobal .graficas3  label{
+         font: bold 0.8rem ARIAL;
+         color: #212529;
+}
+.estadisticaglobal .resultados {
+      background: #e5e5e6;
+      border-radius: 10px;
+      border: solid 4px #ffffff;
+      color: #343a40;
+}
+.estadisticaglobal p {
+}
+
+.estadisticaglobal .graficas4 {
+      background: #e5e5e6;
+      border-radius: 10px;
+      border: solid 4px #ffffff;
+      color: #343a40;
+}
+
+.estadisticaglobal .graficas4 .chart {
+  width: 100%; 
+  min-height: 100px;
+  max-height: 100px;
+  height: 100px;
+  /*min-width: 100px;*/
+}
+#labelOverlay {
+       width: 50px;
+       height: 50px;
+       position: absolute;
+       top: calc(50% - 15px);
+       left: calc(50% - 24px);
+       text-align: center;
+       cursor: default;
+}
+
+#labelOverlay p {
+  line-height: 1;
+  font-size: 10pt;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+
+.estadisticaglobal .multiselect {
+    box-sizing: border-box;
+    font: bold 1rem Arial;
+}
+
+.estadisticaglobal .multiselect__single {
+    background: none;
+    color: #495057;
+    font: bold 12px arial;
+    border-bottom: solid 2px #666;
+    border-radius: 0;
+}

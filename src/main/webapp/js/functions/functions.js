@@ -6525,7 +6525,17 @@ function personalizar_header(perfil) {
 //    }
 //
 //}
-function agregar_menu(id, icon_collapse, nombre,alias, fawsome, collapse, url_externa) {
+function agregar_menu(json) {
+    
+//   agregar_menu("${id_menu}","${icono_categoria}","${nombre}", "${alias}", '${icono}', '${categoria}', "");
+//function agregar_menu(id, icon_collapse, nombre,alias, fawsome, collapse, url_externa) {
+let id = json.id;
+let icon_collapse = json.icono_categoria;
+let nombre = json.nombre;
+let alias = json.alias;
+let fawsome = json.icono;
+let collapse = json.categoria;
+let url_externa = json.url;
     //console.log("agregar menu");
     //console.log(id);
     //console.log(nombre);
@@ -6546,7 +6556,12 @@ function agregar_menu(id, icon_collapse, nombre,alias, fawsome, collapse, url_ex
                 div_icon_categoria.className = "";
                 div_icon_categoria.style = "background-image: url('" + icon_collapse + "');background-size: cover;background-position: center; width: 30px;height: 30px;margin: 5px 10px;background-repeat: no-repeat;";
                 collapse_a.append(div_icon_categoria);
-                collapse_a.html(collapse_a.html()+collapse + '<i class="fas fa-caret-down"></i>');
+                
+                let p_categoria = document.createElement("p");
+                p_categoria.innerHTML = collapse;
+                collapse_a.append(p_categoria);
+                
+                collapse_a.html(collapse_a.html() + '<i class="fas fa-caret-down"></i>');
 
                 let collapse_container = $('<div id="collapse' + collapse.replace(/\s/g, "") + '" class="collapse_sidebar_cntr collapse" aria-labelledby="heading' + collapse.replace(/\s/g, "") + '" data-parent="#accordion' + collapse.replace(/\s/g, "") + '"></div>');
                 acordion.append(collapse_container);
@@ -6563,7 +6578,18 @@ function agregar_menu(id, icon_collapse, nombre,alias, fawsome, collapse, url_ex
     div_icon.className = "icon_menu";
     div_icon.style = "background-image: url('" + fawsome + "');background-size: cover;background-position: center; width: 30px;height: 30px;margin:5px 10px;background-repeat: no-repeat;";
     let div = document.createElement("div");
-    div.className = "menu_sidebar modulo_menu d-flex";
+    div.className = "menu_sidebar modulo_menu d-flex modulo_menu_"+id;
+    
+    let j = {
+        id:id,
+        icon_collapse:icon_collapse,
+        nombre:nombre,
+        alias:alias,
+        fawsome:fawsome,
+        collapse:collapse,
+        url_externa:url_externa
+    };
+    //div.onclick = "'demo("+j+")'";
     div.appendChild(div_icon);
     div.draggable = true;
     if (url_externa !== undefined && url_externa !== null && url_externa !== "") {
@@ -6581,13 +6607,13 @@ function agregar_menu(id, icon_collapse, nombre,alias, fawsome, collapse, url_ex
     $("#contenidoSection").append(div2);
 
     div.addEventListener("click", function () {
-        console.log("clicked menu");
+        //console.log("clicked menu");
         let modulos = $(".modulo_section");
         modulos.addClass("d-none");
         let menus = $(".menu_sidebar");
         menus.removeClass("menu_selected");
         $("#modulo_section_" + id).removeClass("d-none");
-        $("#menu_section_" + id).addClass("menu_selected");
+        $(".modulo_menu_" + id).addClass("menu_selected");
         /*Cambios prueba Fernando*/
         if (url_externa !== undefined && url_externa !== null && url_externa !== "") {
             //console.log("Moviendome a url externa");
@@ -6602,6 +6628,10 @@ function agregar_menu(id, icon_collapse, nombre,alias, fawsome, collapse, url_ex
         div2.appendChild(document.getElementById("base_modulo_" + id));
     }
 
+}
+
+function demo(json){
+    console.log(json);
 }
 //function agregar_menu(nombre, fawsome, collapse, url_externa) {
 //    //El collapse re enviara cuando deseemos enviar el menu dentro de un contenedor 

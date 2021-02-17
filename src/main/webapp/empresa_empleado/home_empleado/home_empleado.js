@@ -216,7 +216,13 @@ function getFriday(d) {
 let reporte_trabajo = (b) => {
     let contenedor = $("<div></div>").addClass("row col-12 m-0 p-1 reporte");
     let titulo = $("<div>Reporte de Trabajo</div>").addClass("col-12 p-0 text-white titulo");
-    let icono = $('<div><i class="fas fa-clipboard"></i></div>').addClass("col-4 p-0 text-white icono");
+    let icono = $('<div></div>').addClass("col-4 p-0 text-white icono");
+    icono.css({
+        "background-image": "url(https://empresas.claro360.com/p360_v4_dev_moises/SVG/reporte_trabajo.svg)",
+        "background-size": "contain",
+        "background-position": "center",
+        "background-repeat": "no-repeat"
+    });
     let info = $("<div></div>").addClass("col-8 p-0 text-white info");
     contenedor.append(titulo);
     contenedor.append(icono);
@@ -224,8 +230,10 @@ let reporte_trabajo = (b) => {
         contenedor.addClass("bg-success");
         let icon = $('<div><i class="fas fa-check-circle"></i></div>').addClass("col-12 p-0 text-white icon");
         let nota = $("<div>Realizado</div>").addClass("col-12 p-0 text-white nota");
+        let blank = $("<div></div>").addClass("col-12 p-0");
         info.append(icon);
         info.append(nota);
+        info.append(blank);
         contenedor.append(info);
     } else {
         let icon = $('<div><i class="fas fa-times-circle"></i></div>').addClass("col-12 p-0 text-danger icon");
@@ -233,15 +241,22 @@ let reporte_trabajo = (b) => {
         let btn = $('<button type="button" class="btn btn-danger col-12 p-0">Realizar reporte</button>');
         btn.click(() => {
             //menu_section_ReportedeActividades
-            if ($("#menu_section_ReportedeActividades").length) {
-                $("#menu_section_ReportedeActividades").click();
+            if ($("#menu_section_ReporteActividades").length) {
+                $("#menu_section_ReporteActividades").click();
             }
         });
+
         info.append(icon);
         info.append(nota);
         contenedor.append(info);
         contenedor.append(btn);
     }
+    contenedor.click(() => {
+        //menu_section_ReportedeActividades
+        if ($("#menu_section_ReporteActividades").length) {
+            $("#menu_section_ReporteActividades").click();
+        }
+    });
 
 
     $("#reporte1").append(contenedor);
@@ -249,8 +264,14 @@ let reporte_trabajo = (b) => {
 
 let reporte_sintomas = (b) => {
     let contenedor = $("<div></div>").addClass("row col-12 m-0 p-1 reporte");
-    let titulo = $("<div>Reporte de Sintomas</div>").addClass("col-12 p-0 text-white titulo");
-    let icono = $('<div><i class="fas fa-temperature-high"></i></div>').addClass("col-4 p-0 text-white icono");
+    let titulo = $("<div>Reporte de Síntomas</div>").addClass("col-12 p-0 text-white titulo");
+    let icono = $('<div></div>').addClass("col-4 p-0 text-white icono");
+    icono.css({
+        "background-image": "url(https://empresas.claro360.com/p360_v4_dev_moises/SVG/reporte_sintomas.svg)",
+        "background-size": "contain",
+        "background-position": "center",
+        "background-repeat": "no-repeat"
+    });
     let info = $("<div></div>").addClass("col-8 p-0 text-white info");
     contenedor.append(titulo);
     contenedor.append(icono);
@@ -258,8 +279,13 @@ let reporte_sintomas = (b) => {
         contenedor.addClass("bg-success");
         let icon = $('<div><i class="fas fa-check-circle"></i></div>').addClass("col-12 p-0 text-white icon");
         let nota = $("<div>Realizado</div>").addClass("col-12 p-0 text-white nota");
+        let blank = $("<div></div>").addClass("col-12 p-0");
+        blank.css({
+            height: "20px"
+        });
         info.append(icon);
         info.append(nota);
+        info.append(blank);
         contenedor.append(info);
     } else {
         let icon = $('<div><i class="fas fa-times-circle"></i></div>').addClass("col-12 p-0 text-danger icon");
@@ -267,16 +293,22 @@ let reporte_sintomas = (b) => {
         let btn = $('<button type="button" class="btn btn-danger col-12 p-0">Realizar reporte</button>');
         btn.click(() => {
             //menu_section_ReportedeActividades
-            if ($("#menu_section_ReportedeSintomas").length) {
-                $("#menu_section_ReportedeSintomas").click();
+            if ($("#menu_section_ReporteSintomas").length) {
+                $("#menu_section_ReporteSintomas").click();
             }
         });
+
         info.append(icon);
         info.append(nota);
         contenedor.append(info);
         contenedor.append(btn);
     }
-
+    contenedor.click(() => {
+        //menu_section_ReportedeActividades
+        if ($("#menu_section_ReporteSintomas").length) {
+            $("#menu_section_ReporteSintomas").click();
+        }
+    });
 
     $("#reporte2").append(contenedor);
 };
@@ -284,7 +316,13 @@ let reporte_sintomas = (b) => {
 let reporte_proteccion_personal = (b) => {
     let contenedor = $("<div></div>").addClass("row col-12 m-0 p-1 reporte");
     let titulo = $("<div>Equipo de Protección Personal</div>").addClass("col-12 p-0 text-white titulo");
-    let icono = $('<div><i class="fas fa-medkit"></i></div>').addClass("col-4 p-0 text-white icono");
+    let icono = $('<div></div>').addClass("col-4 p-0 text-white icono");
+    icono.css({
+        "background-image": "url(https://empresas.claro360.com/p360_v4_dev_moises/SVG/equipo_proteccion_personal.svg)",
+        "background-size": "contain",
+        "background-position": "center",
+        "background-repeat": "no-repeat"
+    });
     let info = $("<div></div>").addClass("col-8 p-0 text-white info");
     contenedor.append(titulo);
     contenedor.append(icono);
@@ -292,25 +330,35 @@ let reporte_proteccion_personal = (b) => {
         contenedor.addClass("bg-success");
         let icon = $('<div><i class="fas fa-check-circle"></i></div>').addClass("col-12 p-0 text-white icon");
         let nota = $("<div>Realizado</div>").addClass("col-12 p-0 text-white nota");
+        let blank = $("<div></div>").addClass("col-12 p-0");
+        blank.css({
+            height: "20px"
+        });
         info.append(icon);
         info.append(nota);
+        info.append(blank);
         contenedor.append(info);
     } else {
         contenedor.addClass("bg-warning");
         let icon = $('<div><i class="fas fa-exclamation-circle"></i></div>').addClass("col-12 p-0 text-white icon");
         let nota = $("<div>Alerta</div>").addClass("col-12 p-0 text-white nota");
+        let blank = $("<div></div>").addClass("col-12 p-0");
 //        let btn = $('<button type="button" class="btn btn-danger col-12 p-0">Realizar reporte</button>');
-        contenedor.click(() => {
-            //menu_section_ReportedeActividades
-            if ($("#menu_section_ReportedeEquipodeProteccionPersonal").length) {
-                $("#menu_section_ReportedeEquipodeProteccionPersonal").click();
-            }
+    blank.css({
+            height: "20px"
         });
         info.append(icon);
         info.append(nota);
+        info.append(blank);
         contenedor.append(info);
 //        contenedor.append(btn);
     }
+    contenedor.click(() => {
+        //menu_section_ReportedeActividades
+        if ($("#menu_section_ReporteProteccionPersonal").length) {
+            $("#menu_section_ReporteProteccionPersonal").click();
+        }
+    });
 
 
     $("#reporte3").append(contenedor);
@@ -319,7 +367,13 @@ let reporte_proteccion_personal = (b) => {
 let reporte_seguridad_sanitaria = (b) => {
     let contenedor = $("<div></div>").addClass("row col-12 m-0 p-1 reporte");
     let titulo = $("<div>Reporte de Seguridad Sanitaria</div>").addClass("col-12 p-0 text-white titulo");
-    let icono = $('<div><i class="fas fa-clipboard"></i></div>').addClass("col-4 p-0 text-white icono");
+    let icono = $('<div></div>').addClass("col-4 p-0 text-white icono");
+    icono.css({
+        "background-image": "url(https://empresas.claro360.com/p360_v4_dev_moises/SVG/reporte_seguridad_sanitaria.svg)",
+        "background-size": "contain",
+        "background-position": "center",
+        "background-repeat": "no-repeat"
+    });
     let info = $("<div></div>").addClass("col-8 p-0 text-white info");
     contenedor.append(titulo);
     contenedor.append(icono);
@@ -327,8 +381,13 @@ let reporte_seguridad_sanitaria = (b) => {
         contenedor.addClass("bg-success");
         let icon = $('<div><i class="fas fa-check-circle"></i></div>').addClass("col-12 p-0 text-white icon");
         let nota = $("<div>Realizado</div>").addClass("col-12 p-0 text-white nota");
+        let blank = $("<div></div>").addClass("col-12 p-0");
+        blank.css({
+            height: "20px"
+        });
         info.append(icon);
         info.append(nota);
+        info.append(blank);
         contenedor.append(info);
     } else {
         let icon = $('<div><i class="fas fa-times-circle"></i></div>').addClass("col-12 p-0 text-danger icon");
@@ -336,8 +395,8 @@ let reporte_seguridad_sanitaria = (b) => {
         let btn = $('<button type="button" class="btn btn-danger col-12 p-0">Realizar reporte</button>');
         btn.click(() => {
             //menu_section_ReportedeActividades
-            if ($("#menu_section_ReportededeSeguridadSanitaria").length) {
-                $("#menu_section_ReportededeSeguridadSanitaria").click();
+            if ($("#menu_section_ReporteSeguridadSanitaria").length) {
+                $("#menu_section_ReporteSeguridadSanitaria").click();
             }
         });
         info.append(icon);
@@ -345,7 +404,12 @@ let reporte_seguridad_sanitaria = (b) => {
         contenedor.append(info);
         contenedor.append(btn);
     }
-
+    contenedor.click(() => {
+        //menu_section_ReportedeActividades
+        if ($("#menu_section_ReporteSeguridadSanitaria").length) {
+            $("#menu_section_ReporteSeguridadSanitaria").click();
+        }
+    });
 
     $("#reporte4").append(contenedor);
 };
@@ -433,8 +497,13 @@ function chart_productividad() {
     chart.draw(data, options);
 }
 var rendimiento_usuario = null;
-const init_home_empleado = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) => {
-
+const init_home_empleado = (json) => {
+    console.log(json);
+    let id = json.id;
+    let id_usuario = json.id_usuario;
+    let tipo_usuario = json.tipo_usuario;
+    let tipo_servicio = json.tipo_servicio;
+    let tipo_area = json.tipo_area;
 //colocar imagen del usuario 
     $("#home_empleado_img").css({
         "background-image": "url(" + perfil_usuario.img + ")",
@@ -514,7 +583,8 @@ const init_home_empleado = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) 
             console.log(response.info[perfil_usuario.id360]);
             let hoy = new Date();
             let dias_trabajados = hoy.getDay();//los dias que deberian ser trabajados
-            let dias_con_registro = 
+            let dias_registrados = response.info[perfil_usuario.id360].total_conexiones;
+            let horas_registradas = response.info[perfil_usuario.id360].total_horas_trabajadas;
             let horas_trabajadas = dias_trabajados * 8;
             let productividad = ((response.info[perfil_usuario.id360]["total_horas_trabajadas"]) / horas_trabajadas) * 100;
             rendimiento_usuario = productividad.toFixed(2);
@@ -534,6 +604,8 @@ const init_home_empleado = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) 
                 $("#retardos_no_ok").addClass("d-none");
                 $("#retardos_ok").removeClass("d-none");
             }
+            $("#dias_laborables").text(dias_registrados);
+            $("#horas_laborables").text(horas_registradas);
             $("#faltas").text(response.info[perfil_usuario.id360]["total_faltas"]);
             console.log(response.info[perfil_usuario.id360]["total_faltas"]);
             if (response.info[perfil_usuario.id360]["total_faltas"] > 0) {
@@ -607,4 +679,14 @@ const init_home_empleado = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) 
             FunClima(location_user.estado_long);
         }
     }
+}
+
+if (perfil_usuario.nombre !== "" && perfil_usuario.nombre !== undefined && perfil_usuario.nombre !== "null" && perfil_usuario.nombre !== null) {
+    $(".home_empleado_nombre_empleado").text(perfil_usuario.nombre);
+}
+if (perfil_usuario.apellido_paterno !== "" && perfil_usuario.apellido_paterno !== undefined && perfil_usuario.apellido_paterno !== "null" && perfil_usuario.apellido_paterno !== null) {
+    $(".home_empleado_nombre_empleado").text($(".home_empleado_nombre_empleado")[0].innerHTML + " " + perfil_usuario.apellido_paterno);
+}
+if (perfil_usuario.apellido_materno !== "" && perfil_usuario.apellido_materno !== undefined && perfil_usuario.apellido_materno !== "null" && perfil_usuario.apellido_materno !== null) {
+    $(".home_empleado_nombre_empleado").text($(".home_empleado_nombre_empleado")[0].innerHTML + " " + perfil_usuario.apellido_materno);
 }

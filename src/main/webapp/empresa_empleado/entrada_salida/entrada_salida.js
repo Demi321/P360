@@ -25,29 +25,50 @@ let entrada_salida_clock = () => {
     document.getElementById("entrada_salida_clock").innerText = time;
     setTimeout(entrada_salida_clock, 1000);
 };
-let tiempo_jornada_clock = (horas, minutos, segundos) => {
-    horas = "8";
-    minutos = "42";
-    segundos = "48";
+let interval_tiempo_jornada_clock = null;
+let tiempo_jornada_clock = (b) => {
+    if (interval_tiempo_jornada_clock !== null) {
+        clearInterval(interval_tiempo_jornada_clock);
+    }
+    let horas = "0";
+    let minutos = "0";
+    let segundos = "0";
     let hrs = parseInt(horas);
     let mins = parseInt(minutos);
     let secs = parseInt(segundos);
-    setInterval(() => {
-        secs++;
-        if (secs >= 60) {
-            mins++;
-            secs = 0;
-        }
-        if (mins >= 60) {
-            hrs++;
-            mins = 0;
-        }
-        horas = hrs < 10 ? "0" + hrs : hrs;
-        minutos = mins < 10 ? "0" + mins : mins;
-        segundos = secs < 10 ? "0" + secs : secs;
-        let time = `${horas}:${minutos}:${segundos}`;
-        document.getElementById("tiempo_jornada_clock").innerText = time;
-    }, 1000);
+
+    if (secs >= 60) {
+        mins++;
+        secs = 0;
+    }
+    if (mins >= 60) {
+        hrs++;
+        mins = 0;
+    }
+    horas = hrs < 10 ? "0" + hrs : hrs;
+    minutos = mins < 10 ? "0" + mins : mins;
+    segundos = secs < 10 ? "0" + secs : secs;
+    let time = `${horas}:${minutos}:${segundos}`;
+    document.getElementById("tiempo_jornada_clock").innerText = time;
+
+    if (b) {
+        interval_tiempo_jornada_clock = setInterval(() => {
+            secs++;
+            if (secs >= 60) {
+                mins++;
+                secs = 0;
+            }
+            if (mins >= 60) {
+                hrs++;
+                mins = 0;
+            }
+            horas = hrs < 10 ? "0" + hrs : hrs;
+            minutos = mins < 10 ? "0" + mins : mins;
+            segundos = secs < 10 ? "0" + secs : secs;
+            let time = `${horas}:${minutos}:${segundos}`;
+            document.getElementById("tiempo_jornada_clock").innerText = time;
+        }, 1000);
+    }
 };
 let estatus_jornada_laboral = (estatus_jornada) => {
     console.log("estatus_jornada_laboral:" + estatus_jornada);
@@ -291,6 +312,7 @@ function initializeSessionEmpleado(data, aumenta) {
 
 
                     RequestPOST("/API/empresas360/registro/inicio_jornada_laboral", j).then(function (response) {
+                        tiempo_jornada_clock(true);
 
                         $("#entrada_salida_lottieLoader").parent().remove();
                         if (response.success) {
@@ -649,8 +671,13 @@ const cabeceraReporteExcel_entrada_salida = () => {
 };
 
 var sesion_jornada_laboral = null;
-const init_entrada_salida = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) => {
-    
+const init_entrada_salida = (json) => {
+    console.log(json);
+    let id = json.id;
+    let id_usuario = json.id_usuario;
+    let tipo_usuario = json.tipo_usuario;
+    let tipo_servicio = json.tipo_servicio;
+    let tipo_area = json.tipo_area;
     let registro_jornada_laboral = null; // Intervalo de envio de registro de jornada laboral finalizar al pausar o finalizar la jornada
     if (location_user !== null) {
         if (location_user.municipio !== null) {
@@ -665,7 +692,8 @@ const init_entrada_salida = (id_usuario, tipo_usuario, tipo_servicio, tipo_area)
 
     entrada_salida_clock();
 
-    tiempo_jornada_clock();
+    //tiempo_jornada_clock(false);
+    clearInterval(interval_tiempo_jornada_clock);
 
 //entrada_salida_nombre_empleado
 
@@ -790,6 +818,9 @@ const init_entrada_salida = (id_usuario, tipo_usuario, tipo_servicio, tipo_area)
                 $("#video_drag_footer").empty();
                 //cambiar el estado de la barra de progreso
                 estatus_jornada_laboral("pausada");
+                if (interval_tiempo_jornada_clock !== null) {
+                    clearInterval(interval_tiempo_jornada_clock);
+                }
             } else {
                 //reactivar barra de progreso
                 estatus_jornada_laboral("finalizada");
@@ -826,7 +857,8 @@ const init_entrada_salida = (id_usuario, tipo_usuario, tipo_servicio, tipo_area)
                     sesion_jornada_laboral.disconnect();
                     sesion_jornada_laboral = null;
                 }
-
+                //tiempo_jornada_clock(false);
+                //clearInterval(interval_tiempo_jornada_clock);
                 //ocultar ventana de video 
                 $("#video_drag").addClass("d-none");
                 $("#conectado_jornada_laboral").empty();
@@ -899,7 +931,10 @@ const init_entrada_salida = (id_usuario, tipo_usuario, tipo_servicio, tipo_area)
                     sesion_jornada_laboral.disconnect();
                     sesion_jornada_laboral = null;
                 }
-
+                //tiempo_jornada_clock(false);
+                if (interval_tiempo_jornada_clock !== null) {
+                    clearInterval(interval_tiempo_jornada_clock);
+                }
                 //ocultar ventana de video 
                 $("#video_drag").addClass("d-none");
                 $("#conectado_jornada_laboral").empty();
@@ -1014,5 +1049,10 @@ const init_entrada_salida = (id_usuario, tipo_usuario, tipo_servicio, tipo_area)
             }
         });
     }
+    var meses = new Array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+    var diasSemana = new Array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado");
+    var f = new Date();
+    document.getElementById("entrada_salida_today").innerHTML = diasSemana[f.getDay()] + ", " + f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear();
+
 //}
 }

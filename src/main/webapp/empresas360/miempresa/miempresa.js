@@ -6,7 +6,13 @@
 
 /* global empresa_usuario, sesion_cookie, RequestPOST, swal */
 
-const init_miempresa = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) => {
+const init_miempresa = (json) => {
+    console.log(json);
+    let id = json.id;
+    let id_usuario = json.id_usuario;
+    let tipo_usuario = json.tipo_usuario;
+    let tipo_servicio = json.tipo_servicio;
+    let tipo_area = json.tipo_area;
     if (empresa_usuario !== null && empresa_usuario !== undefined && empresa_usuario !== "") {
         $("#upFile_MiEmpresa_logotipo").val(empresa_usuario.logotipo);
         $("#upFile_MiEmpresa_logotipo_preview").empty();

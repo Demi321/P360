@@ -133,8 +133,13 @@ function showDeleteForm(evento_id) {
     deleteModal.toggle()
 
 }
-const init_agenda = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) => {
-
+const init_agenda = (json) => {
+console.log(json);
+    let id = json.id;
+    let id_usuario = json.id_usuario;
+    let tipo_usuario = json.tipo_usuario;
+    let tipo_servicio = json.tipo_servicio;
+    let tipo_area = json.tipo_area;
     $(document).ready(function () {
         let fecha = date.toISOString().split('T')[0];
         fetch("https://agenda360.ml/api/eventos/dia", {

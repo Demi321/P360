@@ -232,8 +232,14 @@ function fileReader_reporte_incidente(oEvent) {
     };
     reader.readAsDataURL(oFile);
 }
-const init_reporte_incidentes = (id_usuario, tipo_usuario, tipo_servicio, tipo_area) => {
-
+const init_reporte_incidentes = (json) => {
+console.log(json);
+    console.log(json);
+    let id = json.id;
+    let id_usuario = json.id_usuario;
+    let tipo_usuario = json.tipo_usuario;
+    let tipo_servicio = json.tipo_servicio;
+    let tipo_area = json.tipo_area;
     if (location_user !== null) {
         if (location_user.municipio !== null) {
             $("#reporte_evento_incidente_municipio").text(" " + location_user.municipio);
