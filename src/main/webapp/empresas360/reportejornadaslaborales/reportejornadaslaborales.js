@@ -42,8 +42,8 @@ $(document).ready(async function () {
 
     //GRAFICA DE PASTEL EMPRESAS
     google.charts.load('current', {'packages': ['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
-    function drawChart() {
+    google.charts.setOnLoadCallback(drawChartActivos);
+    function drawChartActivos() {
         var data = google.visualization.arrayToDataTable([
             ['Tipo de Conexion', 'Conexiones'],
             ['Conexion Web', contadorActivos],
@@ -56,7 +56,7 @@ $(document).ready(async function () {
             colors: ['#96C02A', '#278597', '#E74339'],
             backgroundColor: '#f5f5f5'
         };
-        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        var chart = new google.visualization.PieChart(document.getElementById('piechartConexionEmpresa'));
         chart.draw(data, options);
 
     }
@@ -105,8 +105,8 @@ const botonObtenerJornadasReporteEmpleado = async (id360Estatico, jornadas_labor
     const conResultados = $("#empleadoConHistorialLaboral");
     const sinResultados = $("#empleadoSinHistorialLaboral");
     let jornadas_laborales_rango_empleado_tabla = []
-    let rangoInicioEmpleado = $("#fecha_inicio_historial_laboral").val()
-    let rangoFinEmpleado = $("#fecha_fin_historial_laboral").val()
+    let rangoInicioEmpleado = $("#fecha_inicio_historial_laboral2").val()
+    let rangoFinEmpleado = $("#fecha_fin_historial_laboral2").val()
     //SERVIDOR
     let jornadas_laborales_rango_empleado = await $.ajax({
         type: 'POST',
@@ -2300,39 +2300,8 @@ const verReporteDetallado = async empleado => {
             var chart = new google.visualization.PieChart(document.getElementById('donutchart3'));
             chart.draw(data, options);
         }
-
-        google.charts.load("current", {packages: ["corechart"]});
-        google.charts.setOnLoadCallback(drawChart4);
-        function drawChart4() {
-            var data = google.visualization.arrayToDataTable([
-                ['Task', 'Hours per Day'],
-                ['Cumplimiento', 93],
-                ['Incumplimiento', 7]
-            ]);
-            var options = {
-                //title: 'Cumplimiento',
-                //width: '100%',
-                pieHole: 0.8,
-                colors: ['#683982', 'C6C6C4'],
-                backgroundColor: '#f5f5f5',
-                legend: 'none',
-                pieSliceText: 'none',
-                pieSliceTextStyle: {
-                    color: 'black',
-                    //fontSize: 20
-                    bold: true
-                },
-                chartArea: {
-                    left: 0,
-                    height: "90%",
-                    //top: "0%",
-                    width: "100%"
-                }
-            };
-            var chart = new google.visualization.PieChart(document.getElementById('donutchart4'));
-            chart.draw(data, options);
-        }
-
+        
+        
         //RESUMEN GENERAL
         //TOTAL DE DIAS RENDIMIENTO MENSUAL    
         var from = moment(inicioMes, "YYYY-MM-DD"),
@@ -2340,6 +2309,7 @@ const verReporteDetallado = async empleado => {
                 diasTotales = 0;
         faltas = {}
         let faltasArreglo = []
+        let numeroFaltas = 1
         let faltaEncontrada = false
         while (!from.isAfter(to)) {
             // Si no es sabado ni domingo
@@ -2377,6 +2347,7 @@ const verReporteDetallado = async empleado => {
                 if (faltaEncontrada) {
                     faltas[new Date(from.format('YYYY-MM-DD') + "T00:00")] = new Date(from.format('YYYY-MM-DD') + "T00:00")
                     faltasArreglo.push(from.format('YYYY-MM-DD'))
+                    numeroFaltas = faltasArreglo.length
                 }
             }
             from.add(1, 'days');
@@ -2424,10 +2395,44 @@ const verReporteDetallado = async empleado => {
         }
         let diasLaboraloMesEmpleado = 0
         let porcentajePuntualidad = 0
+        let porcentajeCumplimiento = 0
         if (jornadasLaboralesMesEmpleado.data) {
             diasLaboraloMesEmpleado = jornadasLaboralesMesEmpleado.data.length
             porcentajePuntualidad = ((puntualidad / diasLaboraloMesEmpleado) * 100)
             porcentajePuntualidad = porcentajePuntualidad > 100 ? 100 : porcentajePuntualidad.toFixed()
+            porcentajeCumplimiento = ((diasLaboraloMesEmpleado / (diasLaboraloMesEmpleado+numeroFaltas)) * 100)
+            porcentajeCumplimiento = porcentajeCumplimiento > 100 ? 100 : porcentajeCumplimiento.toFixed()
+        }
+        google.charts.load("current", {packages: ["corechart"]});
+        google.charts.setOnLoadCallback(drawChart4);
+        function drawChart4() {
+            var data = google.visualization.arrayToDataTable([
+                ['Task', 'Hours per Day'],
+                ['Cumplimiento', diasLaboraloMesEmpleado],
+                ['Incumplimiento', numeroFaltas]
+            ]);
+            var options = {
+                //title: 'Cumplimiento',
+                //width: '100%',
+                pieHole: 0.8,
+                colors: ['#683982', 'C6C6C4'],
+                backgroundColor: '#f5f5f5',
+                legend: 'none',
+                pieSliceText: 'none',
+                pieSliceTextStyle: {
+                    color: 'black',
+                    //fontSize: 20
+                    bold: true
+                },
+                chartArea: {
+                    left: 0,
+                    height: "90%",
+                    //top: "0%",
+                    width: "100%"
+                }
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('donutchart4'));
+            chart.draw(data, options);
         }
         $('#diasLaboralesMesEmpleado').text(diasLaboraloMesEmpleado)
         $('#diasTotalesLaboralesMesEmpleado').text(diasTotales)
@@ -2437,6 +2442,7 @@ const verReporteDetallado = async empleado => {
         $('#faltasLaboralesMesEmpleado').text(faltasArreglo.length)
         $("#jornadas_laborales_productividad_mensual_porcentaje").text(porcentajeProductividadMensual);
         $("#jornadas_laborales_puntualidad_porcentaje").text(porcentajePuntualidad);
+        $("#jornadas_laborales_cumplimiento_porcentaje").text(porcentajeCumplimiento);
 
         //CALENDARIO
         $.datepicker.regional['es'] = {
