@@ -30,7 +30,7 @@ $("#tab_reporte_jornada").mouseover(() => {
 var empleados = [],
     empleadosEmpresa = [],
     tablaInicio;
-const botonExcel = $("#botonDescargaReporteJornada");
+const botonExcel = $("#botonDescargaReporteJornada2");
 const inicioJornadas = $("#inicio-reporte-jornadas-laborales");
 
 const initComunicacionJornadasLaborales = (id360, llamada) => {
@@ -254,8 +254,8 @@ $("#sucursal_jornadas, #area_jornadas, #empleado_jornadas").change(function(){
     botonExcel.addClass("d-none");
 });
 
-$("#fecha_inicio_reporte").change(function(){
-    const f2 = $("#fecha_fin_reporte");
+$("#fecha_inicio_reporte2").change(function(){
+    const f2 = $("#fecha_fin_reporte2");
     if(f2.val() === "")
         f2.val( $(this).val());
 });
@@ -270,7 +270,7 @@ function formatDateDefault(date){
     return dateParse = date.getFullYear() + "-" + mes + "-" + dia;
 }
 
-$("#tipo_busqueda").change(function(){
+    $("#tipo_busqueda").change(function(){
     let tipo = $(this).val();
     cargaEmpleados();
     botonExcel.addClass("d-none");
@@ -311,11 +311,11 @@ function convertDateFormat(string) {
 $("#form_historia_jornadas2").submit(function(e){
     e.preventDefault();
 
-    let fecha_inicio = $("#fecha_inicio_reporte").val();
+    let fecha_inicio = $("#fecha_inicio_reporte2").val();
 
     if(validarFecha( convertDateFormat(fecha_inicio) )){
 
-        let fecha_fin = $("#fecha_fin_reporte").val();
+        let fecha_fin = $("#fecha_fin_reporte2").val();
 
         if( fecha_fin === "" )
             consulta_historial(fecha_inicio, "");
@@ -783,9 +783,9 @@ const despliegaInformacionJornadas = (fecha_inicio, fecha_final, jornadas) => {
         
     }
 
-    $("#botonDescargaReporteJornada").removeClass("d-none");
+    $("#botonDescargaReporteJornada2").removeClass("d-none");
 
-    $("#resultado-busqueda-jornadas").removeClass("d-none");
+    $("#resultado-busqueda-jornadas2").removeClass("d-none");
 };
 
 const listenerActividadesReporte = () => {
@@ -829,7 +829,7 @@ const cabeceraReporteExcel = (empleado) => {
     let cabecera = '';
     cabecera += '<tr><td colspan="9"><h1 style="text-align: center;">Reporte de jornadas laborales</h1></td></tr><tr></tr>';
     cabecera += '<tr><td colspan="2">Fecha de exportación</td><td>'+moment().format("DD-MMM-YYYY")+'</td></tr>';
-    cabecera += '<tr><td colspan="2">Periodo del reporte</td><td>'+ moment( $("#fecha_inicio_reporte").val() ).format("DD-MMM-YYYY") +'</td><td>'+moment($("#fecha_fin_reporte").val()).format("DD-MMM-YYYY")+'</td></tr><tr></tr>';
+    cabecera += '<tr><td colspan="2">Periodo del reporte</td><td>'+ moment( $("#fecha_inicio_reporte2").val() ).format("DD-MMM-YYYY") +'</td><td>'+moment($("#fecha_fin_reporte2").val()).format("DD-MMM-YYYY")+'</td></tr><tr></tr>';
     cabecera += '<tr><td colspan="2">Empleado:</td><td colspan="3">'+empleado.nombre+' '+empleado.apellido_paterno+' '+ empleado.apellido_materno+'</td></tr>';
     cabecera += '<tr><td colspan="2">Empresa</td><td colspan="3">'+empleado.empresa+'</td></tr>';
     cabecera += '<tr><td colspan="2">Sucursal</td><td colspan="3">'+empleado.sucursal+'</td></tr>';
