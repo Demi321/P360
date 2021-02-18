@@ -24,7 +24,7 @@ var init_estadisticaglobal = (json) => {
         }),
         async: false
     }).responseText;
-
+    var paserJsonData= JSON.parse(jsonData);
     
     console.log("Dashboard Reportes");
     //window.onload = function () {
@@ -73,8 +73,8 @@ var init_estadisticaglobal = (json) => {
       var options = {                       
           legend: 'none',
           backgroundColor: '#fffffff',
-          width: 400,
-          height: 300,
+          width: '400px',
+          height: '300px',
           hAxis: {
               title: 'Rango de Edad',
               textStyle: {
@@ -110,8 +110,8 @@ var init_estadisticaglobal = (json) => {
       var options = {
           legend: 'none',
           backgroundColor: '#ffffff',
-          width: 400,
-          height: 300,
+          width: '400px',
+          height: '300px',
           hAxis: {            
               textStyle: {
                   title: 'Sexo',
@@ -149,8 +149,8 @@ var init_estadisticaglobal = (json) => {
       var options = {
           legend: 'none',
           backgroundColor: '#fffffff',
-          width: 400,
-          height: 300,
+          width: '400px',
+          height: '300px',
           hAxis: {            
               textStyle: {
                   title: 'Sexo',
