@@ -1,0 +1,184 @@
+.recordatorios .container {
+    display: block;
+    width: 80%;
+    margin: 60px auto 0;
+}
+.recordatorios ul {
+    margin: 0;
+    padding: 0;
+}
+.recordatorios li * {
+    float: left;
+}
+.recordatorios li, h3 {
+    clear:both;
+    list-style:none;
+}
+.recordatorios input, button {
+    outline: none;
+}
+.recordatorios button {
+    background: none;
+    border: 0px;
+    color: #888;
+    font-size: 15px;
+    /* width: 60px; */
+    margin: 10px 10px 0;
+    font-family: Lato, sans-serif;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+.recordatorios button[type=submit]{
+    border: 0px;
+    font-size: 12px;
+    font-family: Arial;
+    font-weight: bold;
+    cursor: pointer;
+    background: linear-gradient(
+        135deg
+        , #d0021b 0%,#d0021b 100%);
+    display: flex;
+    justify-content: center;
+    vertical-align: middle;
+    align-items: center;
+}
+.recordatorios button[type=submit] svg{margin: 0 10px;}
+.recordatorios button:hover {
+    color: #333;
+}
+/* Heading */
+.recordatorios h3,
+label[for='new-task'] {
+    color: #333;
+    font-weight: 700;
+    font-size: 15px;
+    border-bottom: 2px solid #333;
+    padding: 30px 0 10px;
+    margin: 0;
+    text-transform: uppercase;
+}
+.recordatorios input[type="text"] {
+    margin: 0;
+    font-size: 12px;
+    line-height: 18px;
+    /* height: 18px; */
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 6px;
+    font-family: Lato, sans-serif;
+    color: #888;
+    font-family: Arial;
+    font-weight: bold;
+}
+.recordatorios input[type="text"]:focus {
+    color: #333;
+}
+
+/* New Task */
+.recordatorios label[for='new-task'] {
+    display: block;
+    margin: 0 0 20px;
+}
+.recordatorios input#new-task {
+    float: left;
+    width: 318px;
+}
+.recordatorios p > button:hover {
+    color: #0FC57C;
+}
+
+/* Task list */
+.recordatorios li {
+    overflow: hidden;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+}
+.recordatorios li > input[type="checkbox"] {
+    margin: 0 10px;
+    position: relative;
+    top: 15px;
+}
+.recordatorios li > label {
+    font-size: 18px;
+    line-height: 40px;
+    width: 237px;
+    padding: 0 0 0 11px;
+}
+.recordatorios li >  input[type="text"] {
+    width: 226px;
+}
+.recordatorios li > .delete:hover {
+    color: #CF2323;
+}
+
+/* Completed */
+.recordatorios #completed-tasks label {
+    text-decoration: line-through;
+    color: #888;
+}
+.recordatorios #completed-tasks p {
+    text-decoration: line-through;
+    color: #888;
+}
+
+/* Edit Task */
+.recordatorios ul li input[type=text] {
+    display:none;
+}
+
+.recordatorios ul li.editMode input[type=text] {
+    display:block;
+    padding: 10px;
+    margin-top: 10px;
+}
+.recordatorios li.editMode button.guardar{
+    color: #f8f9fa;
+    background: #dc3545;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+.recordatorios li.editMode button.delete{
+    font-size: 10px;
+    padding: 5px 10px;
+}
+.recordatorios ul li.editMode label {
+    display:none;
+}
+.recordatorios ul li.editMode p {
+    display:none;
+}
+.recordatorios  .span_recordatorio{
+    background:linear-gradient(135deg, #313131 0%,#534d4d 100%);
+    height: 30px;
+}
+.recordatorios  #fecha{
+    margin: 0;
+    font-size: 12px;
+    line-height: 18px;
+    /* height: 18px; */
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 6px;
+    font-family: Lato, sans-serif;
+    color: #888;
+    font-family: Arial;
+    font-weight: bold;
+}
+.recordatorios .detail{
+    transition: 0.5s;
+    height: 0px;
+    overflow: hidden;
+    /* height: 80px; */
+}
+.recordatorios li label{font: bold 1.5rem Arial;}
+.recordatorios li p{font: normal 1rem Arial;color: #495057;margin-top: 10px;}
+.recordatorios li span{font: bold 0.8rem Arial;color: #495057;margin: 5px 10px;}
+.recordatorios #completed-tasks li label{
+}
+.recordatorios #completed-tasks li p{
+}
+.recordatorios #completed-tasks li span{
+}

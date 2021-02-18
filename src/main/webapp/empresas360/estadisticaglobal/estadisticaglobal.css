@@ -156,3 +156,590 @@ and open the template in the editor.
     border-bottom: solid 2px #666;
     border-radius: 0;
 }
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 24/09/2020, 07:20:03 PM
+    Author     : andre
+*/
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+#contenido{
+    overflow-y: scroll;
+}
+.Contenedor {
+    height: 100%;
+    width: 90%;
+    max-width: 1000px;
+    margin: 20px auto;
+    display: grid;
+    grid-gap: 2px;
+    grid-template-areas:        
+        "EmpleadosRCT   GraficaPastel           Sexo            Sexo     Sexo"
+        "DistribucionE       DistribucionE        DistribucionSexo        DistribucionSexo      DistribucionSexo"
+        "DistribucionSucursales       DistribucionSucursales        ActividadesLaborales        ActividadesLaborales      ActividadesLaborales"
+        "ProductividadSucursal       ProductividadSucursal          ProductividadSucursal        ProductividadSucursal          ProductividadSucursal"
+        "InversionTiempo        InversionTiempo         InversionTiempo         InversionTiempo         InversionTiempo"
+        "HistoralLaboral        HistoralLaboral         HistoralLaboral         HistoralLaboral         HistoralLaboral"
+        /*"AntecedentesRB AntecedentesRB  AntecedentesRB  AntecedentesRB     AntecedentesRB"
+        "MedidadAE      MedidadAE       MedidadAE       MedidadAE          MedidadAE"
+        "Botones        Botones         Botones         Botones            Botones"
+        "EmpleadosRCT   EmpleadosRCT           Sexo            Sexo      Sexo"
+        "DistribucionG       DistribucionG        DistribucionG        DistribucionE      DistribucionE"
+        "EstadoDE       EstadoDE        DistribucionE        DistribucionE      DistribucionE"
+        "EstadoDE        EstadoDE  AntecedentesRB  AntecedentesRB     AntecedentesRB"
+        "MedidadAE      MedidadAE       MedidadAE       MedidadAE          MedidadAE";*/
+
+}
+
+.Contenedor p{
+    color: white;
+}
+
+.Contenedor > div{
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.Contenedor .Botones {
+    grid-area: Botones;
+}
+
+.Contenedor .EstadoDE {
+    grid-area: EstadoDE;
+    background: #252528;
+}
+.Contenedor .GraficaPastel {
+    grid-area: GraficaPastel;
+    background: #252528;
+    display: inline-table;
+}
+.Contenedor .DistribucionSexo {
+    grid-area: DistribucionSexo;
+    background: #252528;
+}
+.Contenedor .DistribucionSucursales {
+    grid-area: DistribucionSucursales;
+    background: #252528;
+}
+.Contenedor .ActividadesLaborales {
+    grid-area: ActividadesLaborales;
+    background: #252528;
+}
+.Contenedor .ProductividadSucursal {
+    grid-area: ProductividadSucursal;
+    background: #252528;
+}
+.Contenedor .InversionTiempo {
+    grid-area: InversionTiempo;
+    background: #252528;
+}
+.Contenedor .HistoralLaboral {
+    grid-area: HistoralLaboral;
+    background: #252528;
+}
+
+
+.Contenedor .EmpleadosRCT {
+    grid-area: EmpleadosRCT;
+    background: #252528;
+    width: 100%
+}
+
+.Contenedor .Sexo {
+    grid-area: Sexo;
+    background: #252528;
+}
+.Contenedor .DistribucionE {
+    grid-area: DistribucionE;
+    background: #252528;
+
+}
+.Contenedor .DistribucionG {
+    grid-area: DistribucionG;
+    background: #252528;
+
+}
+
+
+
+.Contenedor .AntecedentesRB {
+    grid-area: AntecedentesRB;
+    background: #252528;
+}
+
+.Contenedor .MedidadAE {
+    grid-area: MedidadAE;
+    background: #252528;
+
+}
+
+#misbotones{
+    margin-top: 10px;
+    width: 170px; 
+    margin-left: auto;  
+    margin-right: auto; 
+
+}
+
+#divNumeroER{
+    width: 60%;
+    height: 40%;
+    margin: auto;
+    text-align: center;
+    color: white;
+    background-color: #4D4D4F;    
+}
+
+.rectangle{
+    width:10px;
+    height:20px;
+    background:#AC4EBE;
+    margin-left: 2px;
+    float:left; 
+}
+.porcentageS{
+    margin-left: 0%;
+    margin-right: 0%;
+    margin-top: 10%;
+    text-align: left;
+
+}
+
+.rectangle2{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width:10px;
+    height:20px;
+    background:#0C6F7A;
+    margin-left: 2px;
+    float:left; 
+}
+
+#dropDown{
+    margin-top: 1px;
+    width: 200px;
+}
+.contenedorAntecedentes{
+    width: 100%;
+    float: left;
+}
+
+.AntecedenteS{
+
+    float:left;
+    width: 15%;
+    margin-left: 5%;
+    text-align: center;
+}
+.contenedorA2{
+    margin-top: 25px;
+    background-color: #534B5C;
+    border-radius: 5px;
+}
+.contenedorA{
+
+    background-color: #534B5C;
+    border-radius: 5px;
+}
+
+.ConRiesgoBasal{
+    width: 100%;
+    float: left;
+    color: #000;
+}
+
+.Riesgo{
+    width: 15%;
+    margin-left: 18%;
+    border-radius: 5px;
+
+}
+
+
+#RBajo{
+    background-color: #209043;
+    float: left;
+    border-radius: 5px;
+    text-align: center;
+}
+#RMedio{
+    background-color: #C3BB22;
+    float: left;
+    border-radius: 5px;
+    text-align: center;
+}
+#RAlto{
+    background-color: #C12B2B;
+    float: left;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.ContenedorNumeroERS{
+    width: 100%;
+    margin: auto;
+}
+.NumeroERS{
+
+    width: 30%;
+    float: left;
+    text-align: center;
+
+}
+
+.NumeroERS2{
+    width: 30%;
+    float: left;
+    text-align: center;
+    margin-left: 5%;
+}
+
+
+
+.RSHoy{
+    background-color: #0D3D60;
+    border-radius: 5px;
+}
+.RSAyer{
+    background-color: #314654;
+    border-radius: 5px;
+}
+.RSSinReporte{
+    background-color: #4C4D50;
+    border-radius: 5px;
+}
+/*Graficas*/
+.grafico {
+    background-color: white;
+}
+.grafico .barra {
+    height: 50px;
+    background-color: #1895BC;
+    float: left;
+}
+
+.grafico .barra2 {
+    height: 50px;
+    background-color: #0E6D53;
+    float: left;
+}
+
+#porcentaje{
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+
+}
+/* Termina Grafica*/
+#contenedosRecuadros{
+    width: 100%;   
+}
+#contenedorR1{
+    float:left;
+}
+#contenedorR2{
+    float:left;
+    margin-left: 15%;
+}
+.recuadro1{   
+    width:10px;
+    height:10px;
+    background:#1895BC;
+    margin-top: 20%;
+    float:left;
+} 
+.recuadro2{
+    width:10px;
+    height:10px;
+    background:#0E6D53;
+    margin-top: 20%;
+    float:left;
+} 
+.recTxt{
+    float: right;
+    margin-top: 2px;
+    margin-left: 1px
+}
+
+.contenedorBasal{
+    width: 100%;
+}
+.NivelesBasal{
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.basal1{
+    width: 30%;
+    float: left;
+    border-radius: 5px;
+    margin-top: 25px;
+}
+
+.basal2{
+    width: 30%;
+    float: left;
+    margin-left: 5%;
+    border-radius: 5px;
+    margin-top: 25px;
+}
+
+.basal3{
+    width: 30%;
+    float: left;
+    margin-left: 5%;
+    border-radius: 5px;
+    margin-top: 25px;
+}
+
+.rectangleVacio2{
+    width:10px;
+    height:20px;
+    background:#393d39;
+    margin-left: 2px;
+    float:left; 
+}
+
+
+.rectangleVacio3{
+    width: 10px;
+    height: 20px;
+    background: #393d39;
+    margin-left: 2px;
+    float: left;
+}
+
+.rectangleColor1{
+    width:10px;
+    height:20px;
+    background: #ce281c;
+    margin-left: 2px;
+    float:left; 
+}
+.rectangleColor2{
+    width:10px;
+    height:20px;
+    background: #EFB531;
+    margin-left: 2px;
+    float:left; 
+}
+.rectangleColor3{
+    width:10px;
+    height:20px;
+    background:#70AD59;
+    margin-left: 2px;
+    float:left; 
+}
+
+.medidasR{
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.medida{
+    width: 30%;
+    height: 90px;
+    float: left;
+    margin-left: 2%;
+    margin-top: 2px;
+    border-radius: 5px;
+}
+
+.medida2{
+    width: 30%;
+    height: 90px;
+    float: left;
+    margin-left: 19%;
+    margin-top: 2px;
+    border-radius: 5px;
+}
+.medida3{
+    width: 30%;
+    height: 90px;
+    float: right;
+    margin-right: 19%;
+    margin-top: 2px;
+    border-radius: 5px;
+}
+
+#color1{
+    background-color:#305056;
+}
+#color2{
+    background-color:#2E4B24;
+}
+#color3{
+    background-color:#594F1F;
+}
+#color4{
+    background-color:#5D9DA7;
+}
+#color5{
+    background-color:#63171F;
+}
+.imageEmpleadoRH{
+    background-image: url(/p360_v3.03_desarrollo2/Img/dashboard/centro_de_trabajo/icono1_rephoy.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: 100%;
+}
+.imageEmpleadoRA{
+    background-image: url(/p360_v3.03_desarrollo2/Img/dashboard/centro_de_trabajo/icono2_repayer1.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: 100%;
+}
+.imageEmpleadoNR{
+    background-image: url(/p360_v3.03_desarrollo2/Img/dashboard/centro_de_trabajo/icono3_nohanreportado1.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: 100%;
+}
+
+@media screen and (max-width: 768px){
+    .Contenedor {
+        grid-template-areas:             
+            "EmpleadosRCT   EmpleadosRCT   EmpleadosRCT"
+            "GraficaPastel   GraficaPastel   GraficaPastel"
+            "Sexo           Sexo           Sexo"
+            "DistribucionE  DistribucionG  DistribucionG"            
+            "EstadoDE       EstadoDE       EstadoDE"
+            "AntecedentesRB AntecedentesRB AntecedentesRB"
+            "MedidadAE      MedidadAE      MedidadAE";
+    }
+    #misbotones{
+        margin-top: 10px;
+        width: 100%; 
+        margin-left: auto;  
+        margin-right: auto; 
+
+    }
+
+}
+/*
+Estilos de las grafica de pay
+*/
+.container p{
+    color: white;
+}
+#Total {
+    background: #252528;
+    border-radius: 4px;
+    height: 175px;
+}
+#CentrosTrabajoR {
+    background: #252528;
+    border-radius: 4px;
+    height: 175px;
+}
+#ListaCentrosT {
+    background: #40474f;
+    border-radius: 4px;
+}
+#PorcentageA {
+    background: #252528;
+    border-radius: 4px;
+    
+}
+#PorcentageB {
+    background: #252528;
+    border-radius: 4px;
+    
+}
+#grafica{
+    /*height: 150px;*/
+    overflow: scroll;
+}
+#grafica2{
+    /*height: 150px;*/
+    overflow: scroll;
+}
+#UbicacionEstadoE{
+    background: #40474f;
+    border-radius: 4px;
+}
+#CentrosTrabajoRB {
+    background: #252528;
+    border-radius: 4px;
+}
+#EmpleadosRyUbicacionE {
+    background: #252528;
+    border-radius: 4px;
+    height: 175px;
+}
+#EdadE{
+    background: #252528;
+    border-radius: 4px;
+}
+#SexoE{
+    background: #40474f;
+    border-radius: 4px;
+}
+#ReporteS {
+    background: #252528;
+    border-radius: 4px;
+}
+#EmpleadosCC {
+    background: #252528;
+    border-radius: 4px;
+}
+
+
+.grafico .barra {
+    height: 50px;
+    background-color: #1895BC;
+    float: left;
+    border-radius: 4px;
+}
+
+.grafico .barra2 {
+    height: 50px;
+    background-color: #0E6D53;
+    float: left;
+    border-radius: 4px;
+}
+
+#porcentaje{
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+
+}
+/* Termina Grafica*/
+
+.titulos{
+    font-size: 9px;
+}
+.contenidoT{
+    font-size: 8px;
+}
+.recuadro1{   
+    width:10px;
+    height:10px;
+    background:#1895BC;
+    margin-top: 20%;
+    float:left;
+} 
+.recuadro2{
+    width:10px;
+    height:10px;
+    background:#0E6D53;
+    margin-top: 20%;
+    float:left;
+} 
+

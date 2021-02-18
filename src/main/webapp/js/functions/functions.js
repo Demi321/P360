@@ -6526,7 +6526,7 @@ function personalizar_header(perfil) {
 //
 //}
 function agregar_menu(json) {
-    
+console.log(json);    
 //   agregar_menu("${id_menu}","${icono_categoria}","${nombre}", "${alias}", '${icono}', '${categoria}', "");
 //function agregar_menu(id, icon_collapse, nombre,alias, fawsome, collapse, url_externa) {
 let id = json.id;
@@ -6713,7 +6713,7 @@ function acceso_externo_seccion(url, seccion) {
     }).then(function (response) {
         if (response.success) {
             //access_token
-            let path = url + "/API/cuenta360/access_token/" + sesion_cookie.idUsuario_Sys + "/" + response.access_token + "/section/" + seccion + "/" + sesion_cookie.tipo_usuario + "/" + sesion_cookie.tipo_servicio + "/" + sesion_cookie.tipo_area;
+            let path = url + "API/cuenta360/access_token/" + sesion_cookie.idUsuario_Sys + "/" + response.access_token + "/section/" + seccion + "/" + sesion_cookie.tipo_usuario + "/" + sesion_cookie.tipo_servicio + "/" + sesion_cookie.tipo_area;
             window.location.replace(path);
 //            window.open(path);
         }

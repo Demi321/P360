@@ -30,6 +30,7 @@ const init_usodecubrebocas = (json) => {
             $(".usodecubrebocas .parte2").removeClass("d-none");
             let json = buildJSON_Section("uso_cubrebocas_form1");
             console.log(json);
+            console.log(JSON.stringify(json));
             json_uso_cubrebocas = json;
         });
 
@@ -42,6 +43,7 @@ const init_usodecubrebocas = (json) => {
             $(".usodecubrebocas .parte3").removeClass("d-none");
             let json = buildJSON_Section("uso_cubrebocas_form2");
             console.log(json);
+            console.log(JSON.stringify(json));
             var Obj = $.extend(json_uso_cubrebocas, json);
             json_uso_cubrebocas = Obj;
         });
@@ -54,6 +56,7 @@ const init_usodecubrebocas = (json) => {
             $(".usodecubrebocas .parte1").removeClass("d-none");
             let json = buildJSON_Section("uso_cubrebocas_form3");
             console.log(json);
+            console.log(JSON.stringify(json));
             var Obj = $.extend(json_uso_cubrebocas, json);
             json_uso_cubrebocas = Obj;
             console.log(json_uso_cubrebocas);
@@ -72,8 +75,12 @@ const init_usodecubrebocas = (json) => {
             json.tipo_servicio = tipo_servicio;
             json.tipo_area = tipo_area;
             console.log(json);
+            
 
             json_uso_cubrebocas = null;
+            $("#uso_cubrebocas_form1")[0].reset();
+            $("#uso_cubrebocas_form2")[0].reset();
+            $("#uso_cubrebocas_form3")[0].reset();
         });
     });
 };
