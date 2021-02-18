@@ -308,7 +308,7 @@ function convertDateFormat(string) {
     return string.split('-').reverse().join('/');
 }
 
-$("#form_historia_jornadas").submit(function(e){
+$("#form_historia_jornadas2").submit(function(e){
     e.preventDefault();
 
     let fecha_inicio = $("#fecha_inicio_reporte").val();
