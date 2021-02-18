@@ -215,7 +215,8 @@ var init_archivo = (json) => {
                         
                         if( response.success ){
                             formEnvioArchivo[0].reset();
-                            
+                            //Limpiar el input del vue
+                            vueArchivos.value=null;
                             contenedorNuevoEnvio.slideUp("fast", () => {
                                 NotificacionToas.fire({
                                     title: 'Archivo enviado'
