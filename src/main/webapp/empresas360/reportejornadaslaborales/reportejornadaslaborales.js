@@ -4,6 +4,87 @@
  * and open the template in the editor.
  */
 
+//INFORMACION EMPRESA
+$(document).ready(async function () {
+    let usuarioInfo = await JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA))
+
+    let empresaUsuarioInfo = await RequestGET("/API/empresas360/info_empresa/" + usuarioInfo.tipo_usuario);
+    $("#nombreEmpresa").text(empresaUsuarioInfo.razon_social)
+    let sucursalesEmpresaUsuarioInfo = await RequestGET("/API/lineamientos/listado_sucursales/" + usuarioInfo.tipo_usuario)
+    $("#totalSucursales").text("Sucursales: " + sucursalesEmpresaUsuarioInfo.length);
+    //AJAX OBTENER EMPLEADOS DE UN EMPRESA
+    let idsEmpleadosEmpresa = await $.ajax({
+        type: 'POST',
+        url: 'https://empresas.claro360.com/plataforma360/API/empresas360/jornadas_laborales/empresa/obtener_ids',
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+            id: usuarioInfo.tipo_usuario
+        }),
+        success: function (response) {
+            //console.log("RES JSON1: ", response)
+        },
+        error: function (err) {
+            console.log("Ocurrio un problema en la llamada idsEmpleadosEmpresa", err)
+        }
+    })
+
+    let totalEmpleados = idsEmpleadosEmpresa.length
+    $("#totalEmpleados").text("Total de empleados " + totalEmpleados)
+
+    //AJAX OBTENER REPORTE DE JORNADAS LABORALES DE UNA EMPRESA POR RANGO DE FECHAS 
+    let empleadosEnJorandaLaboral = undefined
+    await RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_ids/en_jornada", {id: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario}).then((ids) => {
+        empleadosEnJorandaLaboral = ids
+    })
+    contadorActivos = empleadosEnJorandaLaboral.length
+    sinConexionWeb = totalEmpleados - contadorActivos
+
+    //GRAFICA DE PASTEL EMPRESAS
+    google.charts.load('current', {'packages': ['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Tipo de Conexion', 'Conexiones'],
+            ['Conexion Web', contadorActivos],
+            ['Conexion App', 40],
+            ['Sin Conexion', sinConexionWeb]
+        ]);
+        var options = {
+            title: 'Conexiones',
+            width: '100%',
+            colors: ['#96C02A', '#278597', '#E74339'],
+            backgroundColor: '#f5f5f5'
+        };
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart.draw(data, options);
+
+    }
+    //GRAFICA DE CARTAS EMPRESA
+    document.addEventListener("load", setColorBasal(2, 'Faltas'));
+    document.addEventListener("load", setColorBasal(6, 'Retardos'));
+    document.addEventListener("load", setColorBasal(8, 'Puntales'));
+    function setColorBasal(numero, clase) {
+        numero = parseInt(numero);
+        switch (clase) {
+            case  'Faltas':
+                for (var i = 1; i <= numero; i++) {
+                    document.getElementById("recFalt1_" + i.toString()).className = "rectangleColor1";
+                }
+                break;
+            case  'Retardos':
+                for (var i = 1; i <= numero; i++) {
+                    document.getElementById("recReta2_" + i.toString()).className = "rectangleColor2";
+                }
+                break;
+            case  'Puntales':
+                for (var i = 1; i <= numero; i++) {
+                    document.getElementById("recPunt3_" + i.toString()).className = "rectangleColor3";
+                }
+                break;
+        }
+    }
+})
 //GENERAR REPORTE DE JORNADAS LABORALES
 $(document).ready(() => {
     $("#reporteEmpleadoJornadasLaborales").hide()
@@ -16,6 +97,1006 @@ let jornadas_laborales_empleado
 let puntuales = {}
 let retardos = {}
 let faltas = {}
+const botonObtenerJornadasReporteEmpleado = async (id360Estatico, jornadas_laborales_empleado) => {
+    if (tablaHistorialLaboralEmpleado !== null && tablaHistorialLaboralEmpleado !== undefined) {
+        tablaHistorialLaboralEmpleado.destroy()
+    }
+    const tablaHistorialLaboralEmpleado2 = $("#tablaHistorialLaboralEmpleado")
+    const conResultados = $("#empleadoConHistorialLaboral");
+    const sinResultados = $("#empleadoSinHistorialLaboral");
+    let jornadas_laborales_rango_empleado_tabla = []
+    let rangoInicioEmpleado = $("#fecha_inicio_historial_laboral").val()
+    let rangoFinEmpleado = $("#fecha_fin_historial_laboral").val()
+    //SERVIDOR
+    let jornadas_laborales_rango_empleado = await $.ajax({
+        type: 'POST',
+        url: 'https://empresas.claro360.com/plataforma360/API/empresas360/jornadas_laborales',
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+            id: id360Estatico,
+            inicio: rangoInicioEmpleado,
+            fin: rangoFinEmpleado
+        }),
+        success: function (response) {
+            //console.log("RES JSON1: ", response)
+        },
+        error: function (err) {
+            console.log("Ocurrio un problema en la llamada jornadas_laborales_rango_empleado", err)
+        }
+    })
+    //LOCAL
+    /*jornadas_laborales_rango_empleado = {
+     "data": [
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-04",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "08:59:16",
+     "id": "650",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46906804",
+     "lng": null,
+     "date_created": "2021-01-04",
+     "id_socket": "8144d002-abc7-4dcc-ac3e-c497eb5f97ed",
+     "contadorDesconexion": "0",
+     "time_updated": "21:04:26",
+     "idsesion": "2_MX40NjkwNjgwNH5-MTYwOTgxNTg1OTYwOH5Ycm45c3FLa1p5V1NxMGVWZW9YcTMyOHF-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwNjgwNCZzaWc9NGExM2UzYzkzNzE5NDJlMDU4MWEzODRhODUzYzdlOTlhOTExNmJkMDpzZXNzaW9uX2lkPTJfTVg0ME5qa3dOamd3Tkg1LU1UWXdPVGd4TlRnMU9UWXdPSDVZY200NWMzRkxhMXA1VjFOeE1HVldaVzlZY1RNeU9IRi1mZyZjcmVhdGVfdGltZT0xNjA5ODE1ODU5Jm5vbmNlPS03MDMyNTIyMTQmcm9sZT1tb2RlcmF0b3ImZXhwaXJlX3RpbWU9MTYxMjQwNzg1OQ==",
+     "id_usuario": "9991336774",
+     "time_finished": null,
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-05",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "09:03:03",
+     "id": "709",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46906854",
+     "lng": null,
+     "date_created": "2021-01-05",
+     "id_socket": "564f6f8a-a669-4eae-8c18-8607e252cc72",
+     "contadorDesconexion": "0",
+     "time_updated": "14:06:15",
+     "idsesion": "1_MX40NjkwNjg1NH5-MTYwOTg3NTE2ODIwNX5CbldRNHN4M0JRZ1JVTHNyVEFDY2JXOHJ-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwNjg1NCZzaWc9NTgxZDJmZTJhMDk1NzFkYTJiZmVjN2YxZGNiYmU2NGQzZDEzZDBiOTpzZXNzaW9uX2lkPTFfTVg0ME5qa3dOamcxTkg1LU1UWXdPVGczTlRFMk9ESXdOWDVDYmxkUk5ITjRNMEpSWjFKVlRITnlWRUZEWTJKWE9ISi1mZyZjcmVhdGVfdGltZT0xNjA5ODc1MTY4Jm5vbmNlPS0xOTAwNTIxNzE4JnJvbGU9bW9kZXJhdG9yJmV4cGlyZV90aW1lPTE2MTI0NjcxNjg=",
+     "id_usuario": "9991336774",
+     "time_finished": null,
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-07",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " reporte",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "09:00:37",
+     "id": "786",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46906934",
+     "lng": null,
+     "date_created": "2021-01-07",
+     "id_socket": "cf8cee40-6a93-4832-bca2-b86efcd6b790",
+     "contadorDesconexion": "0",
+     "time_updated": "18:14:44",
+     "idsesion": "2_MX40NjkwNjkzNH5-MTYxMDA2MzMxNDE1MX41YzVjdjRWaXFoMldaay9GZDFHN3c5T1B-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwNjkzNCZzaWc9MTFjY2UyNjVmNzgzOGYyYzNjMTZkN2I3YjgxYzUxNzMwNjU3Mzk1ZTpzZXNzaW9uX2lkPTJfTVg0ME5qa3dOamt6Tkg1LU1UWXhNREEyTXpNeE5ERTFNWDQxWXpWamRqUldhWEZvTWxkYWF5OUdaREZITjNjNVQxQi1mZyZjcmVhdGVfdGltZT0xNjEwMDYzMzE0Jm5vbmNlPTY1NDU1MDU4JnJvbGU9bW9kZXJhdG9yJmV4cGlyZV90aW1lPTE2MTI2NTUzMTQ=",
+     "id_usuario": "9991336774",
+     "time_finished": null,
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-08",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "08:59:40",
+     "id": "826",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46906954",
+     "lng": null,
+     "date_created": "2021-01-08",
+     "id_socket": "9fc4ecd2-74a8-4adf-9326-ba0e9e417269",
+     "contadorDesconexion": "0",
+     "time_updated": "13:34:36",
+     "idsesion": "2_MX40NjkwNjk1NH5-MTYxMDEzNDIxNDU5Mn5BVmdZRGpTaWF6UFE4S2xFbnRLK1RVeWR-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwNjk1NCZzaWc9ZTU3ZjUwNjY2NmRjOTc0OTNmY2M5ZjFiMTA0M2EwNjk4OTM4ZTFhNjpzZXNzaW9uX2lkPTJfTVg0ME5qa3dOamsxTkg1LU1UWXhNREV6TkRJeE5EVTVNbjVCVm1kWlJHcFRhV0Y2VUZFNFMyeEZiblJMSzFSVmVXUi1mZyZjcmVhdGVfdGltZT0xNjEwMTM0MjE0Jm5vbmNlPTc5MzM0NjU4MyZyb2xlPW1vZGVyYXRvciZleHBpcmVfdGltZT0xNjEyNzI2MjE0",
+     "id_usuario": "9991336774",
+     "time_finished": null,
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-11",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": "[ , ]",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "08:50:28",
+     "id": "906",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46906984",
+     "lng": null,
+     "date_created": "2021-01-11",
+     "id_socket": "d2ee8ed0-04e6-431a-b9e0-a9857d39b922",
+     "contadorDesconexion": "12",
+     "time_updated": "20:40:51",
+     "idsesion": "1_MX40NjkwNjk4NH5-MTYxMDQxOTI0MzQ1OX5VVGtZK05zTW45MWcyMnNVYWgrL1pHNzl-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwNjk4NCZzaWc9YWJjMjc4MDA3YWQ2MDBkMjAxMDIyNDk5Yzg1Y2Q5MWU4YTk0MWQ2NDpzZXNzaW9uX2lkPTFfTVg0ME5qa3dOams0Tkg1LU1UWXhNRFF4T1RJME16UTFPWDVWVkd0WkswNXpUVzQ1TVdjeU1uTlZZV2dyTDFwSE56bC1mZyZjcmVhdGVfdGltZT0xNjEwNDE5MjQzJm5vbmNlPTIxMzA3NzY3ODgmcm9sZT1tb2RlcmF0b3ImZXhwaXJlX3RpbWU9MTYxMzAxMTI0Mw==",
+     "id_usuario": "9991336774",
+     "time_finished": null,
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-12",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "08:53:41",
+     "id": "944",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46907014",
+     "lng": null,
+     "date_created": "2021-01-12",
+     "id_socket": "4eb2dddd-e5c2-45ee-810b-3e1247873687",
+     "contadorDesconexion": "4",
+     "time_updated": "19:06:50",
+     "idsesion": "1_MX40NjkwNzAxNH5-MTYxMDQ5OTk5NTM1NX5OWjN4VlBaZjg2NkpMbHRscFByRWdEN3J-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwNzAxNCZzaWc9MWY2YmZjNmE2YWFjMDhlMWRhNTczZjJmMjI5NmNkMWExMjAzMzVjNDpzZXNzaW9uX2lkPTFfTVg0ME5qa3dOekF4Tkg1LU1UWXhNRFE1T1RrNU5UTTFOWDVPV2pONFZsQmFaamcyTmtwTWJIUnNjRkJ5UldkRU4zSi1mZyZjcmVhdGVfdGltZT0xNjEwNDk5OTk1Jm5vbmNlPS0yMDg1MDg0NjczJnJvbGU9bW9kZXJhdG9yJmV4cGlyZV90aW1lPTE2MTMwOTE5OTU=",
+     "id_usuario": "9991336774",
+     "time_finished": "19:06:50",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-13",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "08:33:35",
+     "id": "999",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46907024",
+     "lng": null,
+     "date_created": "2021-01-13",
+     "id_socket": "bfb17049-412a-4764-a56a-32c1d3edc86f",
+     "contadorDesconexion": "10",
+     "time_updated": "14:33:16",
+     "idsesion": "2_MX40NjkwNzAyNH5-MTYxMDU3MDM2NjA3N35FUjVrVzRHTFpUODJJZTNtZjlHVkR6NUV-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwNzAyNCZzaWc9MjMyNWU1MDEwOWRmYzFkOWQxMzU3OWQyOTE4Yzg2MDllYWE4ZWJjMDpzZXNzaW9uX2lkPTJfTVg0ME5qa3dOekF5Tkg1LU1UWXhNRFUzTURNMk5qQTNOMzVGVWpWclZ6UkhURnBVT0RKSlpUTnRaamxIVmtSNk5VVi1mZyZjcmVhdGVfdGltZT0xNjEwNTcwMzY2Jm5vbmNlPS02Nzc4NjUxODQmcm9sZT1tb2RlcmF0b3ImZXhwaXJlX3RpbWU9MTYxMzE2MjM2Ng==",
+     "id_usuario": "9991336774",
+     "time_finished": "14:33:16",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-14",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " reporte",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "08:53:48",
+     "id": "1012",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46907024",
+     "lng": null,
+     "date_created": "2021-01-14",
+     "id_socket": "e9993cc8-4f6a-4e8d-8e3a-346d5158e6ba",
+     "contadorDesconexion": "14",
+     "time_updated": "11:14:36",
+     "idsesion": "2_MX40NjkwNzAyNH5-MTYxMDY0MzcxNTI4MX5QZ3lYSFg2Nm5aREVlcnNjenNraGxaTmh-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwNzAyNCZzaWc9YjhiM2FjZjg5OWE4ZDhjMzkzYWRlNDc1ODQ2YzQzNDhhZjJlZWRkOTpzZXNzaW9uX2lkPTJfTVg0ME5qa3dOekF5Tkg1LU1UWXhNRFkwTXpjeE5USTRNWDVRWjNsWVNGZzJObTVhUkVWbGNuTmplbk5yYUd4YVRtaC1mZyZjcmVhdGVfdGltZT0xNjEwNjQzNzE1Jm5vbmNlPTE0OTE2MDEzNjAmcm9sZT1tb2RlcmF0b3ImZXhwaXJlX3RpbWU9MTYxMzIzNTcxNQ==",
+     "id_usuario": "9991336774",
+     "time_finished": "11:14:36",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-15",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "08:43:39",
+     "id": "1092",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46907054",
+     "lng": null,
+     "date_created": "2021-01-15",
+     "id_socket": "9ea9281b-2718-4935-9fd9-759c1963f58d",
+     "contadorDesconexion": "2",
+     "time_updated": "19:03:10",
+     "idsesion": "2_MX40NjkwNzA1NH5-MTYxMDc1ODk4NjU5NX5JMk9TeWZFMEhkL29kb3F0TkJITzV1VWJ-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwNzA1NCZzaWc9ZDgzNzNlNDJmZWRhMGM3YmRhNTkwMzBiM2NmMGY2MmI4ZWRhMGUwNDpzZXNzaW9uX2lkPTJfTVg0ME5qa3dOekExTkg1LU1UWXhNRGMxT0RrNE5qVTVOWDVKTWs5VGVXWkZNRWhrTDI5a2IzRjBUa0pJVHpWMVZXSi1mZyZjcmVhdGVfdGltZT0xNjEwNzU4OTg2Jm5vbmNlPS0zODI5ODYyODMmcm9sZT1tb2RlcmF0b3ImZXhwaXJlX3RpbWU9MTYxMzM1MDk4Ng==",
+     "id_usuario": "9991336774",
+     "time_finished": null,
+     "tipo_servicio": "3064",
+     "activo": "1"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-18",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "08:48:39",
+     "id": "1109",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46907154",
+     "lng": null,
+     "date_created": "2021-01-18",
+     "id_socket": "f39d3636-8e74-4f00-acb3-c42194b1d88b",
+     "contadorDesconexion": "5",
+     "time_updated": "23:15:49",
+     "idsesion": "1_MX40NjkwNzE1NH5-MTYxMTAzMzMzOTk0OX5YN240ajZOYUYyOE42b3pXdGlkSFJvQzZ-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwNzE1NCZzaWc9ZTM4N2RmNzg1ZWNiYzdlZGJkZmRiM2Q4MTE3MjMwY2JjMjEwYzExMDpzZXNzaW9uX2lkPTFfTVg0ME5qa3dOekUxTkg1LU1UWXhNVEF6TXpNek9UazBPWDVZTjI0MGFqWk9ZVVl5T0U0MmIzcFhkR2xrU0ZKdlF6Wi1mZyZjcmVhdGVfdGltZT0xNjExMDMzMzM5Jm5vbmNlPS0xMDIxOTM0NDk0JnJvbGU9bW9kZXJhdG9yJmV4cGlyZV90aW1lPTE2MTM2MjUzMzk=",
+     "id_usuario": "9991336774",
+     "time_finished": "23:15:49",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-19",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "09:01:08",
+     "id": "1184",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46907184",
+     "lng": null,
+     "date_created": "2021-01-19",
+     "id_socket": "2501a28b-ff45-4426-a4dc-e7428cbb2649",
+     "contadorDesconexion": "12",
+     "time_updated": "19:58:57",
+     "idsesion": "1_MX40NjkwNzE4NH5-MTYxMTEwNjk1OTM2Nn5MakZNNkJUWmIvNys5ZERRaWRuZlhPQVd-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwNzE4NCZzaWc9ZTk2MTNjMjM5NWQ1NTdiMWVhY2ZiODI0OGJmY2UzOWNiNDVjMzhmYTpzZXNzaW9uX2lkPTFfTVg0ME5qa3dOekU0Tkg1LU1UWXhNVEV3TmprMU9UTTJObjVNYWtaTk5rSlVXbUl2TnlzNVpFUlJhV1J1WmxoUFFWZC1mZyZjcmVhdGVfdGltZT0xNjExMTA2OTU5Jm5vbmNlPS0xMDMxNTIzMTgxJnJvbGU9bW9kZXJhdG9yJmV4cGlyZV90aW1lPTE2MTM2OTg5NTk=",
+     "id_usuario": "9991336774",
+     "time_finished": "19:58:57",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-20",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " Reporte sobre actividades ealizadas",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "08:56:13",
+     "id": "1215",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46907224",
+     "lng": null,
+     "date_created": "2021-01-20",
+     "id_socket": "b45179a1-963d-495b-94a4-739c7fbd93ad",
+     "contadorDesconexion": "22",
+     "time_updated": "20:41:29",
+     "idsesion": "1_MX40NjkwNzIyNH5-MTYxMTE5Njg3OTI3OH5oSElLV2g1UkdJR1Y0MTF3Tnd4RHM3THp-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwNzIyNCZzaWc9ZDA0MDFmN2Y4YTg0YjdhMWYzZjExYTQxMjU3NGI4NmYyOWRmOGQ1MDpzZXNzaW9uX2lkPTFfTVg0ME5qa3dOekl5Tkg1LU1UWXhNVEU1TmpnM09USTNPSDVvU0VsTFYyZzFVa2RKUjFZME1URjNUbmQ0UkhNM1RIcC1mZyZjcmVhdGVfdGltZT0xNjExMTk2ODc5Jm5vbmNlPTcyMzc5MTA0OSZyb2xlPW1vZGVyYXRvciZleHBpcmVfdGltZT0xNjEzNzg4ODc5",
+     "id_usuario": "9991336774",
+     "time_finished": "20:41:29",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-21",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "08:54:57",
+     "id": "1269",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46907224",
+     "lng": null,
+     "date_created": "2021-01-21",
+     "id_socket": "0e1fd5fd-d79b-4f06-a4a0-623fbf83966c",
+     "contadorDesconexion": "2",
+     "time_updated": "19:53:07",
+     "idsesion": "1_MX40NjkwNzIyNH5-MTYxMTI0NDM2MDQ3Nn5xdllIN0IvaU50M09TdDVtTDJva09TZkx-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwNzIyNCZzaWc9MDIwNTEzMTc3NDY4M2U4NDIwYmZhNmQwYWIxN2U2NjVkMzNmMGE1ZDpzZXNzaW9uX2lkPTFfTVg0ME5qa3dOekl5Tkg1LU1UWXhNVEkwTkRNMk1EUTNObjV4ZGxsSU4wSXZhVTUwTTA5VGREVnRUREp2YTA5VFpreC1mZyZjcmVhdGVfdGltZT0xNjExMjQ0MzYwJm5vbmNlPS0xOTMyMTE0ODAyJnJvbGU9bW9kZXJhdG9yJmV4cGlyZV90aW1lPTE2MTM4MzYzNjA=",
+     "id_usuario": "9991336774",
+     "time_finished": "20:53:07",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-22",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "05:53:14",
+     "id": "1305",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46907254",
+     "lng": null,
+     "date_created": "2021-01-22",
+     "id_socket": "bb5b7b52-ccc8-4423-8538-8c42f1b79693",
+     "contadorDesconexion": "11",
+     "time_updated": "19:54:41",
+     "idsesion": "1_MX40NjkwNzI1NH5-MTYxMTM2MTU5MDMyOH5jUUVvc2pXdFUzdnNhK1VyU3MxSVNqRll-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwNzI1NCZzaWc9ZWJiZWJjNDBmM2JiZjE1MDgwOWNhNGUzNTg5NGZiYjliMTJhMDY3MTpzZXNzaW9uX2lkPTFfTVg0ME5qa3dOekkxTkg1LU1UWXhNVE0yTVRVNU1ETXlPSDVqVVVWdmMycFhkRlV6ZG5OaEsxVnlVM014U1ZOcVJsbC1mZyZjcmVhdGVfdGltZT0xNjExMzYxNTkwJm5vbmNlPTExMTMwODc4ODMmcm9sZT1tb2RlcmF0b3ImZXhwaXJlX3RpbWU9MTYxMzk1MzU5MA==",
+     "id_usuario": "9991336774",
+     "time_finished": "18:54:41",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-25",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "09:00:58",
+     "id": "1385",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46907264",
+     "lng": null,
+     "date_created": "2021-01-25",
+     "id_socket": "4ca42354-1e93-469f-8cb7-da9b40e98a24",
+     "contadorDesconexion": "9",
+     "time_updated": "21:18:43",
+     "idsesion": "1_MX40NjkwNzI2NH5-MTYxMTYyMTc5MDA3OX5wS3RVUkZHOFlWTzVxVldBUVhvdU9ITmV-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwNzI2NCZzaWc9Y2MwOTc3YmI0MGM0ZjYzNzZkNTMyMjNjZWQyZWRkZmYyODc3ZDIyYzpzZXNzaW9uX2lkPTFfTVg0ME5qa3dOekkyTkg1LU1UWXhNVFl5TVRjNU1EQTNPWDV3UzNSVlVrWkhPRmxXVHpWeFZsZEJVVmh2ZFU5SVRtVi1mZyZjcmVhdGVfdGltZT0xNjExNjIxNzkwJm5vbmNlPTE2MDgyMTA4NzUmcm9sZT1tb2RlcmF0b3ImZXhwaXJlX3RpbWU9MTYxNDIxMzc5MA==",
+     "id_usuario": "9991336774",
+     "time_finished": "19:18:43",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-26",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "08:54:26",
+     "id": "1416",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46907284",
+     "lng": null,
+     "date_created": "2021-01-26",
+     "id_socket": "65a9bb59-4cf3-43fc-9844-633b293c5dbf",
+     "contadorDesconexion": "4",
+     "time_updated": "22:01:00",
+     "idsesion": "2_MX40NjkwNzI4NH5-MTYxMTcwNDYwOTU5OH5XZ3BKTzg3Smk2T1Q5elNiOUp5TUZuaTV-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwNzI4NCZzaWc9ZDYxMGNjZDExY2VjMWM5ZDg5MzRlYmU5NmQwZDI3YmNjMjgxM2UyZjpzZXNzaW9uX2lkPTJfTVg0ME5qa3dOekk0Tkg1LU1UWXhNVGN3TkRZd09UVTVPSDVYWjNCS1R6ZzNTbWsyVDFRNWVsTmlPVXA1VFVadWFUVi1mZyZjcmVhdGVfdGltZT0xNjExNzA0NjA5Jm5vbmNlPTE0NTk5NTU0OTYmcm9sZT1tb2RlcmF0b3ImZXhwaXJlX3RpbWU9MTYxNDI5NjYwOQ==",
+     "id_usuario": "9991336774",
+     "time_finished": "19:01:00",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-27",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "08:18:01",
+     "id": "1510",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46908094",
+     "lng": null,
+     "date_created": "2021-01-27",
+     "id_socket": "147b18cd-4d88-4abc-ac1a-b37cb939d068",
+     "contadorDesconexion": "4",
+     "time_updated": "23:24:07",
+     "idsesion": "1_MX40NjkwODA5NH5-MTYxMTc3ODg4NDIwN351R05zTW1BTjUyb3huSWJLMVdBUFRnWSt-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwODA5NCZzaWc9NTExNWRkYmNlYzZkZGVmMDBmZGU5YTJhZTM0MWFjNDUzMDU3YWM5ZjpzZXNzaW9uX2lkPTFfTVg0ME5qa3dPREE1Tkg1LU1UWXhNVGMzT0RnNE5ESXdOMzUxUjA1elRXMUJUalV5YjNodVNXSkxNVmRCVUZSbldTdC1mZyZjcmVhdGVfdGltZT0xNjExNzc4ODg0Jm5vbmNlPS01MzA0MTE4OTYmcm9sZT1tb2RlcmF0b3ImZXhwaXJlX3RpbWU9MTYxNDM3MDg4NA==",
+     "id_usuario": "9991336774",
+     "time_finished": "14:24:07",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-28",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "03:14:56",
+     "id": "1521",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46908094",
+     "lng": null,
+     "date_created": "2021-01-28",
+     "id_socket": "895805aa-c187-4d14-930f-6a61bccabd3b",
+     "contadorDesconexion": "1",
+     "time_updated": "21:15:02",
+     "idsesion": "1_MX40NjkwODA5NH5-MTYxMTgzNjA4NDYyM344ZWlNTWdvcHBCK1V2bWp0cmlvbWFyb3R-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwODA5NCZzaWc9Y2E2N2E5NTk5ZWNkODRmNTY1ODE0NjFkMGIxMTQ4YWY0YzNmNDM1NzpzZXNzaW9uX2lkPTFfTVg0ME5qa3dPREE1Tkg1LU1UWXhNVGd6TmpBNE5EWXlNMzQ0WldsTlRXZHZjSEJDSzFWMmJXcDBjbWx2YldGeWIzUi1mZyZjcmVhdGVfdGltZT0xNjExODM2MDg0Jm5vbmNlPTM1MDU3MTg4NyZyb2xlPW1vZGVyYXRvciZleHBpcmVfdGltZT0xNjE0NDI4MDg0",
+     "id_usuario": "9991336774",
+     "time_finished": "06:15:02",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-29",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": null,
+     "time_created": "04:52:10",
+     "id": "1578",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46908134",
+     "lng": null,
+     "date_created": "2021-01-28",
+     "id_socket": "eecf1f37-afa5-4ef6-9efd-2e500469410f",
+     "contadorDesconexion": "8",
+     "time_updated": "19:07:38",
+     "idsesion": "1_MX40NjkwODEzNH5-MTYxMTk2ODg1Mzk1Nn5nMzBnUm55d2JudFhMNmx2MUJ0Q0lIeXF-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwODEzNCZzaWc9ZjNmNjQwMzc4ZGFlZjI3Y2I2YzVhNmUxYzYzNTAzNjg2OWZmMzBmNjpzZXNzaW9uX2lkPTFfTVg0ME5qa3dPREV6Tkg1LU1UWXhNVGsyT0RnMU16azFObjVuTXpCblVtNTVkMkp1ZEZoTU5teDJNVUowUTBsSWVYRi1mZyZjcmVhdGVfdGltZT0xNjExOTY4ODUzJm5vbmNlPS0xMTU3NTkwMzA3JnJvbGU9bW9kZXJhdG9yJmV4cGlyZV90aW1lPTE2MTQ1NjA4NTM=",
+     "id_usuario": "9991336774",
+     "time_finished": null,
+     "tipo_servicio": "3064",
+     "activo": "1"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-01-30",
+     "idUsuario": "9991336774",
+     "id360": "9991336774",
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": null,
+     "tipo_area": "463",
+     "web": "true",
+     "time_created": "05:50:12",
+     "id": "1620",
+     "tipo_usuario": "124",
+     "lat": "19.5592192",
+     "apikey": "46908134",
+     "lng": "-99.0347264",
+     "date_created": "2021-01-30",
+     "id_socket": "c8ca9c2f-ee35-4756-806d-221aa75df511",
+     "contadorDesconexion": "6",
+     "time_updated": "08:32:14",
+     "idsesion": "2_MX40NjkwODEzNH5-MTYxMjAxNzEyNTc0NX52K0o0eXN2ZTBOQmRzQTdudTBIcG96YzR-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwODEzNCZzaWc9MDdmODRkYzg0ZjVkNTdiOGY2OTRjM2FjYzAyOGY1MTFjZTg0ZjliMjpzZXNzaW9uX2lkPTJfTVg0ME5qa3dPREV6Tkg1LU1UWXhNakF4TnpFeU5UYzBOWDUySzBvMGVYTjJaVEJPUW1SelFUZHVkVEJJY0c5Nll6Ui1mZyZjcmVhdGVfdGltZT0xNjEyMDE3MTI1Jm5vbmNlPS0xMzA0MDc3OTIxJnJvbGU9bW9kZXJhdG9yJmV4cGlyZV90aW1lPTE2MTQ2MDkxMjU=",
+     "id_usuario": "9991336774",
+     "time_finished": null,
+     "tipo_servicio": "3064",
+     "activo": "1"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-02-02",
+     "idUsuario": "9991336774",
+     "id360": "9991336774",
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": "true",
+     "time_created": "08:29:43",
+     "id": "1643",
+     "tipo_usuario": "124",
+     "lat": "19.4462672",
+     "apikey": "46908144",
+     "lng": "-99.1124246",
+     "date_created": "2021-01-30",
+     "id_socket": "9892e365-2522-4cac-8b57-27db4cb6edcd",
+     "contadorDesconexion": "5",
+     "time_updated": "16:32:07",
+     "idsesion": "1_MX40NjkwODE0NH5-MTYxMjMwNTEyMjc4M34zdmFUN3dEQ1pHRmYxZmFEbllrQlZhOG5-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwODE0NCZzaWc9YmQzY2UyOTllY2U2ZDEyMzM3MTA3MjkxNTkyMDNhYjcwNmE2YmU4ZDpzZXNzaW9uX2lkPTFfTVg0ME5qa3dPREUwTkg1LU1UWXhNak13TlRFeU1qYzRNMzR6ZG1GVU4zZEVRMXBIUm1ZeFptRkVibGxyUWxaaE9HNS1mZyZjcmVhdGVfdGltZT0xNjEyMzA1MTIyJm5vbmNlPS0yMDc2MDQ5ODU0JnJvbGU9bW9kZXJhdG9yJmV4cGlyZV90aW1lPTE2MTQ4OTcxMjI=",
+     "id_usuario": "9991336774",
+     "time_finished": "16:32:07",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": null,
+     "idUsuario": "9991336774",
+     "id360": "9991336774",
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": null,
+     "tipo_area": "463",
+     "web": "true",
+     "time_created": "08:27:44",
+     "id": "1675",
+     "tipo_usuario": "124",
+     "lat": "19.4462672",
+     "apikey": "46908144",
+     "lng": "-99.1124246",
+     "date_created": "2021-02-01",
+     "id_socket": "8e546089-8126-4483-95a4-a8ad357307a7",
+     "contadorDesconexion": "0",
+     "time_updated": null,
+     "idsesion": "1_MX40NjkwODE0NH5-MTYxMjMxMjA2MDkyOX4zTjJGSVlHWERVaGM3anFZYWxaN1BhYlJ-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwODE0NCZzaWc9NTRjZjM4ZDUwMWIyYjI5Yjg3ZDEwNzZhMWVkMmMxNzkyMzZkYjM3MDpzZXNzaW9uX2lkPTFfTVg0ME5qa3dPREUwTkg1LU1UWXhNak14TWpBMk1Ea3lPWDR6VGpKR1NWbEhXRVJWYUdNM2FuRlpZV3hhTjFCaFlsSi1mZyZjcmVhdGVfdGltZT0xNjEyMzEyMDYxJm5vbmNlPTAuOTQ4MjYxNzQyNTQxMjgzOCZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNjEyMzk4NDYxJmNvbm5lY3Rpb25fZGF0YT0lN0IlMjJ1c2VyTmFtZSUyMiUzQSUyMkFub255bW91cyUyMFVzZXI5JTIyJTdEJmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9",
+     "id_usuario": "9991336774",
+     "time_finished": null,
+     "tipo_servicio": "3064",
+     "activo": "1"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-02-02",
+     "idUsuario": "9991336774",
+     "id360": "9991336774",
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": null,
+     "tipo_area": "463",
+     "web": "true",
+     "time_created": "08:56:01",
+     "id": "1676",
+     "tipo_usuario": "124",
+     "lat": "19.4462672",
+     "apikey": "46908144",
+     "lng": "-99.1124246",
+     "date_created": "2021-02-02",
+     "id_socket": "2b5524e7-42d7-479a-b2f2-7006d0e49ea0",
+     "contadorDesconexion": "2",
+     "time_updated": "20:56:31",
+     "idsesion": "2_MX40NjkwODE0NH5-MTYxMjMxMzc4OTg2MX4rUUw0VW42WlBNdXcyeHFEZEtkamJNbVl-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwODE0NCZzaWc9ZjFiNThjZDYwYjMyMWFmZjU5YjVjZmYyZTUwZmVlYTU3ZDExYjNhMzpzZXNzaW9uX2lkPTJfTVg0ME5qa3dPREUwTkg1LU1UWXhNak14TXpjNE9UZzJNWDRyVVV3MFZXNDJXbEJOZFhjeWVIRkVaRXRrYW1KTmJWbC1mZyZjcmVhdGVfdGltZT0xNjEyMzEzNzkwJm5vbmNlPTAuMDczNTc2OTEwNjM0OTQzMSZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNjEyNDAwMTkwJmNvbm5lY3Rpb25fZGF0YT0lN0IlMjJ1c2VyTmFtZSUyMiUzQSUyMkFub255bW91cyUyMFVzZXIxNSUyMiU3RCZpbml0aWFsX2xheW91dF9jbGFzc19saXN0PQ==",
+     "id_usuario": "9991336774",
+     "time_finished": "20:56:13",
+     "tipo_servicio": "3064",
+     "activo": "1"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-02-04",
+     "idUsuario": "9991336774",
+     "id360": "9991336774",
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " dzsadasd",
+     "tipo_area": "463",
+     "web": "true",
+     "time_created": "08:06:02",
+     "id": "1726",
+     "tipo_usuario": "124",
+     "lat": "19.4462672",
+     "apikey": "46908164",
+     "lng": "-99.1124246",
+     "date_created": "2021-02-03",
+     "id_socket": "0eb95304-a836-4e82-bb67-271a37ef9499",
+     "contadorDesconexion": "8",
+     "time_updated": "00:03:22",
+     "idsesion": "2_MX40NjkwODE2NH5-MTYxMjQxNzQ5NDAyMn5BcDMySjZVOWdJY1VMWENDNjRSRWlqWmN-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwODE2NCZzaWc9ZTg2ZGMxZTFjMTIwNmIyYzM4YTlmNjYyZTYxZmEzZjY2YTA1YWI0NzpzZXNzaW9uX2lkPTJfTVg0ME5qa3dPREUyTkg1LU1UWXhNalF4TnpRNU5EQXlNbjVCY0RNeVNqWlZPV2RKWTFWTVdFTkROalJTUldscVdtTi1mZyZjcmVhdGVfdGltZT0xNjEyNDE3NDk0Jm5vbmNlPS02MTEzNTQ3OCZyb2xlPW1vZGVyYXRvciZleHBpcmVfdGltZT0xNjE1MDA5NDk0",
+     "id_usuario": "9991336774",
+     "time_finished": "00:03:22",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-02-04",
+     "idUsuario": "9991336774",
+     "id360": "9991336774",
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": "reporte",
+     "tipo_area": "463",
+     "web": "true",
+     "time_created": "00:54:10",
+     "id": "1731",
+     "tipo_usuario": "124",
+     "lat": "19.4904064",
+     "apikey": "46908204",
+     "lng": "-99.0773248",
+     "date_created": "2021-02-04",
+     "id_socket": "cbb4c087-6eaa-4103-bb38-47cac0a538b5",
+     "contadorDesconexion": "13",
+     "time_updated": "20:16:49",
+     "idsesion": "1_MX40NjkwODIwNH5-MTYxMjQ5MDQ3NDg2MH5TZjRpZjVKQkJHL2hiemVxSFdPaHFBUnR-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwODIwNCZzaWc9OWI1MGQyZDQ3NTNiNTJhYWEwMjI3OWMwZDMwYzBmZDI4MDE2ZDc4NDpzZXNzaW9uX2lkPTFfTVg0ME5qa3dPREl3Tkg1LU1UWXhNalE1TURRM05EZzJNSDVUWmpScFpqVktRa0pITDJoaWVtVnhTRmRQYUhGQlVuUi1mZyZjcmVhdGVfdGltZT0xNjEyNDkwNDc0Jm5vbmNlPS0yMDIxNjg5Njg3JnJvbGU9bW9kZXJhdG9yJmV4cGlyZV90aW1lPTE2MTUwODI0NzQ=",
+     "id_usuario": "9991336774",
+     "time_finished": "20:16:49",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-02-05",
+     "idUsuario": "9991336774",
+     "id360": "9991336774",
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": "true",
+     "time_created": "08:15:03",
+     "id": "1833",
+     "tipo_usuario": "124",
+     "lat": "19.4353955",
+     "apikey": "46908214",
+     "lng": "-99.1021375",
+     "date_created": "2021-02-05",
+     "id_socket": "bfb9794f-9d9e-40a4-8923-dcb40f2cc0be",
+     "contadorDesconexion": "20",
+     "time_updated": "20:46:20",
+     "idsesion": "1_MX40NjkwODIxNH5-MTYxMjU3MjM3NzkzMn5tdi9PQ0tVZDlYL3NWSHgwcFFjSXY2N0V-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwODIxNCZzaWc9NDdiOGE0OWZkMjFlNWVlMjhmYTdkMjczYWM5MmQ5MGYzYWZkNTNkOTpzZXNzaW9uX2lkPTFfTVg0ME5qa3dPREl4Tkg1LU1UWXhNalUzTWpNM056a3pNbjV0ZGk5UFEwdFZaRGxZTDNOV1NIZ3djRkZqU1hZMk4wVi1mZyZjcmVhdGVfdGltZT0xNjEyNTcyMzc4Jm5vbmNlPTAuNjQwNDUxMzQxOTY3NjM0MSZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNjEyNjU4Nzc4JmNvbm5lY3Rpb25fZGF0YT0lN0IlMjJ1c2VyTmFtZSUyMiUzQSUyMkFub255bW91cyUyMFVzZXIxMiUyMiU3RCZpbml0aWFsX2xheW91dF9jbGFzc19saXN0PQ==",
+     "id_usuario": "9991336774",
+     "time_finished": "20:05:56",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-02-09",
+     "idUsuario": "9991336774",
+     "id360": null,
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": "true",
+     "time_created": "07:06:55",
+     "id": "1882",
+     "tipo_usuario": "124",
+     "lat": null,
+     "apikey": "46908234",
+     "lng": null,
+     "date_created": "2021-02-08",
+     "id_socket": "45d9b8b3-9664-48a9-9fb2-d3fade5dcaa4",
+     "contadorDesconexion": "2",
+     "time_updated": "20:42:59",
+     "idsesion": "1_MX40NjkwODIzNH5-MTYxMjc5NjgwNzY5OH5oU25LaitLTDVxejRGZUZydHFQK3hMOU9-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwODIzNCZzaWc9YzY5ODA1ZTM3OGY2MjczNjQ5ZWU4NDYzODY5NWI1Y2RlNzJjYzk0NDpzZXNzaW9uX2lkPTFfTVg0ME5qa3dPREl6Tkg1LU1UWXhNamM1Tmpnd056WTVPSDVvVTI1TGFpdExURFZ4ZWpSR1pVWnlkSEZRSzNoTU9VOS1mZyZjcmVhdGVfdGltZT0xNjEyNzk2ODA3Jm5vbmNlPS0zNzQyODM1MyZyb2xlPW1vZGVyYXRvciZleHBpcmVfdGltZT0xNjE1Mzg4ODA3",
+     "id_usuario": "9991336774",
+     "time_finished": "20:42:59",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-02-09",
+     "idUsuario": "9991336774",
+     "id360": "9991336774",
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": "true",
+     "time_created": "08:42:55",
+     "id": "1896",
+     "tipo_usuario": "124",
+     "lat": "19.4379776",
+     "apikey": "46908234",
+     "lng": "-99.0969856",
+     "date_created": "2021-02-09",
+     "id_socket": "22c2ec45-fc10-4e7b-bf32-c686b94f9753",
+     "contadorDesconexion": "4",
+     "time_updated": "20:52:37",
+     "idsesion": "1_MX40NjkwODIzNH5-MTYxMjg4OTUyOTU4NX5GbkFOWU9yYTFiQlFzcU03a1QrUWZUaVR-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwODIzNCZzaWc9NWM0YjE4MjQ3MWM0NDZmYjdkMGQ3MzgzNjY5ZTQ0ZjViYjVkNTZiYTpzZXNzaW9uX2lkPTFfTVg0ME5qa3dPREl6Tkg1LU1UWXhNamc0T1RVeU9UVTROWDVHYmtGT1dVOXlZVEZpUWxGemNVMDNhMVFyVVdaVWFWUi1mZyZjcmVhdGVfdGltZT0xNjEyODg5NTMwJm5vbmNlPTAuNzgyMTU1OTQ2Mzc5MzgzJnJvbGU9cHVibGlzaGVyJmV4cGlyZV90aW1lPTE2MTI5NzU5MzAmY29ubmVjdGlvbl9kYXRhPSU3QiUyMnVzZXJOYW1lJTIyJTNBJTIyQW5vbnltb3VzJTIwVXNlcjIxJTIyJTdEJmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9",
+     "id_usuario": "9991336774",
+     "time_finished": "20:52:37",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-02-09",
+     "idUsuario": "9991336774",
+     "id360": "9991336774",
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " ",
+     "tipo_area": "463",
+     "web": "true",
+     "time_created": "08:50:13",
+     "id": "2035",
+     "tipo_usuario": "124",
+     "lat": "19.4379776",
+     "apikey": "46908234",
+     "lng": "-99.0969856",
+     "date_created": "2021-02-10",
+     "id_socket": "22c2ec45-fc10-4e7b-bf32-c686b94f9753",
+     "contadorDesconexion": "4",
+     "time_updated": "20:45:12",
+     "idsesion": "1_MX40NjkwODIzNH5-MTYxMjg4OTUyOTU4NX5GbkFOWU9yYTFiQlFzcU03a1QrUWZUaVR-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwODIzNCZzaWc9NWM0YjE4MjQ3MWM0NDZmYjdkMGQ3MzgzNjY5ZTQ0ZjViYjVkNTZiYTpzZXNzaW9uX2lkPTFfTVg0ME5qa3dPREl6Tkg1LU1UWXhNamc0T1RVeU9UVTROWDVHYmtGT1dVOXlZVEZpUWxGemNVMDNhMVFyVVdaVWFWUi1mZyZjcmVhdGVfdGltZT0xNjEyODg5NTMwJm5vbmNlPTAuNzgyMTU1OTQ2Mzc5MzgzJnJvbGU9cHVibGlzaGVyJmV4cGlyZV90aW1lPTE2MTI5NzU5MzAmY29ubmVjdGlvbl9kYXRhPSU3QiUyMnVzZXJOYW1lJTIyJTNBJTIyQW5vbnltb3VzJTIwVXNlcjIxJTIyJTdEJmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9",
+     "id_usuario": "9991336774",
+     "time_finished": "20:45:12",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": "2021-02-11",
+     "idUsuario": "9991336774",
+     "id360": "9991336774",
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": " Reporte de actividades laborales",
+     "tipo_area": "463",
+     "web": "true",
+     "time_created": "09:02:55",
+     "id": "2036",
+     "tipo_usuario": "124",
+     "lat": "19.4379776",
+     "apikey": "46908324",
+     "lng": "-99.0969856",
+     "date_created": "2021-02-11",
+     "id_socket": "be22a0db-a7d4-457c-9ddc-b7669016d5fb",
+     "contadorDesconexion": "19",
+     "time_updated": "20:31:11",
+     "idsesion": "1_MX40NjkwODMyNH5-MTYxMzA4NjIxODEyN35uZjFJN2ZsSkRqd1V3WWp3RGhCT2w3Zyt-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwODMyNCZzaWc9YzdkNDQwMjdlNWEwN2MxYTcxOTQ1OWU0OWZlNjE3ZThmMmU1MGRjNTpzZXNzaW9uX2lkPTFfTVg0ME5qa3dPRE15Tkg1LU1UWXhNekE0TmpJeE9ERXlOMzV1WmpGSk4yWnNTa1JxZDFWM1dXcDNSR2hDVDJ3M1p5dC1mZyZjcmVhdGVfdGltZT0xNjEzMDg2MjE4Jm5vbmNlPTE0MDMzMjY0ODImcm9sZT1tb2RlcmF0b3ImZXhwaXJlX3RpbWU9MTYxNTY3ODIxOA==",
+     "id_usuario": "9991336774",
+     "time_finished": "20:31:11",
+     "tipo_servicio": "3064",
+     "activo": "0"
+     },
+     {
+     "Nombre": null,
+     "aliasServicio": null,
+     "date_updated": null,
+     "idUsuario": "9991336774",
+     "id360": "9991336774",
+     "urlServicio": "https://empresas.claro360.com/plataforma360",
+     "reporte": null,
+     "tipo_area": "463",
+     "web": "true",
+     "time_created": "08:27:16",
+     "id": "2045",
+     "tipo_usuario": "124",
+     "lat": "19.4379776",
+     "apikey": "46908324",
+     "lng": "-99.0969856",
+     "date_created": "2021-02-12",
+     "id_socket": "c351ad27-6038-4e8b-b3a1-91d0bbeaef51",
+     "contadorDesconexion": "0",
+     "time_updated": null,
+     "idsesion": "2_MX40NjkwODMyNH5-MTYxMzE0MDAzMTg3MX41ZGxDaVNHa1M1UGUrR2c5am5lR3pVVUJ-fg",
+     "token": "T1==cGFydG5lcl9pZD00NjkwODMyNCZzaWc9NTY3MmFkZDVlNGIwMjA1ZGNiZTAxZWZlNzE5ZGVjZGJlMjIwYWZjYjpzZXNzaW9uX2lkPTJfTVg0ME5qa3dPRE15Tkg1LU1UWXhNekUwTURBek1UZzNNWDQxWkd4RGFWTkhhMU0xVUdVclIyYzVhbTVsUjNwVlZVSi1mZyZjcmVhdGVfdGltZT0xNjEzMTQwMDMyJm5vbmNlPTAuNzYxNjMzODY2MjY4MzY5NSZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNjEzMjI2NDMyJmNvbm5lY3Rpb25fZGF0YT0lN0IlMjJ1c2VyTmFtZSUyMiUzQSUyMkFub255bW91cyUyMFVzZXIxNSUyMiU3RCZpbml0aWFsX2xheW91dF9jbGFzc19saXN0PQ==",
+     "id_usuario": "9991336774",
+     "time_finished": null,
+     "tipo_servicio": "3064",
+     "activo": "1"
+     }
+     ],
+     "success": true,
+     "failure": false,
+     "mensaje": "ok"
+     }*/
+    if (jornadas_laborales_rango_empleado.data) {
+        //tablaHistorialLaboralEmpleado = $("#tablaHistorialLaboralEmpleado")
+        //const cuerpoTablaHistorialLaboralEmpleado = tablaHistorialLaboralEmpleado.find("tbody");        
+        conResultados.addClass("d-none");
+        sinResultados.addClass("d-none");
+        //cuerpoTablaHistorialLaboralEmpleado.empty();
+
+        conResultados.removeClass("d-none");
+        sinResultados.addClass("d-none");
+
+        //let horasLaboralesTotales = 0
+        let puntualHistorialLaboral = 0
+        let retardoHistorialLaboral = 0
+        let totalSegundosDiferencia = 0
+        let totalMinutosDiferencia = 0
+        let totalHorasDiferencia = 0
+        jornadas_laborales_rango_empleado.data.forEach(element => {
+            let elemento = {
+                dia: new Date(element.date_created + "T" + element.time_created).toLocaleDateString('es-MX', {weekday: 'long'}),
+                fecha: new Date(element.date_created + "T" + element.time_created).toLocaleDateString('es-MX', {year: 'numeric', month: 'long', day: 'numeric'}),
+                horaEntrada: element.time_created,
+                horaSalida: element.time_finished,
+                horasLaborales: null,
+                contadorDesconexion: element.contadorDesconexion,
+                observaciones: '<i class="text-success fas fa-star"></i>'
+            }
+            let horarioEntradaUser = moment(element.date_created + "T" + jornadas_laborales_empleado[0].horario_entrada)
+            horarioEntradaUser.add(moment.duration("00:01:00"))
+            let horarioSalidaUser = moment(element.date_created + "T" + jornadas_laborales_empleado[0].horario_salida)
+            let horaEntradaUser = moment(element.date_created + "T" + element.time_created)
+            let horasDiferencia = 0
+            if (element.time_finished) {
+                let horaFinalizada = moment(element.date_updated + "T" + element.time_finished)
+                if (horaEntradaUser > horaFinalizada) {
+                    horaFinalizada = moment(element.date_created + "T" + element.time_finished)
+                }
+                if (horaEntradaUser <= horaFinalizada) {
+                    if (horaFinalizada.diff(horaEntradaUser, 'hours') > 5) {
+                        horasDiferencia = horaFinalizada.diff(horaEntradaUser, 'hours') - 2
+                        minutosDiferencia = moment(moment(horaFinalizada, "HH:mm:ss").diff(moment(horaEntradaUser, "HH:mm:ss"))).format("mm")
+                        segundosDiferencia = moment(horaFinalizada.diff(horaEntradaUser)).format("ss")
+                        totalHorasDiferencia += horasDiferencia
+                        totalSegundosDiferencia += parseInt(segundosDiferencia)
+                        if (totalSegundosDiferencia >= 60) {
+                            totalMinutosDiferencia++
+                            totalSegundosDiferencia -= 60
+                        }
+                        totalMinutosDiferencia += parseInt(minutosDiferencia)
+                        if (totalMinutosDiferencia >= 60) {
+                            totalHorasDiferencia++
+                            totalMinutosDiferencia -= 60
+                        }
+                        elemento.horasLaborales = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-light">' + horasDiferencia + ":" + minutosDiferencia + ":" + segundosDiferencia + '</span>'
+                    } else {
+                        horasDiferencia = horaFinalizada.diff(horaEntradaUser, 'hours')
+                        minutosDiferencia = moment(moment(horaFinalizada, "HH:mm:ss").diff(moment(horaEntradaUser, "HH:mm:ss"))).format("mm")
+                        segundosDiferencia = moment(horaFinalizada.diff(horaEntradaUser)).format("ss")
+                        totalHorasDiferencia += horasDiferencia
+                        totalSegundosDiferencia += parseInt(segundosDiferencia)
+                        if (totalSegundosDiferencia >= 60) {
+                            totalMinutosDiferencia++
+                            totalSegundosDiferencia -= 60
+                        }
+                        totalMinutosDiferencia += parseInt(minutosDiferencia)
+                        if (totalMinutosDiferencia >= 60) {
+                            totalHorasDiferencia++
+                            totalMinutosDiferencia -= 60
+                        }
+                        elemento.horasLaborales = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-light">' + horasDiferencia + ":" + minutosDiferencia + ":" + segundosDiferencia + '</span>'
+                    }
+                }
+                if (horaFinalizada < horarioSalidaUser) {
+                    elemento.horaSalida = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-warning">' + horaFinalizada.format('HH:mm:ss A') + '</span>'
+                    //elemento.observaciones = '<i class="text-warning fas fa-star"></i>'
+                } else {
+                    elemento.horaSalida = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-success">' + horaFinalizada.format('HH:mm:ss A') + '</span>'
+                }
+            }
+            /*if (!isNaN(elemento.horasLaborales)) {
+             horasLaboralesTotales += elemento.horasLaborales
+             }*/
+            if (horaEntradaUser >= horarioEntradaUser) {
+                elemento.horaEntrada = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-warning">' + horaEntradaUser.format('HH:mm:ss A') + '</span>'
+                elemento.observaciones = '<i class="text-danger fas fa-clock"></i>'
+                retardoHistorialLaboral++
+            } else {
+                elemento.horaEntrada = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-success">' + horaEntradaUser.format('HH:mm:ss A') + '</span>'
+                if (horasDiferencia > 8) {
+                    elemento.observaciones = '<i class="text-success fas fa-star"></i> + ' + (horasDiferencia - 8)
+                } else {
+                    elemento.observaciones = '<i class="text-success fas fa-star"></i>'
+                }
+
+                puntualHistorialLaboral++
+            }
+            jornadas_laborales_rango_empleado_tabla.push(elemento)
+        })
+        $("#horasLaboralesTotales").text("Total: " + totalHorasDiferencia + " hrs " + totalMinutosDiferencia + " min " + totalSegundosDiferencia + " seg")
+        $("#puntualHistorialLaboral").text(puntualHistorialLaboral)
+        $("#retardoHistorialLaboral").text(retardoHistorialLaboral)
+
+        tablaHistorialLaboralEmpleado = tablaHistorialLaboralEmpleado2.DataTable({
+            dom: 'Bfrtip',
+            order: [],
+            paging: false,
+            buttons: [
+                'print'
+            ],
+            "data": jornadas_laborales_rango_empleado_tabla,
+            "columns": [{"data": "dia"},
+                {"data": "fecha"},
+                {"data": "horaEntrada"},
+                {"data": "horaSalida"},
+                {"data": "horasLaborales"},
+                {"data": "contadorDesconexion"},
+                {"data": "observaciones"}
+            ]
+        });
+    } else {
+        conResultados.addClass("d-none");
+        sinResultados.removeClass("d-none");
+    }
+}
+//BOTON BUSCAR EMPLEADO  
+$('#buscar_reportes_personales').click(async () => {
+    await botonObtenerJornadasReporteEmpleado(id360Estatico, jornadas_laborales_empleado)
+});
 //BOTON REGRESAR A JORNADAS LABORALES  
 $('#botonRegresarJornadasLaborales').click(async () => {
     //await botonRegresarJornadasLaborales()
