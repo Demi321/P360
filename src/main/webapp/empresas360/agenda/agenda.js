@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 var date = new Date();
-var usuario_id = 1; //TU LO MOFICAS
+var usuario_id = perfil_usuario.id360; //TU LO MOFICAS
 var zona_horaria = "America/Mexico_City";//TU LO MODIFICAS
 var eventos_usuario = []
 function getEventos() {
@@ -228,6 +228,19 @@ console.log(json);
                     click: function () {
                         nuevoModal.toggle()
                     }
+                },
+                timeGridDay:{
+                    text:"Día"
+                },
+
+                timeGridWeek:{
+                    text:"Semana"
+                },
+                dayGridMonth:{
+                    text:"Mes"
+                },
+                today:{
+                    text:"Hoy"
                 }
             },
             dateClick: function (info) {
@@ -269,6 +282,7 @@ console.log(json);
         });
 
         calendar.setOption('locale', 'Es');
+        calendar.setOption('height', "100%");
         calendar.render();
     });
 

@@ -96,7 +96,7 @@ $(window).on("load", function () {
         });
         chart_productividad();
     }
-    $(".modulo_menu")[0].click();
+   // $(".modulo_menu")[0].click();
 
 //    if ($("#menu_section_EstadísticaGlobal").length) {
 //        $("#menu_section_EstadísticaGlobal").click(() => {
