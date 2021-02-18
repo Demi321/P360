@@ -2506,7 +2506,15 @@ const verReporteDetallado = async empleado => {
     sinResultados.addClass("d-none");
 }
 
-agregar_menu("Reporte Jornadas Laborales", '<i class="fas fa-clipboard-list"></i>', 'Recursos Humanos');
+//agregar_menu("Reporte Jornadas Laborales", '<i class="fas fa-clipboard-list"></i>', 'Recursos Humanos');
+const init_reportejornadaslaborales = (json) => {
+    console.log(json);
+    let id = json.id;
+    let id_usuario = json.id_usuario;
+    let tipo_usuario = json.tipo_usuario;
+    let tipo_servicio = json.tipo_servicio;
+    let tipo_area = json.tipo_area;
+}
 $(function () {
     $("#tabs_jornadas_laborales").tabs({
         //event: "mouseover"
