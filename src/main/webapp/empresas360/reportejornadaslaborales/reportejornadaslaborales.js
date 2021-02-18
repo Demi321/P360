@@ -4,6 +4,12 @@
  * and open the template in the editor.
  */
 
+//GENERAR REPORTE DE JORNADAS LABORALES
+$(document).ready(() => {
+    $("#reporteEmpleadoJornadasLaborales").hide()
+    //$("#reporteJornadasLaborales").hide()
+    //$("#reporteEmpleadoJornadasLaborales").show()
+})
 const init_reportejornadaslaborales = (json) => {
     console.log(json);
     let id = json.id;
