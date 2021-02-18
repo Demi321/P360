@@ -14,6 +14,18 @@ var init_estadisticaglobal = (json) => {
     let tipo_usuario = json.tipo_usuario;
     let tipo_servicio = json.tipo_servicio;
     let tipo_area = json.tipo_area;
+    var jsonData = $.ajax({        
+        type: 'POST',
+        url: '/' + DEPENDENCIA + '/API/Cantidad',
+        contentType: "application/json",
+        dataType: 'json',
+        data: JSON.stringify({                        
+            "tipo_servicio":tipo_usuario
+        }),
+        async: false
+    }).responseText;
+
+    
     console.log("Dashboard Reportes");
     //window.onload = function () {
     google.charts.load('current', {'packages':['corechart']});
@@ -29,9 +41,9 @@ var init_estadisticaglobal = (json) => {
 
       var options = {
           //pieSliceText: 'none',
-          legend: { 'position': 'labeled', textStyle: {color: '#ffffff'} }, 
+          legend: { 'position': 'labeled', textStyle: {color: '#252528'} }, 
           colors:['blue','#439EAE','green','#49C848','red','#004411'],
-          backgroundColor: '#252528',       
+          backgroundColor: '#ffffff',       
           tooltip: {
               trigger: 'none',
               showColorCode: true,
@@ -60,13 +72,13 @@ var init_estadisticaglobal = (json) => {
       ]);
       var options = {                       
           legend: 'none',
-          backgroundColor: '#252528',
+          backgroundColor: '#fffffff',
           width: 400,
           height: 300,
           hAxis: {
               title: 'Rango de Edad',
               textStyle: {
-                  color: '#ffffff'
+                  color: '#252528'
               }
           },
           vAxis: {
@@ -97,13 +109,13 @@ var init_estadisticaglobal = (json) => {
       ]);
       var options = {
           legend: 'none',
-          backgroundColor: '#252528',
+          backgroundColor: '#ffffff',
           width: 400,
           height: 300,
           hAxis: {            
               textStyle: {
                   title: 'Sexo',
-                  color: '#ffffff'
+                  color: '#252528'
               }
           },
           vAxis: {
@@ -136,19 +148,19 @@ var init_estadisticaglobal = (json) => {
       ]);
       var options = {
           legend: 'none',
-          backgroundColor: '#252528',
+          backgroundColor: '#fffffff',
           width: 400,
           height: 300,
           hAxis: {            
               textStyle: {
                   title: 'Sexo',
-                  color: '#ffffff'
+                  color: '#252528'
               }
           },
           vAxis: {
               title: 'No. de Empleados',
-              titleTextStyle:{color: '#ffffff'},                        
-              textStyle: {color: '#ffffff'},
+              titleTextStyle:{color: '#252528'},                        
+              textStyle: {color: '#252528'},
               ticks: [ {v: 30}, {v: 50}, {v: 80}, {v: 100} ]
           }
       };
@@ -173,9 +185,9 @@ var init_estadisticaglobal = (json) => {
 
       var options = {
           pieSliceText: 'none',
-          legend: { 'position': 'labeled', textStyle: {color: '#ffffff'} }, 
+          legend: { 'position': 'labeled', textStyle: {color: '#252528'} }, 
           colors:['blue','#439EAE','green','#49C848','red','#004411'],
-          backgroundColor: '#252528',        
+          backgroundColor: '#ffffff',        
           tooltip: {
               trigger: 'none',
               showColorCode: true,
@@ -217,14 +229,14 @@ var init_estadisticaglobal = (json) => {
               3: { color: '#6f9654'/* verde*/ }                      
           },        
           hAxis: {                        
-              titleTextStyle:{color: '#ffffff'},
-              textStyle: {color: '#FFF' }
+              titleTextStyle:{color: '#252528'},
+              textStyle: {color: '#252528' }
           },
           vAxis: {
               title:'Productividad',
-              titleTextStyle:{color: '#ffffff'},
+              titleTextStyle:{color: '#252528'},
               labelString: "Percentage",
-              textStyle: {color: '#FFF'},
+              textStyle: {color: '#252528'},
               ticks: [ {v: 0, f:"0%"}, {v: 50, f:"50%"}, {v: 70, f:"70%"}, {v: 100, f:"100%"} ]
           },
           backgroundColor: '#252528'
@@ -255,7 +267,7 @@ var init_estadisticaglobal = (json) => {
       var options = {
           legend: 'none',
           pointSize: 5,
-          backgroundColor: '#252528',        
+          backgroundColor: '#ffffff',        
           series: {
               0: { color: '#358EA5'/*azul*/ },
               1: { color: '#f1ca3a'/*amarillo*/ },
@@ -264,13 +276,13 @@ var init_estadisticaglobal = (json) => {
           },        
           hAxis: {
               title:'Actividad',
-              titleTextStyle:{color: '#ffffff'},
-              textStyle: {color: '#FFF' }
+              titleTextStyle:{color: '#252528'},
+              textStyle: {color: '#252528' }
           },
           vAxis: {
               title:'Tiempo',
-              titleTextStyle:{color: '#ffffff'}, 
-              textStyle: {color: '#FFF'},
+              titleTextStyle:{color: '#252528'}, 
+              textStyle: {color: '#252528'},
               ticks: [ {v: 0, f: '0 hr'}, {v: 100, f: '100 hrs'}, {v: 200, f: '200 hrs'}, {v: 300, f: '300 hrs'} ]        
           }
       };
