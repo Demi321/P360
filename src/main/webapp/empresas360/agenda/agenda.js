@@ -283,6 +283,10 @@ console.log(json);
 
         calendar.setOption('locale', 'Es');
         calendar.setOption('height', "100%");
+        var button_agenda = document.getElementById("menu_section_Agenda");
+        button_agenda.onclick =function(evt){
+            calendar.updateSize()
+        };
         calendar.render();
     });
 
