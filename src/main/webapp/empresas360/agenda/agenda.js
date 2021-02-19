@@ -7,138 +7,6 @@ var date = new Date();
 var usuario_id = perfil_usuario.id360; //TU LO MOFICAS
 var zona_horaria = "America/Mexico_City";//TU LO MODIFICAS
 var eventos_usuario = []
-function getEventos() {
-    fetch("https://agenda360.ml/api/eventos/usuario", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-            'usuario_id': usuario_id,
-            'zona_horaria': zona_horaria
-        })
-    }).then(response => response.json()).then((data) => {
-        console.log(data)
-        let events = data.data
-        eventos_usuario = events.map(function (event) {
-            return {
-                'id': event.id,
-                'title': event.titulo,
-                'start': event.inicio,
-                'end': event.fin,
-                'evento': event
-            }
-        })
-    });
-}
-function showEvent(evento_id) {
-    fetch("https://agenda360.ml/api/eventos/" + evento_id)
-            .then(response => response.json())
-            .then((data) => {
-                evento = data.data
-                body_html = `
-    				<div class="row">
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Titulo</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.titulo}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Descripción</label>
-    						<textarea class="form-control" readonly="">${evento.descripcion ? evento.descripcion : "N/A" }</textarea>
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Fecha Inicio</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.fechainicio ? evento.fechainicio : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Hora Inicio</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.horainicio ? evento.horainicio : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Fecha Fin</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.fechafin ? evento.fechafin : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Hora Fin</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.horafin ? evento.horafin : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Fecha Recordatorio</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.fecharecordatorio ? evento.fecharecordatorio : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Hora Recordatorio</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.horarecordatorio ? evento.horarecordatorio : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Temporizador</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.temporizador ? evento.temporizador : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Recurrente</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.recurrente ? evento.recurrente : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Periodo</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.periodo ? evento.periodo : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>URL</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.url ? evento.url : "N/A"}">
-    					</div>
-    					<div class="col-12 mt-3 d-flex justify-content-between">
-							<button type="button" class="btn btn-warning" onclick="showUpdateForm(${evento.id})">Editar</button>
-                                                        <button type="button" class="btn btn-info" onclick="showEmailEventForm(${evento.id})">Enviar por correo</button>
-							<button type="button" class="btn btn-danger" onclick="showDeleteForm(${evento.id})">Eliminar</button>
-    					</div>
-    				</div>
-    				`
-                $("#bodyEvento").empty().append(body_html);
-                eventoModal.toggle()
-
-            });
-}
-
-function showUpdateForm(evento_id) {
-    fetch("https://agenda360.ml/api/eventos/" + evento_id)
-            .then(response => response.json())
-            .then((data) => {
-                evento = data.data
-                $("#evento_id").val(evento.id)
-                $("#update_titulo").val(evento.titulo ? evento.titulo : "")
-                $("#update_descripcion").val(evento.descripcion ? evento.descripcion : "")
-                $("#update_direccion").val(evento.direccion ? evento.direccion : "")
-                $("#update_latitud").val(evento.latitud ? evento.latitud : "")
-                $("#update_longitud").val(evento.longitud ? evento.longitud : "")
-                $("#update_tipoevento").val(evento.tipoevento ? evento.tipoevento : "")
-                $("#update_fecharegistro").val(evento.fecharegistro ? evento.fecharegistro : "")
-                $("#update_fechainicio").val(evento.fechainicio ? evento.fechainicio : "")
-                $("#update_horainicio").val(evento.horainicio ? evento.horainicio : "")
-                $("#update_fechafin").val(evento.fechafin ? evento.fechafin : "")
-                $("#update_horafin").val(evento.horafin ? evento.horafin : "")
-                $("#update_fecharecordatorio").val(evento.fecharecordatorio ? evento.fecharecordatorio : "")
-                $("#update_horarecordatorio").val(evento.horarecordatorio ? evento.horarecordatorio : "")
-                $("#update_temporizador").val(evento.temporizador ? evento.temporizador : "")
-                $("#update_recurrente").val(evento.recurrente ? evento.recurrente : "")
-                $("#update_periodo").val(evento.periodo ? evento.periodo : "")
-                $("#update_url").val(evento.url ? evento.url : "")
-                updateModal.toggle()
-            });
-}
-
-function showDeleteForm(evento_id) {
-
-    $("#evento").val(evento_id);
-    deleteModal.toggle()
-
-}
-
-// FUNCION PARA MOSTRAR FORMULARIO DE ENVIO DE CORREO ELECTRONICO
-function showEmailEventForm(evento_id){
-    $("#evento_email").val(evento_id)
-    emailModal.toggle()
-}
 
 const init_agenda = (json) => {
 console.log(json);
@@ -313,6 +181,140 @@ console.log(json);
     var emailModal = new bootstrap.Modal(document.getElementById('emailEventModal'),{
         keyboard:false
     })
+    
+    function getEventos() {
+        fetch("https://agenda360.ml/api/eventos/usuario", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                'usuario_id': usuario_id,
+                'zona_horaria': zona_horaria
+            })
+        }).then(response => response.json()).then((data) => {
+            console.log(data)
+            let events = data.data
+            eventos_usuario = events.map(function (event) {
+                return {
+                    'id': event.id,
+                    'title': event.titulo,
+                    'start': event.inicio,
+                    'end': event.fin,
+                    'evento': event
+                }
+            })
+        });
+    }
+    function showEvent(evento_id) {
+        fetch("https://agenda360.ml/api/eventos/" + evento_id)
+                .then(response => response.json())
+                .then((data) => {
+                    evento = data.data
+                    body_html = `
+                                    <div class="row">
+                                            <div class="col-12 col-md-4 mt-2">
+                                                    <label>Titulo</label>
+                                                    <input class="form-control" type="text" readonly="" value="${evento.titulo}">
+                                            </div>
+                                            <div class="col-12 col-md-4 mt-2">
+                                                    <label>Descripción</label>
+                                                    <textarea class="form-control" readonly="">${evento.descripcion ? evento.descripcion : "N/A" }</textarea>
+                                            </div>
+                                            <div class="col-12 col-md-4 mt-2">
+                                                    <label>Fecha Inicio</label>
+                                                    <input class="form-control" type="text" readonly="" value="${evento.fechainicio ? evento.fechainicio : "N/A"}">
+                                            </div>
+                                            <div class="col-12 col-md-4 mt-2">
+                                                    <label>Hora Inicio</label>
+                                                    <input class="form-control" type="text" readonly="" value="${evento.horainicio ? evento.horainicio : "N/A"}">
+                                            </div>
+                                            <div class="col-12 col-md-4 mt-2">
+                                                    <label>Fecha Fin</label>
+                                                    <input class="form-control" type="text" readonly="" value="${evento.fechafin ? evento.fechafin : "N/A"}">
+                                            </div>
+                                            <div class="col-12 col-md-4 mt-2">
+                                                    <label>Hora Fin</label>
+                                                    <input class="form-control" type="text" readonly="" value="${evento.horafin ? evento.horafin : "N/A"}">
+                                            </div>
+                                            <div class="col-12 col-md-4 mt-2">
+                                                    <label>Fecha Recordatorio</label>
+                                                    <input class="form-control" type="text" readonly="" value="${evento.fecharecordatorio ? evento.fecharecordatorio : "N/A"}">
+                                            </div>
+                                            <div class="col-12 col-md-4 mt-2">
+                                                    <label>Hora Recordatorio</label>
+                                                    <input class="form-control" type="text" readonly="" value="${evento.horarecordatorio ? evento.horarecordatorio : "N/A"}">
+                                            </div>
+                                            <div class="col-12 col-md-4 mt-2">
+                                                    <label>Temporizador</label>
+                                                    <input class="form-control" type="text" readonly="" value="${evento.temporizador ? evento.temporizador : "N/A"}">
+                                            </div>
+                                            <div class="col-12 col-md-4 mt-2">
+                                                    <label>Recurrente</label>
+                                                    <input class="form-control" type="text" readonly="" value="${evento.recurrente ? evento.recurrente : "N/A"}">
+                                            </div>
+                                            <div class="col-12 col-md-4 mt-2">
+                                                    <label>Periodo</label>
+                                                    <input class="form-control" type="text" readonly="" value="${evento.periodo ? evento.periodo : "N/A"}">
+                                            </div>
+                                            <div class="col-12 col-md-4 mt-2">
+                                                    <label>URL</label>
+                                                    <input class="form-control" type="text" readonly="" value="${evento.url ? evento.url : "N/A"}">
+                                            </div>
+                                            <div class="col-12 mt-3 d-flex justify-content-between">
+                                                            <button type="button" class="btn btn-warning" onclick="showUpdateForm(${evento.id})">Editar</button>
+                                                            <button type="button" class="btn btn-info" onclick="showEmailEventForm(${evento.id})">Enviar por correo</button>
+                                                            <button type="button" class="btn btn-danger" onclick="showDeleteForm(${evento.id})">Eliminar</button>
+                                            </div>
+                                    </div>
+                                    `
+                    $("#bodyEvento").empty().append(body_html);
+                    eventoModal.toggle()
+
+                });
+    }
+
+    function showUpdateForm(evento_id) {
+        fetch("https://agenda360.ml/api/eventos/" + evento_id)
+                .then(response => response.json())
+                .then((data) => {
+                    evento = data.data
+                    $("#evento_id").val(evento.id)
+                    $("#update_titulo").val(evento.titulo ? evento.titulo : "")
+                    $("#update_descripcion").val(evento.descripcion ? evento.descripcion : "")
+                    $("#update_direccion").val(evento.direccion ? evento.direccion : "")
+                    $("#update_latitud").val(evento.latitud ? evento.latitud : "")
+                    $("#update_longitud").val(evento.longitud ? evento.longitud : "")
+                    $("#update_tipoevento").val(evento.tipoevento ? evento.tipoevento : "")
+                    $("#update_fecharegistro").val(evento.fecharegistro ? evento.fecharegistro : "")
+                    $("#update_fechainicio").val(evento.fechainicio ? evento.fechainicio : "")
+                    $("#update_horainicio").val(evento.horainicio ? evento.horainicio : "")
+                    $("#update_fechafin").val(evento.fechafin ? evento.fechafin : "")
+                    $("#update_horafin").val(evento.horafin ? evento.horafin : "")
+                    $("#update_fecharecordatorio").val(evento.fecharecordatorio ? evento.fecharecordatorio : "")
+                    $("#update_horarecordatorio").val(evento.horarecordatorio ? evento.horarecordatorio : "")
+                    $("#update_temporizador").val(evento.temporizador ? evento.temporizador : "")
+                    $("#update_recurrente").val(evento.recurrente ? evento.recurrente : "")
+                    $("#update_periodo").val(evento.periodo ? evento.periodo : "")
+                    $("#update_url").val(evento.url ? evento.url : "")
+                    updateModal.toggle()
+                });
+    }
+
+    function showDeleteForm(evento_id) {
+
+        $("#evento").val(evento_id);
+        deleteModal.toggle()
+
+    }
+
+    // FUNCION PARA MOSTRAR FORMULARIO DE ENVIO DE CORREO ELECTRONICO
+    function showEmailEventForm(evento_id){
+        $("#evento_email").val(evento_id)
+        emailModal.toggle()
+    }
+
 
     $("#nuevoEvento").on("submit", function (event) {
         event.preventDefault();
