@@ -66,21 +66,25 @@ $(document).ready(async function () {
     document.addEventListener("load", setColorBasal(8, 'Puntales'));
     function setColorBasal(numero, clase) {
         numero = parseInt(numero);
+        console.log("COLOR-----: " + clase)
         switch (clase) {
             case  'Faltas':
                 for (var i = 1; i <= numero; i++) {
-                    document.getElementById("recFalt1_" + i.toString()).className = "rectangleColor1";
+                    document.getElementById("faltaEmpresa_" + i.toString()).className = "rectangleColor1";
                 }
+                console.log("COLOR-----: " + clase + " NUMERO------: "+ numero)
                 break;
             case  'Retardos':
                 for (var i = 1; i <= numero; i++) {
                     document.getElementById("recReta2_" + i.toString()).className = "rectangleColor2";
                 }
+                console.log("COLOR-----: " + clase + " NUMERO------: "+ numero)
                 break;
             case  'Puntales':
                 for (var i = 1; i <= numero; i++) {
                     document.getElementById("recPunt3_" + i.toString()).className = "rectangleColor3";
                 }
+                console.log("COLOR-----: " + clase + " NUMERO------: "+ numero)
                 break;
         }
     }
@@ -2343,6 +2347,7 @@ const verReporteDetallado = async empleado => {
                             }
                         }
                     }
+                    numeroFaltas = faltasArreglo.length
                 }
                 if (faltaEncontrada) {
                     faltas[new Date(from.format('YYYY-MM-DD') + "T00:00")] = new Date(from.format('YYYY-MM-DD') + "T00:00")
