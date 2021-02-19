@@ -5,7 +5,7 @@
  */
 
 
-/* global RequestPOST, directorio_usuario, AWS, sesion_cookie, NotificacionToas, moment, Swal, lottieLoader_blockpage, superCm, swal */
+/* global RequestPOST, directorio_usuario, AWS, sesion_cookie, NotificacionToas, moment, Swal, lottieLoader_blockpage, superCm, swal, Notification, PathRecursos */
 
 var vueArchivos, tablaArchivos, detailRows = [], usuariosReenviaArchivo = [];
 var banderaD = false, banderaR = false;
@@ -131,23 +131,27 @@ function detalleArchivo ( d ) {
     
     let detalle =   '<table cellpadding="5" class="tablaDetalle" cellspacing="0" border="0" style="padding-left:50px; width: 100%;">'+
                         '<tr>'+
+                            '<td>Remitente:</td>'+
+                            '<td>'+d[12]+'</td>'+
+                        '</tr>'+
+                        '<tr>'+
                             '<td style="width: 15%;">Compartido con:</td>'+
                             '<td style="width: 30%;">'+msjDestinatarios+'</td>'+
                             '<td rowspan="5" style="width: 55%;">';
 
-    let extension = d[11];
+    let extension = d[3];
     
     if(extension === "pdf"){
-        detalle +=              '<embed type="application/pdf" style="width: 100%; height: 300px;" frameborder="0" src="'+d[9]+'" >';
+        detalle +=              '<embed type="application/pdf" style="width: 100%; height: 300px;" frameborder="0" src="'+d[10]+'" >';
     }else if( extension === "gif" || extension === "jpg" || extension === "jpeg" || extension === "png" ){
-        detalle +=              '<img style="max-width: 100%; max-height: 300px" src="'+d[9]+'" />';
+        detalle +=              '<img style="max-width: 100%; max-height: 300px" src="'+d[10]+'" />';
     }
         
     detalle +=              '</td>'+
                         '</tr>'+
                         '<tr>'+
                             '<td>Proyecto:</td>'+
-                            '<td>'+d[3]+'</td>'+
+                            '<td>'+d[4]+'</td>'+
                         '</tr>'+
                         '<tr>'+
                             '<td>Título:</td>'+
@@ -155,7 +159,7 @@ function detalleArchivo ( d ) {
                         '</tr>'+
                         '<tr>'+
                             '<td>Descripción:</td>'+
-                            '<td>'+d[10]+'</td>'+
+                            '<td>'+d[11]+'</td>'+
                         '</tr>'+
                         '<tr>'+
                             '<td>Extensión:</td>'+
@@ -168,8 +172,9 @@ function detalleArchivo ( d ) {
     return detalle;
 }
 
-const buscaArchivosEnviado = () => {
+const buscaArchivosEnviado = (tituloDefault) => {
     
+    console.log("Filtrar: " + tituloDefault);
     muestraLoaderArchivo();
     
     let services = "/API/empresas360/consultar_archivos_empresas";
@@ -216,7 +221,7 @@ const buscaArchivosEnviado = () => {
             let arrayArchivos = [];
             $.each(archivos, (index, archivo) => {
                 
-                let iconSeleccionar = '<i class="fas fa-hand-pointer"></i>';
+                let iconSeleccionar = '<i class="fas fa-hand-point-right"></i>';
                 let buttonCompartir = '<button class="btn btn-app"><i class="fas fa-share"></i></button>';
                 let buttonDescargar = '<a href="'+archivo.ruta_archivo+'" download="'+archivo.titulo_archivo+'" target="_blank" class="btn btn-app"><i class="fas fa-cloud-download-alt"></i></a>';
                 
@@ -224,6 +229,7 @@ const buscaArchivosEnviado = () => {
                     iconSeleccionar,
                     "",
                     archivo.titulo_archivo,
+                    archivo.tipo_archivo,
                     archivo.nombre_proyecto,
                     archivo.fecha_envio,
                     archivo.hora_envio,
@@ -232,7 +238,6 @@ const buscaArchivosEnviado = () => {
                     archivo.id_archivo,
                     archivo.ruta_archivo,
                     archivo.descripcion_archivo,
-                    archivo.tipo_archivo,
                     archivo.id360,
                     archivo.destinatarios,
                     archivo.agrupador
@@ -256,6 +261,7 @@ const buscaArchivosEnviado = () => {
                         "defaultContent": ""
                     },
                     { "title": "Título" },
+                    { "title": "Tipo" },
                     { "title": "Proyecto" },
                     { "title": "Fecha de envío" },
                     { "title": "Hora de envío" },
@@ -271,11 +277,16 @@ const buscaArchivosEnviado = () => {
                 ],
                 "order": [[1, 'asc']],
                 initComplete: function() {
-                    this.api().columns([1,2,3]).every(function() {
+                    this.api().columns([2,3,4,5]).every(function() {
                         var column = this;
 
-                        var select = $('<select style="width: 80%; margin-left: 10%; height: 15px; margin-top: 10px; margin-bottom: 10px;" class="custom-select"><option value=""></option></select>')
-                            .appendTo($(column.header()))
+                        var containerSelect = $("<div></div>");
+                        containerSelect.css({
+                            "width":"100%",
+                            "margin":"5px 0"
+                        });
+                        var select = $('<select style="width: 80%; margin-left: 10%; height: 15px; margin-top: 10px; margin-bottom: 10px;" class="custom-select select2"><option value="">Todos</option></select>')
+                            .appendTo(containerSelect)
                             .on('change', function() {
                                 var val = $.fn.dataTable.util.escapeRegex(
                                     $(this).val()
@@ -287,8 +298,10 @@ const buscaArchivosEnviado = () => {
 
 
                             });
+                       
+                        containerSelect.appendTo($(column.header()));
 
-                        $(select).click(function(e) {
+                        containerSelect.click(function(e) {
                             e.stopPropagation();
                         });
 
@@ -303,6 +316,8 @@ const buscaArchivosEnviado = () => {
                     { "bSearchable": true, "aTargets": [ 1 ] }
                 ]
             } );
+            
+            $("#tablaArchivos .select2").select2();
             
             $('#tablaArchivos').css({
                 "width":"100%"
@@ -383,15 +398,15 @@ const buscaArchivosEnviado = () => {
                         Swal.close();
                         muestraLoaderArchivo();
 
-                        let rutaArchivo = data[9];
+                        let rutaArchivo = data[10];
                         let partes = rutaArchivo.split(".");
                         let tipo = partes[ partes.length-1 ];
                         let dataArchivo = {
                             'titulo_archivo': data[2],
-                            'descripcion_archivo': data[10],
+                            'descripcion_archivo': data[11],
                             'ruta_archivo': rutaArchivo,
                             'tipo_archivo': tipo,
-                            'proyecto': data[3],
+                            'proyecto': data[4],
                             'id360': sesion_cookie.idUsuario_Sys,
                             'destinatarios': usuariosReenviaArchivo,
                             "tipo_usuario": sesion_cookie.tipo_usuario,
@@ -444,6 +459,11 @@ const buscaArchivosEnviado = () => {
                     });
                 }
             } );
+            
+            if(tablaArchivos !== undefined && tituloDefault !== undefined && tituloDefault !== null && tituloDefault !== ""){
+                $("#contentArchivos input").val( tituloDefault );
+                tablaArchivos.columns(2).search( tituloDefault ).draw();
+            }
             
             archivosEncontrados.removeClass("d-none");
             archivosNoEncontrados.addClass("d-none");
@@ -511,7 +531,7 @@ buttonBorrarArchivos.click((e) => {
                         
                 if(response){
 
-                    RequestPOST("/API/empresas360/eliminar_archivos_seleccionados", {"agrupadores": agrupadores, "id360": sesion_cookie}).then((response) => {
+                    RequestPOST("/API/empresas360/eliminar_archivos_seleccionados", {"agrupadores": agrupadores, "id360": sesion_cookie.idUsuario_Sys}).then((response) => {
                         if(response.success){
                             buscaArchivosEnviado();
                         }
@@ -533,6 +553,47 @@ buttonBorrarArchivos.click((e) => {
 refrescarArchivos.click(() => {
     buscaArchivosEnviado();
 });
+
+const recibirArchivoSocket = (mensaje) => {
+    
+    console.log("Recibir archivo por socket");
+    let remitente = buscaEnDirectorioCompletoArchivos(mensaje.id360).nombre;
+    
+    if (Notification.permission !== "granted") {
+        console.log("weeeeee");
+        Notification.requestPermission();
+    } else {
+
+        console.log("Wiiiiii");
+        let options = {
+            body: remitente + " te ha enviado " + mensaje.titulo_archivo + "." + mensaje.tipo_archivo,
+            icon: PathRecursos + "images/claro2min.png",
+            silent: true
+        };
+        
+        console.log(options);
+        let notificacion = new Notification("Nuevo archivo recibido", options);
+        setTimeout(notificacion.close.bind(notificacion), 15000);
+
+        notificacion.onshow = function () {
+            //document.getElementById('').play();
+        };
+
+        notificacion.onclick = () => {
+            $("#menu_section_Archivo").click();
+    
+            selectOrigen.val("2");
+            selectOrigen.trigger("change");
+            buscaArchivosEnviado(mensaje.titulo_archivo);
+        };
+
+        notificacion.silent = true;
+        console.log("Termina socket");
+
+    }
+    
+    
+};
 
 var init_archivo = (json) => {
     console.log(json);
@@ -586,6 +647,13 @@ var init_archivo = (json) => {
         destinatarioArchivo.append(optionD);
         remitenteArchivo.append(optionR);
         
+    });
+    
+    remitenteArchivo.select2();
+    destinatarioArchivo.select2();
+    
+    $(".filtrosArchivos .select2").css({
+        "width":"100%"
     });
     
     selectOrigen.change(() => {

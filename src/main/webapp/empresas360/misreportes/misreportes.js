@@ -25,10 +25,10 @@ const init_misreportes = (json) => {
 
 //GENERAR REPORTE DE JORNADAS LABORALES
     /*$(document).ready(() => {
-        $("#reporteEmpleadoJornadasLaborales").hide()
-        //$("#reporteJornadasLaborales").hide()
-        //$("#reporteEmpleadoJornadasLaborales").show()
-    })*/
+     $("#reporteEmpleadoJornadasLaborales").hide()
+     //$("#reporteJornadasLaborales").hide()
+     //$("#reporteEmpleadoJornadasLaborales").show()
+     })*/
     let tablaHistorialLaboralEmpleado
     let id360Estatico
     let jornadas_laborales_empleado
@@ -43,8 +43,8 @@ const init_misreportes = (json) => {
         const conResultados = $("#empleadoConHistorialLaboralMisReportes");
         const sinResultados = $("#empleadoSinHistorialLaboralMisReportes");
         let jornadas_laborales_rango_empleado_tabla = []
-        let rangoInicioEmpleado = $("#fecha_inicio_historial_laboral2").val()
-        let rangoFinEmpleado = $("#fecha_fin_historial_laboral2").val()
+        let rangoInicioEmpleado = $("#fecha_inicio_historial_laboral2MisReportes").val()
+        let rangoFinEmpleado = $("#fecha_fin_historial_laboral2MisReportes").val()
         //SERVIDOR
         let jornadas_laborales_rango_empleado = await $.ajax({
             type: 'POST',
@@ -63,7 +63,7 @@ const init_misreportes = (json) => {
                 console.log("Ocurrio un problema en la llamada jornadas_laborales_rango_empleado", err)
             }
         })
-        
+
         if (jornadas_laborales_rango_empleado.data) {
             //tablaHistorialLaboralEmpleado = $("#tablaHistorialLaboralEmpleado")
             //const cuerpoTablaHistorialLaboralEmpleado = tablaHistorialLaboralEmpleado.find("tbody");        
@@ -214,7 +214,7 @@ const init_misreportes = (json) => {
                 console.log("Ocurrio un problema en la llamada jornadas Laborales Empleado", err)
             }
         })
-       
+
         let datosVistaReporteDetallado
         if (jornadas_laborales_empleado[0]) {
             datosVistaReporteDetallado = {
@@ -299,7 +299,7 @@ const init_misreportes = (json) => {
                 console.log("Ocurrio un problema en la llamada jornadasLaboralesSemanaEmpleado", err)
             }
         })
-        
+
         var from = moment(lunes2, "YYYY-MM-DD").set({'hour': 00, 'minute': 00, 'second': 00, 'millisecond': 000}),
                 to = moment(viernes2, "YYYY-MM-DD"),
                 diasLaboralesSemana = 0,
@@ -451,7 +451,7 @@ const init_misreportes = (json) => {
             //SERVIDOR        
             const inicioMes = moment().set('month', numeroMes).startOf('month').format('YYYY-MM-DD');
             const finMes = moment().set('month', numeroMes).endOf('month').format('YYYY-MM-DD');
-            
+
             let mesEnRevision = today
             mesEnRevision.setMonth(numeroMes)
             let mesString = mesEnRevision.toLocaleDateString('es-ES', {month: 'long'})
@@ -477,7 +477,7 @@ const init_misreportes = (json) => {
                     console.log("Ocurrio un problema en la llamada jornadasLaboralesMesEmpleado", err)
                 }
             })
-            
+
             let horaEntrada2 = undefined
             let tiempoCreado2 = undefined
             retardos = {}
@@ -711,9 +711,9 @@ const init_misreportes = (json) => {
             vacaciones[ new Date('01/30/2021')] = new Date('01/30/2021');
             vacaciones[ new Date('01/31/2021')] = new Date('01/31/2021');
 
-            $(".datepicker").datepicker("refresh")
+            $("#calendarioRendimientoMensualMisReportes").datepicker("refresh")
 
-            await $('.datepicker').datepicker({
+            await $("#calendarioRendimientoMensualMisReportes").datepicker({
                 firstDay: 0,
                 beforeShowDay: function (date) {
                     var highlight = puntuales[date];

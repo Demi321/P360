@@ -1103,7 +1103,7 @@ $('#botonRegresarJornadasLaborales').click(async () => {
     $("#reporteJornadasLaborales").show()
     $("#reporteEmpleadoJornadasLaborales").hide()
 
-    $(".datepicker").datepicker("destroy")
+    $("#calendarioRendimientoMensual").datepicker("destroy")
 });
 const verReporteDetallado = async empleado => {
     $("#reporteJornadasLaborales").hide()
@@ -2470,9 +2470,9 @@ const verReporteDetallado = async empleado => {
         vacaciones[ new Date('01/30/2021')] = new Date('01/30/2021');
         vacaciones[ new Date('01/31/2021')] = new Date('01/31/2021');
 
-        $(".datepicker").datepicker("refresh")
+        $("#calendarioRendimientoMensual").datepicker("refresh")
 
-        await $('.datepicker').datepicker({
+        await $("#calendarioRendimientoMensual").datepicker({
             firstDay: 0,
             beforeShowDay: function (date) {
                 var highlight = puntuales[date];
