@@ -367,8 +367,8 @@ const init_misreportes = (json) => {
         porcentajeProductividadSemanal = ((horasSemanaEmpleado / horasLaboralesSemana) * 100)
         porcentajeProductividadSemanal = porcentajeProductividadSemanal > 100 ? 100 : porcentajeProductividadSemanal.toFixed()
         google.charts.load("current", {packages: ["corechart"]});
-        google.charts.setOnLoadCallback(drawChart2);
-        function drawChart2() {
+        google.charts.setOnLoadCallback(drawChart2MisReportes);
+        function drawChart2MisReportes() {
             var data = google.visualization.arrayToDataTable([
                 ['Task', 'Hours per Day'],
                 ['Productividad', horasSemanaEmpleado],
@@ -510,8 +510,8 @@ const init_misreportes = (json) => {
             }
 
             google.charts.load("current", {packages: ["corechart"]});
-            google.charts.setOnLoadCallback(drawChart);
-            function drawChart() {
+            google.charts.setOnLoadCallback(drawChartMisReportesPuntualidad);
+            function drawChartMisReportesPuntualidad() {
                 var data = google.visualization.arrayToDataTable([
                     ['Task', 'Hours per Day'],
                     ['Puntualidad', puntualidad],
@@ -605,8 +605,8 @@ const init_misreportes = (json) => {
             porcentajeProductividadMensual = porcentajeProductividadMensual > 100 ? 100 : porcentajeProductividadMensual.toFixed()
 
             google.charts.load("current", {packages: ["corechart"]});
-            google.charts.setOnLoadCallback(drawChart3);
-            function drawChart3() {
+            google.charts.setOnLoadCallback(drawChart3MisReportes);
+            function drawChart3MisReportes() {
                 var data = google.visualization.arrayToDataTable([
                     ['Task', 'Hours per Day'],
                     ['Productividad', horasMesEmpleado],
@@ -646,8 +646,8 @@ const init_misreportes = (json) => {
                 porcentajeCumplimiento = porcentajeCumplimiento > 100 ? 100 : porcentajeCumplimiento.toFixed()
             }
             google.charts.load("current", {packages: ["corechart"]});
-            google.charts.setOnLoadCallback(drawChart4);
-            function drawChart4() {
+            google.charts.setOnLoadCallback(drawChart4MisReportes);
+            function drawChart4MisReportes() {
                 var data = google.visualization.arrayToDataTable([
                     ['Task', 'Hours per Day'],
                     ['Cumplimiento', diasLaboraloMesEmpleado],
