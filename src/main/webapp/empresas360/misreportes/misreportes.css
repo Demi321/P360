@@ -8,3 +8,293 @@ and open the template in the editor.
     Author     : moises
 */
 
+.misreportes .opciones_tabs_jornadas_laborales{
+    list-style: none;
+    display: flex;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 50px;
+}
+
+.misreportes .opciones_tabs_jornadas_laborales li{
+    text-align: center;
+    width: 50%;
+    padding: 10px;
+    border-radius: 50px;
+}
+
+.misreportes .opciones_tabs_jornadas_laborales li.active{
+    background-color: lightsteelblue;
+}
+
+.misreportes .opciones_tabs_jornadas_laborales li a{
+    color: currentcolor;
+    font-size: 1.4rem;
+    text-decoration: none;
+    padding: 10px 30%;
+}
+
+.misreportes .rectangleVacio2{
+    width:10px; 
+    height:20px; 
+    background:#9c9c9c; 
+    margin-left: 2px; 
+    float:left; 
+}
+.misreportes .rectangleColor1{ 
+    width:10px; 
+    height:20px;
+    background: #E23F20;
+    margin-left: 2px;
+    float:left;
+}
+
+.misreportes .rectangleColor2{ 
+    width:10px; 
+    height:20px;
+    background: #F8B133;
+    margin-left: 2px;
+    float:left;
+}
+
+.misreportes .rectangleColor3{ 
+    width:10px; 
+    height:20px;
+    background: #8E9351;
+    margin-left: 2px;
+    float:left;
+}
+
+.misreportes #calendarioRendimientoMensualMisReportes .puntuales a {
+    background-color: #8E9351 !important;
+    color: white !important;
+}
+
+.misreportes #calendarioRendimientoMensualMisReportes .retardos a {
+    background-color: #F8B135 !important;
+    color: white !important;
+}
+
+.misreportes #calendarioRendimientoMensualMisReportes .faltas a {
+    background-color: #B53018 !important;
+    color: white !important;
+}
+
+.misreportes #calendarioRendimientoMensualMisReportes .vacaciones a {
+    background-color: #9C9C9C !important;
+    color: white !important;
+}
+
+.misreportes #misReportes #labelOverlay {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: calc(50% - 20px);
+    left: calc(50% - 25px);
+    text-align: center;
+    cursor: default;
+}
+
+.misreportes #misReportes #labelOverlay strong {
+    line-height: 1;
+    font-size: 8pt;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+.misreportes #misReportes #labelOverlay p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3px;
+}
+.misreportes #misReportes #labelOverlay span {
+    line-height: 1;
+    font-size: 19pt;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.misreportes .ui-datepicker {
+    width: 17em;
+    padding: .2em .2em 0;
+    display: none;
+}
+.misreportes .ui-datepicker .ui-datepicker-header {
+    position: relative;
+    padding: .2em 0;
+}
+.misreportes .ui-datepicker .ui-datepicker-prev,
+.misreportes .ui-datepicker .ui-datepicker-next {
+    position: absolute;
+    top: 2px;
+    width: 1.8em;
+    height: 1.8em;   
+    /*background: white;*/
+    cursor: pointer;    
+}
+.misreportes .ui-datepicker .ui-datepicker-prev-hover,
+.misreportes .ui-datepicker .ui-datepicker-next-hover {
+    top: 1px;
+}
+.misreportes .ui-datepicker .ui-datepicker-prev {
+    left: 2px;
+}
+.misreportes .ui-datepicker .ui-datepicker-next {
+    right: 2px;
+}
+.misreportes .ui-datepicker .ui-datepicker-prev-hover {
+    left: 1px;
+}
+.misreportes .ui-datepicker .ui-datepicker-next-hover {
+    right: 1px;
+}
+.misreportes .ui-datepicker .ui-datepicker-prev span,
+.misreportes .ui-datepicker .ui-datepicker-next span {
+    display: block;
+    position: absolute;
+    left: 50%;
+    margin-left: -8px;
+    top: 50%;
+    margin-top: -8px;
+}
+.misreportes .ui-datepicker .ui-datepicker-title {
+    margin: 0 2.3em;
+    line-height: 1.8em;
+    text-align: center;
+}
+.misreportes .ui-datepicker .ui-datepicker-title select {
+    font-size: 1em;
+    margin: 1px 0;
+}
+.misreportes .ui-datepicker select.ui-datepicker-month,
+.misreportes .ui-datepicker select.ui-datepicker-year {
+    width: 45%;
+}
+.misreportes .ui-datepicker table {
+    width: 100%;
+    font-size: .9em;
+    border-collapse: collapse;
+    margin: 0 0 .4em;
+}
+.misreportes .ui-datepicker th {
+    padding: .7em .3em;
+    text-align: center;
+    font-weight: bold;
+    border: 0;
+}
+.misreportes .ui-datepicker td {
+    border: 0;
+    padding: 1px;
+}
+.misreportes .ui-datepicker td span,
+.misreportes .ui-datepicker td a {
+    display: block;
+    padding: .2em;
+    text-align: right;
+    text-decoration: none;
+}
+.misreportes .ui-datepicker .ui-datepicker-buttonpane {
+    background-image: none;
+    margin: .7em 0 0 0;
+    padding: 0 .2em;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+}
+.misreportes .ui-datepicker .ui-datepicker-buttonpane button {
+    float: right;
+    margin: .5em .2em .4em;
+    cursor: pointer;
+    padding: .2em .6em .3em .6em;
+    width: auto;
+    overflow: visible;
+}
+.misreportes .ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current {
+    float: left;
+}
+
+.misreportes .ui-datepicker .ui-icon {
+    display: block;
+    /*text-indent: -99999px;*/
+    overflow: hidden;
+    background-repeat: no-repeat;
+    left: .5em;
+    top: .3em;   
+    font-size: 130%;
+    font-weight: bold;
+    color: #565656;
+}
+
+.misreportes .ui-corner-all,
+.misreportes .ui-corner-top,
+.misreportes .ui-corner-left,
+.misreportes .ui-corner-tl {
+    border-top-left-radius: 3px;
+}
+.misreportes .ui-corner-all,
+.misreportes .ui-corner-top,
+.misreportes .ui-corner-right,
+.misreportes .ui-corner-tr {
+    border-top-right-radius: 3px;
+}
+.misreportes .ui-corner-all,
+.misreportes .ui-corner-bottom,
+.misreportes .ui-corner-left,
+.misreportes .ui-corner-bl {
+    border-bottom-left-radius: 3px;
+}
+.misreportes .ui-corner-all,
+.misreportes .ui-corner-bottom,
+.misreportes .ui-corner-right,
+.misreportes .ui-corner-br {
+    border-bottom-right-radius: 3px;
+}
+
+.misreportes .ui-datepicker-header {
+    width: 100%;
+    border-radius: 0px !important;
+    background-color: #F5F5F5 !important;
+    background: #F5F5F5 !important;
+    border: none !important; 
+    cursor: default; 
+}
+.misreportes .ui-datepicker {
+    width: 100%;
+    /*font-family: 'Jaldi', sans-serif !important;*/
+    border: none !important;
+    background: #F5F5F5;    
+}
+.misreportes .datepicker table tr td,
+.misreportes .datepicker table tr th{
+    padding: 2px 0px;
+    font-weight: bold;
+}
+.misreportes .datepicker table tr td a,
+.misreportes .datepicker table tr th a{
+    text-align: center;
+    width: 32px; 
+    height: 22px;
+    border-radius: 0px !important; 
+    border: none !important;
+    /*color: #000; */
+    cursor: default;
+    font-size: 130%;    
+    color: #565656;
+}
+
+.misreportes .datepicker table thead tr th span{
+    font-size: 130%;
+    font-weight: bold;
+    color: #565656;
+}
+
+.misreportes .datepicker table thead{
+    border-bottom: 1px solid black;
+    cursor: default; 
+}
