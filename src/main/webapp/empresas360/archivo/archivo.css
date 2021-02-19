@@ -32,3 +32,41 @@ and open the template in the editor.
 #tablaArchivos table{
     text-align: left !important;
 }
+
+#loaderArchivos{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#tablaArchivos .seleccionar-archivo{
+    cursor: pointer;
+}
+
+#tablaArchivos tr.selected{
+    background-color: #0097a9 !important;
+    color: #fff;
+}
+
+#tablaArchivos tr.selected button,
+#tablaArchivos tr.selected a{
+    color: #fff;
+}
+
+#eliminarArchivos,
+#refrescarArchivos{
+    position: absolute;
+    top: 0;
+    right: 10px;
+}
+
+#refrescarArchivos{
+    right: 50px;
+}
