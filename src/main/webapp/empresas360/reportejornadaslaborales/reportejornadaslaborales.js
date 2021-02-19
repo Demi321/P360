@@ -66,25 +66,21 @@ $(document).ready(async function () {
     document.addEventListener("load", setColorBasal(8, 'Puntales'));
     function setColorBasal(numero, clase) {
         numero = parseInt(numero);
-        console.log("COLOR-----: " + clase)
         switch (clase) {
             case  'Faltas':
                 for (var i = 1; i <= numero; i++) {
                     document.getElementById("faltaEmpresa_" + i.toString()).className = "rectangleColor1";
                 }
-                console.log("COLOR-----: " + clase + " NUMERO------: "+ numero)
                 break;
             case  'Retardos':
                 for (var i = 1; i <= numero; i++) {
-                    document.getElementById("recReta2_" + i.toString()).className = "rectangleColor2";
+                    document.getElementById("retardoEmpresa_" + i.toString()).className = "rectangleColor2";
                 }
-                console.log("COLOR-----: " + clase + " NUMERO------: "+ numero)
                 break;
             case  'Puntales':
                 for (var i = 1; i <= numero; i++) {
-                    document.getElementById("recPunt3_" + i.toString()).className = "rectangleColor3";
+                    document.getElementById("puntualEmpresa_" + i.toString()).className = "rectangleColor3";
                 }
-                console.log("COLOR-----: " + clase + " NUMERO------: "+ numero)
                 break;
         }
     }
