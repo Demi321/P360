@@ -100,6 +100,7 @@ let faltas = {}
 const botonObtenerJornadasReporteEmpleado = async (id360Estatico, jornadas_laborales_empleado) => {
     if (tablaHistorialLaboralEmpleado !== null && tablaHistorialLaboralEmpleado !== undefined) {
         tablaHistorialLaboralEmpleado.destroy()
+        tablaHistorialLaboralEmpleado = undefined
     }
     const tablaHistorialLaboralEmpleado2 = $("#tablaHistorialLaboralEmpleado")
     const conResultados = $("#empleadoConHistorialLaboral");

@@ -38,6 +38,7 @@ const init_misreportes = (json) => {
     const botonObtenerJornadasReporteEmpleado = async (id360Estatico, jornadas_laborales_empleado) => {
         if (tablaHistorialLaboralEmpleado !== null && tablaHistorialLaboralEmpleado !== undefined) {
             tablaHistorialLaboralEmpleado.destroy()
+            tablaHistorialLaboralEmpleado = undefined
         }
         const tablaHistorialLaboralEmpleado2 = $("#tablaHistorialLaboralEmpleadoMisReportes")
         const conResultados = $("#empleadoConHistorialLaboralMisReportes");
