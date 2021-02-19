@@ -135,7 +135,7 @@ and open the template in the editor.
     top: 2px;
     width: 1.8em;
     height: 1.8em;   
-    background: white;
+    /*background: white;*/
     cursor: pointer;    
 }
 .reportejornadaslaborales .ui-datepicker .ui-datepicker-prev-hover,
@@ -225,7 +225,10 @@ and open the template in the editor.
     overflow: hidden;
     background-repeat: no-repeat;
     left: .5em;
-    top: .3em;    
+    top: .3em;   
+    font-size: 130%;
+    font-weight: bold;
+    color: #565656;
 }
 
 .reportejornadaslaborales .ui-corner-all,
@@ -258,7 +261,8 @@ and open the template in the editor.
     border-radius: 0px !important;
     background-color: #F5F5F5 !important;
     background: #F5F5F5 !important;
-    border: none !important;        
+    border: none !important; 
+    cursor: default; 
 }
 .reportejornadaslaborales .ui-datepicker {
     width: 100%;
@@ -279,7 +283,7 @@ and open the template in the editor.
     border-radius: 0px !important; 
     border: none !important;
     /*color: #000; */
-    cursor: pointer !important;
+    cursor: default;
     font-size: 130%;    
     color: #565656;
 }
@@ -292,4 +296,5 @@ and open the template in the editor.
 
 .reportejornadaslaborales .datepicker table thead{
     border-bottom: 1px solid black;
+    cursor: default; 
 }

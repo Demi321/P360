@@ -2448,8 +2448,8 @@ const verReporteDetallado = async empleado => {
         //CALENDARIO
         $.datepicker.regional['es'] = {
             closeText: 'Cerrar',
-            prevText: '< Ant',
-            nextText: 'Sig >',
+            prevText: '< ',
+            nextText: ' >',
             currentText: 'Hoy',
             monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
             monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
@@ -2516,7 +2516,7 @@ const init_reportejornadaslaborales = (json) => {
 }
 $( function() {
     $( "#tabs_jornadas_laborales" ).tabs({
-      event: "mouseover"
+      //event: "mouseover"
     });
 } );
 
