@@ -88,8 +88,8 @@ function showEvent(evento_id) {
     						<input class="form-control" type="text" readonly="" value="${evento.url ? evento.url : "N/A"}">
     					</div>
     					<div class="col-12 mt-3 d-flex justify-content-between">
-							
 							<button type="button" class="btn btn-warning" onclick="showUpdateForm(${evento.id})">Editar</button>
+                                                        <button type="button" class="btn btn-info" onclick="showEmailEventForm(${evento.id})">Enviar por correo</button>
 							<button type="button" class="btn btn-danger" onclick="showDeleteForm(${evento.id})">Eliminar</button>
     					</div>
     				</div>
@@ -133,6 +133,13 @@ function showDeleteForm(evento_id) {
     deleteModal.toggle()
 
 }
+
+// FUNCION PARA MOSTRAR FORMULARIO DE ENVIO DE CORREO ELECTRONICO
+function showEmailEventForm(evento_id){
+    $("#evento_email").val(evento_id)
+    emailModal.toggle()
+}
+
 const init_agenda = (json) => {
 console.log(json);
     let id = json.id;
@@ -303,6 +310,9 @@ console.log(json);
     var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
         keyboard: false
     })
+    var emailModal = new bootstrap.Modal(document.getElementById('emailEventModal'),{
+        keyboard:false
+    })
 
     $("#nuevoEvento").on("submit", function (event) {
         event.preventDefault();
@@ -317,6 +327,7 @@ console.log(json);
             },
             body: JSON.stringify({
                 'usuario_id': usuario_id,
+                'participantes_id':$("#participantes_id").val(),
                 'titulo': $("#titulo").val(),
                 'descripcion': $("#descripcion").val(),
                 'direccion': $("#direccion").val(),
@@ -355,6 +366,7 @@ console.log(json);
             },
             body: JSON.stringify({
                 'usuario_id': usuario_id,
+                'participantes_id':$("#update_participantes_id").val(),
                 '_method': "PUT",
                 'titulo': $("#update_titulo").val(),
                 'descripcion': $("#update_descripcion").val(),
@@ -400,6 +412,30 @@ console.log(json);
             location.reload();
         });
 
+    })
+    
+    // EVENTO JQUERY PARA ENVIAR CORREO CON EL EVENTO
+    $("#emailEvento").on("submit",function(event){
+        event.preventDefault()
+        let params = {
+            evento_id: $("#evento_email").val(),
+            correo: $("#correo").val(),
+            asunto: $("#asunto").val(),
+            cuerpo: $("#cuerpo").val()
+        }
+        fetch("https://agenda360.ml/api/email/event",{
+            method:"POST",
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept':'application/json'
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body:JSON.stringify(params)
+        }).then(response => response.json()).then(data => {
+            console.log(data)
+            emailModal.toggle();
+
+        });
     })
 }
 
