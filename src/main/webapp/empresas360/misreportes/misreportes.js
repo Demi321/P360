@@ -193,27 +193,27 @@ const init_misreportes = (json) => {
     });
 
     const verReporteDetallado = async empleado => {
-        //$("#reporteJornadasLaborales").hide()
         $("#misReportes").show()
 
         //VISTA REPORTE EMPLEADO
         id360Estatico = await empleado
         //SERVIDOR
-        jornadas_laborales_empleado = await $.ajax({
-            type: 'POST',
-            url: 'https://empresas.claro360.com/plataforma360/API/empresas360/jornadas_laborales/empresa/obtener_empleados',
-            contentType: "application/json",
-            dataType: "json",
-            data: JSON.stringify([{
-                    id360: id360Estatico
-                }]),
-            success: function (response) {
-                //console.log("RES JSON1: ", response)
-            },
-            error: function (err) {
-                console.log("Ocurrio un problema en la llamada jornadas Laborales Empleado", err)
-            }
-        })
+        /*jornadas_laborales_empleado = await $.ajax({
+         type: 'POST',
+         url: 'https://empresas.claro360.com/plataforma360/API/empresas360/jornadas_laborales/empresa/obtener_empleados',
+         contentType: "application/json",
+         dataType: "json",
+         data: JSON.stringify([{
+         id360: id360Estatico
+         }]),
+         success: function (response) {
+         //console.log("RES JSON1: ", response)
+         },
+         error: function (err) {
+         console.log("Ocurrio un problema en la llamada jornadas Laborales Empleado", err)
+         }
+         })*/
+        jornadas_laborales_empleado = [perfil_usuario]
 
         let datosVistaReporteDetallado
         if (jornadas_laborales_empleado[0]) {
@@ -227,6 +227,7 @@ const init_misreportes = (json) => {
                 num_empleado: jornadas_laborales_empleado[0].num_empleado,
                 img: jornadas_laborales_empleado[0].img
             };
+            datosVistaReporteDetallado.direccion = location_user.colonia + " " + location_user.municipio + " " + location_user.estado_long
             $("#nombreEmpleadoMisReportes").text("Nombre: " + datosVistaReporteDetallado.nombre);
             $("#direccionEmpleadoMisReportes").text(datosVistaReporteDetallado.direccion);
             $("#areaEmpleadoMisReportes").text(datosVistaReporteDetallado.area);
