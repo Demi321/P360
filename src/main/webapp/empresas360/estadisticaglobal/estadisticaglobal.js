@@ -6,6 +6,8 @@
 
 
 
+/* global parserJsonData */
+
 var init_estadisticaglobal = (json) => {
 
     console.log(json);
@@ -14,17 +16,21 @@ var init_estadisticaglobal = (json) => {
     let tipo_usuario = json.tipo_usuario;
     let tipo_servicio = json.tipo_servicio;
     let tipo_area = json.tipo_area;
+    console.log(tipo_servicio + "----------------------> Estadistica Global");
+    var h =0;
+    var m =0;
     var jsonData = $.ajax({        
         type: 'POST',
-        url: '/' + DEPENDENCIA + '/API/Cantidad',
+        url: '/' + DEPENDENCIA + '/API/cantidad_empleados',
         contentType: "application/json",
         dataType: 'json',
         data: JSON.stringify({                        
-            "tipo_servicio":tipo_usuario
+            "tipo_servicio": tipo_usuario
         }),
         async: false
     }).responseText;
     var paserJsonData= JSON.parse(jsonData);
+    console.log(paserJsonData + " ------------------> Parse JsonData");
     
     console.log("Dashboard Reportes");
     //window.onload = function () {
@@ -98,7 +104,19 @@ var init_estadisticaglobal = (json) => {
   google.charts.setOnLoadCallback(drawBasicSexo);    
   google.charts.load('current', { callback: drawBasicSexo, packages:['corechart', 'bar'] });
 
-  function drawBasicSexo() {        
+  function drawBasicSexo() {
+        paserJsonData 
+        for(var i = 0; i < parserJsonData.length ; i++) {
+            if(paserJsonData[0].genero === "Hombre" || parserJsonData[0].genero === "Masculino"){
+                h++;
+                console.log(h);
+            }else if (paserJsonData[0].genero === "Mujer") {
+                m++;
+                console.log(m);
+            }                           
+        }
+        var total = parserJsonData.length;
+        console.log(total);
       var data = new google.visualization.DataTable();
       data.addColumn('string', 'Sexo');
       data.addColumn('number', 'Cantidad ');    
