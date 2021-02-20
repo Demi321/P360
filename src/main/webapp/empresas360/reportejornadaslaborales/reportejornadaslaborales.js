@@ -1113,22 +1113,21 @@ const verReporteDetallado = async empleado => {
     //VISTA REPORTE EMPLEADO
     id360Estatico = await empleado
     //SERVIDOR
-    /*jornadas_laborales_empleado = await $.ajax({
-     type: 'POST',
-     url: 'https://empresas.claro360.com/plataforma360/API/empresas360/jornadas_laborales/empresa/obtener_empleados',
-     contentType: "application/json",
-     dataType: "json",
-     data: JSON.stringify([{
-     id360: id360Estatico
-     }]),
-     success: function (response) {
-     //console.log("RES JSON1: ", response)
-     },
-     error: function (err) {
-     console.log("Ocurrio un problema en la llamada jornadas Laborales Empleado", err)
-     }
-     })*/
-    jornadas_laborales_empleado = [perfil_usuario]
+    jornadas_laborales_empleado = await $.ajax({
+        type: 'POST',
+        url: 'https://empresas.claro360.com/plataforma360/API/empresas360/jornadas_laborales/empresa/obtener_empleados',
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify([{
+                id360: id360Estatico
+            }]),
+        success: function (response) {
+            //console.log("RES JSON1: ", response)
+        },
+        error: function (err) {
+            console.log("Ocurrio un problema en la llamada jornadas Laborales Empleado", err)
+        }
+    })
     //LOCAL
     /*jornadas_laborales_empleado = [
      {
