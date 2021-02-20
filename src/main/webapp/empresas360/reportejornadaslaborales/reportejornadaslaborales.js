@@ -1211,13 +1211,6 @@ const verReporteDetallado = async empleado => {
             num_empleado: jornadas_laborales_empleado[0].num_empleado,
             img: jornadas_laborales_empleado[0].img
         };
-        if (location_user !== null) {
-            if (location_user.municipio !== null && location_user.estado !== null) {
-                datosVistaReporteDetallado.direccion = location_user.colonia + " " + location_user.municipio + " " + location_user.estado_long
-            }
-        } else {
-            datosVistaReporteDetallado.direccion = " - - - - "
-        }
         $("#nombreEmpleado").text("Nombre: " + datosVistaReporteDetallado.nombre);
         $("#direccionEmpleado").text(datosVistaReporteDetallado.direccion);
         $("#areaEmpleado").text(datosVistaReporteDetallado.area);
