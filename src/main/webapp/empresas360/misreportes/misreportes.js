@@ -223,12 +223,18 @@ const init_misreportes = (json) => {
                 direccion: jornadas_laborales_empleado[0].direccion,
                 area: jornadas_laborales_empleado[0].area,
                 cargo: jornadas_laborales_empleado[0].puesto,
-                reporteAislamiento: null,
-                actividadesDesempeñar: null,
+                reporteAislamiento: " - - - -",
+                actividadesDesempeñar: " - - - - ",
                 num_empleado: jornadas_laborales_empleado[0].num_empleado,
                 img: jornadas_laborales_empleado[0].img
             };
-            datosVistaReporteDetallado.direccion = location_user.colonia + " " + location_user.municipio + " " + location_user.estado_long
+            if (location_user !== null) {
+                if (location_user.municipio !== null && location_user.estado !== null) {
+                    datosVistaReporteDetallado.direccion = location_user.colonia + " " + location_user.municipio + " " + location_user.estado_long
+                }
+            } else {
+                datosVistaReporteDetallado.direccion = " - - - - "
+            }
             $("#nombreEmpleadoMisReportes").text("Nombre: " + datosVistaReporteDetallado.nombre);
             $("#direccionEmpleadoMisReportes").text(datosVistaReporteDetallado.direccion);
             $("#areaEmpleadoMisReportes").text(datosVistaReporteDetallado.area);
