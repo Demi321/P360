@@ -375,7 +375,7 @@ const init_misreportes = async (json) => {
         porcentajeProductividadSemanal = ((horasSemanaEmpleado / horasLaboralesSemana) * 100)
         porcentajeProductividadSemanal = porcentajeProductividadSemanal > 100 ? 100 : porcentajeProductividadSemanal.toFixed()
         google.charts.load("current", {packages: ["corechart"]});
-        google.charts.setOnLoadCallback(drawChart2MisReportes);
+        await google.charts.setOnLoadCallback(drawChart2MisReportes);
         function drawChart2MisReportes() {
             var data = google.visualization.arrayToDataTable([
                 ['Task', 'Hours per Day'],
@@ -748,7 +748,7 @@ const init_misreportes = async (json) => {
                 }
             });
         }
-        rendimientoMensual(moment().month())
+        await rendimientoMensual(moment().month())
 
         const conResultados = $("#empleadoConHistorialLaboralMisReportes");
         const sinResultados = $("#empleadoSinHistorialLaboralMisReportes");
