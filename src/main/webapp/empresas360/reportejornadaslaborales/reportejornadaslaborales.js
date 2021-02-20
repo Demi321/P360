@@ -100,6 +100,7 @@ let faltas = {}
 const botonObtenerJornadasReporteEmpleado = async (id360Estatico, jornadas_laborales_empleado) => {
     if (tablaHistorialLaboralEmpleado !== null && tablaHistorialLaboralEmpleado !== undefined) {
         tablaHistorialLaboralEmpleado.destroy()
+        tablaHistorialLaboralEmpleado = undefined
     }
     const tablaHistorialLaboralEmpleado2 = $("#tablaHistorialLaboralEmpleado")
     const conResultados = $("#empleadoConHistorialLaboral");
@@ -1112,21 +1113,22 @@ const verReporteDetallado = async empleado => {
     //VISTA REPORTE EMPLEADO
     id360Estatico = await empleado
     //SERVIDOR
-    jornadas_laborales_empleado = await $.ajax({
-        type: 'POST',
-        url: 'https://empresas.claro360.com/plataforma360/API/empresas360/jornadas_laborales/empresa/obtener_empleados',
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify([{
-                id360: id360Estatico
-            }]),
-        success: function (response) {
-            //console.log("RES JSON1: ", response)
-        },
-        error: function (err) {
-            console.log("Ocurrio un problema en la llamada jornadas Laborales Empleado", err)
-        }
-    })
+    /*jornadas_laborales_empleado = await $.ajax({
+     type: 'POST',
+     url: 'https://empresas.claro360.com/plataforma360/API/empresas360/jornadas_laborales/empresa/obtener_empleados',
+     contentType: "application/json",
+     dataType: "json",
+     data: JSON.stringify([{
+     id360: id360Estatico
+     }]),
+     success: function (response) {
+     //console.log("RES JSON1: ", response)
+     },
+     error: function (err) {
+     console.log("Ocurrio un problema en la llamada jornadas Laborales Empleado", err)
+     }
+     })*/
+    jornadas_laborales_empleado = [perfil_usuario]
     //LOCAL
     /*jornadas_laborales_empleado = [
      {
@@ -1205,11 +1207,18 @@ const verReporteDetallado = async empleado => {
             direccion: jornadas_laborales_empleado[0].direccion,
             area: jornadas_laborales_empleado[0].area,
             cargo: jornadas_laborales_empleado[0].puesto,
-            reporteAislamiento: null,
-            actividadesDesempeñar: null,
+            reporteAislamiento: " - - - -",
+            actividadesDesempeñar: " - - - -",
             num_empleado: jornadas_laborales_empleado[0].num_empleado,
             img: jornadas_laborales_empleado[0].img
         };
+        if (location_user !== null) {
+            if (location_user.municipio !== null && location_user.estado !== null) {
+                datosVistaReporteDetallado.direccion = location_user.colonia + " " + location_user.municipio + " " + location_user.estado_long
+            }
+        } else {
+            datosVistaReporteDetallado.direccion = " - - - - "
+        }
         $("#nombreEmpleado").text("Nombre: " + datosVistaReporteDetallado.nombre);
         $("#direccionEmpleado").text(datosVistaReporteDetallado.direccion);
         $("#areaEmpleado").text(datosVistaReporteDetallado.area);
@@ -2300,8 +2309,8 @@ const verReporteDetallado = async empleado => {
             var chart = new google.visualization.PieChart(document.getElementById('donutchart3'));
             chart.draw(data, options);
         }
-        
-        
+
+
         //RESUMEN GENERAL
         //TOTAL DE DIAS RENDIMIENTO MENSUAL    
         var from = moment(inicioMes, "YYYY-MM-DD"),
@@ -2401,7 +2410,7 @@ const verReporteDetallado = async empleado => {
             diasLaboraloMesEmpleado = jornadasLaboralesMesEmpleado.data.length
             porcentajePuntualidad = ((puntualidad / diasLaboraloMesEmpleado) * 100)
             porcentajePuntualidad = porcentajePuntualidad > 100 ? 100 : porcentajePuntualidad.toFixed()
-            porcentajeCumplimiento = ((diasLaboraloMesEmpleado / (diasLaboraloMesEmpleado+numeroFaltas)) * 100)
+            porcentajeCumplimiento = ((diasLaboraloMesEmpleado / (diasLaboraloMesEmpleado + numeroFaltas)) * 100)
             porcentajeCumplimiento = porcentajeCumplimiento > 100 ? 100 : porcentajeCumplimiento.toFixed()
         }
         google.charts.load("current", {packages: ["corechart"]});
@@ -2514,11 +2523,11 @@ const init_reportejornadaslaborales = (json) => {
     let tipo_servicio = json.tipo_servicio;
     let tipo_area = json.tipo_area;
 }
-$( function() {
-    $( "#tabs_jornadas_laborales" ).tabs({
-      //event: "mouseover"
+$(function () {
+    $("#tabs_jornadas_laborales").tabs({
+        //event: "mouseover"
     });
-} );
+});
 
 $("#tab_en_jornada").mouseover(() => {
     $("#tab_en_jornada").addClass("active");
@@ -2530,30 +2539,32 @@ $("#tab_reporte_jornada").mouseover(() => {
     $("#tab_en_jornada").removeClass("active");
 });
 var empleados = [],
-    empleadosEmpresa = [],
-    tablaInicio;
+        empleadosEmpresa = [],
+        tablaInicio;
 const botonExcel = $("#botonDescargaReporteJornada2");
 const inicioJornadas = $("#inicio-reporte-jornadas-laborales");
 
 const initComunicacionJornadasLaborales = (id360, llamada) => {
-  
+
     $("#sidebar a:eq(3)").click();
     $("#menu_section_Comunicación").click();
     if (!$("#profile_chat" + id360).length) {
-        let dataUsr = {"id360":id360};
+        let dataUsr = {"id360": id360};
         RequestPOST("/API/get/perfil360", dataUsr).then((response) => {
             if (response.success) {
                 contacto_chat(response);
                 directorio_completo.push(response);
-                $("#profile_chat"+id360).click();
-                if(llamada) $("#profile_chat"+id360 + " .btn-realizarLlamadaChat").click();
+                $("#profile_chat" + id360).click();
+                if (llamada)
+                    $("#profile_chat" + id360 + " .btn-realizarLlamadaChat").click();
             }
         });
-    }else{
-        $("#profile_chat"+id360).click();
-        if(llamada) $("#profile_chat"+id360 + " .btn-realizarLlamadaChat").click();
+    } else {
+        $("#profile_chat" + id360).click();
+        if (llamada)
+            $("#profile_chat" + id360 + " .btn-realizarLlamadaChat").click();
     }
-    
+
 };
 
 const enviar_mensaje_empleado_en_jornada = (id360) => {
@@ -2569,131 +2580,131 @@ $("#btn-refrescar-jornadas").click(() => {
 });
 
 const inicioJornadasLaborales = () => {
-    
-    if(tablaInicio !== undefined && tablaInicio !== null){
+
+    if (tablaInicio !== undefined && tablaInicio !== null) {
         tablaInicio.destroy();
     }
-    
+
     let c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0, c7 = 0, sumaTotal;
-    
+
     const tablaEmpleadosEnJornada = $("#tabla-empleados-en-jornada");
     const cuerpoTableEmpleadosEnJornada = tablaEmpleadosEnJornada.find("tbody");
     const conResultados = $("#con-empleados-en-jornada");
     const sinResultados = $("#sin-empleados-en-jornada");
-    
+
     conResultados.addClass("d-none");
     sinResultados.addClass("d-none");
     cuerpoTableEmpleadosEnJornada.empty();
-  
+
     let data = new Object();
-    data.id = JSON.parse(getCookie("username_v3.1_"+DEPENDENCIA)).tipo_usuario;
-    
-    RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_ids/en_jornada",data).then( (ids) => {
+    data.id = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
+
+    RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_ids/en_jornada", data).then((ids) => {
         empleadosEmpresa = ids;
-        
-        if( empleadosEmpresa.length ){
-            
+
+        if (empleadosEmpresa.length) {
+
             conResultados.removeClass("d-none");
             sinResultados.addClass("d-none");
-            
+
             let tbody = "";
-            
-            RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_empleados", ids).then( (response) => {
-                
+
+            RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_empleados", ids).then((response) => {
+
                 empleados = response;
-                
+
                 $.each(empleadosEmpresa, (index, empleado) => {
-                  
+
                     let detalleEmpleado = infoEmpleado(empleado.id360);
-                    
+
                     let partesHoraEntro = detalleEmpleado.hora_entrada.split(":");
                     let horaEntro = moment();
-                    horaEntro.set("hour",partesHoraEntro[0]);
+                    horaEntro.set("hour", partesHoraEntro[0]);
                     horaEntro.set("minute", partesHoraEntro[1]);
                     horaEntro.set("second", partesHoraEntro[2]);
-                    
+
                     let partesHoraTenia = detalleEmpleado.horario_entrada.split(":");
                     let horaTenia = moment();
-                    horaTenia.set("hour",partesHoraTenia[0]);
+                    horaTenia.set("hour", partesHoraTenia[0]);
                     horaTenia.set("minute", partesHoraTenia[1]);
                     horaTenia.set("second", partesHoraTenia[2]);
-                    
+
                     let tipoEntrada = 'success';
 
-                    let minutosDeDiferencia = horaTenia.diff( horaEntro , 'minutes' );
-                    
+                    let minutosDeDiferencia = horaTenia.diff(horaEntro, 'minutes');
+
                     c1++;
-                    if( minutosDeDiferencia < -5 ){
+                    if (minutosDeDiferencia < -5) {
                         tipoEntrada = 'warning';
                         c2++;
                         c1--;
                     }
-                    if( minutosDeDiferencia < -20 ){
+                    if (minutosDeDiferencia < -20) {
                         tipoEntrada = 'danger';
                         c3++;
                         c2--;
                     }
-                    
+
                     let tipoSalida = 'light';
                     let salio = '';
                     c7++;
-                    
-                    if( detalleEmpleado.hora_salida !== undefined && detalleEmpleado.hora_salida !== null ){
-                        
+
+                    if (detalleEmpleado.hora_salida !== undefined && detalleEmpleado.hora_salida !== null) {
+
                         tipoSalida = 'success';
                         c7--;
                         salio = detalleEmpleado.hora_salida;
-                        
+
                         let partesHoraSalio = detalleEmpleado.hora_salida.split(":");
                         let horaSalio = moment();
-                        horaSalio.set("hour",partesHoraSalio[0]);
+                        horaSalio.set("hour", partesHoraSalio[0]);
                         horaSalio.set("minute", partesHoraSalio[1]);
                         horaSalio.set("second", partesHoraSalio[2]);
 
                         let partesHoraTeniaSalir = detalleEmpleado.horario_salida.split(":");
                         let horaTeniaSalir = moment();
-                        horaTeniaSalir.set("hour",partesHoraTeniaSalir[0]);
+                        horaTeniaSalir.set("hour", partesHoraTeniaSalir[0]);
                         horaTeniaSalir.set("minute", partesHoraTeniaSalir[1]);
                         horaTeniaSalir.set("second", partesHoraTeniaSalir[2]);
-                        
-                        let minutosDeDiferenciaSalida = horaTeniaSalir.diff( horaSalio , 'minutes' );
+
+                        let minutosDeDiferenciaSalida = horaTeniaSalir.diff(horaSalio, 'minutes');
                         console.log("minutos de diferencia de salida");
                         console.log(minutosDeDiferenciaSalida);
-                        
+
                         c4++;
-                        if( minutosDeDiferenciaSalida > -5 ){
+                        if (minutosDeDiferenciaSalida > -5) {
                             tipoSalida = 'warning';
                             c5++;
                             c4--;
                         }
-                        if( minutosDeDiferenciaSalida > -20 ){
+                        if (minutosDeDiferenciaSalida > -20) {
                             tipoSalida = 'danger';
                             c6++;
                             c5--;
                         }
-                        
-                    }
-                    
-                    let horaDesconexion = detalleEmpleado.hora_desconexion !== undefined && detalleEmpleado.hora_desconexion !== null ? detalleEmpleado.hora_desconexion : '';
-                  
-                    tbody += '<tr class="text-center" id="fila_empleado_en_jornada_'+detalleEmpleado.id360+'">';
 
-                    tbody += '  <td>'+detalleEmpleado.nombre+' '+detalleEmpleado.apellido_paterno+' '+detalleEmpleado.apellido_materno+'</td>';
-                    tbody += '  <td>'+detalleEmpleado.sucursal+'</td>';
-                    tbody += '  <td>'+detalleEmpleado.area+'</td>';
-                    tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoEntrada+'">'+detalleEmpleado.horario_entrada+'</span></td>';
-                    tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoEntrada+'">'+detalleEmpleado.hora_entrada+'</span></td>';
-                    tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-light">'+horaDesconexion+'</span></td>';
-                    tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoSalida+'">'+detalleEmpleado.horario_salida+'</span></td>';
-                    tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-'+tipoSalida+'">'+salio+'</span></td>';
-                    tbody += '  <td>'+detalleEmpleado.desconexiones+'</td>';
-                    tbody += '  <td><button onclick="enviar_mensaje_empleado_en_jornada('+detalleEmpleado.id360+')" class="btn btn-dark"><i class="fas fa-comment-dots"></i></button></td>';
-                    tbody += '  <td><button onclick="inicia_llamada_empleado_en_jornada('+detalleEmpleado.id360+')" class="btn btn-dark"><i class="fas fa-phone"></i></button></td>';
+                    }
+
+                    let horaDesconexion = detalleEmpleado.hora_desconexion !== undefined && detalleEmpleado.hora_desconexion !== null ? detalleEmpleado.hora_desconexion : '';
+
+                    tbody += '<tr class="text-center" id="fila_empleado_en_jornada_' + detalleEmpleado.id360 + '">';
+
+                    tbody += '  <td>' + detalleEmpleado.nombre + ' ' + detalleEmpleado.apellido_paterno + ' ' + detalleEmpleado.apellido_materno + '</td>';
+                    tbody += '  <td>' + detalleEmpleado.sucursal + '</td>';
+                    tbody += '  <td>' + detalleEmpleado.area + '</td>';
+                    tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-' + tipoEntrada + '">' + detalleEmpleado.horario_entrada + '</span></td>';
+                    tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-' + tipoEntrada + '">' + detalleEmpleado.hora_entrada + '</span></td>';
+                    tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-light">' + horaDesconexion + '</span></td>';
+                    tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-' + tipoSalida + '">' + detalleEmpleado.horario_salida + '</span></td>';
+                    tbody += '  <td><span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-' + tipoSalida + '">' + salio + '</span></td>';
+                    tbody += '  <td>' + detalleEmpleado.desconexiones + '</td>';
+                    tbody += '  <td><button onclick="enviar_mensaje_empleado_en_jornada(' + detalleEmpleado.id360 + ')" class="btn btn-dark"><i class="fas fa-comment-dots"></i></button></td>';
+                    tbody += '  <td><button onclick="inicia_llamada_empleado_en_jornada(' + detalleEmpleado.id360 + ')" class="btn btn-dark"><i class="fas fa-phone"></i></button></td>';
 
                     tbody += '</tr>';
-                    
+
                 });
-                
+
                 cuerpoTableEmpleadosEnJornada.append(tbody);
                 tablaInicio = tablaEmpleadosEnJornada.DataTable({
                     retrieve: true,
@@ -2703,46 +2714,46 @@ const inicioJornadasLaborales = () => {
                     ],
                     paging: false
                 });
-                
+
                 sumaTotal = c1 + c2 + c3;
-                
-                $("#contadorEnTiempo").text(c1 + " - " + ( (c1 / sumaTotal) * 100 ).toFixed(2) + "%" );
-                $("#contadorRetardo").text(c2 + " - " + ( (c2 / sumaTotal) * 100 ).toFixed(2) + "%");
-                $("#contadorTarde").text(c3 + " - " + ( (c3 / sumaTotal) * 100 ).toFixed(2) + "%");
-                
-                $("#contadorEnTiempoSalida").text(c4 + " - " + ( (c4 / sumaTotal) * 100 ).toFixed(2) + "%");
-                $("#contadorRetardoSalida").text(c5 + " - " + ( (c5 / sumaTotal) * 100 ).toFixed(2) + "%");
-                $("#contadorTardeSalida").text(c6 + " - " + ( (c6 / sumaTotal) * 100 ).toFixed(2) + "%");
-                
-                $("#contadorAunEnJornada").text(c7 + " - " + ( (c7 / sumaTotal) * 100 ).toFixed(2) + "%");
-                
+
+                $("#contadorEnTiempo").text(c1 + " - " + ((c1 / sumaTotal) * 100).toFixed(2) + "%");
+                $("#contadorRetardo").text(c2 + " - " + ((c2 / sumaTotal) * 100).toFixed(2) + "%");
+                $("#contadorTarde").text(c3 + " - " + ((c3 / sumaTotal) * 100).toFixed(2) + "%");
+
+                $("#contadorEnTiempoSalida").text(c4 + " - " + ((c4 / sumaTotal) * 100).toFixed(2) + "%");
+                $("#contadorRetardoSalida").text(c5 + " - " + ((c5 / sumaTotal) * 100).toFixed(2) + "%");
+                $("#contadorTardeSalida").text(c6 + " - " + ((c6 / sumaTotal) * 100).toFixed(2) + "%");
+
+                $("#contadorAunEnJornada").text(c7 + " - " + ((c7 / sumaTotal) * 100).toFixed(2) + "%");
+
             });
-            
-        }else{
+
+        } else {
             conResultados.addClass("d-none");
             sinResultados.removeClass("d-none");
         }
-        
+
     });
-    
+
 };
 
 inicioJornadasLaborales();
 
 const cargaEmpleados = () => {
     let data = new Object();
-    data.id = JSON.parse(getCookie("username_v3.1_"+DEPENDENCIA)).tipo_usuario;
-    RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_ids",data).then( (ids) => {
+    data.id = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
+    RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_ids", data).then((ids) => {
         empleadosEmpresa = ids;
-        RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_empleados", ids).then( (response) => {
+        RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_empleados", ids).then((response) => {
 
             empleados = response;
             const selectEmpleados = $("#empleado_jornadas");
             selectEmpleados.empty().append('<option selected disabled value="">Seleccionar...</option>');
 
             let options = '';
-            $.each(empleados, function(index, empleado){
-                options += '<option value="'+empleado.id360+'" >'+empleado.nombre + ' ' + empleado.apellido_paterno + ' ' + empleado.apellido_materno +'</option>';
+            $.each(empleados, function (index, empleado) {
+                options += '<option value="' + empleado.id360 + '" >' + empleado.nombre + ' ' + empleado.apellido_paterno + ' ' + empleado.apellido_materno + '</option>';
             });
 
             selectEmpleados.append(options);
@@ -2752,27 +2763,27 @@ const cargaEmpleados = () => {
     });
 };
 
-$("#sucursal_jornadas, #area_jornadas, #empleado_jornadas").change(function(){
+$("#sucursal_jornadas, #area_jornadas, #empleado_jornadas").change(function () {
     botonExcel.addClass("d-none");
 });
 
-$("#fecha_inicio_reporte2").change(function(){
+$("#fecha_inicio_reporte2").change(function () {
     const f2 = $("#fecha_fin_reporte2");
-    if(f2.val() === "")
-        f2.val( $(this).val());
+    if (f2.val() === "")
+        f2.val($(this).val());
 });
 
-function formatDateDefault(date){
+function formatDateDefault(date) {
     let dia = date.getDate().toString();
-    if(dia.length === 1)
+    if (dia.length === 1)
         dia = "0" + dia;
-    let mes = (date.getMonth()+1).toString();
-    if(mes.length === 1)
+    let mes = (date.getMonth() + 1).toString();
+    if (mes.length === 1)
         mes = "0" + mes;
     return dateParse = date.getFullYear() + "-" + mes + "-" + dia;
 }
 
-    $("#tipo_busqueda").change(function(){
+$("#tipo_busqueda").change(function () {
     let tipo = $(this).val();
     cargaEmpleados();
     botonExcel.addClass("d-none");
@@ -2781,7 +2792,7 @@ function formatDateDefault(date){
     const contenedorSelectAreas = $("#contenedor-select-areas");
     const contenedorSelectEmpleados = $("#contenedor-select-empleados");
 
-    switch(tipo){
+    switch (tipo) {
         case "SUCURSAL":
             contenedorSelectSucursales.removeClass("d-none");
             contenedorSelectAreas.addClass("d-none");
@@ -2810,46 +2821,46 @@ function convertDateFormat(string) {
     return string.split('-').reverse().join('/');
 }
 
-$("#form_historia_jornadas2").submit(function(e){
+$("#form_historia_jornadas2").submit(function (e) {
     e.preventDefault();
 
     let fecha_inicio = $("#fecha_inicio_reporte2").val();
 
-    if(validarFecha( convertDateFormat(fecha_inicio) )){
+    if (validarFecha(convertDateFormat(fecha_inicio))) {
 
         let fecha_fin = $("#fecha_fin_reporte2").val();
 
-        if( fecha_fin === "" )
+        if (fecha_fin === "")
             consulta_historial(fecha_inicio, "");
-        else{
-            if(validarFecha( convertDateFormat(fecha_fin) )){
+        else {
+            if (validarFecha(convertDateFormat(fecha_fin))) {
 
-                let f1 = new Date( fecha_inicio );
-                let f2 = new Date( fecha_fin );
+                let f1 = new Date(fecha_inicio);
+                let f2 = new Date(fecha_fin);
 
-                if(f2.getTime() >= f1.getTime())
+                if (f2.getTime() >= f1.getTime())
                     consulta_historial(fecha_inicio, fecha_fin);
                 else
-                    swal.fire({text:"La fecha final debe ser mayor que la fecha inicial"});
+                    swal.fire({text: "La fecha final debe ser mayor que la fecha inicial"});
 
-            }else
-                swal.fire({text:"Ingresa una fecha final válida"});
+            } else
+                swal.fire({text: "Ingresa una fecha final válida"});
         }
 
-    }else
-        swal.fire({text:"Ingresa una fecha inicial válida"});
+    } else
+        swal.fire({text: "Ingresa una fecha inicial válida"});
 });
 
 const consulta_historial = (fecha_inicio, fecha_final) => {
 
     let tipoBusqueda = $("#tipo_busqueda").val();
 
-    if(tipoBusqueda === null || tipoBusqueda === undefined || tipoBusqueda === ""){
-        swal.fire({text:"Seleccione un tipo de búsqueda"});
-    }else{
+    if (tipoBusqueda === null || tipoBusqueda === undefined || tipoBusqueda === "") {
+        swal.fire({text: "Seleccione un tipo de búsqueda"});
+    } else {
 
         $("#inicio_jornadas_laborales").addClass("d-none");
-    
+
         const resultInfo = $("#tablas_resultados");
         resultInfo.empty();
         const excel = $("#resultados-exportar-excel");
@@ -2859,39 +2870,39 @@ const consulta_historial = (fecha_inicio, fecha_final) => {
         data.inicio = fecha_inicio;
         data.fin = fecha_final;
 
-        switch(tipoBusqueda){
+        switch (tipoBusqueda) {
             case "AREA":
 
                 let area = $("#area_jornadas").val();
 
-                if(area === null || area === undefined || area === ""){
-                    swal.fire({text:"Seleccione un área"});
+                if (area === null || area === undefined || area === "") {
+                    swal.fire({text: "Seleccione un área"});
                     botonExcel.addClass("d-none");
-                }else{
+                } else {
                     data.id = area;
-                    RequestPOST("/API/empresas360/jornadas_laborales/area",data).then((response) => {
+                    RequestPOST("/API/empresas360/jornadas_laborales/area", data).then((response) => {
 
-                        if( response.success ){
+                        if (response.success) {
                             let jornadaEmpleado = new Object();
 
-                            $.each(response.data, function(index, jornada){
-                                if( jornadaEmpleado[jornada.idUsuario] === undefined ){
+                            $.each(response.data, function (index, jornada) {
+                                if (jornadaEmpleado[jornada.idUsuario] === undefined) {
                                     jornadaEmpleado[jornada.idUsuario] = [];
-                                    jornadaEmpleado[jornada.idUsuario].push( jornada );
-                                }else{
-                                    jornadaEmpleado[jornada.idUsuario].push( jornada );
+                                    jornadaEmpleado[jornada.idUsuario].push(jornada);
+                                } else {
+                                    jornadaEmpleado[jornada.idUsuario].push(jornada);
                                 }
 
                             });
 
                             const keys = Object.keys(jornadaEmpleado);
-                            for(let x = 0; x<keys.length; x++){
+                            for (let x = 0; x < keys.length; x++) {
                                 despliegaInformacionJornadas(fecha_inicio, fecha_final, jornadaEmpleado[keys[x]]);
                             }
 
                             listenerActividadesReporte();
-                        }else{
-                            swal.fire({text:"No hay empleados en esta área"});
+                        } else {
+                            swal.fire({text: "No hay empleados en esta área"});
                             botonExcel.addClass("d-none");
                         }
 
@@ -2904,34 +2915,34 @@ const consulta_historial = (fecha_inicio, fecha_final) => {
 
                 let sucursal = $("#sucursal_jornadas").val();
 
-                if(sucursal === null || sucursal === undefined || sucursal === ""){
-                    swal.fire({text:"Seleccione una sucursal"});
+                if (sucursal === null || sucursal === undefined || sucursal === "") {
+                    swal.fire({text: "Seleccione una sucursal"});
                     botonExcel.addClass("d-none");
-                }else{
+                } else {
                     data.id = sucursal;
-                    RequestPOST("/API/empresas360/jornadas_laborales/sucursal",data).then((response) => {
+                    RequestPOST("/API/empresas360/jornadas_laborales/sucursal", data).then((response) => {
 
-                        if( response.success ){
+                        if (response.success) {
                             let jornadaEmpleado = new Object();
 
-                            $.each(response.data, function(index, jornada){
-                                if( jornadaEmpleado[jornada.idUsuario] === undefined ){
+                            $.each(response.data, function (index, jornada) {
+                                if (jornadaEmpleado[jornada.idUsuario] === undefined) {
                                     jornadaEmpleado[jornada.idUsuario] = [];
-                                    jornadaEmpleado[jornada.idUsuario].push( jornada );
-                                }else{
-                                    jornadaEmpleado[jornada.idUsuario].push( jornada );
+                                    jornadaEmpleado[jornada.idUsuario].push(jornada);
+                                } else {
+                                    jornadaEmpleado[jornada.idUsuario].push(jornada);
                                 }
 
                             });
 
                             const keys = Object.keys(jornadaEmpleado);
-                            for(let x = 0; x<keys.length; x++){
+                            for (let x = 0; x < keys.length; x++) {
                                 despliegaInformacionJornadas(fecha_inicio, fecha_final, jornadaEmpleado[keys[x]]);
                             }
 
                             listenerActividadesReporte();
-                        }else{
-                            swal.fire({text:"No hay empleados en esta sucursal"});
+                        } else {
+                            swal.fire({text: "No hay empleados en esta sucursal"});
                             botonExcel.addClass("d-none");
                         }
 
@@ -2944,13 +2955,13 @@ const consulta_historial = (fecha_inicio, fecha_final) => {
 
                 let empleado = $("#empleado_jornadas").val();
 
-                if(empleado === null || empleado === undefined || empleado === ""){
-                    swal.fire({text:"Seleccione un empleado"});
+                if (empleado === null || empleado === undefined || empleado === "") {
+                    swal.fire({text: "Seleccione un empleado"});
                     botonExcel.addClass("d-none");
-                }else{
+                } else {
                     data.id = empleado;
 
-                    RequestPOST("/API/empresas360/jornadas_laborales",data).then((response) => {
+                    RequestPOST("/API/empresas360/jornadas_laborales", data).then((response) => {
                         despliegaInformacionJornadas(fecha_inicio, fecha_final, response.data);
                         listenerActividadesReporte();
                     });
@@ -2961,30 +2972,30 @@ const consulta_historial = (fecha_inicio, fecha_final) => {
 
             case "TODOS":
 
-                data.id = JSON.parse(getCookie("username_v3.1_"+DEPENDENCIA)).tipo_usuario;
-                RequestPOST("/API/empresas360/jornadas_laborales/empresa",data).then((response) => {
+                data.id = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
+                RequestPOST("/API/empresas360/jornadas_laborales/empresa", data).then((response) => {
 
-                    if( response.success ){
+                    if (response.success) {
                         let jornadaEmpleado = new Object();
 
-                        $.each(response.data, function(index, jornada){
-                            if( jornadaEmpleado[jornada.idUsuario] === undefined ){
+                        $.each(response.data, function (index, jornada) {
+                            if (jornadaEmpleado[jornada.idUsuario] === undefined) {
                                 jornadaEmpleado[jornada.idUsuario] = [];
-                                jornadaEmpleado[jornada.idUsuario].push( jornada );
-                            }else{
-                                jornadaEmpleado[jornada.idUsuario].push( jornada );
+                                jornadaEmpleado[jornada.idUsuario].push(jornada);
+                            } else {
+                                jornadaEmpleado[jornada.idUsuario].push(jornada);
                             }
 
                         });
 
                         const keys = Object.keys(jornadaEmpleado);
-                        for(let x = 0; x<keys.length; x++){
+                        for (let x = 0; x < keys.length; x++) {
                             despliegaInformacionJornadas(fecha_inicio, fecha_final, jornadaEmpleado[keys[x]]);
                         }
 
                         listenerActividadesReporte();
-                    }else{
-                        swal.fire({text:"No hay empleados en esta empresa"});
+                    } else {
+                        swal.fire({text: "No hay empleados en esta empresa"});
                         botonExcel.addClass("d-none");
                     }
 
@@ -3003,7 +3014,7 @@ const despliegaInformacionJornadas = (fecha_inicio, fecha_final, jornadas) => {
 
     let emple = infoEmpleado(jornadas[0].idUsuario);
 
-    if (emple !== null && emple !== undefined) {        
+    if (emple !== null && emple !== undefined) {
         let informacionEmpleado = '';
 
         informacionEmpleado += '<form class="mb-3">';
@@ -3138,7 +3149,7 @@ const despliegaInformacionJornadas = (fecha_inicio, fecha_final, jornadas) => {
                 let cantidadJornadas = jornadas.length;
                 for (let x = 0; x < cantidadJornadas; x++)
                     if (jornadas[x].date_created === fechaRecorre) {
-                        
+
                         let jornada = jornadas[x];
                         let ff = new Date(jornada.date_created);
 
@@ -3180,9 +3191,9 @@ const despliegaInformacionJornadas = (fecha_inicio, fecha_final, jornadas) => {
 
                             tipoSalida = 'success';
                             c7--;
-                            
+
                             let partesHoraSalio = jornada.time_finished.split(":");
-                            let horaSalio = moment();                            
+                            let horaSalio = moment();
                             horaSalio.set("hour", partesHoraSalio[0]);
                             horaSalio.set("minute", partesHoraSalio[1]);
                             horaSalio.set("second", partesHoraSalio[2]);
@@ -3241,9 +3252,9 @@ const despliegaInformacionJornadas = (fecha_inicio, fecha_final, jornadas) => {
 
                         banderaAgregado = true;
                         break;
-                    
+
                     }
-            }        
+            }
 
             if (!banderaAgregado) {
 
@@ -3305,7 +3316,7 @@ const despliegaInformacionJornadas = (fecha_inicio, fecha_final, jornadas) => {
         excel.append(tablaExcel);
 
         sumaTotal = c1 + c2 + c3 + c8;
-        
+
         $("#contadorDiasEnTiempo_" + emple.id360).val(c1 + " - " + ((c1 / sumaTotal) * 100).toFixed(2) + "%");
         $("#contadorDiasEnRetardo_" + emple.id360).val(c2 + " - " + ((c2 / sumaTotal) * 100).toFixed(2) + "%");
         $("#contadorDiasTarde_" + emple.id360).val(c3 + " - " + ((c3 / sumaTotal) * 100).toFixed(2) + "%");
@@ -3322,10 +3333,10 @@ const despliegaInformacionJornadas = (fecha_inicio, fecha_final, jornadas) => {
 };
 
 const listenerActividadesReporte = () => {
-    $("tr.control").click(function() {
+    $("tr.control").click(function () {
         let nextTr = $(this).next();
         if (nextTr.hasClass("oculta")) {
-            $("tr.visible").each(function(index, tr) {
+            $("tr.visible").each(function (index, tr) {
                 $(tr).addClass("oculta").removeClass("visible");
                 $(tr).hide("fast");
             });
@@ -3338,18 +3349,18 @@ const listenerActividadesReporte = () => {
     });
 };
 
-$("#botonDescargaReporteJornada").click(function(){
+$("#botonDescargaReporteJornada").click(function () {
 
     var wb = XLSX.utils.book_new();
     let ws;
     let nombre_hoja;
 
-    $(".hojaExcelJornada").each(function(){
+    $(".hojaExcelJornada").each(function () {
 
         nombre_hoja = $(this).data("nombre-empleado");
-        wb.SheetNames.push( nombre_hoja );
+        wb.SheetNames.push(nombre_hoja);
 
-        ws = XLSX.utils.table_to_book( document.getElementById( $(this).attr("id")) );
+        ws = XLSX.utils.table_to_book(document.getElementById($(this).attr("id")));
 
         wb.Sheets[nombre_hoja] = ws.Sheets["Sheet1"];
 
@@ -3361,16 +3372,16 @@ $("#botonDescargaReporteJornada").click(function(){
 const cabeceraReporteExcel = (empleado) => {
     let cabecera = '';
     cabecera += '<tr><td colspan="9"><h1 style="text-align: center;">Reporte de jornadas laborales</h1></td></tr><tr></tr>';
-    cabecera += '<tr><td colspan="2">Fecha de exportación</td><td>'+moment().format("DD-MMM-YYYY")+'</td></tr>';
-    cabecera += '<tr><td colspan="2">Periodo del reporte</td><td>'+ moment( $("#fecha_inicio_reporte2").val() ).format("DD-MMM-YYYY") +'</td><td>'+moment($("#fecha_fin_reporte2").val()).format("DD-MMM-YYYY")+'</td></tr><tr></tr>';
-    cabecera += '<tr><td colspan="2">Empleado:</td><td colspan="3">'+empleado.nombre+' '+empleado.apellido_paterno+' '+ empleado.apellido_materno+'</td></tr>';
-    cabecera += '<tr><td colspan="2">Empresa</td><td colspan="3">'+empleado.empresa+'</td></tr>';
-    cabecera += '<tr><td colspan="2">Sucursal</td><td colspan="3">'+empleado.sucursal+'</td></tr>';
-    cabecera += '<tr><td colspan="2">Área</td><td colspan="3">'+empleado.area+'</td></tr>';
-    cabecera += '<tr><td colspan="2">Puesto</td><td colspan="3">'+empleado.puesto+'</td></tr>';
-    cabecera += '<tr><td colspan="2">Número de empleado</td><td>'+empleado.num_empleado+'</td></tr>';
-    cabecera += '<tr><td colspan="2">Jornada</td><td colspan="2">Entrada: <span>'+empleado.horario_entrada+'</span></td><td colspan="2">Salida: <span>'+empleado.horario_salida+'</span></td></tr>';
-    cabecera += '<tr> <td>Días en tiempo</td> <td id="diasEnTiempoExcel_'+empleado.id360+'"></td> <td>Días con retardo</td> <td id="diasConRetardoExcel_'+empleado.id360+'"></td> <td>Días tarde</td> <td id="diasTardeExcel_'+empleado.id360+'"></td> <td>Días sin jornada</td> <td id="diasSinJornadaExcel_'+empleado.id360+'"></td> </tr>';
+    cabecera += '<tr><td colspan="2">Fecha de exportación</td><td>' + moment().format("DD-MMM-YYYY") + '</td></tr>';
+    cabecera += '<tr><td colspan="2">Periodo del reporte</td><td>' + moment($("#fecha_inicio_reporte2").val()).format("DD-MMM-YYYY") + '</td><td>' + moment($("#fecha_fin_reporte2").val()).format("DD-MMM-YYYY") + '</td></tr><tr></tr>';
+    cabecera += '<tr><td colspan="2">Empleado:</td><td colspan="3">' + empleado.nombre + ' ' + empleado.apellido_paterno + ' ' + empleado.apellido_materno + '</td></tr>';
+    cabecera += '<tr><td colspan="2">Empresa</td><td colspan="3">' + empleado.empresa + '</td></tr>';
+    cabecera += '<tr><td colspan="2">Sucursal</td><td colspan="3">' + empleado.sucursal + '</td></tr>';
+    cabecera += '<tr><td colspan="2">Área</td><td colspan="3">' + empleado.area + '</td></tr>';
+    cabecera += '<tr><td colspan="2">Puesto</td><td colspan="3">' + empleado.puesto + '</td></tr>';
+    cabecera += '<tr><td colspan="2">Número de empleado</td><td>' + empleado.num_empleado + '</td></tr>';
+    cabecera += '<tr><td colspan="2">Jornada</td><td colspan="2">Entrada: <span>' + empleado.horario_entrada + '</span></td><td colspan="2">Salida: <span>' + empleado.horario_salida + '</span></td></tr>';
+    cabecera += '<tr> <td>Días en tiempo</td> <td id="diasEnTiempoExcel_' + empleado.id360 + '"></td> <td>Días con retardo</td> <td id="diasConRetardoExcel_' + empleado.id360 + '"></td> <td>Días tarde</td> <td id="diasTardeExcel_' + empleado.id360 + '"></td> <td>Días sin jornada</td> <td id="diasSinJornadaExcel_' + empleado.id360 + '"></td> </tr>';
     cabecera += '<tr></tr><tr></tr>';
     cabecera += '<tr><th>Día</th><th>Fecha</th><th>Hora Entrada</th><th>Hora entrada jornada</th><th>Hora última desconexión</th><th>Hora Salida</th><th>Hora salida jornada</th><th>Cantidad de Desconexiones</th><th>Actividad</th></tr>';
     return cabecera;
@@ -3380,25 +3391,25 @@ const infoEmpleado = (id_empleado) => {
     let empleado, generales;
     const cantidadEmpleados = empleados.length;
     const cantidadEmpleadosEmpresa = empleadosEmpresa.length;
-    for( let x = 0; x<cantidadEmpleados; x++ ){
-        if( empleados[x].id360 === id_empleado ){
+    for (let x = 0; x < cantidadEmpleados; x++) {
+        if (empleados[x].id360 === id_empleado) {
             empleado = empleados[x];
-            for( let x = 0; x<cantidadEmpleadosEmpresa; x++ ){
-                if( empleadosEmpresa[x].id360 === id_empleado ){
+            for (let x = 0; x < cantidadEmpleadosEmpresa; x++) {
+                if (empleadosEmpresa[x].id360 === id_empleado) {
                     generales = empleadosEmpresa[x];
                     empleado.area = generales.area;
                     empleado.sucursal = generales.sucursal;
                     empleado.empresa = generales.empresa;
-                    if(generales.time_created !== undefined && generales.time_created !== null){
+                    if (generales.time_created !== undefined && generales.time_created !== null) {
                         empleado.hora_entrada = generales.time_created;
                     }
-                    if(generales.time_finished !== undefined && generales.time_finished !== null){
+                    if (generales.time_finished !== undefined && generales.time_finished !== null) {
                         empleado.hora_salida = generales.time_finished;
                     }
-                    if(generales.time_updated !== undefined && generales.time_updated !== null){
+                    if (generales.time_updated !== undefined && generales.time_updated !== null) {
                         empleado.hora_desconexion = generales.time_updated;
                     }
-                    if(generales.desconexiones !== undefined && generales.desconexiones !== null){
+                    if (generales.desconexiones !== undefined && generales.desconexiones !== null) {
                         empleado.desconexiones = generales.desconexiones;
                     }
                     break;

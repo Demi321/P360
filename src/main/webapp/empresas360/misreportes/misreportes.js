@@ -38,6 +38,7 @@ const init_misreportes = (json) => {
     const botonObtenerJornadasReporteEmpleado = async (id360Estatico, jornadas_laborales_empleado) => {
         if (tablaHistorialLaboralEmpleado !== null && tablaHistorialLaboralEmpleado !== undefined) {
             tablaHistorialLaboralEmpleado.destroy()
+            tablaHistorialLaboralEmpleado = undefined
         }
         const tablaHistorialLaboralEmpleado2 = $("#tablaHistorialLaboralEmpleadoMisReportes")
         const conResultados = $("#empleadoConHistorialLaboralMisReportes");
@@ -193,27 +194,27 @@ const init_misreportes = (json) => {
     });
 
     const verReporteDetallado = async empleado => {
-        //$("#reporteJornadasLaborales").hide()
         $("#misReportes").show()
 
         //VISTA REPORTE EMPLEADO
         id360Estatico = await empleado
         //SERVIDOR
-        jornadas_laborales_empleado = await $.ajax({
-            type: 'POST',
-            url: 'https://empresas.claro360.com/plataforma360/API/empresas360/jornadas_laborales/empresa/obtener_empleados',
-            contentType: "application/json",
-            dataType: "json",
-            data: JSON.stringify([{
-                    id360: id360Estatico
-                }]),
-            success: function (response) {
-                //console.log("RES JSON1: ", response)
-            },
-            error: function (err) {
-                console.log("Ocurrio un problema en la llamada jornadas Laborales Empleado", err)
-            }
-        })
+        /*jornadas_laborales_empleado = await $.ajax({
+         type: 'POST',
+         url: 'https://empresas.claro360.com/plataforma360/API/empresas360/jornadas_laborales/empresa/obtener_empleados',
+         contentType: "application/json",
+         dataType: "json",
+         data: JSON.stringify([{
+         id360: id360Estatico
+         }]),
+         success: function (response) {
+         //console.log("RES JSON1: ", response)
+         },
+         error: function (err) {
+         console.log("Ocurrio un problema en la llamada jornadas Laborales Empleado", err)
+         }
+         })*/
+        jornadas_laborales_empleado = [perfil_usuario]
 
         let datosVistaReporteDetallado
         if (jornadas_laborales_empleado[0]) {
@@ -222,11 +223,18 @@ const init_misreportes = (json) => {
                 direccion: jornadas_laborales_empleado[0].direccion,
                 area: jornadas_laborales_empleado[0].area,
                 cargo: jornadas_laborales_empleado[0].puesto,
-                reporteAislamiento: null,
-                actividadesDesempeñar: null,
+                reporteAislamiento: " - - - -",
+                actividadesDesempeñar: " - - - - ",
                 num_empleado: jornadas_laborales_empleado[0].num_empleado,
                 img: jornadas_laborales_empleado[0].img
             };
+            if (location_user !== null) {
+                if (location_user.municipio !== null && location_user.estado !== null) {
+                    datosVistaReporteDetallado.direccion = location_user.colonia + " " + location_user.municipio + " " + location_user.estado_long
+                }
+            } else {
+                datosVistaReporteDetallado.direccion = " - - - - "
+            }
             $("#nombreEmpleadoMisReportes").text("Nombre: " + datosVistaReporteDetallado.nombre);
             $("#direccionEmpleadoMisReportes").text(datosVistaReporteDetallado.direccion);
             $("#areaEmpleadoMisReportes").text(datosVistaReporteDetallado.area);
@@ -367,8 +375,8 @@ const init_misreportes = (json) => {
         porcentajeProductividadSemanal = ((horasSemanaEmpleado / horasLaboralesSemana) * 100)
         porcentajeProductividadSemanal = porcentajeProductividadSemanal > 100 ? 100 : porcentajeProductividadSemanal.toFixed()
         google.charts.load("current", {packages: ["corechart"]});
-        google.charts.setOnLoadCallback(drawChart2);
-        function drawChart2() {
+        google.charts.setOnLoadCallback(drawChart2MisReportes);
+        function drawChart2MisReportes() {
             var data = google.visualization.arrayToDataTable([
                 ['Task', 'Hours per Day'],
                 ['Productividad', horasSemanaEmpleado],
@@ -510,8 +518,8 @@ const init_misreportes = (json) => {
             }
 
             google.charts.load("current", {packages: ["corechart"]});
-            google.charts.setOnLoadCallback(drawChart);
-            function drawChart() {
+            google.charts.setOnLoadCallback(drawChartMisReportesPuntualidad);
+            function drawChartMisReportesPuntualidad() {
                 var data = google.visualization.arrayToDataTable([
                     ['Task', 'Hours per Day'],
                     ['Puntualidad', puntualidad],
@@ -605,8 +613,8 @@ const init_misreportes = (json) => {
             porcentajeProductividadMensual = porcentajeProductividadMensual > 100 ? 100 : porcentajeProductividadMensual.toFixed()
 
             google.charts.load("current", {packages: ["corechart"]});
-            google.charts.setOnLoadCallback(drawChart3);
-            function drawChart3() {
+            google.charts.setOnLoadCallback(drawChart3MisReportes);
+            function drawChart3MisReportes() {
                 var data = google.visualization.arrayToDataTable([
                     ['Task', 'Hours per Day'],
                     ['Productividad', horasMesEmpleado],
@@ -646,8 +654,8 @@ const init_misreportes = (json) => {
                 porcentajeCumplimiento = porcentajeCumplimiento > 100 ? 100 : porcentajeCumplimiento.toFixed()
             }
             google.charts.load("current", {packages: ["corechart"]});
-            google.charts.setOnLoadCallback(drawChart4);
-            function drawChart4() {
+            google.charts.setOnLoadCallback(drawChart4MisReportes);
+            function drawChart4MisReportes() {
                 var data = google.visualization.arrayToDataTable([
                     ['Task', 'Hours per Day'],
                     ['Cumplimiento', diasLaboraloMesEmpleado],
