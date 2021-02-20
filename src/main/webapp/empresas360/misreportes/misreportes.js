@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-const init_misreportes = (json) => {
+const init_misreportes = async (json) => {
     console.log(json);
     let id = json.id;
     let id_usuario = json.id_usuario;
@@ -755,5 +755,5 @@ const init_misreportes = (json) => {
         conResultados.addClass("d-none");
         sinResultados.addClass("d-none");
     }
-    verReporteDetallado(perfil_usuario.id360)
+    await verReporteDetallado(perfil_usuario.id360)
 };
