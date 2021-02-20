@@ -805,24 +805,24 @@ var init_archivo = (json) => {
 
         let addFile = () => {	
 
-                var files = document.getElementById('archivos_envio').files;
-                if(!files.length){
-                    return alert("Elige un archivo valido");
+            var files = document.getElementById('archivos_envio').files;
+            if(!files.length){
+                return alert("Elige un archivo valido");
+            }
+            var file = files[0];
+            var file_name = file.name;
+            var file_storage_key=encodeURIComponent("Prueba") + "/";
+            var file_key= file_storage_key+file_name;
+            var upload = new AWS.S3.ManagedUpload({
+                partSize: 5 * 1024 * 1024, // 5 MB
+                params : {
+                        Bucket: bucketName,
+                        Key: file_key,
+                        Body: file
                 }
-                var file = files[0];
-                var file_name = file.name;
-                var file_storage_key=encodeURIComponent("Prueba") + "/";
-                var file_key= file_storage_key+file_name;
-                var upload = new AWS.S3.ManagedUpload({
-                    partSize: 5 * 1024 * 1024, // 5 MB
-                    params : {
-                            Bucket: bucketName,
-                            Key: file_key,
-                            Body: file
-                    }
-                });
+            });
 
-                var promise = upload.on('httpUploadProgress', function(evt) {
+            var promise = upload.on('httpUploadProgress', function(evt) {
 
                 console.log("Cargando :: " + parseInt((evt.loaded * 100) / evt.total)+'%');
 
