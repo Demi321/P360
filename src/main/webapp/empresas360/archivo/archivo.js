@@ -5,7 +5,7 @@
  */
 
 
-/* global RequestPOST, directorio_usuario, AWS, sesion_cookie, NotificacionToas, moment, Swal, lottieLoader_blockpage, superCm, swal, Notification, PathRecursos */
+/* global RequestPOST, directorio_usuario, AWS, sesion_cookie, NotificacionToas, moment, Swal, lottieLoader_blockpage, superCm, swal, Notification, PathRecursos, pdfjsLib */
 
 var vueArchivos, tablaArchivos, detailRows = [], usuariosReenviaArchivo = [];
 var banderaD = false, banderaR = false;
@@ -104,7 +104,6 @@ vuewModalReenviaArchivo = () => {
 
 function detalleArchivo ( d ) {
     
-    console.log(d);
     let destinatarios = d[13];
     let arrayDestinatarios = destinatarios.split(",");
     let msjDestinatarios = "";
@@ -137,13 +136,31 @@ function detalleArchivo ( d ) {
                         '<tr>'+
                             '<td style="width: 15%;">Compartido con:</td>'+
                             '<td style="width: 30%;">'+msjDestinatarios+'</td>'+
-                            '<td rowspan="5" style="width: 55%;">';
+                            '<td rowspan="5" style="width: 55%; text-align: center;">';
 
     let extension = d[3];
     
     if(extension === "pdf"){
-        detalle +=              '<embed type="application/pdf" style="width: 100%; height: 300px;" frameborder="0" src="'+d[10]+'" >';
-    }else if( extension === "gif" || extension === "jpg" || extension === "jpeg" || extension === "png" ){
+        
+        let canvas = '<div id="my_pdf_viewer'+d[9]+'">' +
+                        '<div style="max-width: 100%; height: 450px; overflow: auto; background: #333;text-align: center; border: solid 3px;" id="canvas_container'+d[9]+'">' +
+                            '<canvas id="pdf_renderer'+d[9]+'"></canvas>' +
+                            '<div id="navigation_controls'+d[9]+'">' +
+                                '<button id="go_previous'+d[9]+'">Previous</button>' +
+                                '<input id="current_page'+d[9]+'" value="1" type="number" />' +
+                                '<button id="go_next'+d[9]+'">Next</button>' +
+                            '</div>' +
+                            '<div id="zoom_controls'+d[9]+'">' +
+                                '<button id="zoom_in'+d[9]+'">+</button>' +
+                                '<button id="zoom_out'+d[9]+'">-</button>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+        
+        //detalle +=              '<embed type="application/pdf" style="width: 100%; height: 300px;" frameborder="0" src="'+d[10]+'" >';
+        //detalle +=              '<object data="'+d[10]+'" type="application/pdf"><p>The PDF couldn\'t be displayed</p</object>';
+        detalle +=              canvas;
+    }else if( extension === "gif"|| extension === "GIF" || extension === "jpg" || extension === "JPG" || extension === "jpeg" || extension === "JPEG" || extension === "png" || extension === "PNG"){
         detalle +=              '<img style="max-width: 100%; max-height: 300px" src="'+d[10]+'" />';
     }
         
@@ -166,9 +183,7 @@ function detalleArchivo ( d ) {
                             '<td>'+extension+'</td>'+
                         '</tr>'+
                     '</table>';
-    
-    console.log(detalle);
-            
+                
     return detalle;
 }
 
@@ -206,7 +221,6 @@ const buscaArchivosEnviado = (tituloDefault) => {
         
     }
     
-    console.log(dataArchivos);
     RequestPOST(services, dataArchivos).then((response) => {
                 
         if(response.length>0){
@@ -401,6 +415,7 @@ const buscaArchivosEnviado = (tituloDefault) => {
                         let rutaArchivo = data[10];
                         let partes = rutaArchivo.split(".");
                         let tipo = partes[ partes.length-1 ];
+                        tipo = tipo.toLowerCase() ;
                         let dataArchivo = {
                             'titulo_archivo': data[2],
                             'descripcion_archivo': data[11],
@@ -457,6 +472,116 @@ const buscaArchivosEnviado = (tituloDefault) => {
                         "background-color": "lightgray",
                         "border-radius":"20px"
                     });
+                    
+                    if(row.data()[3] === "pdf"){
+                        let myState = {
+                            pdf: null,
+                            currentPage: 1,
+                            zoom: 1
+                        };
+                        
+                        let render = () => {
+                            try{
+                                myState.pdf.getPage(myState.currentPage).then((page) => {
+
+                                    let canvas = document.getElementById("pdf_renderer"+ row.data()[9]);
+                                    let ctx = canvas.getContext('2d');
+
+                                    let viewport = page.getViewport(myState.zoom);
+                                    canvas.width = viewport.width;
+                                    canvas.height = viewport.height;
+                                    page.render({
+                                        canvasContext: ctx,
+                                        viewport: viewport
+                                    });
+
+                                });
+                            }catch(e){
+                                console.log(e);
+                            }
+                            
+                        };
+
+                        pdfjsLib.getDocument(row.data()[10]).then((pdf) => {
+
+                            myState.pdf = pdf;
+                            render();
+
+                            document.getElementById('go_previous'+ row.data()[9])
+                                .addEventListener('click', (e) => {
+                                    try{
+                                        if (myState.pdf === null || myState.currentPage === 1) return;
+                                        myState.currentPage -= 1;
+                                        document.getElementById("current_page"+ row.data()[9])
+                                            .value = myState.currentPage;
+                                        render();
+                                    }catch(e){
+                                        console.log(e);
+                                    }
+                                });
+
+                            document.getElementById('go_next'+ row.data()[9])
+                                .addEventListener('click', (e) => {
+                                    try{
+                                        if (myState.pdf === null ||
+                                            myState.currentPage > myState.pdf
+                                            ._pdfInfo.numPages)
+                                            return;
+
+                                        myState.currentPage += 1;
+                                        document.getElementById("current_page"+ row.data()[9])
+                                            .value = myState.currentPage;
+                                        render();
+                                    }catch(e){
+                                        console.log(e);
+                                    }
+                                });
+
+                            document.getElementById('current_page'+ row.data()[9])
+                                .addEventListener('keypress', (e) => {
+                                    try{
+                                        if (myState.pdf === null) return;
+
+                                        // Get key code
+                                        var code = (e.keyCode ? e.keyCode : e.which);
+
+                                        // If key code matches that of the Enter key
+                                        if (code === 13) {
+                                            var desiredPage =
+                                                document.getElementById('current_page'+ row.data()[9])
+                                                .valueAsNumber;
+
+                                            if (desiredPage >= 1 &&
+                                                desiredPage <= myState.pdf
+                                                ._pdfInfo.numPages) {
+                                                myState.currentPage = desiredPage;
+                                                document.getElementById("current_page"+ row.data()[9])
+                                                    .value = desiredPage;
+                                                render();
+                                            }
+                                        }
+                                    }catch(e){
+                                        console.log(e);
+                                    }
+                                });
+
+                            document.getElementById('zoom_in'+ row.data()[9])
+                                .addEventListener('click', (e) => {
+                                    if (myState.pdf === null) return;
+                                    myState.zoom += 0.5;
+                                    render();
+                                });
+
+                            document.getElementById('zoom_out'+ row.data()[9])
+                                .addEventListener('click', (e) => {
+                                    if (myState.pdf === null || myState.zoom === 0.5) return;
+                                    myState.zoom -= 0.5;
+                                    render();
+                                });
+
+                        });
+                    }
+                    
                 }
             } );
             
@@ -603,7 +728,7 @@ var init_archivo = (json) => {
     let tipo_servicio = json.tipo_servicio;
     let tipo_area = json.tipo_area;
     let vuewModelDestinatariosArchivos;
-    let destinatarios_archivos;
+    let destinatarios_archivos = [];
     
     lottieLoader_blockpage.style = "width: 200px;height: 200px;";
     document.getElementById("loaderArchivos").appendChild(lottieLoader_blockpage);
@@ -777,110 +902,161 @@ var init_archivo = (json) => {
     });
 
     buttonCancelarEnvio.click(() => {
-        console.log("Cancelar envio");
         contenedorNuevoEnvio.slideUp("fast", () => {
             contenedorDespliegueArchivos.slideDown("fast", () => {});
         });
     });
+    
+    const validaCamposArchivos = () => {
+        
+        if(destinatarios_archivos.length === 0){
+            document.getElementById("labelDestinatariosArchivos").scrollIntoView();
+            NotificacionToasArchivos.fire({
+                title: 'Selecciona al menos un destinatario'
+            });
+            return false;
+        }
+        
+        if( $("#list_proj").val() === "" ){
+            document.getElementById("labelProyectoArchivos").scrollIntoView();
+            NotificacionToasArchivos.fire({
+                title: 'Selecciona/Ingresa a que proyecto pertenece'
+            });
+            $("#list_proj").focus();
+            return false;
+        }
+        
+        if( $("#tituloArchivo").val() === "" ){
+            document.getElementById("labelTituloArchivos").scrollIntoView();
+            NotificacionToasArchivos.fire({
+                title: 'Ingresa el titulo de tu archivo'
+            });
+            $("#tituloArchivo").focus();
+            return false;
+        }
+        
+        if( $("#descripcionArchivo").val() === "" ){
+            document.getElementById("labelDescripcionArchivos").scrollIntoView();
+            NotificacionToasArchivos.fire({
+                title: 'Ingresa la descripción del archivo'
+            });
+            $("#descripcionArchivo").focus();
+            return false;
+        }
+        
+        if( $("#archivos_envio").fileinput('getFilesCount') === 0 ){
+            document.getElementById("archivos_envio").scrollIntoView();
+            NotificacionToasArchivos.fire({
+                title: 'Ingresa un archivo para enviar'
+            });
+            return false;
+        }
+        
+        return true;
+        
+    };
 
     buttonEnviarArchivo.click(() => {
+        
+        if(validaCamposArchivos()){
+            muestraLoaderArchivo();
 
-        muestraLoaderArchivo();
+            let bucketName="proyecto-backend";
+            let bucketRegion="us-east-1" ;
+            let IdentityPoolId = "us-east-1:715df460-b915-49bc-81a9-501b8e9177b6";
 
-        let bucketName="proyecto-backend";
-        let bucketRegion="us-east-1" ;
-        let IdentityPoolId = "us-east-1:715df460-b915-49bc-81a9-501b8e9177b6";
-
-        AWS.config.update({
-                region: bucketRegion,
-                credentials: new AWS.CognitoIdentityCredentials({
-                IdentityPoolId: IdentityPoolId
-                })
-        });
-
-        let s3 = new AWS.S3({
-                apiVersion: "2006-03-01",
-            params: {Bucket: bucketName}
-        });
-
-        let addFile = () => {	
-
-            var files = document.getElementById('archivos_envio').files;
-            if(!files.length){
-                return alert("Elige un archivo valido");
-            }
-            var file = files[0];
-            var file_name = file.name;
-            var file_storage_key=encodeURIComponent("Prueba") + "/";
-            var file_key= file_storage_key+file_name;
-            var upload = new AWS.S3.ManagedUpload({
-                partSize: 5 * 1024 * 1024, // 5 MB
-                params : {
-                        Bucket: bucketName,
-                        Key: file_key,
-                        Body: file
-                }
+            AWS.config.update({
+                    region: bucketRegion,
+                    credentials: new AWS.CognitoIdentityCredentials({
+                    IdentityPoolId: IdentityPoolId
+                    })
             });
 
-            var promise = upload.on('httpUploadProgress', function(evt) {
+            let s3 = new AWS.S3({
+                    apiVersion: "2006-03-01",
+                params: {Bucket: bucketName}
+            });
 
-                console.log("Cargando :: " + parseInt((evt.loaded * 100) / evt.total)+'%');
+            let addFile = () => {	
 
-            }).promise();
-
-            promise.then((data)=>{
-                console.log("data",data);
-
-                /*
-                 * ENVIAR EL ARCHIVO A LA DB
-                 */
-
-                let rutaArchivo = data.Location;
-                let partes = rutaArchivo.split(".");
-                let tipo = partes[ partes.length-1 ];
-                let dataArchivo = {
-                    'titulo_archivo': $("#tituloArchivo").val(),
-                    'descripcion_archivo': $("#descripcionArchivo").val(),
-                    'ruta_archivo': data.Location,
-                    'tipo_archivo': tipo,
-                    'proyecto': $("#list_proj").val(),
-                    'id360': sesion_cookie.idUsuario_Sys,
-                    'destinatarios': destinatarios_archivos,
-                    "tipo_usuario": tipo_usuario,
-                    'tipo_servicio': tipo_servicio,
-                    'tipo_area': tipo_area
-                };
-
-                RequestPOST("/API/empresas360/guardar_archivo_empresas", dataArchivo).then((response) => {
-                    
-                    ocultaLoaderArchivo();
-
-                    buscaArchivosEnviado();
-
-                    if( response.success ){
-                        formEnvioArchivo[0].reset();
-                        //Limpiar el input del vue
-                        vueArchivos.value=null;
-                        contenedorNuevoEnvio.slideUp("fast", () => {
-                            contenedorDespliegueArchivos.slideDown("fast", () => {
-                                NotificacionToasArchivos.fire({
-                                    title: 'Archivo enviado'
-                                });
-                            });
-                            
-                        });
-
+                var files = document.getElementById('archivos_envio').files;
+                if(!files.length){
+                    return alert("Elige un archivo valido");
+                }
+                var file = files[0];
+                var file_name = file.name;
+                var file_storage_key=encodeURIComponent("Prueba") + "/";
+                var file_key= file_storage_key+file_name;
+                var upload = new AWS.S3.ManagedUpload({
+                    partSize: 5 * 1024 * 1024, // 5 MB
+                    params : {
+                            Bucket: bucketName,
+                            Key: file_key,
+                            Body: file
                     }
-
                 });
 
-            },(error)=>{
-                console.log("error",error);
-            });
+                var promise = upload.on('httpUploadProgress', function(evt) {
 
-        };
+                    console.log("Cargando :: " + parseInt((evt.loaded * 100) / evt.total)+'%');
 
-        addFile();
+                }).promise();
+
+                promise.then((data)=>{
+                    console.log("data",data);
+
+                    /*
+                     * ENVIAR EL ARCHIVO A LA DB
+                     */
+
+                    let rutaArchivo = data.Location;
+                    let partes = rutaArchivo.split(".");
+                    let tipo = partes[ partes.length-1 ];
+                    tipo = tipo.toLowerCase();
+                    let dataArchivo = {
+                        'titulo_archivo': $("#tituloArchivo").val(),
+                        'descripcion_archivo': $("#descripcionArchivo").val(),
+                        'ruta_archivo': data.Location,
+                        'tipo_archivo': tipo,
+                        'proyecto': $("#list_proj").val(),
+                        'id360': sesion_cookie.idUsuario_Sys,
+                        'destinatarios': destinatarios_archivos,
+                        "tipo_usuario": tipo_usuario,
+                        'tipo_servicio': tipo_servicio,
+                        'tipo_area': tipo_area
+                    };
+
+                    RequestPOST("/API/empresas360/guardar_archivo_empresas", dataArchivo).then((response) => {
+
+                        ocultaLoaderArchivo();
+
+                        buscaArchivosEnviado();
+
+                        if( response.success ){
+                            formEnvioArchivo[0].reset();
+                            //Limpiar el input del vue
+                            vueArchivos.value=null;
+                            contenedorNuevoEnvio.slideUp("fast", () => {
+                                contenedorDespliegueArchivos.slideDown("fast", () => {
+                                    NotificacionToasArchivos.fire({
+                                        title: 'Archivo enviado'
+                                    });
+                                });
+
+                            });
+
+                        }
+
+                    });
+
+                },(error)=>{
+                    console.log("error",error);
+                });
+
+            };
+
+            addFile();
+        }
 
     });
     

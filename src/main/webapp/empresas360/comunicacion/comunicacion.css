@@ -1434,3 +1434,8 @@ ESTILOS LLAMADA
     width: 50%;
     margin-left: 25%;
 }
+
+.comunicacion .sinMensajesDestacados{
+    font-size: 1.2rem;
+    text-align: center;
+}
