@@ -310,7 +310,7 @@ const init_misreportes = async (json) => {
         var from = moment(lunes2, "YYYY-MM-DD").set({'hour': 00, 'minute': 00, 'second': 00, 'millisecond': 000}),
                 to = moment(viernes2, "YYYY-MM-DD"),
                 diasLaboralesSemana = 0,
-                diasFestivos = [moment("2021-01-01T00:00:00"), moment("2021-02-01T00:00:00")];
+                diasFestivos = [moment("2021-01-01T00:00:00"), moment("2021-02-01T00:00:00"), moment("2021-03-15T00:00:00"), moment("2021-04-01T00:00:00"), moment("2021-09-16T00:00:00"), moment("2021-11-15T00:00:00"), moment("2021-25-25T00:00:00")];
         let diaFeriadoEncontrado = false
         while (!from.isAfter(to)) {
             diaFeriadoEncontrado = false
