@@ -158,6 +158,7 @@
     max-height: 30px;
 }
 .plantillalaboral .invitaciones {
-    max-height: 600px;
+    max-height: 630px;
+    min-height: 600px;
     overflow-y: auto;
 }

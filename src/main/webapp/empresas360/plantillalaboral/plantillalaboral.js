@@ -195,7 +195,7 @@ function registro_plantilla_laboral(nombre) {
             let invitaciones = response.invitaciones;
             $.each(invitaciones, (i) => {
                 var fila = `<tr>
-                                <td>${i}</td>
+                                <td>${i + 1}</td>
                                 <td>${invitaciones[i].nombre} ${invitaciones[i].apellidopaterno} ${invitaciones[i].apellidomaterno}</td>
                                 <td>${invitaciones[i].area}</td>
                                 <td>${invitaciones[i].puesto}</td>
