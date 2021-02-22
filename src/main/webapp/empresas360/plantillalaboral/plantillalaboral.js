@@ -161,6 +161,13 @@ function registro_plantilla_laboral(nombre) {
     div_inv.id = 'div_inv';
     div_contendor.appendChild(div_inv);
 
+
+    /*************************/
+
+    $(".plantillalaboral").append(div_contendor);
+    $(".plantillalaboral").append(div_empty);
+
+    /* Cambios prueba fernando*/
     let tabla = `<table class='table table-hover dataTable no-footer' id='table_invitaciones'>
                         <thead class='thead-light'>
                             <tr class='text-center' role='row'>
@@ -199,14 +206,11 @@ function registro_plantilla_laboral(nombre) {
                             </tr>`;
                 $("#table_body_invitaciones").append(fila);
             });
-            
+
             $('#table_invitaciones').DataTable();
         }
     });
     /*************************/
-
-    $(".plantillalaboral").append(div_contendor);
-    $(".plantillalaboral").append(div_empty);
 
     /*Cambios prueba fernando*/
     btn_reg.addEventListener('click', () => {
