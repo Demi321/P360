@@ -657,12 +657,12 @@ Estilos de las grafica de pay
     border-radius: 4px;
 }
 #PorcentageA {
-    background: #252528;
+    background: white;
     border-radius: 4px;
     
 }
 #PorcentageB {
-    background: #252528;
+    background: white;
     border-radius: 4px;
     
 }
@@ -670,10 +670,10 @@ Estilos de las grafica de pay
     /*height: 150px;*/
     overflow: scroll;
 }
-#grafica2{
-    /*height: 150px;*/
+/*#grafica2{
+    height: 150px;
     overflow: scroll;
-}
+}*/
 #UbicacionEstadoE{
     background: #40474f;
     border-radius: 4px;
