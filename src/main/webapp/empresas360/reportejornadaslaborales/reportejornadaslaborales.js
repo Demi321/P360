@@ -2714,10 +2714,10 @@ const inicioJornadasLaborales = () => {
                 $("#contadorTarde").text(c3 + " - " + ((c3 / sumaTotal) * 100).toFixed(2) + "%");
                 let contadorEnTiempo = Math.round((((c1 / sumaTotal) * 100).toFixed(2)) / 10)
                 document.addEventListener("load", setColorBasal(contadorEnTiempo, 'Puntales'));
-                $("#PorcentajePuntales").text(((c1 / sumaTotal) * 100).toFixed(2))
+                $("#PorcentajePuntales").text(((c1 / sumaTotal) * 100).toFixed(2) + "%")
                 let contadorRetardo = Math.round(((((c2 + c3) / sumaTotal) * 100).toFixed(2)) / 10)
                 document.addEventListener("load", setColorBasal(contadorRetardo, 'Retardos'));
-                $("#PorcentajaRetardos").text(((c1 / sumaTotal) * 100).toFixed(2))
+                $("#PorcentajaRetardos").text((((c2 + c3) / sumaTotal) * 100).toFixed(2) + "%")
 
                 $("#contadorEnTiempoSalida").text(c4 + " - " + ((c4 / sumaTotal) * 100).toFixed(2) + "%");
                 $("#contadorRetardoSalida").text(c5 + " - " + ((c5 / sumaTotal) * 100).toFixed(2) + "%");
