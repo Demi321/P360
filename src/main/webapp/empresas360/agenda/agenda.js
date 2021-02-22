@@ -444,39 +444,78 @@ console.log(json);
 }
 
 new Vue({
-        el: "#event_new",
-        components: {
-            Multiselect: window.VueMultiselect.default
+    el: "#event_new",
+    components: {
+        "multiselect": window.VueMultiselect.default
+    },
+    data() {
+        return {
+            value: [],
+            options: directorio_usuario
+        };
+    },
+    methods: {
+        customLabel(option) {
+            return option.nombre + " " + option.apellido_paterno + " " + option.apellido_materno + " ";
         },
-        data() {
-            return {
-                value: [],
-                options: directorio_usuario
-            };
+        onClosed(value) {
+            //console.log(value);
+
         },
-        methods: {
-            customLabel(option) {
-                return option.nombre + " " + option.apellido_paterno + " " + option.apellido_materno + " ";
-            },
-            onClosed(value) {
-                //console.log(value);
 
-            },
+        onTag(value) {
+            //console.log(value);
+        },
 
-            onTag(value) {
-                //console.log(value);
-            },
+        onRemove(value) {
+            //console.log(value);
+        },
 
-            onRemove(value) {
-                //console.log(value);
-            },
-
-            onInput(value) {
-                document.getElementById("menu_sidebar" + value.id360).scrollIntoView();
-                document.getElementsByClassName("home_empleado")[0].scrollIntoView();
-            },
-            onOpen(value) {
-                this.value = null;
-            }
+        onInput(value) {
+            document.getElementById("menu_sidebar" + value.id360).scrollIntoView();
+            document.getElementsByClassName("home_empleado")[0].scrollIntoView();
+        },
+        onOpen(value) {
+            this.value = null;
         }
-    });
+    }
+});
+
+new Vue({
+    el: "#update_event",
+    components: {
+        "multiselect": window.VueMultiselect.default
+    },
+    data() {
+        return {
+            value: [],
+            options: directorio_usuario
+        };
+    },
+    methods: {
+        customLabel(option) {
+            return option.nombre + " " + option.apellido_paterno + " " + option.apellido_materno + " ";
+        },
+        onClosed(value) {
+            //console.log(value);
+
+        },
+
+        onTag(value) {
+            //console.log(value);
+        },
+
+        onRemove(value) {
+            //console.log(value);
+        },
+
+        onInput(value) {
+            document.getElementById("menu_sidebar" + value.id360).scrollIntoView();
+            document.getElementsByClassName("home_empleado")[0].scrollIntoView();
+        },
+        onOpen(value) {
+            this.value = null;
+        }
+    }
+});
+
