@@ -30,3 +30,65 @@ and open the template in the editor.
 .agenda .modal-content{
     width: 100%;
 }
+.multiselect {
+    border-radius: 0px;
+    border-bottom: 2px solid #d3d3d3;
+    width: 96%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+.multiselect__single {
+    background: none;
+    color: #303030;
+    font: bold 12px arial;
+}
+.card-header {
+    background: #0097a9;
+    font: bold 1.1rem Arial;
+    color: white;
+    text-align: center;
+}
+.multiselect__input {
+    background: none;
+    color: #343a40;
+    font: bold 12px arial;
+    border-radius: 5px;
+}
+
+#event_new .multiselect {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    background: #dee2e6;
+    border-radius: 5px;
+    height: 20px;
+    max-height: 20px;
+    display: block;
+}
+#event_new .multiselect__single {
+    background: none;
+    color: #6c757d;
+    font: bold 10px arial;
+    padding: 4px 20px;
+}
+#event_new .option__image {
+    width: 30px;
+    border-radius: 5px;
+}
+
+#event_new .option__title {
+    font: bold 1rem Arial;
+    padding: 10px;
+    color: #495057;
+}
+#event_new .multiselect__option--selected.multiselect__option--highlight:after {
+    color: #0097a9;
+    background: #0097a9;
+    content: attr(data-deselect);
+    color: #fff;
+}
+#event_new .multiselect__option--selected.multiselect__option--highlight {
+    background: #0097a9;
+    color: #fff;
+}
