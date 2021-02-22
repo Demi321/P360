@@ -148,12 +148,14 @@
     font: bold 1.3rem Arial;
     border: solid 1px;
     margin-bottom: 10px;
+    max-height: 30px;
 }
 .plantillalaboral .btn_colaboradores2 {
     background: #f5f5f5;
     font: bold 1.3rem Arial;
     border: solid 1px;
     margin-bottom: 10px;
+    max-height: 30px;
 }
 .plantillalaboral .invitaciones {
     max-height: 600px;

@@ -181,7 +181,7 @@ function registro_plantilla_laboral(nombre) {
                                 <th scope="col">Estatus Invitacion</th>
                             </tr>
                         </thead>
-                        <tbody table='table_body_invitaciones'></tbody>
+                        <tbody id='table_body_invitaciones'></tbody>
                     </table>`;
     $('#div_inv').append(tabla);
 
