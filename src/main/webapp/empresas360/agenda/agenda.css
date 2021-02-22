@@ -92,3 +92,40 @@ and open the template in the editor.
     background: #0097a9;
     color: #fff;
 }
+
+#update_event .multiselect {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    background: #dee2e6;
+    border-radius: 5px;
+    height: 20px;
+    max-height: 20px;
+    display: block;
+}
+#update_event .multiselect__single {
+    background: none;
+    color: #6c757d;
+    font: bold 10px arial;
+    padding: 4px 20px;
+}
+#update_event .option__image {
+    width: 30px;
+    border-radius: 5px;
+}
+
+#update_event .option__title {
+    font: bold 1rem Arial;
+    padding: 10px;
+    color: #495057;
+}
+#update_event .multiselect__option--selected.multiselect__option--highlight:after {
+    color: #0097a9;
+    background: #0097a9;
+    content: attr(data-deselect);
+    color: #fff;
+}
+#update_event .multiselect__option--selected.multiselect__option--highlight {
+    background: #0097a9;
+    color: #fff;
+}
