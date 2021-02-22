@@ -64,27 +64,27 @@ $(document).ready(async function () {
     document.addEventListener("load", setColorBasal(2, 'Faltas'));
     document.addEventListener("load", setColorBasal(6, 'Retardos'));
     document.addEventListener("load", setColorBasal(8, 'Puntales'));
-    function setColorBasal(numero, clase) {
-        numero = parseInt(numero);
-        switch (clase) {
-            case  'Faltas':
-                for (var i = 1; i <= numero; i++) {
-                    document.getElementById("faltaEmpresa_" + i.toString()).className = "rectangleColor1";
-                }
-                break;
-            case  'Retardos':
-                for (var i = 1; i <= numero; i++) {
-                    document.getElementById("retardoEmpresa_" + i.toString()).className = "rectangleColor2";
-                }
-                break;
-            case  'Puntales':
-                for (var i = 1; i <= numero; i++) {
-                    document.getElementById("puntualEmpresa_" + i.toString()).className = "rectangleColor3";
-                }
-                break;
-        }
-    }
 })
+function setColorBasal(numero, clase) {
+    numero = parseInt(numero);
+    switch (clase) {
+        case  'Faltas':
+            for (var i = 1; i <= numero; i++) {
+                document.getElementById("faltaEmpresa_" + i.toString()).className = "rectangleColor1";
+            }
+            break;
+        case  'Retardos':
+            for (var i = 1; i <= numero; i++) {
+                document.getElementById("retardoEmpresa_" + i.toString()).className = "rectangleColor2";
+            }
+            break;
+        case  'Puntales':
+            for (var i = 1; i <= numero; i++) {
+                document.getElementById("puntualEmpresa_" + i.toString()).className = "rectangleColor3";
+            }
+            break;
+    }
+}
 //GENERAR REPORTE DE JORNADAS LABORALES
 $(document).ready(() => {
     $("#reporteEmpleadoJornadasLaborales").hide()
