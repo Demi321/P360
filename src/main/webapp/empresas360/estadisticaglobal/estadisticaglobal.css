@@ -200,7 +200,7 @@ and open the template in the editor.
 }
 
 .Contenedor p{
-    color: white;
+    color: black;
 }
 
 .Contenedor > div{
@@ -214,57 +214,62 @@ and open the template in the editor.
 
 .Contenedor .EstadoDE {
     grid-area: EstadoDE;
-    background: #252528;
+    background: white;
 }
 .Contenedor .GraficaPastel {
     grid-area: GraficaPastel;
-    background: #252528;
+    background: white;
     display: inline-table;
+    border-radius: 15px;
 }
 .Contenedor .DistribucionSexo {
     grid-area: DistribucionSexo;
-    background: #252528;
+    background: white;
 }
 .Contenedor .DistribucionSucursales {
     grid-area: DistribucionSucursales;
-    background: #252528;
+    background: white;
 }
 .Contenedor .ActividadesLaborales {
     grid-area: ActividadesLaborales;
-    background: #252528;
+    background: white;
 }
 .Contenedor .ProductividadSucursal {
     grid-area: ProductividadSucursal;
-    background: #252528;
+    background: white;
 }
 .Contenedor .InversionTiempo {
     grid-area: InversionTiempo;
-    background: #252528;
+    background: white;
 }
 .Contenedor .HistoralLaboral {
     grid-area: HistoralLaboral;
-    background: #252528;
+    background: white;
 }
 
 
 .Contenedor .EmpleadosRCT {
     grid-area: EmpleadosRCT;
-    background: #252528;
+    background: white;
+    border-radius: 20px;
+    margin: 20px;
     width: 100%
 }
 
 .Contenedor .Sexo {
     grid-area: Sexo;
-    background: #252528;
+    background: white;
+    border-radius: 20px;
+    margin: 20px;
 }
 .Contenedor .DistribucionE {
     grid-area: DistribucionE;
-    background: #252528;
+    background: white;
 
 }
 .Contenedor .DistribucionG {
     grid-area: DistribucionG;
-    background: #252528;
+    background: white;
 
 }
 
@@ -272,12 +277,12 @@ and open the template in the editor.
 
 .Contenedor .AntecedentesRB {
     grid-area: AntecedentesRB;
-    background: #252528;
+    background: white;
 }
 
 .Contenedor .MedidadAE {
     grid-area: MedidadAE;
-    background: #252528;
+    background: white;
 
 }
 
@@ -652,12 +657,12 @@ Estilos de las grafica de pay
     border-radius: 4px;
 }
 #PorcentageA {
-    background: #252528;
+    background: white;
     border-radius: 4px;
     
 }
 #PorcentageB {
-    background: #252528;
+    background: white;
     border-radius: 4px;
     
 }
@@ -665,10 +670,10 @@ Estilos de las grafica de pay
     /*height: 150px;*/
     overflow: scroll;
 }
-#grafica2{
-    /*height: 150px;*/
+/*#grafica2{
+    height: 150px;
     overflow: scroll;
-}
+}*/
 #UbicacionEstadoE{
     background: #40474f;
     border-radius: 4px;
@@ -741,5 +746,75 @@ Estilos de las grafica de pay
     background:#0E6D53;
     margin-top: 20%;
     float:left;
+} .recuadro1{   
+    width:10px;
+    height:10px;
+    background:#1895BC;
+    margin-top: 20%;
+    float:left;
 } 
-
+.recuadro2{
+    width:10px;
+    height:10px;
+    background:#0E6D53;
+    margin-top: 20%;
+    float:left;
+}
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 10px;
+}
+.DatosGraficaEdades{
+    background-color: gray;
+    width: 250px;
+    height: 300px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+.td1{       
+    margin-right: 20px;
+}
+.td2{    
+    height: 35px;
+    text-align: end;
+    margin-left: 20px;    
+    text-overflow: ellipsis;
+    white-space: pre-wrap;
+    
+}
+.table1{
+    margin: 15px;
+}
+.rectangleActLab1{
+    width: 10px;
+    height: 17px;
+    background-color: #49C848; 
+    margin: 7px;
+    float: left; 
+    padding: 7px;
+}
+.rectangleActLab2{
+    width:10px;
+    height:20px;
+    background-color: yellow;
+    margin: 7px;
+    float: left; 
+    padding: 7px;
+}
+.rectangleActLab3{
+    width:10px;
+    height:20px;
+    background-color: #439EAE;
+    margin: 7px;
+    float: left; 
+    padding: 7px;
+}
+.rectangleActLab4{
+    width:10px;
+    height:20px;
+    background-color: #ef0c0c; 
+    margin: 7px;
+    float: left; 
+    padding: 7px;
+}

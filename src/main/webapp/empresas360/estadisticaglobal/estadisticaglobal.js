@@ -6,6 +6,8 @@
 
 
 
+/* global parserJsonData */
+
 var init_estadisticaglobal = (json) => {
 
     console.log(json);
@@ -13,7 +15,28 @@ var init_estadisticaglobal = (json) => {
     let id_usuario = json.id_usuario;
     let tipo_usuario = json.tipo_usuario;
     let tipo_servicio = json.tipo_servicio;
-    let tipo_area = json.tipo_area;
+    let tipo_area = json.tipo_area;    
+    var h =0;
+var m =0;
+var r_e1=0;
+var r_e2=0;
+var r_e3=0;
+var r_e4=0;
+var r_e5=0;
+var r_e6=0;
+var jsonData = $.ajax({        
+    type: 'POST',
+    url: '/' + DEPENDENCIA + '/API/cantidad_empleados',
+    contentType: "application/json",
+    dataType: 'json',
+    data: JSON.stringify({                        
+        "tipo_servicio": 124
+    }),
+    async: false
+}).responseText;
+var paserJsonData= JSON.parse(jsonData);
+console.log(paserJsonData);
+    
     console.log("Dashboard Reportes");
     //window.onload = function () {
     google.charts.load('current', {'packages':['corechart']});
@@ -29,9 +52,9 @@ var init_estadisticaglobal = (json) => {
 
       var options = {
           //pieSliceText: 'none',
-          legend: { 'position': 'labeled', textStyle: {color: '#ffffff'} }, 
+          legend: { 'position': 'labeled', textStyle: {color: '#252528'} }, 
           colors:['blue','#439EAE','green','#49C848','red','#004411'],
-          backgroundColor: '#252528',       
+          backgroundColor: '#ffffff',       
           tooltip: {
               trigger: 'none',
               showColorCode: true,
@@ -45,28 +68,61 @@ var init_estadisticaglobal = (json) => {
   google.charts.setOnLoadCallback(drawBasicEdad);    
   google.charts.load('current', { callback: drawBasicEdad, packages:['corechart', 'bar'] });
 
-  function drawBasicEdad() {        
+  function drawBasicEdad() {
+        var datos = paserJsonData;
+        for (var i = 0; i < datos.length; i++) {       
+            var fecha = datos[i].fecha_nacimiento;
+            if(fecha === null) {
+                r_e6++;
+                console.log("ES null");
+                console.log("Sin fecha de nacimiento");        
+            }
+            var hoy = new Date();
+            var cumpleanos = new Date(fecha);
+            var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+            var m = hoy.getMonth() - cumpleanos.getMonth();
+            if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+                edad--;
+            }
+            console.log(edad);
+            if( edad >= 18 && edad <= 25  ){
+                r_e1++;
+                console.log("rango 18 a 25 ");
+            }else if( edad >= 26 && edad <= 35) {
+                r_e2++;
+                console.log("rango 26 a 35");   
+            }else if( edad >= 36 && edad <= 45) {
+                r_e3++;
+                console.log("rango 36 a 45");
+            }else if( edad >= 46 && edad <= 55) {
+                r_e4++;
+                console.log("rango 46 a 55 ");
+            }else if( edad > 60) {
+                r_e5++;
+                console.log("Mayores de 60");
+            }
+        }
       var data = new google.visualization.DataTable();
       data.addColumn('string', 'rango');
       data.addColumn('number', 'Cantidad ');
       data.addColumn({ role: 'style' });
       data.addRows([
-          ["De 18 a 25 años", /*rango1*/ 30, 'color: #358EA5'],
-          ["De 26 a 35 años", /*rango2*/ 60, 'color: #F2940D'],
-          ["De 36 a 45 años", /*rango3*/ 40, 'color: #3A8F48'],
-          ["De 46 a 55 años", /*rango4*/ 10, 'color: #393d39'],
-          ["Mayores de 60 años", /*rango5*/ 10, 'color: #900C3F '],
-          ["Sin fecha de nacimiento", /*rango6*/ 10, 'color: #C5A5CF']
-      ]);
+        ["De 18 a 25 años", /*rango1*/ r_e1, 'color: #358EA5'],
+        ["De 26 a 35 años", /*rango2*/ r_e2, 'color: #F2940D'],
+        ["De 36 a 45 años", /*rango3*/ r_e3, 'color: #3A8F48'],
+        ["De 46 a 55 años", /*rango4*/ r_e4, 'color: #393d39'],
+        ["Mayores de 60 años", /*rango5*/ r_e5, 'color: #900C3F '],
+        ["Sin fecha de nacimiento", /*rango6*/ r_e6, 'color: #C5A5CF']
+    ]);
       var options = {                       
           legend: 'none',
-          backgroundColor: '#252528',
-          width: 400,
-          height: 300,
+          backgroundColor: '#fffffff',
+          width: '400px',
+          height: '300px',
           hAxis: {
               title: 'Rango de Edad',
               textStyle: {
-                  color: '#ffffff'
+                  color: '#252528'
               }
           },
           vAxis: {
@@ -86,24 +142,36 @@ var init_estadisticaglobal = (json) => {
   google.charts.setOnLoadCallback(drawBasicSexo);    
   google.charts.load('current', { callback: drawBasicSexo, packages:['corechart', 'bar'] });
 
-  function drawBasicSexo() {        
-      var data = new google.visualization.DataTable();
+  function drawBasicSexo() {
+        var datos = paserJsonData;
+        console.log(datos);
+        for(var i = 0; i < datos.length ; i++) {
+            if(datos[i].genero === "Hombre" || datos[i].genero === "Masculino"){
+                h++;
+                console.log(h);
+            }else if (datos[i].genero === "Mujer") {
+                m++;
+                console.log(m);
+            }                           
+        }
+        var total = datos.length; 
+        var data = new google.visualization.DataTable();
       data.addColumn('string', 'Sexo');
       data.addColumn('number', 'Cantidad ');    
       data.addColumn({ role: 'style' });
       data.addRows([
-          ["Mujer", 50, 'color: #358EA5'],
-          ["Hombre ", 100, 'color: orange']
-      ]);
+        ["Mujer", m, 'color: #358EA5'],
+        ["Hombre ", h, 'color: orange']
+    ]);
       var options = {
           legend: 'none',
-          backgroundColor: '#252528',
-          width: 400,
-          height: 300,
+          backgroundColor: '#ffffff',
+          width: '400px',
+          height: '300px',
           hAxis: {            
               textStyle: {
                   title: 'Sexo',
-                  color: '#ffffff'
+                  color: '#252528'
               }
           },
           vAxis: {
@@ -136,19 +204,19 @@ var init_estadisticaglobal = (json) => {
       ]);
       var options = {
           legend: 'none',
-          backgroundColor: '#252528',
-          width: 400,
-          height: 300,
+          backgroundColor: '#fffffff',
+          width: '400px',
+          height: '300px',
           hAxis: {            
               textStyle: {
                   title: 'Sexo',
-                  color: '#ffffff'
+                  color: '#252528'
               }
           },
           vAxis: {
               title: 'No. de Empleados',
-              titleTextStyle:{color: '#ffffff'},                        
-              textStyle: {color: '#ffffff'},
+              titleTextStyle:{color: '#252528'},                        
+              textStyle: {color: '#252528'},
               ticks: [ {v: 30}, {v: 50}, {v: 80}, {v: 100} ]
           }
       };
@@ -173,9 +241,9 @@ var init_estadisticaglobal = (json) => {
 
       var options = {
           pieSliceText: 'none',
-          legend: { 'position': 'labeled', textStyle: {color: '#ffffff'} }, 
+          legend: { 'position': 'labeled', textStyle: {color: '#252528'} }, 
           colors:['blue','#439EAE','green','#49C848','red','#004411'],
-          backgroundColor: '#252528',        
+          backgroundColor: '#ffffff',        
           tooltip: {
               trigger: 'none',
               showColorCode: true,
@@ -217,14 +285,14 @@ var init_estadisticaglobal = (json) => {
               3: { color: '#6f9654'/* verde*/ }                      
           },        
           hAxis: {                        
-              titleTextStyle:{color: '#ffffff'},
-              textStyle: {color: '#FFF' }
+              titleTextStyle:{color: '#252528'},
+              textStyle: {color: '#252528' }
           },
           vAxis: {
               title:'Productividad',
-              titleTextStyle:{color: '#ffffff'},
+              titleTextStyle:{color: '#252528'},
               labelString: "Percentage",
-              textStyle: {color: '#FFF'},
+              textStyle: {color: '#252528'},
               ticks: [ {v: 0, f:"0%"}, {v: 50, f:"50%"}, {v: 70, f:"70%"}, {v: 100, f:"100%"} ]
           },
           backgroundColor: '#252528'
@@ -255,7 +323,7 @@ var init_estadisticaglobal = (json) => {
       var options = {
           legend: 'none',
           pointSize: 5,
-          backgroundColor: '#252528',        
+          backgroundColor: '#ffffff',        
           series: {
               0: { color: '#358EA5'/*azul*/ },
               1: { color: '#f1ca3a'/*amarillo*/ },
@@ -264,13 +332,13 @@ var init_estadisticaglobal = (json) => {
           },        
           hAxis: {
               title:'Actividad',
-              titleTextStyle:{color: '#ffffff'},
-              textStyle: {color: '#FFF' }
+              titleTextStyle:{color: '#252528'},
+              textStyle: {color: '#252528' }
           },
           vAxis: {
               title:'Tiempo',
-              titleTextStyle:{color: '#ffffff'}, 
-              textStyle: {color: '#FFF'},
+              titleTextStyle:{color: '#252528'}, 
+              textStyle: {color: '#252528'},
               ticks: [ {v: 0, f: '0 hr'}, {v: 100, f: '100 hrs'}, {v: 200, f: '200 hrs'}, {v: 300, f: '300 hrs'} ]        
           }
       };

@@ -7,6 +7,23 @@ var date = new Date();
 var usuario_id = perfil_usuario.id360; //TU LO MOFICAS
 var zona_horaria = "America/Mexico_City";//TU LO MODIFICAS
 var eventos_usuario = []
+
+var nuevoModal = new bootstrap.Modal(document.getElementById('nuevoModal'), {
+    keyboard: false
+})
+var eventoModal = new bootstrap.Modal(document.getElementById('showEventoModal'), {
+    keyboard: false
+})
+var updateModal = new bootstrap.Modal(document.getElementById('updateModal'), {
+    keyboard: false
+})
+var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
+    keyboard: false
+})
+var emailModal = new bootstrap.Modal(document.getElementById('emailEventModal'),{
+    keyboard:false
+})
+
 function getEventos() {
     fetch("https://agenda360.ml/api/eventos/usuario", {
         method: "POST",
@@ -38,62 +55,62 @@ function showEvent(evento_id) {
             .then((data) => {
                 evento = data.data
                 body_html = `
-    				<div class="row">
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Titulo</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.titulo}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Descripción</label>
-    						<textarea class="form-control" readonly="">${evento.descripcion ? evento.descripcion : "N/A" }</textarea>
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Fecha Inicio</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.fechainicio ? evento.fechainicio : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Hora Inicio</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.horainicio ? evento.horainicio : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Fecha Fin</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.fechafin ? evento.fechafin : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Hora Fin</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.horafin ? evento.horafin : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Fecha Recordatorio</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.fecharecordatorio ? evento.fecharecordatorio : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Hora Recordatorio</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.horarecordatorio ? evento.horarecordatorio : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Temporizador</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.temporizador ? evento.temporizador : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Recurrente</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.recurrente ? evento.recurrente : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>Periodo</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.periodo ? evento.periodo : "N/A"}">
-    					</div>
-    					<div class="col-12 col-md-4 mt-2">
-    						<label>URL</label>
-    						<input class="form-control" type="text" readonly="" value="${evento.url ? evento.url : "N/A"}">
-    					</div>
-    					<div class="col-12 mt-3 d-flex justify-content-between">
-							
-							<button type="button" class="btn btn-warning" onclick="showUpdateForm(${evento.id})">Editar</button>
-							<button type="button" class="btn btn-danger" onclick="showDeleteForm(${evento.id})">Eliminar</button>
-    					</div>
-    				</div>
-    				`
+                                <div class="row">
+                                        <div class="col-12 col-md-4 mt-2">
+                                                <label>Titulo</label>
+                                                <input class="form-control" type="text" readonly="" value="${evento.titulo}">
+                                        </div>
+                                        <div class="col-12 col-md-4 mt-2">
+                                                <label>Descripción</label>
+                                                <textarea class="form-control" readonly="">${evento.descripcion ? evento.descripcion : "N/A" }</textarea>
+                                        </div>
+                                        <div class="col-12 col-md-4 mt-2">
+                                                <label>Fecha Inicio</label>
+                                                <input class="form-control" type="text" readonly="" value="${evento.fechainicio ? evento.fechainicio : "N/A"}">
+                                        </div>
+                                        <div class="col-12 col-md-4 mt-2">
+                                                <label>Hora Inicio</label>
+                                                <input class="form-control" type="text" readonly="" value="${evento.horainicio ? evento.horainicio : "N/A"}">
+                                        </div>
+                                        <div class="col-12 col-md-4 mt-2">
+                                                <label>Fecha Fin</label>
+                                                <input class="form-control" type="text" readonly="" value="${evento.fechafin ? evento.fechafin : "N/A"}">
+                                        </div>
+                                        <div class="col-12 col-md-4 mt-2">
+                                                <label>Hora Fin</label>
+                                                <input class="form-control" type="text" readonly="" value="${evento.horafin ? evento.horafin : "N/A"}">
+                                        </div>
+                                        <div class="col-12 col-md-4 mt-2">
+                                                <label>Fecha Recordatorio</label>
+                                                <input class="form-control" type="text" readonly="" value="${evento.fecharecordatorio ? evento.fecharecordatorio : "N/A"}">
+                                        </div>
+                                        <div class="col-12 col-md-4 mt-2">
+                                                <label>Hora Recordatorio</label>
+                                                <input class="form-control" type="text" readonly="" value="${evento.horarecordatorio ? evento.horarecordatorio : "N/A"}">
+                                        </div>
+                                        <div class="col-12 col-md-4 mt-2">
+                                                <label>Temporizador</label>
+                                                <input class="form-control" type="text" readonly="" value="${evento.temporizador ? evento.temporizador : "N/A"}">
+                                        </div>
+                                        <div class="col-12 col-md-4 mt-2">
+                                                <label>Recurrente</label>
+                                                <input class="form-control" type="text" readonly="" value="${evento.recurrente ? evento.recurrente : "N/A"}">
+                                        </div>
+                                        <div class="col-12 col-md-4 mt-2">
+                                                <label>Periodo</label>
+                                                <input class="form-control" type="text" readonly="" value="${evento.periodo ? evento.periodo : "N/A"}">
+                                        </div>
+                                        <div class="col-12 col-md-4 mt-2">
+                                                <label>URL</label>
+                                                <input class="form-control" type="text" readonly="" value="${evento.url ? evento.url : "N/A"}">
+                                        </div>
+                                        <div class="col-12 mt-3 d-flex justify-content-between">
+                                                        <button type="button" class="btn btn-warning" onclick="showUpdateForm(${evento.id})">Editar</button>
+                                                        <button type="button" class="btn btn-info" onclick="showEmailEventForm(${evento.id})">Enviar por correo</button>
+                                                        <button type="button" class="btn btn-danger" onclick="showDeleteForm(${evento.id})">Eliminar</button>
+                                        </div>
+                                </div>
+                                `
                 $("#bodyEvento").empty().append(body_html);
                 eventoModal.toggle()
 
@@ -133,6 +150,138 @@ function showDeleteForm(evento_id) {
     deleteModal.toggle()
 
 }
+
+// FUNCION PARA MOSTRAR FORMULARIO DE ENVIO DE CORREO ELECTRONICO
+function showEmailEventForm(evento_id){
+    $("#evento_email").val(evento_id)
+    emailModal.toggle()
+}
+
+
+$("#nuevoEvento").on("submit", function (event) {
+    event.preventDefault();
+    // data = 
+    // console.log(data);
+    fetch("https://agenda360.ml/api/eventos", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify({
+            'usuario_id': usuario_id,
+            'participantes_id':$("#participantes_id").val(),
+            'titulo': $("#titulo").val(),
+            'descripcion': $("#descripcion").val(),
+            'direccion': $("#direccion").val(),
+            'latitud': $("#latitud").val(),
+            'longitud': $("#longitud").val(),
+            'tipoevento': $("#tipoevento").val(),
+            'fecharegistro': $("#fecharegistro").val(),
+            'fechainicio': $("#fechainicio").val(),
+            'fechafin': $("#fechafin").val(),
+            'horainicio': $("#horainicio").val(),
+            'horafin': $("#horafin").val(),
+            'fecharecordatorio': $("#fecharecordatorio").val(),
+            'horarecordatorio': $("#horarecordatorio").val(),
+            'temporizador': $("#temporizador").val(),
+            'recurrente': $("#recurrente").val(),
+            'periodo': $("#periodo").val(),
+            'url': $("#url").val()
+        })
+    }).then(response => response.json()).then(data => {
+        console.log(data)
+        nuevoModal.toggle()
+        location.reload();
+
+    });
+})
+
+$("#updateEvento").on("submit", function (event) {
+    event.preventDefault()
+    let evento_id = $("#evento_id").val();
+    fetch("https://agenda360.ml/api/eventos/" + evento_id, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify({
+            'usuario_id': usuario_id,
+            'participantes_id':$("#update_participantes_id").val(),
+            '_method': "PUT",
+            'titulo': $("#update_titulo").val(),
+            'descripcion': $("#update_descripcion").val(),
+            'direccion': $("#update_direccion").val(),
+            'latitud': $("#update_latitud").val(),
+            'longitud': $("#update_longitud").val(),
+            'tipoevento': $("#update_tipoevento").val(),
+            'fecharegistro': $("#update_fecharegistro").val(),
+            'fechainicio': $("#update_fechainicio").val(),
+            'fechafin': $("#update_fechafin").val(),
+            'horainicio': $("#update_horainicio").val(),
+            'horafin': $("#update_horafin").val(),
+            'fecharecordatorio': $("#update_fecharecordatorio").val(),
+            'horarecordatorio': $("#update_horarecordatorio").val(),
+            'temporizador': $("#update_temporizador").val(),
+            'recurrente': $("#update_recurrente").val(),
+            'periodo': $("#update_periodo").val(),
+            'url': $("#update_url").val()
+        })
+    }).then(response => response.json()).then(data => {
+        console.log(data)
+        updateModal.toggle()
+        location.reload();
+    });
+})
+
+$("#deleteEvento").on("submit", function (event) {
+    event.preventDefault();
+    let evento_id = $("#evento").val();
+    fetch("https://agenda360.ml/api/eventos/" + evento_id, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify({
+            "_method": "DELETE"
+        })
+    }).then(response => response.json()).then(data => {
+        console.log(data)
+        deleteModal.toggle();
+        location.reload();
+    });
+
+})
+
+// EVENTO JQUERY PARA ENVIAR CORREO CON EL EVENTO
+$("#emailEvento").on("submit",function(event){
+    event.preventDefault()
+    let params = {
+        evento_id: $("#evento_email").val(),
+        correo: $("#correo").val(),
+        asunto: $("#asunto").val(),
+        cuerpo: $("#cuerpo").val()
+    }
+    fetch("https://agenda360.ml/api/email/event",{
+        method:"POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept':'application/json'
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body:JSON.stringify(params)
+    }).then(response => response.json()).then(data => {
+        console.log(data)
+        emailModal.toggle();
+
+    });
+})
+
 const init_agenda = (json) => {
 console.log(json);
     let id = json.id;
@@ -283,119 +432,51 @@ console.log(json);
 
         calendar.setOption('locale', 'Es');
         calendar.setOption('height', "100%");
+        var button_agenda = document.getElementById("menu_section_Agenda");
+        button_agenda.onclick =function(evt){
+            calendar.updateSize()
+        };
         calendar.render();
     });
 
 
-    var nuevoModal = new bootstrap.Modal(document.getElementById('nuevoModal'), {
-        keyboard: false
-    })
-    var eventoModal = new bootstrap.Modal(document.getElementById('showEventoModal'), {
-        keyboard: false
-    })
-    var updateModal = new bootstrap.Modal(document.getElementById('updateModal'), {
-        keyboard: false
-    })
-    var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
-        keyboard: false
-    })
-
-    $("#nuevoEvento").on("submit", function (event) {
-        event.preventDefault();
-        // data = 
-        // console.log(data);
-        fetch("https://agenda360.ml/api/eventos", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-                        // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: JSON.stringify({
-                'usuario_id': usuario_id,
-                'titulo': $("#titulo").val(),
-                'descripcion': $("#descripcion").val(),
-                'direccion': $("#direccion").val(),
-                'latitud': $("#latitud").val(),
-                'longitud': $("#longitud").val(),
-                'tipoevento': $("#tipoevento").val(),
-                'fecharegistro': $("#fecharegistro").val(),
-                'fechainicio': $("#fechainicio").val(),
-                'fechafin': $("#fechafin").val(),
-                'horainicio': $("#horainicio").val(),
-                'horafin': $("#horafin").val(),
-                'fecharecordatorio': $("#fecharecordatorio").val(),
-                'horarecordatorio': $("#horarecordatorio").val(),
-                'temporizador': $("#temporizador").val(),
-                'recurrente': $("#recurrente").val(),
-                'periodo': $("#periodo").val(),
-                'url': $("#url").val()
-            })
-        }).then(response => response.json()).then(data => {
-            console.log(data)
-            nuevoModal.toggle()
-            location.reload();
-
-        });
-    })
-
-    $("#updateEvento").on("submit", function (event) {
-        event.preventDefault()
-        let evento_id = $("#evento_id").val();
-        fetch("https://agenda360.ml/api/eventos/" + evento_id, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-                        // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: JSON.stringify({
-                'usuario_id': usuario_id,
-                '_method': "PUT",
-                'titulo': $("#update_titulo").val(),
-                'descripcion': $("#update_descripcion").val(),
-                'direccion': $("#update_direccion").val(),
-                'latitud': $("#update_latitud").val(),
-                'longitud': $("#update_longitud").val(),
-                'tipoevento': $("#update_tipoevento").val(),
-                'fecharegistro': $("#update_fecharegistro").val(),
-                'fechainicio': $("#update_fechainicio").val(),
-                'fechafin': $("#update_fechafin").val(),
-                'horainicio': $("#update_horainicio").val(),
-                'horafin': $("#update_horafin").val(),
-                'fecharecordatorio': $("#update_fecharecordatorio").val(),
-                'horarecordatorio': $("#update_horarecordatorio").val(),
-                'temporizador': $("#update_temporizador").val(),
-                'recurrente': $("#update_recurrente").val(),
-                'periodo': $("#update_periodo").val(),
-                'url': $("#update_url").val()
-            })
-        }).then(response => response.json()).then(data => {
-            console.log(data)
-            updateModal.toggle()
-            location.reload();
-        });
-    })
-
-    $("#deleteEvento").on("submit", function (event) {
-        event.preventDefault();
-        let evento_id = $("#evento").val();
-        fetch("https://agenda360.ml/api/eventos/" + evento_id, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-                        // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: JSON.stringify({
-                "_method": "DELETE"
-            })
-        }).then(response => response.json()).then(data => {
-            console.log(data)
-            deleteModal.toggle();
-            location.reload();
-        });
-
-    })
+    
 }
 
+new Vue({
+        el: "#event_new",
+        components: {
+            Multiselect: window.VueMultiselect.default
+        },
+        data() {
+            return {
+                value: [],
+                options: directorio_usuario
+            };
+        },
+        methods: {
+            customLabel(option) {
+                return option.nombre + " " + option.apellido_paterno + " " + option.apellido_materno + " ";
+            },
+            onClosed(value) {
+                //console.log(value);
+
+            },
+
+            onTag(value) {
+                //console.log(value);
+            },
+
+            onRemove(value) {
+                //console.log(value);
+            },
+
+            onInput(value) {
+                document.getElementById("menu_sidebar" + value.id360).scrollIntoView();
+                document.getElementsByClassName("home_empleado")[0].scrollIntoView();
+            },
+            onOpen(value) {
+                this.value = null;
+            }
+        }
+    });

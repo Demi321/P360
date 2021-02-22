@@ -11,11 +11,21 @@ const init_recordatorios = (json) => {
     let tipo_usuario = json.tipo_usuario;
     let tipo_servicio = json.tipo_servicio;
     let tipo_area = json.tipo_area;
+    
+    
+    
+    var recordatorios = '{ "recordatorios" : [' +
+         '{"id":1, "titulo_recordatorio":"Junta", "descripcion_recordatorio":"Junta con equipo MC", "idUsuario":"8521478", "hora_recordatorio":"12:13","fecha_recordatorio":"17/02/2021"},'+
+         '{"id":2, "titulo_recordatorio":"Junta", "descripcion_recordatorio":"Junta con equipo MC", "idUsuario":"8521478", "hora_recordatorio":"01:30","fecha_recordatorio":"17/02/2021"},'+
+         '{"id":3, "titulo_recordatorio":"Junta", "descripcion_recordatorio":"Junta con equipo MC", "idUsuario":"8521478", "hora_recordatorio":"17:10","fecha_recordatorio":"17/02/2021"}'+
+         ']}';
 
-
-
-
-    // traer los recordatorios almacenados en el servidor 
+    // var element = document.getElementById("calendar");
+    // caleandar(element);
+     //-------------Document ready-----------
+    $(document).ready(
+        function(){
+            // traer los recordatorios almacenados en el servidor 
     //agregarlos
 
     var taskInput = document.getElementById("nombre_recordatorio");//Add a new task.
@@ -88,8 +98,6 @@ const init_recordatorios = (json) => {
         deleteButton.innerText = "Eliminar";
         deleteButton.className = "delete";
 
-
-
         //and appending.
         div_check.appendChild(checkBox);
         div_data.appendChild(label);
@@ -108,13 +116,22 @@ const init_recordatorios = (json) => {
         return listItem;
     }
 
-
-
     var addTask = function () {
         console.log("Add Task...");
         //Create a new list item with the text from the #new-task:
         var listItem = createNewTaskElement(taskInput.value,descriptionInput.value,dateInput.value,timeInput.value);
+        var jsonData = {};
+        jsonData["id"]="4";
+        jsonData["titulo_recordatorio"]=taskInput.value;
+        jsonData["descripcion_recordatorio"]=descriptionInput.value;
+        jsonData["hora_recordatorio"]=timeInput.value;
+        jsonData["fecha_recordatorio"]= formatearFecha(dateInput.value);
+        console.log(jsonData);
+        console.log(timeInput.value);
+        recordatorios_array.push(jsonData);
+        //lista.append("<li>"+ titulo +"</li>");
         console.log(listItem);
+        console.log(recordatorios_array);
         //Append listItem to incompleteTaskHolder
         incompleteTaskHolder.appendChild(listItem);
         bindTaskEvents(listItem, taskCompleted);
@@ -124,6 +141,12 @@ const init_recordatorios = (json) => {
         dateInput.value = "";
         timeInput.value = "";
 
+    }
+
+    function formatearFecha(fecha){
+        var arreglo = fecha.split("-");
+        var fecha_formateada = arreglo[2] + "/" + arreglo[1] + "/" + arreglo[0];
+        return fecha_formateada;
     }
 
 //Edit an existing task.
@@ -218,21 +241,9 @@ const init_recordatorios = (json) => {
     $("#agrega_recordatorio").submit((e) => {
         e.preventDefault();
         console.log("enviado");
-        var jsonData = buildJSON_Section("agrega_recordatorio");
-        console.log(jsonData);
+        //var jsonData = {};
+        //console.log(jsonData);
         addTask();
-//        var lista = $("#lista_recordatorios");
-//        var fecha = $("#fecha").val();
-//        $("#fecha").empty();
-//        var hora = $("#hora_recordatorio").val();
-//        var titulo = $("#nombre_recordatorio").val();
-//        var descripcion = $("#descripcion_recordatorio").val();
-//        jsonData["Titulo_recordatorio"] = titulo;
-//        jsonData["Descripcion_recordatorio"] = descripcion;
-//        jsonData["hora_recordatorio"] = hora;
-//        jsonData["fecha_recordatorio"] = fecha;
-//        console.log(jsonData);
-//        recordatorios_array.push(jsonData);
 //        lista.append("<li>" + titulo + "</li>");
         $("#agrega_recordatorio").trigger("reset");
     });
@@ -269,8 +280,146 @@ const init_recordatorios = (json) => {
         bindTaskEvents(completedTasksHolder.children[i], taskIncomplete);
     }
 
+ 
+            $("#fecha_recordatorio").mask("00/00/0000");
+            $("#hora_recordatorio").mask("00:00");
+            var recordatorios_json = JSON.parse(recordatorios);
+            var recordatorios_array = recordatorios_json.recordatorios;
+            var audioElement = document.createElement('audio');
+            audioElement.setAttribute('src', "https://empresas.claro360.com/p360_v4_dev_moises/empresas360/recordatorios/SD_ALERT_3.mp3");
+            audioElement.addEventListener('ended', function() {
+                this.play();
+            }, false);
+            audioElement.addEventListener("canplay",function(){
+       console.log("ready to play");
+    });
+           var alarma_activa = false;
+            console.log("ready");
+           llena_lista_recordatorios();
+        $(".cld-days li").attr("data-bs-toggle","modal");
+        $(".cld-days li").attr('data-bs-target','#exampleModal');
+        setInterval(checa_recordatorios,1000);
 
-    $("#agregar_recordatorio").on("change", (e) => {
+     function llena_lista_recordatorios(){
+        var lista = $("#lista_recordatorios");
+        lista.empty();
+            for(var j=0; j<recordatorios_array.length; j++){
+                var temp = $("<li><p> "+ recordatorios_array[j].Titulo_recordatorio + ": " + recordatorios_array[j].Descripcion_recordatorio +"</p></li>");
+                    //console.log("add " + temp);
+                    lista.append(temp);
+            }
+     }
+
+     function checa_recordatorios(){
+         console.log("checking");
+         if(!alarma_activa){
+             console.log("alarma por activar");
+            var current = new Date();
+            var hora = get_tiempo(current);
+            var fecha = get_fecha(current);
+            //console.log("checking");
+            for(var i = 0; i<recordatorios_array.length; i++){ 
+                //console.log(i);
+                //console.log(recordatorios_array[i].hora_recordatorio);
+                console.log(fecha);
+                console.log(recordatorios_array[i].fecha_recordatorio);
+                if(recordatorios_array[i].hora_recordatorio===hora && fecha===recordatorios_array[i].fecha_recordatorio){
+                    console.log("entró");
+                    var index = i;
+                    alarma_activa=true;
+                    audioElement.play();
+                    Swal.fire({
+                    title: '<h4>Recordatorio '+ recordatorios_array[i].Titulo_recordatorio +'</h4>',
+                    html: '<hr class="swa-hr">\
+                            <p style="font-size: 1.25rem; color: #000; ">'+ recordatorios_array[i].Descripcion_recordatorio +' \n\
+                            </p> \n\
+                            <button class="btn btn-warning aplazar" minutes="5" id_alarma="'+ recordatorios_array[i].id +'">Aplazar 5 mins.</button> \n\
+                            <button class="btn btn-info aplazar" minutes="10" id_alarma="'+ recordatorios_array[i].id +'">Aplazar 10 mins.</button> \n\
+                            <button class="btn btn-info aplazar" minutes="15" id_alarma="'+ recordatorios_array[i].id +'">Aplazar 15 mins.</button>',
+                    showCancelButton: false,
+                    confirmButtonText: 'Descartar',
+                    background: '#fff',
+                    width: '25%',
+                    padding: '0',
+                    customClass: {
+                        confirmButton: 'btn-danger',
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        audioElement.pause();
+                        console.log(index);
+                        recordatorios_array.splice(index, 1);
+                        //console.log(recordatorios);
+                        alarma_activa=false;
+                        llena_lista_recordatorios();
+                        console.log(recordatorios_array);
+                    }
+                });
+        
+                }
+            }
+        }
+     }
+
+     $(document).on("click",".aplazar", function(){
+        console.log("click");
+        var mins = $(this).attr("minutes");
+        var temp = $(this).attr("id_alarma");
+        for(var i = 0; i<recordatorios_array.length; i++){
+            if(recordatorios_array[i].id === temp){
+                var time_split = recordatorios_array[i].hora_recordatorio.split(":");
+              
+                var hora_aplazada = suma_mins(parseInt(time_split[0]),parseInt(time_split[1]),parseInt(mins));
+                //console.log(hora_aplazada);
+                //console.log(recordatorios_array);
+                recordatorios_array[i].hora_recordatorio = hora_aplazada;
+                console.log(recordatorios_array);
+                audioElement.pause();
+                swal.close();
+                //recordatorios_array.splice(index, 1);
+                alarma_activa=false;
+                i= recordatorios_array.length;
+            }
+        }
+        console.log(temp);
+    });
+
+    function suma_mins(hora,min, tmp_aplazar){
+        var sum_mins = min + tmp_aplazar;
+        if(sum_mins>59){
+            sum_mins -= 60;
+            hora += 1;
+            if(sum_mins.toString().length < 2) {sum_mins = "0" + sum_mins;}
+            return hora + ":" + sum_mins;
+        }else{
+            if(sum_mins.toString().length < 2) {sum_mins = "0" + sum_mins;}
+            return hora + ":" + sum_mins;
+        }
+    }
+
+     function get_fecha(date){
+        var dia = date.getDate();
+        var mes = date.getMonth() + 1;
+        if(mes.toString().length < 2) {mes = "0" + mes;}
+        var year = date.getFullYear();
+        var fecha = dia + "/" + mes + "/" + year;
+        return fecha;
+     }
+
+     function get_tiempo(date){
+        var hora = date.getHours();
+        var mins = date.getMinutes();
+        var seconds = date.getSeconds();
+        if(hora.toString().length < 2) {hora = "0" + hora;}
+        if(mins.toString().length < 2) {mins = "0" + mins;}
+        //if(seconds.toString().length < 2) {seconds = "0" + seconds;}
+        var tiempo = hora + ":" + mins;
+        //console.log("seconds: " + seconds);
+        return tiempo;
+     }
+
+
+     $("#agregar_recordatorio").on("change", (e) => {
         console.log(e.target.checked);
         if (e.target.checked) {
             $(".recordatorios .detail").css({height: "80px"});
@@ -279,11 +428,30 @@ const init_recordatorios = (json) => {
         }
     });
 
+    /* $("#agrega_recordatorio").submit((e)=>{
+        e.preventDefault();
+         console.log("enviado");
+        var jsonData = {};
+        addTask();
+        var lista = $("#lista_recordatorios");
+        var fecha = $("#fecha").val();
+        $("#fecha").empty();
+        var hora = $("#hora_recordatorio").val();
+        var titulo = $("#nombre_recordatorio").val();
+        var descripcion = $("#descripcion_recordatorio").val();
+        jsonData["Titulo_recordatorio"]=titulo;
+        jsonData["Descripcion_recordatorio"]=descripcion;
+        jsonData["hora_recordatorio"]=hora;
+        jsonData["fecha_recordatorio"]=fecha;
+        console.log(jsonData);
+        recordatorios_array.push(jsonData);
+        lista.append("<li>"+ titulo +"</li>");
+        $("#agrega_recordatorio").trigger("reset");
+     }).catch(console.log(e));*/
 
+     
 
-
-
-
-}
-
- 
+    });
+   
+   
+};

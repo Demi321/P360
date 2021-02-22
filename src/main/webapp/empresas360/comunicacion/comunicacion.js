@@ -3,10 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_completo, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal, configuracionEmpleado, configuracionUsuario, moment, Promise, Directorio, superCm, swalConfirmDialog, guarda_adjunto_chat, FgEmojiPicker, objectEmojis, AWS, json, perfil_usuario */
+/* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_usuario, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal, configuracionEmpleado, configuracionUsuario, moment, Promise, Directorio, superCm, swalConfirmDialog, guarda_adjunto_chat, FgEmojiPicker, objectEmojis, AWS, json, perfil_usuario */
 
 const init_comunicacion = (json) => {
-    console.log(json);
+    
+    $("#profile-nombre").text(perfil_usuario.nombre + " " + perfil_usuario.apellido_paterno + " " + perfil_usuario.apellido_materno);
+    $("#profile-img").css({
+        "background": "url('" + perfil_usuario.img + "')",
+        "background-size": "cover",
+        "background-position": "center",
+        "background-repeat": "no-repeat"
+    });
+    
 };
 
 var BucketName = "lineamientos";
@@ -439,7 +447,7 @@ const funcionesSocket = () => {
             "apellido_paterno": "",
             "apellido_materno": ""
         };
-        directorio_completo.push(dataContac);
+        directorio_usuario.push(dataContac);
         contacto_chat(dataContac, true);
         NotificacionToas.fire({
             title: 'Bienvenido al grupo ' + mensaje.nombre_grupo
@@ -925,9 +933,9 @@ const NotificacionToas = Swal.mixin({
 
 const buscaEnDirectorioCompleto = (id360) => {
     let user;
-    $.each(directorio_completo, (i) => {
-        if (id360 === directorio_completo[i].id360) {
-            user = directorio_completo[i];
+    $.each(directorio_usuario, (i) => {
+        if (id360 === directorio_usuario[i].id360) {
+            user = directorio_usuario[i];
             return false;
         }
     });
@@ -1099,13 +1107,13 @@ var participantesParaGrupo = null;
 vuewModalParticipantesGrupo = (id_componente, participantes) => {
   
     participantesParaGrupo = new Array();
-    var json = directorio_completo;
+    var json = directorio_usuario;
     
     //quitar los participantes del grupo para el select
     if(participantes !== undefined && participantes !== null){
         
         json = [];
-        $.each(directorio_completo, (index, user) => {
+        $.each(directorio_usuario, (index, user) => {
             if( participantes.indexOf(user.id360) === -1 ){
                 json.push(user);
             }
@@ -1953,7 +1961,7 @@ function agregar_chat_enviado(mensaje, viejo) {
         RequestPOST("/API/get/perfil360", {id360: mensaje.to_id360}).then((response) => {
             if (response.sucesss) {
                 contacto_chat(response);
-                directorio_completo.push(response);
+                directorio_usuario.push(response);
                 agregar_chat(mensaje, response, "replies", viejo);
             }
         });
@@ -1963,9 +1971,9 @@ function agregar_chat_enviado(mensaje, viejo) {
             agregar_chat(mensaje, user, "replies", viejo);
         }else{
             let user = null;
-            $.each(directorio_completo, (i) => {
-                if (mensaje.to_id360 === directorio_completo[i].id360) {
-                    user = directorio_completo[i];
+            $.each(directorio_usuario, (i) => {
+                if (mensaje.to_id360 === directorio_usuario[i].id360) {
+                    user = directorio_usuario[i];
                     return false;
                 }
             });
@@ -2043,9 +2051,9 @@ function recibir_chat(mensaje, viejo, group, aumenta) {
                 console.log("Tampoco existe el componente del grupo");
             }else{
                 let user = null;
-                $.each(directorio_completo, (i) => {
-                    if (mensaje.id360 === directorio_completo[i].id360) {
-                        user = directorio_completo[i];
+                $.each(directorio_usuario, (i) => {
+                    if (mensaje.id360 === directorio_usuario[i].id360) {
+                        user = directorio_usuario[i];
                         return false;
                     }
                 });
@@ -2082,7 +2090,7 @@ function recibir_chat(mensaje, viejo, group, aumenta) {
                 RequestPOST("/API/get/perfil360", mensaje).then((response) => {
                     if (response.success) {
                         contacto_chat(response);
-                        directorio_completo.push(response);
+                        directorio_usuario.push(response);
                         
                         CantidadMensajesPorChat[mensaje.id360] = {
                             cantidad: 1,
@@ -2098,9 +2106,9 @@ function recibir_chat(mensaje, viejo, group, aumenta) {
         }
     } else {
         let user = null;
-        $.each(directorio_completo, (i) => {
-            if (mensaje.id360 === directorio_completo[i].id360) {
-                user = directorio_completo[i];
+        $.each(directorio_usuario, (i) => {
+            if (mensaje.id360 === directorio_usuario[i].id360) {
+                user = directorio_usuario[i];
                 return false;
             }
         });
@@ -2157,7 +2165,7 @@ function notificacion_mensaje(title, body, onclick) {
 vuewModalReenviaMensaje = () => {
   
     usuariosReenviaMensaje = new Array();
-    var json = directorio_completo;
+    var json = directorio_usuario;
     vue = new Vue({
         components: {
             Multiselect: window.VueMultiselect.default
@@ -2912,7 +2920,7 @@ RequestPOST("/API/ConsultarDirectorio", {
     "tipo_area": "0"
 }).then((response) => {
     let directorio = response.directorio;
-    directorio_completo = response.directorio;
+    directorio_usuario = response.directorio;
 
     for (var i = 0; i < directorio.length; i++)
         if (directorio[i].id360 === sesion_cookie.id_usuario)
@@ -3056,7 +3064,7 @@ RequestPOST("/API/ConsultarDirectorio", {
                     
                     $.each(response, function (index, grupo) {
                         //directorio.push(empleado);
-                        //directorio_completo.push(empleado);
+                        //directorio_usuario.push(empleado);
                         
                         let participantesConGuion = grupo.participantes.split(",");
                         let participantes = [];
@@ -3081,7 +3089,7 @@ RequestPOST("/API/ConsultarDirectorio", {
                             "img": grupo.icono_grupo,
                             "id360": grupo.id_grupo
                         };
-                        directorio_completo.push(paraDirectorio);
+                        directorio_usuario.push(paraDirectorio);
                         
                         let estatusEnGrupo = grupo.estatusEnGrupo === "0" ? false: true;
                         
@@ -3103,7 +3111,7 @@ RequestPOST("/API/ConsultarDirectorio", {
                 $.each(response, function (index, empleado) {
                     if (empleado.success) {
                         directorio.push(empleado);
-                        directorio_completo.push(empleado);
+                        directorio_usuario.push(empleado);
                         contacto_chat(empleado);
                     }
                 });

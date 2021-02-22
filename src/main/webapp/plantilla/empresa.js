@@ -130,6 +130,11 @@ WebSocketGeneral.onmessage = function (message) {
     }
     try {
         
+        if(mensaje.archivo_recibido){
+            console.log("Socket archivos");
+            recibirArchivoSocket(mensaje);
+        }
+        
         if(mensaje.eliminado_grupo){
             eliminadoParticipanteGrupoChat(mensaje);
         }
