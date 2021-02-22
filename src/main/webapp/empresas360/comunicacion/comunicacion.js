@@ -6,7 +6,15 @@
 /* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_usuario, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal, configuracionEmpleado, configuracionUsuario, moment, Promise, Directorio, superCm, swalConfirmDialog, guarda_adjunto_chat, FgEmojiPicker, objectEmojis, AWS, json, perfil_usuario */
 
 const init_comunicacion = (json) => {
-    console.log(json);
+    
+    $("#profile-nombre").text(perfil_usuario.nombre + " " + perfil_usuario.apellido_paterno + " " + perfil_usuario.apellido_materno);
+    $("#profile-img").css({
+        "background": "url('" + perfil_usuario.img + "')",
+        "background-size": "cover",
+        "background-position": "center",
+        "background-repeat": "no-repeat"
+    });
+    
 };
 
 var BucketName = "lineamientos";

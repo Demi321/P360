@@ -1113,22 +1113,21 @@ const verReporteDetallado = async empleado => {
     //VISTA REPORTE EMPLEADO
     id360Estatico = await empleado
     //SERVIDOR
-    /*jornadas_laborales_empleado = await $.ajax({
-     type: 'POST',
-     url: 'https://empresas.claro360.com/plataforma360/API/empresas360/jornadas_laborales/empresa/obtener_empleados',
-     contentType: "application/json",
-     dataType: "json",
-     data: JSON.stringify([{
-     id360: id360Estatico
-     }]),
-     success: function (response) {
-     //console.log("RES JSON1: ", response)
-     },
-     error: function (err) {
-     console.log("Ocurrio un problema en la llamada jornadas Laborales Empleado", err)
-     }
-     })*/
-    jornadas_laborales_empleado = [perfil_usuario]
+    jornadas_laborales_empleado = await $.ajax({
+        type: 'POST',
+        url: 'https://empresas.claro360.com/plataforma360/API/empresas360/jornadas_laborales/empresa/obtener_empleados',
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify([{
+                id360: id360Estatico
+            }]),
+        success: function (response) {
+            //console.log("RES JSON1: ", response)
+        },
+        error: function (err) {
+            console.log("Ocurrio un problema en la llamada jornadas Laborales Empleado", err)
+        }
+    })
     //LOCAL
     /*jornadas_laborales_empleado = [
      {
@@ -1212,13 +1211,6 @@ const verReporteDetallado = async empleado => {
             num_empleado: jornadas_laborales_empleado[0].num_empleado,
             img: jornadas_laborales_empleado[0].img
         };
-        if (location_user !== null) {
-            if (location_user.municipio !== null && location_user.estado !== null) {
-                datosVistaReporteDetallado.direccion = location_user.colonia + " " + location_user.municipio + " " + location_user.estado_long
-            }
-        } else {
-            datosVistaReporteDetallado.direccion = " - - - - "
-        }
         $("#nombreEmpleado").text("Nombre: " + datosVistaReporteDetallado.nombre);
         $("#direccionEmpleado").text(datosVistaReporteDetallado.direccion);
         $("#areaEmpleado").text(datosVistaReporteDetallado.area);
@@ -1417,7 +1409,7 @@ const verReporteDetallado = async empleado => {
     var from = moment(lunes2, "YYYY-MM-DD").set({'hour': 00, 'minute': 00, 'second': 00, 'millisecond': 000}),
             to = moment(viernes2, "YYYY-MM-DD"),
             diasLaboralesSemana = 0,
-            diasFestivos = [moment("2021-01-01T00:00:00"), moment("2021-02-01T00:00:00")];
+            diasFestivos = [moment("2021-01-01T00:00:00"), moment("2021-02-01T00:00:00"), moment("2021-03-15T00:00:00"), moment("2021-04-01T00:00:00"), moment("2021-09-16T00:00:00"), moment("2021-11-15T00:00:00"), moment("2021-25-25T00:00:00")];
     let diaFeriadoEncontrado = false
     while (!from.isAfter(to)) {
         diaFeriadoEncontrado = false
@@ -2720,6 +2712,9 @@ const inicioJornadasLaborales = () => {
                 $("#contadorEnTiempo").text(c1 + " - " + ((c1 / sumaTotal) * 100).toFixed(2) + "%");
                 $("#contadorRetardo").text(c2 + " - " + ((c2 / sumaTotal) * 100).toFixed(2) + "%");
                 $("#contadorTarde").text(c3 + " - " + ((c3 / sumaTotal) * 100).toFixed(2) + "%");
+                let contadorEnTiempo = Math.round((((c1 / sumaTotal) * 100).toFixed(2)) / 10)
+                document.addEventListener("load", setColorBasal(contadorEnTiempo, 'Puntales'));
+                $("#PorcentajePuntales").text(((c1 / sumaTotal) * 100).toFixed(2))
 
                 $("#contadorEnTiempoSalida").text(c4 + " - " + ((c4 / sumaTotal) * 100).toFixed(2) + "%");
                 $("#contadorRetardoSalida").text(c5 + " - " + ((c5 / sumaTotal) * 100).toFixed(2) + "%");

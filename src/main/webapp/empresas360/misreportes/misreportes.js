@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-const init_misreportes = (json) => {
+const init_misreportes = async (json) => {
     console.log(json);
     let id = json.id;
     let id_usuario = json.id_usuario;
@@ -194,7 +194,6 @@ const init_misreportes = (json) => {
     });
 
     const verReporteDetallado = async empleado => {
-        $("#misReportes").show()
 
         //VISTA REPORTE EMPLEADO
         id360Estatico = await empleado
@@ -311,7 +310,7 @@ const init_misreportes = (json) => {
         var from = moment(lunes2, "YYYY-MM-DD").set({'hour': 00, 'minute': 00, 'second': 00, 'millisecond': 000}),
                 to = moment(viernes2, "YYYY-MM-DD"),
                 diasLaboralesSemana = 0,
-                diasFestivos = [moment("2021-01-01T00:00:00"), moment("2021-02-01T00:00:00")];
+                diasFestivos = [moment("2021-01-01T00:00:00"), moment("2021-02-01T00:00:00"), moment("2021-03-15T00:00:00"), moment("2021-04-01T00:00:00"), moment("2021-09-16T00:00:00"), moment("2021-11-15T00:00:00"), moment("2021-25-25T00:00:00")];
         let diaFeriadoEncontrado = false
         while (!from.isAfter(to)) {
             diaFeriadoEncontrado = false
@@ -375,7 +374,7 @@ const init_misreportes = (json) => {
         porcentajeProductividadSemanal = ((horasSemanaEmpleado / horasLaboralesSemana) * 100)
         porcentajeProductividadSemanal = porcentajeProductividadSemanal > 100 ? 100 : porcentajeProductividadSemanal.toFixed()
         google.charts.load("current", {packages: ["corechart"]});
-        google.charts.setOnLoadCallback(drawChart2MisReportes);
+        await google.charts.setOnLoadCallback(drawChart2MisReportes);
         function drawChart2MisReportes() {
             var data = google.visualization.arrayToDataTable([
                 ['Task', 'Hours per Day'],
@@ -748,12 +747,12 @@ const init_misreportes = (json) => {
                 }
             });
         }
-        rendimientoMensual(moment().month())
+        await rendimientoMensual(moment().month())
 
         const conResultados = $("#empleadoConHistorialLaboralMisReportes");
         const sinResultados = $("#empleadoSinHistorialLaboralMisReportes");
         conResultados.addClass("d-none");
         sinResultados.addClass("d-none");
     }
-    verReporteDetallado(perfil_usuario.id360)
+    await verReporteDetallado(perfil_usuario.id360)
 };
