@@ -1,145 +1,161 @@
 
 
 .plantillalaboral .cuadrado_contenido:hover {
-            box-shadow: 1px 1px 10px -1px #7c7878;
-            border: solid 3px white;
-        }
+    box-shadow: 1px 1px 10px -1px #7c7878;
+    border: solid 3px white;
+}
 
 .plantillalaboral .titulo_ajuste{
-            font: bold 1.2rem Arial;
-        }
+    font: bold 1.2rem Arial;
+}
 .plantillalaboral .cuadrado_icon{
-            width: 40%; 
-            padding: 20%; 
-            position: relative;
-            cursor: pointer;
-        }
+    width: 40%; 
+    padding: 20%; 
+    position: relative;
+    cursor: pointer;
+}
 .plantillalaboral .cuadrado_contenido{
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 5rem;
-            background: #212529;
-            border-radius: 15px;
-            border: solid 2px #dee2e6;
-        }
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 5rem;
+    background: #212529;
+    border-radius: 15px;
+    border: solid 2px #dee2e6;
+}
 .plantillalaboral .menu_sidebar{
-            width: 100%;
-            height: 50px;
-            border: solid 1px #495057;
-            border-radius: 3px;
-            margin: 5px 0;
-            cursor: pointer;
-            text-align: center;
-            background: #343a40;
-            align-items: center;
-            padding: 0 20px;
-            font: bold 1.12rem Arial;
-        }
+    width: 100%;
+    height: 50px;
+    border: solid 1px #495057;
+    border-radius: 3px;
+    margin: 5px 0;
+    cursor: pointer;
+    text-align: center;
+    background: #343a40;
+    align-items: center;
+    padding: 0 20px;
+    font: bold 1.12rem Arial;
+}
 .plantillalaboral .menu_sidebar:hover, .menu_selected{
-            background: #0097a9;
-        }
+    background: #0097a9;
+}
 .plantillalaboral .modulo_section{
-            width: 100%;
-            height: 100%;
-            color: #f5f5f5;
-        }
+    width: 100%;
+    height: 100%;
+    color: #f5f5f5;
+}
 .plantillalaboral #toggle{
-            background: #f5f5f5;
-        }
+    background: #f5f5f5;
+}
 .plantillalaboral .datos_institucion{
-            padding-bottom: 25%;
-            width: 100%;
-        }
+    padding-bottom: 25%;
+    width: 100%;
+}
 .plantillalaboral h1 {
-            font: bold 2.1rem Arial;
-            margin: 5px 0;
-        }
+    font: bold 2.1rem Arial;
+    margin: 5px 0;
+}
 .plantillalaboral h2{
-            font-size: 2rem;
-            color: #0097a9;
-            font: bold 2rem Ariel;
-        }
+    font-size: 2rem;
+    color: #0097a9;
+    font: bold 2rem Ariel;
+}
 .plantillalaboral h5{
-            font: normal 01rem Arial;
-            margin: 0;
-        }
+    font: normal 01rem Arial;
+    margin: 0;
+}
 .plantillalaboral h6 {
-            color: #0097a9;
-            font: bold 1rem Arial;
-        }
+    color: #0097a9;
+    font: bold 1rem Arial;
+}
 .plantillalaboral h4 {
-            font: normal 1.4rem Arial;
-            padding: 2px 10px;
-        }
+    font: normal 1.4rem Arial;
+    padding: 2px 10px;
+}
 .plantillalaboral h4 > strong{
 
-            /* width: 25%; */
+    /* width: 25%; */
 
-            font: bold 1.1rem Roboto;
+    font: bold 1.1rem Roboto;
 
-            display: inline-block;
-        }
+    display: inline-block;
+}
 .plantillalaboral h4 > span{
 
-            font: normal 1.3rem Roboto;
+    font: normal 1.3rem Roboto;
 
-            padding-left: 10px;
-        }
+    padding-left: 10px;
+}
 .plantillalaboral .img_perfil{
-            width: 150px; 
-            height: 150px; 
-            background: #6c757d; 
-            border-radius: 50%;
-        }
+    width: 150px; 
+    height: 150px; 
+    background: #6c757d; 
+    border-radius: 50%;
+}
 .plantillalaboral .col-form-label {
-            padding-top: calc(0.375rem + 1px);
-            padding-bottom: calc(0.375rem + 1px);
-            margin-bottom: 0;
-            font-size: inherit;
-            line-height: 1.5;
-            font: bold 1.1rem Arial;
-        }
+    padding-top: calc(0.375rem + 1px);
+    padding-bottom: calc(0.375rem + 1px);
+    margin-bottom: 0;
+    font-size: inherit;
+    line-height: 1.5;
+    font: bold 1.1rem Arial;
+}
 
 .plantillalaboral .input {
-            overflow: visible;
-            font: 1.1rem Arial;
-            border: solid 1px #dee2e6;
-            margin: 5px 0;
-            padding: 5px 15px;
-            border-width: 1px;
-            color:#f5f5f5;
-        }
+    overflow: visible;
+    font: 1.1rem Arial;
+    border: solid 1px #dee2e6;
+    margin: 5px 0;
+    padding: 5px 15px;
+    border-width: 1px;
+    color:#f5f5f5;
+}
 .plantillalaboral .input::placeholder{
-            color: #f5f5f5;
-        }
+    color: #f5f5f5;
+}
 .plantillalaboral .multiselect {
-            border-radius: 0px;
-            border-bottom: 2px solid #d3d3d3;
-            width: 96%;
-            margin-left: auto;
-            margin-right: auto;
-            margin-bottom: 10px;
-        }
+    border-radius: 0px;
+    border-bottom: 2px solid #d3d3d3;
+    width: 96%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
 .plantillalaboral .multiselect__single {
-            background: none;
-            color: #303030;
-            font: bold 12px arial;
-        }
+    background: none;
+    color: #303030;
+    font: bold 12px arial;
+}
 .plantillalaboral .card-header {
-            background: #0097a9;
-            font: bold 1.1rem Arial;
-            color: white;
-            text-align: center;
-        }
+    background: #0097a9;
+    font: bold 1.1rem Arial;
+    color: white;
+    text-align: center;
+}
 .plantillalaboral .multiselect__input {
-            background: none;
-            color: #343a40;
-            font: bold 12px arial;
-        }
+    background: none;
+    color: #343a40;
+    font: bold 12px arial;
+}
+.plantillalaboral .btn_colaboradores1 {
+    background: #b7b7b7;
+    font: bold 1.3rem Arial;
+    border: solid 1px;
+    margin-bottom: 10px;
+}
+.plantillalaboral .btn_colaboradores2 {
+    background: #f5f5f5;
+    font: bold 1.3rem Arial;
+    border: solid 1px;
+    margin-bottom: 10px;
+}
+.plantillalaboral .invitaciones {
+    max-height: 600px;
+    overflow-y: auto;
+}

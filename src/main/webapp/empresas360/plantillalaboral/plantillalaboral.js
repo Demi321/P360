@@ -4,8 +4,10 @@
  * and open the template in the editor.
  */
 
+/* global RequestPOST, sesion_cookie */
+
 const init_plantillalaboral = (json) => {
-console.log(json);
+    console.log(json);
     let id = json.id;
     let id_usuario = json.id_usuario;
     let tipo_usuario = json.tipo_usuario;
@@ -18,10 +20,26 @@ function registro_plantilla_laboral(nombre) {
     div_contendor.className = 'row col-12 m-0 p-2 pt-3';
     let h3_title = document.createElement("h3");
     h3_title.innerHTML = 'Registrar nuevo personal';
-    div_contendor.appendChild(h3_title);
+    /*Cambios prueba fernando*/
+    let btn_reg = document.createElement('input');
+    btn_reg.type = 'button';
+    btn_reg.className = 'btn btn_colaboradores1 col-12 col-lg-6';
+    btn_reg.value = 'Registrar nuevo personal';
+    let btn_inv = document.createElement('input');
+    btn_inv.type = 'button';
+    btn_inv.className = 'btn btn_colaboradores2 col-12 col-lg-6';
+    btn_inv.style = 'background: #f5f5f5;';
+    btn_inv.value = 'Invitaciones enviadas';
+    div_contendor.appendChild(btn_reg);
+    div_contendor.appendChild(btn_inv);
+    /************************/
+//    div_contendor.appendChild(h3_title);
 
     let div_form = document.createElement("div");
     div_form.className = 'col-12 p-0';
+    /*Cambios prueba fernando*/
+    div_form.id = 'div_reg_personal';
+    /************************/
     let form_registro = document.createElement("form");
     form_registro.id = 'form_registro_personal';
     form_registro.className = 'row m-0 p-0 col-12=';
@@ -105,6 +123,9 @@ function registro_plantilla_laboral(nombre) {
 
     let div_doc = document.createElement("div");
     div_doc.className = 'col-12 p-0';
+    /*Cambios prueba fernando*/
+    div_doc.id = 'div_doc_reg_personal';
+    /************************/
     let h3_doc = document.createElement("h3");
     h3_doc.innerHTML = 'Subir documento (Excel) de plantilla laboral';
     div_doc.appendChild(h3_doc);
@@ -134,9 +155,74 @@ function registro_plantilla_laboral(nombre) {
 
     div_contendor.appendChild(div_doc);
 
+    /*Cambios prueba fernando*/
+    let div_inv = document.createElement('div');
+    div_inv.className = 'col-12 m-0 p-0 invitaciones';
+    div_inv.id = 'div_inv';
+    div_contendor.appendChild(div_inv);
+
+    let tabla = `<table class='table table-hover dataTable no-footer' id='table_invitaciones'>
+                        <thead class='thead-light'>
+                            <tr class='text-center' role='row'>
+                                <th scope="col">#</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Area</th>
+                                <th scope="col">Puesto</th>
+                                <th scope="col">Empresa</th>
+                                <th scope="col">Sucursal</th>
+                                <th scope="col">Correo</th>
+                                <th scope="col">Estatus Invitacion</th>
+                            </tr>
+                        </thead>
+                        <tbody table='table_body_invitaciones'></tbody>
+                    </table>`;
+    $('#div_inv').append(tabla);
+
+    RequestPOST('/API/cuenta360/get/invitaciones', {
+        tipo_usuario: sesion_cookie.tipo_usuario,
+        tipo_servicio: sesion_cookie.tipo_servicio
+    }).then((response) => {
+        console.log(response);
+        //Colocamos las invitaciones
+        if (response.success) {
+            let invitaciones = response.invitaciones;
+            $.each(invitaciones, (i) => {
+                var fila = `<tr>
+                                <td>${i}</td>
+                                <td>${invitaciones[i].nombre} ${invitaciones[i].apellidopaterno} ${invitaciones[i].apellidomaterno}</td>
+                                <td>${invitaciones[i].area}</td>
+                                <td>${invitaciones[i].puesto}</td>
+                                <td>${invitaciones[i].empresa}</td>
+                                <td>${invitaciones[i].sucursal}</td>
+                                <td>${invitaciones[i].correo}</td>
+                                <td>${invitaciones[i].estatus_cuenta}</td>
+                            </tr>`;
+                $("#table_body_invitaciones").append(fila);
+            });
+            
+            $('#table_invitaciones').DataTable();
+        }
+    });
+    /*************************/
+
     $(".plantillalaboral").append(div_contendor);
     $(".plantillalaboral").append(div_empty);
 
+    /*Cambios prueba fernando*/
+    btn_reg.addEventListener('click', () => {
+        console.log('bingo!!');
+        $('#div_inv').addClass('d-none');
+        $('#div_reg_personal').removeClass('d-none');
+        $('#div_doc_reg_personal').removeClass('d-none');
+
+    });
+    btn_inv.addEventListener('click', () => {
+        console.log('bingo!!');
+        $('#div_inv').removeClass('d-none');
+        $('#div_reg_personal').addClass('d-none');
+        $('#div_doc_reg_personal').addClass('d-none');
+    });
+    /*************************/
     $("#form_registro_personal").submit(function (e) {
         e.preventDefault();
         //        let inputs = $("[id^=docente_]");
