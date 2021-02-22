@@ -17,25 +17,42 @@ var init_estadisticaglobal = (json) => {
     let tipo_servicio = json.tipo_servicio;
     let tipo_area = json.tipo_area;    
     var h =0;
-var m =0;
-var r_e1=0;
-var r_e2=0;
-var r_e3=0;
-var r_e4=0;
-var r_e5=0;
-var r_e6=0;
-var jsonData = $.ajax({        
-    type: 'POST',
-    url: '/' + DEPENDENCIA + '/API/cantidad_empleados',
-    contentType: "application/json",
-    dataType: 'json',
-    data: JSON.stringify({                        
-        "tipo_servicio": 124
-    }),
-    async: false
-}).responseText;
-var paserJsonData= JSON.parse(jsonData);
-console.log(paserJsonData);
+    var m =0;
+    var r_e1=0;
+    var r_e2=0;
+    var r_e3=0;
+    var r_e4=0;
+    var r_e5=0;
+    var r_e6=0;
+    
+    var jsonData = $.ajax({        
+        type: 'POST',
+        url: '/' + DEPENDENCIA + '/API/cantidad_empleados',
+        contentType: "application/json",
+        dataType: 'json',
+        data: JSON.stringify({                        
+            "tipo_servicio": tipo_usuario
+        }),
+        async: false
+    }).responseText;
+    
+    var EmpresaData = $.ajax({        
+        type: 'POST',
+        url: '/' + DEPENDENCIA + '/API/empresa_dashboard',
+        contentType: "application/json",
+        dataType: 'json',
+        data: JSON.stringify({                        
+            "tipo_usuario": tipo_usuario
+        }),
+        async: false
+    }).responseText;
+    
+    var paserJsonData= JSON.parse(jsonData);
+    var paserEmpresaData= JSON.parse(EmpresaData);
+    console.log(paserJsonData);
+    document.getElementById("nombre_corporativo").innerHTML= paserEmpresaData.razon_social;
+    document.getElementById("Total_sucursales").innerHTML= paserEmpresaData.numero_sucursales;
+    document.getElementById("Total_empleados").innerHTML= paserJsonData.length;
     
     console.log("Dashboard Reportes");
     //window.onload = function () {
@@ -346,30 +363,41 @@ console.log(paserJsonData);
       var chart = new google.visualization.LineChart(document.getElementById('chart_div_line'));
       chart.draw(data, options);
   }
-
-  document.addEventListener("load", setColorBasal(2,'Faltas'));
-  document.addEventListener("load", setColorBasal(6,'Retardos'));
-  document.addEventListener("load", setColorBasal(8,'Puntales'));
-  function setColorBasal(numero, clase) { 
-      numero = parseInt(numero);        
-      switch (clase) {
-          case  'Faltas':
-              for (var i= 1; i <= numero; i++) {
-                  document.getElementById("recFalt1_"+i.toString()).className = "rectangleColor1";
-              }
-              break;
-          case  'Retardos':
-              for (var i= 1; i <= numero; i++) {
-                  document.getElementById("recReta2_"+i.toString()).className = "rectangleColor2";
-              }
-              break;
-          case  'Puntales':
-              for (var i= 1; i <= numero; i++) {
-                  document.getElementById("recPunt3_"+i.toString()).className = "rectangleColor3";
-              }
-              break;        
-      }
-  }    
+    var DatosJornada = $.ajax({           
+        type: 'POST',
+        url: '/' + DEPENDENCIA + '/API/empresas360/jornadas_laborales/empresa/obtener_ids/en_jornada',
+        contentType: "application/json",
+        dataType: 'json',
+        data: JSON.stringify({                        
+            "id": tipo_usuario
+        }),
+        async: false
+    }).responseText;
+    
+    var parserJornadaData = JSON.parse(DatosJornada);
+    document.addEventListener("load", setColorBasal(2,'Faltas'));
+    document.addEventListener("load", setColorBasal(6,'Retardos'));
+    document.addEventListener("load", setColorBasal(8,'Puntales'));
+    function setColorBasal(numero, clase) { 
+        numero = parseInt(numero);        
+        switch (clase) {
+            case  'Faltas':
+                for (var i= 1; i <= numero; i++) {
+                    document.getElementById("recFalt1_"+i.toString()).className = "rectangleColor1";
+                }
+                break;
+            case  'Retardos':
+                for (var i= 1; i <= numero; i++) {
+                    document.getElementById("recReta2_"+i.toString()).className = "rectangleColor2";
+                }
+                break;
+            case  'Puntales':
+                for (var i= 1; i <= numero; i++) {
+                    document.getElementById("recPunt3_"+i.toString()).className = "rectangleColor3";
+                }
+                break;        
+        }
+    }    
 
 };
 
