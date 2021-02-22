@@ -556,3 +556,6 @@ and open the template in the editor.
     background-position: center;
     background-repeat: no-repeat;
 }
+.home_empleado .menu_sidebar:hover, .menu_selected {
+     background: none !important; 
+}
