@@ -8,12 +8,24 @@ and open the template in the editor.
     Author     : moises
 */
 
+
+#padreArchivosVistaArchivos,
+#padreArchivosVistaCorreo{
+    display: none;
+}
+
 .archivo #enviar_nuevo_archivo{
     display: flex;
     justify-content: center;
     align-items: center;
     height: 40px;
     cursor: pointer;
+}
+
+.archivo #nuevo_envio_archivo{
+    border-radius: 15px;
+    display: none;
+    border: solid 1px #d3d3d3;
 }
 
 .archivo td.details-control {
@@ -69,4 +81,100 @@ and open the template in the editor.
 
 #refrescarArchivos{
     right: 50px;
+}
+
+/* ESTILOS VISTA DE CORREOS */
+
+#archivosVistaCorreo{
+    display: grid;
+    grid-template-columns: 0.3fr 0.5fr 1fr;
+}
+
+.formulario-lista > div {
+    padding: 20px 0;
+}
+.formulario-lista label {
+    display: block;
+    cursor: pointer;
+    color: #6e7479;
+    position: relative;
+    padding: 5px 15px 5px 51px;
+    font-size: 1em;
+    border-radius: 5px;
+    -webkit-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+.formulario-lista label:hover {
+    background: rgba(0, 116, 217, 0.1);
+}
+.formulario-lista label:before {
+    content: "";
+    display: inline-block;
+    width: 17px;
+    height: 17px;
+    position: absolute;
+    left: 15px;
+    border-radius: 50%;
+    background: none;
+    border: 3px solid #6e7479;
+}
+.formulario-lista input[type="radio"] {
+    display: none;
+}
+.formulario-lista input[type="radio"]:checked + label:before {
+    display: none;
+}
+.formulario-lista input[type="radio"]:checked + label {
+    padding: 5px 15px;
+    background: #0097a9;
+    border-radius: 2px;
+    color: #fff;
+}
+
+#archivosVistaCorreo .listadoDeProyectos{
+    padding: 5px;
+}
+
+#archivosVistaCorreo .listadoDeArchivos{
+    padding: 5px 10px;
+}
+
+#archivosVistaCorreo .listadoDeArchivos .itemArchivo{
+    position: relative;
+    padding: 20px 5px;
+    cursor: pointer;
+}
+
+#archivosVistaCorreo .listadoDeArchivos .itemArchivo:hover,
+#archivosVistaCorreo .listadoDeArchivos .itemArchivo:nth-child(even){
+    background-color: rgba(0,0,0,0.1);
+}
+
+#archivosVistaCorreo .listadoDeArchivos .itemArchivo:nth-child(even):hover{
+    background-color: rgba(0,0,0,0.2);
+}
+
+#archivosVistaCorreo .listadoDeArchivos .itemArchivo .controlesItemArchivo{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: none;
+}
+
+#archivosVistaCorreo .listadoDeArchivos .itemArchivo .fechaArchivo{
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+
+#archivosVistaCorreo .listadoDeArchivos .sinResultados{
+    text-align: center;
+    padding: 5px;
+    font-family: cursive;
+    font-size: 1.1rem;
+    background-color: lightgrey;
+    border-radius: 30px;
+    margin: 20px;
+    text-transform: capitalize;
 }
