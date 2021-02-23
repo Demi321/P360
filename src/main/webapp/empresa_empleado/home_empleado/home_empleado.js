@@ -33,7 +33,7 @@ let vue_contactos = (directorio) => {
     //eliminar al usuario del directorio 
     for (var i = 0; i < directorio.length; i++) {
         if (directorio[i].id360 === directorio.id_usuario) {
-            directorio.splice(i,1);
+            directorio.splice(i, 1);
         }
     }
     for (var i = 0; i < directorio.length; i++) {
@@ -150,10 +150,51 @@ let card_contacto = (contacto) => {
         chat.className = "action_button";
         chat.title = "Iniciar una conversación con: " + contacto.nombre + " " + contacto.apellido_paterno + " " + contacto.apellido_materno;
 
+        let mail = document.createElement("div");
+        mail.innerHTML = '<a href="mailto:' + contacto.correo + '"<i class="fas fa-envelope"></i>/a>';
+        mail.className = "action_button";
+        mail.title = "Envía un correo electrónico a: " + contacto.nombre + " " + contacto.apellido_paterno + " " + contacto.apellido_materno;
+
+        const initComunicacionJornadasLaborales = (id360, llamada) => {
+            if (!$("#collapseConmutador").hasClass("show")) {
+                    $("#headingConmutador a").click();
+                }
+            $("#menu_section_Comunicación").click();
+            if (!$("#profile_chat" + id360).length) {
+                let dataUsr = {"id360": id360};
+                RequestPOST("/API/get/perfil360", dataUsr).then((response) => {
+                    if (response.success) {
+                        contacto_chat(response);
+                        directorio_completo.push(response);
+                        $("#profile_chat" + id360).click();
+                        if (llamada)
+                            $("#profile_chat" + id360 + " .btn-realizarLlamadaChat").click();
+                    }
+                });
+            } else {
+                $("#profile_chat" + id360).click();
+                if (llamada)
+                    $("#profile_chat" + id360 + " .btn-realizarLlamadaChat").click();
+            }
+
+        };
+
+        video.addEventListener("click", () => {
+            initComunicacionJornadasLaborales(contacto.id360, true);
+        });
+        audio.addEventListener("click", () => {
+            initComunicacionJornadasLaborales(contacto.id360, true);
+        });
+        chat.addEventListener("click", () => {
+            initComunicacionJornadasLaborales(contacto.id360, false);
+        });
+
         actions.appendChild(video);
         actions.appendChild(audio);
         actions.appendChild(chat);
-
+        if (contacto.correo !== "") {
+            actions.appendChild(mail);
+        }
         contenedor.appendChild(div);
         contenedor.appendChild(actions);
         div.id = "menu_section_directorio_" + contacto.tipo_area.replace(/\s/g, "");
