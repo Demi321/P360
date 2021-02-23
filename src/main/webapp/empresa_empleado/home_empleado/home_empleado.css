@@ -241,6 +241,13 @@ and open the template in the editor.
     color: white;
     background: #495057;
 }
+#cards_contactos .action_button a{
+    color: #6c757d;
+}
+#cards_contactos .action_button a:hover {
+    color: white;
+    background: #495057;
+}
 #cards_contactos .menu_sidebar {
     width: 100%;
     height: 100%;

@@ -30,6 +30,7 @@ let clock = () => {
 
 let vue_contactos = (directorio) => {
     console.log(directorio);
+
     for (var i = 0; i < directorio.length; i++) {
         card_contacto(directorio[i]);
     }
@@ -62,8 +63,11 @@ let vue_contactos = (directorio) => {
             },
 
             onInput(value) {
-                document.getElementById("menu_sidebar" + value.id360).scrollIntoView();
-                document.getElementsByClassName("home_empleado")[0].scrollIntoView();
+                if (value !== null) {
+
+                    document.getElementsByClassName("home_empleado")[0].scrollIntoView();
+                    document.getElementById("menu_sidebar" + value.id360).scrollIntoView();
+                }
             },
             onOpen(value) {
                 this.value = null;
@@ -73,92 +77,94 @@ let vue_contactos = (directorio) => {
 };
 
 let card_contacto = (contacto) => {
+    if (contacto.id360.toString() !== sesion_cookie.id_usuario.toString()) {
+        //El collapse re enviara cuando deseemos enviar el menu dentro de un contenedor 
+        let root = "cards_contactos";
+        if (contacto.tipo_area !== null && contacto.tipo_area !== "" && contacto.tipo_area !== undefined) {
+            //comprobar que exista el collapse
+            if (!$("#accordion_directorio" + contacto.tipo_area.replace(/\s/g, "")).length) {
+                {
+                    //en caso de que no exista lo agregamos
+                    let acordion = $('<div class="accordion w-100" id="accordion_directorio' + contacto.tipo_area.replace(/\s/g, "") + '"></div>');
+                    let heading = $('<div class="collapse_sidebar shadow-none btn p-0" id="heading_directorio_' + contacto.tipo_area.replace(/\s/g, "") + '"></div>');
+                    let collapse_a = $('<a class="collapse_sidebar shadow-none btn collapsedXO" data-toggle="collapseXO" data-target="#collapse_directorio_' + contacto.tipo_area.replace(/\s/g, "") + '" aria-expanded="false" aria-controls="collapse_directorio_' + contacto.tipo_area.replace(/\s/g, "") + '">' + contacto.area + '<i class="fas fa-caret-down"></i></a>').addClass("collapse_sidebar shadow-none btn collapsedXO");
+                    heading.append(collapse_a);
+                    acordion.append(heading);
 
-    //El collapse re enviara cuando deseemos enviar el menu dentro de un contenedor 
-    let root = "cards_contactos";
-    if (contacto.tipo_area !== null && contacto.tipo_area !== "" && contacto.tipo_area !== undefined) {
-        //comprobar que exista el collapse
-        if (!$("#accordion_directorio" + contacto.tipo_area.replace(/\s/g, "")).length) {
-            {
-                //en caso de que no exista lo agregamos
-                let acordion = $('<div class="accordion w-100" id="accordion_directorio' + contacto.tipo_area.replace(/\s/g, "") + '"></div>');
-                let heading = $('<div class="collapse_sidebar shadow-none btn p-0" id="heading_directorio_' + contacto.tipo_area.replace(/\s/g, "") + '"></div>');
-                let collapse_a = $('<a class="collapse_sidebar shadow-none btn collapsedXO" data-toggle="collapseXO" data-target="#collapse_directorio_' + contacto.tipo_area.replace(/\s/g, "") + '" aria-expanded="false" aria-controls="collapse_directorio_' + contacto.tipo_area.replace(/\s/g, "") + '">' + contacto.area + '<i class="fas fa-caret-down"></i></a>').addClass("collapse_sidebar shadow-none btn collapsedXO");
-                heading.append(collapse_a);
-                acordion.append(heading);
-
-                let collapse_container = $('<div id="collapse_directorio_' + contacto.tipo_area.replace(/\s/g, "") + '" class="collapse_sidebar_cntr collapseXO" aria-labelledby="heading_directorio_' + contacto.tipo_area.replace(/\s/g, "") + '" data-parent="#accordion_directorio' + contacto.tipo_area.replace(/\s/g, "") + '"></div>');
-                acordion.append(collapse_container);
-                $("#" + root).append(acordion);
+                    let collapse_container = $('<div id="collapse_directorio_' + contacto.tipo_area.replace(/\s/g, "") + '" class="collapse_sidebar_cntr collapseXO" aria-labelledby="heading_directorio_' + contacto.tipo_area.replace(/\s/g, "") + '" data-parent="#accordion_directorio' + contacto.tipo_area.replace(/\s/g, "") + '"></div>');
+                    acordion.append(collapse_container);
+                    $("#" + root).append(acordion);
+                }
             }
+            root = "collapse_directorio_" + contacto.tipo_area.replace(/\s/g, "");
         }
-        root = "collapse_directorio_" + contacto.tipo_area.replace(/\s/g, "");
-    }
-    let contenedor = document.createElement("div");
-    contenedor.className = "menu_sidebar";
-    contenedor.id = "menu_sidebar" + contacto.id360;
-    let estatus = document.createElement("div");
-    if (contacto.en_jornada === "1") {
-        estatus.className = "activo";
-    } else {
-        estatus.className = "inactivo";
-    }
-    contenedor.appendChild(estatus);
-    let div = document.createElement("div");
-    div.className = "d-flex align-items-center";
-    let img = document.createElement("div");
-    if (contacto.img === undefined || contacto.img === null || contacto.img === "") {
-        contacto.img = "https://bucketmoviles121652-dev.s3.amazonaws.com/public/MobileCard/perfil.png";
-    }
-    img.style = "height: 30px;width: 30px;margin-right: 10px;padding:15px;border-radius: 30px;background-image:url('" + contacto.img + "'); background-size: cover;  background-repeat: no-repeat;  background-position: center;";
-    let nombre = document.createElement("div");
-    nombre.innerHTML = contacto.nombre + " " + contacto.apellido_paterno + " " + contacto.apellido_materno;
-    nombre.style = "font: bold 0.9rem Arial;color: #495057;";
-    let puesto = document.createElement("div");
-    puesto.innerHTML = contacto.puesto;
-    puesto.style = "font: 0.75rem Arial;color: #5b636b;";
-    let info = document.createElement("div");
-    info.className = "d-inline";
-    div.appendChild(img);
-    info.appendChild(nombre);
-    info.appendChild(puesto);
-    div.appendChild(info);
-    let actions = document.createElement("div");
-    actions.className = "p-1 pt-2 directorio_home_empleado d-none ";
-    let video = document.createElement("div");
-    video.innerHTML = '<i class="fas fa-video"></i>';
-    video.className = "action_button";
-    video.title = "Iniciar una videollamada con: " + contacto.nombre + " " + contacto.apellido_paterno + " " + contacto.apellido_materno;
-    let audio = document.createElement("div");
-    audio.innerHTML = '<i class="fas fa-phone-alt"></i>';
-    audio.className = "action_button";
-    audio.title = "Iniciar una llamada con: " + contacto.nombre + " " + contacto.apellido_paterno + " " + contacto.apellido_materno;
+        let contenedor = document.createElement("div");
+        contenedor.className = "menu_sidebar";
+        contenedor.id = "menu_sidebar" + contacto.id360;
+        let estatus = document.createElement("div");
+        if (contacto.en_jornada === "1") {
+            estatus.className = "activo";
+        } else {
+            estatus.className = "inactivo";
+        }
+        contenedor.appendChild(estatus);
+        let div = document.createElement("div");
+        div.className = "d-flex align-items-center";
+        let img = document.createElement("div");
+        if (contacto.img === undefined || contacto.img === null || contacto.img === "") {
+            contacto.img = "https://bucketmoviles121652-dev.s3.amazonaws.com/public/MobileCard/perfil.png";
+        }
+        img.style = "height: 30px;width: 30px;margin-right: 10px;padding:15px;border-radius: 30px;background-image:url('" + contacto.img + "'); background-size: cover;  background-repeat: no-repeat;  background-position: center;";
+        let nombre = document.createElement("div");
+        nombre.innerHTML = contacto.nombre + " " + contacto.apellido_paterno + " " + contacto.apellido_materno;
+        nombre.style = "font: bold 0.9rem Arial;color: #495057;";
+        let puesto = document.createElement("div");
+        puesto.innerHTML = contacto.puesto;
+        puesto.style = "font: 0.75rem Arial;color: #5b636b;";
+        let info = document.createElement("div");
+        info.className = "d-inline";
+        div.appendChild(img);
+        info.appendChild(nombre);
+        info.appendChild(puesto);
+        div.appendChild(info);
+        let actions = document.createElement("div");
+        actions.className = "p-1 pt-2 directorio_home_empleado d-none ";
+        let video = document.createElement("div");
+        video.innerHTML = '<i class="fas fa-video"></i>';
+        video.className = "action_button";
+        video.title = "Iniciar una videollamada con: " + contacto.nombre + " " + contacto.apellido_paterno + " " + contacto.apellido_materno;
+        let audio = document.createElement("div");
+        audio.innerHTML = '<i class="fas fa-phone-alt"></i>';
+        audio.className = "action_button";
+        audio.title = "Iniciar una llamada con: " + contacto.nombre + " " + contacto.apellido_paterno + " " + contacto.apellido_materno;
 
-    let chat = document.createElement("div");
-    chat.innerHTML = '<i class="fas fa-comment-alt"></i>';
-    chat.className = "action_button";
-    chat.title = "Iniciar una conversación con: " + contacto.nombre + " " + contacto.apellido_paterno + " " + contacto.apellido_materno;
+        let chat = document.createElement("div");
+        chat.innerHTML = '<i class="fas fa-comment-alt"></i>';
+        chat.className = "action_button";
+        chat.title = "Iniciar una conversación con: " + contacto.nombre + " " + contacto.apellido_paterno + " " + contacto.apellido_materno;
 
-    actions.appendChild(video);
-    actions.appendChild(audio);
-    actions.appendChild(chat);
+        actions.appendChild(video);
+        actions.appendChild(audio);
+        actions.appendChild(chat);
 
-    contenedor.appendChild(div);
-    contenedor.appendChild(actions);
-    div.id = "menu_section_directorio_" + contacto.tipo_area.replace(/\s/g, "");
-    $("#" + root).append(contenedor);
-    div.addEventListener("click", () => {
-        $(".directorio_home_empleado").removeClass("d-flex");
-        $(".directorio_home_empleado").addClass("d-none");
-        actions.className = "p-1 pt-2 d-flex directorio_home_empleado";
-    });
-    let div2 = document.createElement("div");
-    div2.className = "modulo_section d-none";
-    div2.id = "modulo_section_directorio_" + contacto.tipo_area;//quitale los espacios si llegara a tener 
+        contenedor.appendChild(div);
+        contenedor.appendChild(actions);
+        div.id = "menu_section_directorio_" + contacto.tipo_area.replace(/\s/g, "");
+        $("#" + root).append(contenedor);
+        div.addEventListener("click", () => {
+            $(".directorio_home_empleado").removeClass("d-flex");
+            $(".directorio_home_empleado").addClass("d-none");
+            actions.className = "p-1 pt-2 d-flex directorio_home_empleado";
+        });
+        let div2 = document.createElement("div");
+        div2.className = "modulo_section d-none";
+        div2.id = "modulo_section_directorio_" + contacto.tipo_area;//quitale los espacios si llegara a tener 
 //            div2.innerHTML = nombre;
 
-    $("#contenidoSection").append(div2);
-
+        $("#contenidoSection").append(div2);
+    } else {
+        console.warn("No se colocao la card por pertenecer al mismo usuario.")
+    }
 };
 
 function analog_clock() {
@@ -344,7 +350,7 @@ let reporte_proteccion_personal = (b) => {
         let nota = $("<div>Alerta</div>").addClass("col-12 p-0 text-white nota");
         let blank = $("<div></div>").addClass("col-12 p-0");
 //        let btn = $('<button type="button" class="btn btn-danger col-12 p-0">Realizar reporte</button>');
-    blank.css({
+        blank.css({
             height: "20px"
         });
         info.append(icon);

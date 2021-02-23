@@ -1035,6 +1035,9 @@ const init_entrada_salida = (json) => {
         }).then((result) => {
             if (result.value) {
 //                initJornadaLaboral(false);
+                if (!$("#collapseTrabajo").hasClass("show")) {
+                    $("#headingTrabajo a").click();
+                }
                 $("#entrada_salida_iniciar_jornada").click();
             } else {
                 if (jornada_usuario.estatus_jornada === "iniciada") {
