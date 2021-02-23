@@ -32,7 +32,7 @@ let vue_contactos = (directorio) => {
     console.log(directorio);
     //eliminar al usuario del directorio 
     for (var i = 0; i < directorio.length; i++) {
-        if (directorio[i].id360 === directorio.id_usuario) {
+        if (directorio[i].id360.toString() === sesion_cookie.id_usuario) {
             directorio.splice(i, 1);
         }
     }
@@ -151,7 +151,7 @@ let card_contacto = (contacto) => {
         chat.title = "Iniciar una conversación con: " + contacto.nombre + " " + contacto.apellido_paterno + " " + contacto.apellido_materno;
 
         let mail = document.createElement("div");
-        mail.innerHTML = '<a href="mailto:' + contacto.correo + '"<i class="fas fa-envelope"></i>/a>';
+        mail.innerHTML = '<a href="mailto:' + contacto.correo + '"><i class="fas fa-envelope"></i></a>';
         mail.className = "action_button";
         mail.title = "Envía un correo electrónico a: " + contacto.nombre + " " + contacto.apellido_paterno + " " + contacto.apellido_materno;
 
