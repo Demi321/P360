@@ -184,7 +184,7 @@ $(document).ready(async function () {
     let porcentajeProductividadSemanal = 0
     porcentajeProductividadSemanal = ((horasSemanaEmpleado / horasLaboralesSemana) * 100)
     porcentajeProductividadSemanal = porcentajeProductividadSemanal > 100 ? 100 : porcentajeProductividadSemanal.toFixed()
-    google.charts.load("current", {packages: ["corechart"]});
+    google.charts.load('current', {'packages': ['corechart']});
     await google.charts.setOnLoadCallback(drawChart2MisReportes);
     async function drawChart2MisReportes() {
         var data = google.visualization.arrayToDataTable([
