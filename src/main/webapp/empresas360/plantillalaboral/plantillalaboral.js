@@ -23,12 +23,13 @@ function registro_plantilla_laboral(nombre) {
     /*Cambios prueba fernando*/
     let btn_reg = document.createElement('input');
     btn_reg.type = 'button';
+    btn_reg.id = 'btn_registro';
     btn_reg.className = 'btn btn_colaboradores1 col-12 col-lg-6';
     btn_reg.value = 'Registrar nuevo personal';
     let btn_inv = document.createElement('input');
     btn_inv.type = 'button';
+    btn_inv.id = 'btn_invitacion';
     btn_inv.className = 'btn btn_colaboradores2 col-12 col-lg-6';
-    btn_inv.style = 'background: #f5f5f5;';
     btn_inv.value = 'Invitaciones enviadas';
     div_contendor.appendChild(btn_reg);
     div_contendor.appendChild(btn_inv);
@@ -157,7 +158,7 @@ function registro_plantilla_laboral(nombre) {
 
     /*Cambios prueba fernando*/
     let div_inv = document.createElement('div');
-    div_inv.className = 'col-12 m-0 p-0 invitaciones';
+    div_inv.className = 'col-12 m-0 p-0 invitaciones d-none';
     div_inv.id = 'div_inv';
     div_contendor.appendChild(div_inv);
 
@@ -218,6 +219,10 @@ function registro_plantilla_laboral(nombre) {
         $('#div_inv').addClass('d-none');
         $('#div_reg_personal').removeClass('d-none');
         $('#div_doc_reg_personal').removeClass('d-none');
+        $('#btn_registro').addClass('btn_colaboradores1');
+        $('#btn_registro').removeClass('btn_colaboradores2');
+        $('#btn_invitacion').removeClass('btn_colaboradores1');
+        $('#btn_invitacion').addClass('btn_colaboradores2');
 
     });
     btn_inv.addEventListener('click', () => {
@@ -225,6 +230,10 @@ function registro_plantilla_laboral(nombre) {
         $('#div_inv').removeClass('d-none');
         $('#div_reg_personal').addClass('d-none');
         $('#div_doc_reg_personal').addClass('d-none');
+        $('#btn_registro').addClass('btn_colaboradores2');
+        $('#btn_registro').removeClass('btn_colaboradores1');
+        $('#btn_invitacion').removeClass('btn_colaboradores2');
+        $('#btn_invitacion').addClass('btn_colaboradores1');
     });
     /*************************/
     $("#form_registro_personal").submit(function (e) {

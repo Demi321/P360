@@ -1473,8 +1473,8 @@ const verReporteDetallado = async empleado => {
     porcentajeProductividadSemanal = ((horasSemanaEmpleado / horasLaboralesSemana) * 100)
     porcentajeProductividadSemanal = porcentajeProductividadSemanal > 100 ? 100 : porcentajeProductividadSemanal.toFixed()
     google.charts.load("current", {packages: ["corechart"]});
-    google.charts.setOnLoadCallback(drawChart2);
-    function drawChart2() {
+    google.charts.setOnLoadCallback(drawChart2ReporteJornadasLaborales);
+    function drawChart2ReporteJornadasLaborales() {
         var data = google.visualization.arrayToDataTable([
             ['Task', 'Hours per Day'],
             ['Productividad', horasSemanaEmpleado],
@@ -1500,7 +1500,7 @@ const verReporteDetallado = async empleado => {
                 width: "80%"
             }
         };
-        var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+        var chart = new google.visualization.PieChart(document.getElementById('donutchartReporteJornadasLaborales'));
         chart.draw(data, options);
     }
 
@@ -2270,8 +2270,8 @@ const verReporteDetallado = async empleado => {
         }
 
         google.charts.load("current", {packages: ["corechart"]});
-        google.charts.setOnLoadCallback(drawChart);
-        function drawChart() {
+        google.charts.setOnLoadCallback(drawChartReporteJornadasLaborales);
+        function drawChartReporteJornadasLaborales() {
             var data = google.visualization.arrayToDataTable([
                 ['Task', 'Hours per Day'],
                 ['Puntualidad', puntualidad],
@@ -2298,7 +2298,7 @@ const verReporteDetallado = async empleado => {
                 }
             }
             ;
-            var chart = new google.visualization.PieChart(document.getElementById('donutchart3'));
+            var chart = new google.visualization.PieChart(document.getElementById('donutchart3ReporteJornadasLaborales'));
             chart.draw(data, options);
         }
 
@@ -2365,8 +2365,8 @@ const verReporteDetallado = async empleado => {
         porcentajeProductividadMensual = porcentajeProductividadMensual > 100 ? 100 : porcentajeProductividadMensual.toFixed()
 
         google.charts.load("current", {packages: ["corechart"]});
-        google.charts.setOnLoadCallback(drawChart3);
-        function drawChart3() {
+        google.charts.setOnLoadCallback(drawChart3ReporteJornadasLaborales);
+        function drawChart3ReporteJornadasLaborales() {
             var data = google.visualization.arrayToDataTable([
                 ['Task', 'Hours per Day'],
                 ['Productividad', horasMesEmpleado],
@@ -2392,7 +2392,7 @@ const verReporteDetallado = async empleado => {
                     width: "100%"
                 }
             };
-            var chart = new google.visualization.PieChart(document.getElementById('donutchart2'));
+            var chart = new google.visualization.PieChart(document.getElementById('donutchart2ReporteJornadasLaborales'));
             chart.draw(data, options);
         }
         let diasLaboraloMesEmpleado = 0
@@ -2406,8 +2406,8 @@ const verReporteDetallado = async empleado => {
             porcentajeCumplimiento = porcentajeCumplimiento > 100 ? 100 : porcentajeCumplimiento.toFixed()
         }
         google.charts.load("current", {packages: ["corechart"]});
-        google.charts.setOnLoadCallback(drawChart4);
-        function drawChart4() {
+        google.charts.setOnLoadCallback(drawChart4ReporteJornadasLaborales);
+        function drawChart4ReporteJornadasLaborales() {
             var data = google.visualization.arrayToDataTable([
                 ['Task', 'Hours per Day'],
                 ['Cumplimiento', diasLaboraloMesEmpleado],
@@ -2433,7 +2433,7 @@ const verReporteDetallado = async empleado => {
                     width: "100%"
                 }
             };
-            var chart = new google.visualization.PieChart(document.getElementById('donutchart4'));
+            var chart = new google.visualization.PieChart(document.getElementById('donutchart4ReporteJornadasLaborales'));
             chart.draw(data, options);
         }
         $('#diasLaboralesMesEmpleado').text(diasLaboraloMesEmpleado)
