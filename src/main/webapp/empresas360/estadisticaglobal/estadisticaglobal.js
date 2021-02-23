@@ -362,14 +362,15 @@ var init_estadisticaglobal = (json) => {
 
       var chart = new google.visualization.LineChart(document.getElementById('chart_div_line'));
       chart.draw(data, options);
-  }
+    }
+    var fecha_hoy = Date.now();
     var DatosJornada = $.ajax({           
         type: 'POST',
-        url: '/' + DEPENDENCIA + '/API/empresas360/jornadas_laborales/empresa/obtener_ids/en_jornada',
+        url: '/' + DEPENDENCIA + '/API/estatus_jornada_laboral/',
         contentType: "application/json",
         dataType: 'json',
         data: JSON.stringify({                        
-            "id": tipo_usuario
+            "fecha_hoy": fecha_hoy
         }),
         async: false
     }).responseText;
