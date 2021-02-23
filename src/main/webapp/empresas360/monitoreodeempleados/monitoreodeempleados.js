@@ -328,7 +328,7 @@ DataGrupos().then(function (data) {
             }
         }
     });
-    for (var i = 0; i < directorio.length; i++) {
+    /*for (var i = 0; i < directorio.length; i++) {
         let user = directorio[i];
         try {
             contacto_chat(user);
@@ -336,7 +336,7 @@ DataGrupos().then(function (data) {
             console.warn(q)
         }
 
-    }
+    }*/
 
 });
 function EditarGrupo(id_Grupo) {
