@@ -53,7 +53,7 @@ var s3 = new AWS.S3({
 });
 
 /* LISTENER SOCKET CON RESPECTO AL CHAT EMPRESARIAL */
-const funcionesSocket = () => {
+//const funcionesSocket = () => {
 
     const menuContectualMensaje = (msj, user, type) => {
 
@@ -910,9 +910,9 @@ const funcionesSocket = () => {
         liMensaje.remove();
     };
 
-};
+//};
 
-funcionesSocket();
+//funcionesSocket();
 
 const ocultaSpin = () => {
     spinCargando.addClass("d-none");
