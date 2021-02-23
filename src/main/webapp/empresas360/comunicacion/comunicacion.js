@@ -5326,7 +5326,7 @@ function contacto_chat(user, group, statusGroup) {
                     //initCall();  
                     RequestPOST("/API/notificacion/llamada360", id360).then((msj) => {
                         dataLlamada = msj;
-                        if (mensaje.credenciales.RoomName) {
+                        if (msj.credenciales.RoomName) {
                             RequestPOST("/API/cuenta360/access_token", {
                                 "token": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).token,
                                 "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
@@ -5335,14 +5335,14 @@ function contacto_chat(user, group, statusGroup) {
                                 if (response.success) {
                                     //access_token
                                     let nombre = sesion_cookie.nombre + " " + sesion_cookie.apellido_p + " " + sesion_cookie.apellido_m;
-                                    window.open('https://meeting.claro360.com/room/' + msj.credenciales.RoomName + "/usr360/" + sesion_cookie.id_usuario + "/" + sesion_cookie.id_sesion + "/" + sesion_cookie.tipo_usuario + "/" + sesion_cookie.tipo_servicio + "/" + sesion_cookie.tipo_area + "/" + response.access_token + "/" + normalize_text(nombre) + "/" + mensaje.registro_llamada.idLlamada, '_blank');
+                                    window.open('https://meeting.claro360.com/room/' + msj.credenciales.RoomName + "/usr360/" + sesion_cookie.id_usuario + "/" + sesion_cookie.id_sesion + "/" + sesion_cookie.tipo_usuario + "/" + sesion_cookie.tipo_servicio + "/" + sesion_cookie.tipo_area + "/" + response.access_token + "/" + normalize_text(nombre) + "/" + msj.registro_llamada.idLlamada, '_blank');
 
                                 }
 
                             });
 
                         } else {
-                            window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
+                            window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');
                         }
 //                        Swal.fire({
 //                            text: '¿Cómo quieres continuar la llamada? (Selecciona ventana externa.)',
