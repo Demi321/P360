@@ -6,7 +6,7 @@
 /* global RequestPOST, DEPENDENCIA, Vue, perfil, sesion_cookie, Swal, directorio_usuario, PathRecursos, Notification, data, dataG, connectionCount, OT, DEPENDENCIA_ALIAS, Incidente, infowindow, google, map, prefijoFolio, vue, swal, configuracionEmpleado, configuracionUsuario, moment, Promise, Directorio, superCm, swalConfirmDialog, guarda_adjunto_chat, FgEmojiPicker, objectEmojis, AWS, json, perfil_usuario */
 
 const init_comunicacion = (json) => {
-    
+
     $("#profile-nombre").text(perfil_usuario.nombre + " " + perfil_usuario.apellido_paterno + " " + perfil_usuario.apellido_materno);
     $("#profile-img").css({
         "background": "url('" + perfil_usuario.img + "')",
@@ -14,7 +14,7 @@ const init_comunicacion = (json) => {
         "background-position": "center",
         "background-repeat": "no-repeat"
     });
-    
+
 };
 
 var BucketName = "lineamientos";
@@ -34,8 +34,8 @@ Vue.component("multiselect", window.VueMultiselect.default);
 var perfil = perfil_usuario;
 
 var configuracionUsuario = null;
-RequestPOST("/API/empresas360/configuracionUsuario", {id360:JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario}).then((response) => {
-    if(response.length>0){
+RequestPOST("/API/empresas360/configuracionUsuario", {id360: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario}).then((response) => {
+    if (response.length > 0) {
         configuracionUsuario = response[0];
     }
 });
@@ -54,9 +54,9 @@ var s3 = new AWS.S3({
 
 /* LISTENER SOCKET CON RESPECTO AL CHAT EMPRESARIAL */
 const funcionesSocket = () => {
-    
+
     const menuContectualMensaje = (msj, user, type) => {
-    
+
         let mensaje = msj.message;
         let iconOpciones = $("#mensaje_" + msj.id + " span.iconOpciones");
         iconOpciones.off();
@@ -73,16 +73,16 @@ const funcionesSocket = () => {
 
                     let services;
 
-                    if(tipo === 0){
+                    if (tipo === 0) {
                         services = "/API/empresas360/eliminaMensaje";
                         dataMensaje.id360 = sesion_cookie.idUsuario_Sys;
                         dataMensaje.to_id360 = user.id360;
 
-                        if(msj.idGroup !== undefined && msj.idGroup !== null && msj.idGroup !== ""){
+                        if (msj.idGroup !== undefined && msj.idGroup !== null && msj.idGroup !== "") {
                             dataMensaje.esGrupo = true;
                         }
 
-                    }else{
+                    } else {
                         services = "/API/empresas360/eliminaMensajeParaMi";
                         dataMensaje.idUser = sesion_cookie.idUsuario_Sys;
                     }
@@ -108,25 +108,25 @@ const funcionesSocket = () => {
         };
 
         let myMenu = [{
-            icon: 'fas fa-trash-alt',
-            label: 'Eliminar mensaje para mi',
-            action: function(option, contextMenuIndex, optionIndex) {
-                eliminaMensaje(1);
-            },
-            submenu: null,
-            disabled: false 
-        }];
+                icon: 'fas fa-trash-alt',
+                label: 'Eliminar mensaje para mi',
+                action: function (option, contextMenuIndex, optionIndex) {
+                    eliminaMensaje(1);
+                },
+                submenu: null,
+                disabled: false
+            }];
 
         if (type === "replies") {
 
             myMenu.push({
                 icon: 'fas fa-trash',
                 label: 'Eliminar mensaje para todos',
-                action: function(option, contextMenuIndex, optionIndex) {
+                action: function (option, contextMenuIndex, optionIndex) {
                     eliminaMensaje(0);
                 },
                 submenu: null,
-                disabled: false 
+                disabled: false
             });
 
             if (msj.type === "text") {
@@ -134,13 +134,13 @@ const funcionesSocket = () => {
                 myMenu.push({
                     icon: 'fas fa-edit',
                     label: 'Editar mensaje',
-                    action: function(option, contextMenuIndex, optionIndex) {
+                    action: function (option, contextMenuIndex, optionIndex) {
 
                         let idSeguir = null;
-                        if(msj.idGroup !== undefined && msj.idGroup !== null && msj.idGroup !== ""){
+                        if (msj.idGroup !== undefined && msj.idGroup !== null && msj.idGroup !== "") {
                             idSeguir = msj.idGroup;
                             banderaEditandoGrupo = true;
-                        }else{
+                        } else {
                             banderaEditandoGrupo = false;
                             idSeguir = user.id360;
                         }
@@ -157,7 +157,7 @@ const funcionesSocket = () => {
 
                     },
                     submenu: null,
-                    disabled: false 
+                    disabled: false
                 });
 
             }
@@ -167,28 +167,28 @@ const funcionesSocket = () => {
         myMenu.push({
             icon: 'fas fa-share-square',
             label: 'Reenviar mensaje',
-            action: function(option, contextMenuIndex, optionIndex) {
+            action: function (option, contextMenuIndex, optionIndex) {
                 reenviaMensaje(mensaje, msj.type);
             },
             submenu: null,
-            disabled: false 
+            disabled: false
         });
 
         myMenu.push({
             icon: 'fas fa-reply',
             label: 'Responder mensaje',
-            action: function(option, contextMenuIndex, optionIndex) {
+            action: function (option, contextMenuIndex, optionIndex) {
                 responderMensaje();
             },
             submenu: null,
-            disabled: false 
+            disabled: false
         });
 
-        if(msj.destacado === "0"){
+        if (msj.destacado === "0") {
             myMenu.push({
                 icon: 'fas fa-star',
                 label: 'Destacar mensaje',
-                action: function(option, contextMenuIndex, optionIndex) {
+                action: function (option, contextMenuIndex, optionIndex) {
 
                     let dataDestacar = {
                         "idUser": sesion_cookie.idUsuario_Sys,
@@ -208,13 +208,13 @@ const funcionesSocket = () => {
 
                 },
                 submenu: null,
-                disabled: false 
+                disabled: false
             });
-        }else{
+        } else {
             myMenu.push({
                 icon: 'fas fa-times',
                 label: 'No destacar mensaje',
-                action: function(option, contextMenuIndex, optionIndex) {
+                action: function (option, contextMenuIndex, optionIndex) {
 
                     let dataDestacar = {
                         "idUser": sesion_cookie.idUsuario_Sys,
@@ -234,7 +234,7 @@ const funcionesSocket = () => {
 
                 },
                 submenu: null,
-                disabled: false 
+                disabled: false
             });
         }
 
@@ -265,7 +265,7 @@ const funcionesSocket = () => {
         });
         //imagen panel de descripcion
         let fotoPanelDescripcion = $("#imagenPanelDescripcion_" + idGrupo);
-        fotoPanelDescripcion.attr("src",imagen);
+        fotoPanelDescripcion.attr("src", imagen);
     };
 
     const cambioTituloGrupo = (mensaje) => {
@@ -290,9 +290,9 @@ const funcionesSocket = () => {
         let descripcionPanelDescripcion = $("#descripcionGrupoDescripcion_" + idGrupo);
         descripcionPanelDescripcion.text(descripcion);
     };
-    
+
     const cambioParametroGrupoChat = (mensaje) => {
-        switch(mensaje.columna){
+        switch (mensaje.columna) {
             case "icono_grupo":
                 cambioIconoGrupo(mensaje);
                 break;
@@ -304,33 +304,33 @@ const funcionesSocket = () => {
                 break;
         }
     };
-    
+
     const eliminadoParticipanteGrupoChat = (mensaje) => {
         let idUsuarioEliminado = mensaje.id360;
         let idGrupo = mensaje.idGroup;
 
         $("#" + idGrupo + "_" + idUsuarioEliminado).remove();
 
-        if(idUsuarioEliminado === sesion_cookie.idUsuario_Sys){
+        if (idUsuarioEliminado === sesion_cookie.idUsuario_Sys) {
             let input = $("#message_input_" + idUsuarioEliminado);
             let button = $("#btn_enviar" + idUsuarioEliminado);
 
             input.attr("disabled", true);
             input.attr("placeholder", "No puedes enviar mensajes en este chat");
             input.css({
-                "text-align":"center",
-                "font-weight":"bold",
+                "text-align": "center",
+                "font-weight": "bold",
                 "text-transform": "uppercase"
             });
             button.attr("disabled", true);
         }
     };
-    
+
     const nuevoMensajeDestacado = (mensaje) => {
         console.log("Nuevo mensaje destacado");
-            
+
         const panelDespliegueDestacados = $("#panelMensajesDestacados");
-        if(panelDespliegueDestacados.css("display") === "block"){
+        if (panelDespliegueDestacados.css("display") === "block") {
 
             let ulMensajes = $(".listadoMensajesDestacados");
             agregarItemMensajeDestacado(mensaje.data, ulMensajes, true);
@@ -340,29 +340,29 @@ const funcionesSocket = () => {
         mensaje.data.destacado = "1";
 
         let userDestacado = {};
-        if(mensaje.data.id360 === sesion_cookie.idUsuario_Sys){
+        if (mensaje.data.id360 === sesion_cookie.idUsuario_Sys) {
             userDestacado.id360 = sesion_cookie.idUsuario_Sys;
-        }else{
+        } else {
             userDestacado = buscaEnDirectorioCompleto(mensaje.data.id360);
         }
 
         let typeMessage = "send";
-        if(mensaje.data.id360 === sesion_cookie.id_usuario){
+        if (mensaje.data.id360 === sesion_cookie.id_usuario) {
             typeMessage = "replies";
-        }    
+        }
         menuContectualMensaje(mensaje.data, userDestacado, typeMessage);
 
         const pMensaje = $("#mensaje_" + mensaje.idMensaje).find("p").first();
-        console.log( pMensaje.length );
+        console.log(pMensaje.length);
         let iconoDestacado = $("<span></span>").addClass("iconoDestacado");
         iconoDestacado.append('<i class="fas fa-star"></i>');
         pMensaje.append(iconoDestacado);
         console.log("Ya lo agregue");
     };
-    
+
     const eliminarMensajeDestacado = (mensaje) => {
         const panelDespliegueDestacados = $("#panelMensajesDestacados");
-        if(panelDespliegueDestacados.css("display") === "block"){
+        if (panelDespliegueDestacados.css("display") === "block") {
 
             const item = $("#itemMensajeDestacado" + mensaje.data.id);
             item.slideUp("slow", () => {
@@ -374,36 +374,37 @@ const funcionesSocket = () => {
         mensaje.data.destacado = "0";
 
         let userDestacado = {};
-        if(mensaje.data.id360 === sesion_cookie.idUsuario_Sys){
+        if (mensaje.data.id360 === sesion_cookie.idUsuario_Sys) {
             userDestacado.id360 = sesion_cookie.idUsuario_Sys;
-        }else{
+        } else {
             userDestacado = buscaEnDirectorioCompleto(mensaje.data.id360);
         }
 
         let typeMessage = "send";
-        if(mensaje.data.id360 === sesion_cookie.id_usuario){
+        if (mensaje.data.id360 === sesion_cookie.id_usuario) {
             typeMessage = "replies";
-        }  
+        }
         menuContectualMensaje(mensaje.data, userDestacado, typeMessage);
 
         const pMensaje = $("#mensaje_" + mensaje.idMensaje);
         pMensaje.find(".iconoDestacado").remove();
     };
-    
+
     const nuevoUsuarioFavorito = (mensaje) => {
         const contenedorFavorito = $("#iconoFavorito" + mensaje.id360Favorito);
-        let icon_favorito = $("<i></i>").addClass("fas fa-star");;
+        let icon_favorito = $("<i></i>").addClass("fas fa-star");
+        ;
         icon_favorito.css({
             "background": "#fff",
             "padding": "10px",
             "font-size": "60px",
             "width": "50px",
             "cursor": "pointer",
-            "color":"yellowgreen"
+            "color": "yellowgreen"
         });
         contenedorFavorito.empty().append(icon_favorito);
 
-        if( $('#soloFavoritos').prop('checked') ) {
+        if ($('#soloFavoritos').prop('checked')) {
             $("#profile_chat" + mensaje.id360Favorito).slideToggle();
         }
 
@@ -411,21 +412,22 @@ const funcionesSocket = () => {
 
         CantidadMensajesPorChat[mensaje.id360Favorito].esFavorito = true;
     };
-    
+
     const eliminaUsuarioFavorito = (mensaje) => {
         const contenedorFavorito = $("#iconoFavorito" + mensaje.id360Favorito);
-        let icon_favorito = $("<i></i>").addClass("far fa-star");;
+        let icon_favorito = $("<i></i>").addClass("far fa-star");
+        ;
         icon_favorito.css({
             "background": "#fff",
             "padding": "10px",
             "font-size": "60px",
             "width": "50px",
             "cursor": "pointer",
-            "color":"yellowgreen"
+            "color": "yellowgreen"
         });
         contenedorFavorito.empty().append(icon_favorito);
 
-        if( $('#soloFavoritos').prop('checked') ) {
+        if ($('#soloFavoritos').prop('checked')) {
             $("#profile_chat" + mensaje.id360Favorito).slideToggle();
         }
 
@@ -433,10 +435,10 @@ const funcionesSocket = () => {
 
         CantidadMensajesPorChat[mensaje.id360Favorito].esFavorito = false;
     };
-    
+
     const nuevoGrupoChatEmpresarial = (mensaje) => {
         let participantesParaGrupo = mensaje.participantes;
-        participantesParaGrupo.push( mensaje.idUser );
+        participantesParaGrupo.push(mensaje.idUser);
         let dataContac = {
             "id360": mensaje.id_grupo,
             "nombre_grupo": mensaje.nombre_grupo,
@@ -453,38 +455,38 @@ const funcionesSocket = () => {
             title: 'Bienvenido al grupo ' + mensaje.nombre_grupo
         });
     };
-    
+
     const nuevoMensajeChatEmpresarial = (mensaje) => {
-        if(mensaje.chat_empresarial_mio){
+        if (mensaje.chat_empresarial_mio) {
             agregar_chat_enviado(mensaje, false);
-        }else{
-            if((mensaje.idGroup !== undefined && mensaje.idGroup !== null) && mensaje.id360 === sesion_cookie.idUsuario_Sys ){
+        } else {
+            if ((mensaje.idGroup !== undefined && mensaje.idGroup !== null) && mensaje.id360 === sesion_cookie.idUsuario_Sys) {
                 agregar_chat_enviado(mensaje, false);
             }
-            if( mensaje.id360 === undefined || mensaje.id360 === null ){
-                despliegaMensajeSistema( mensaje.message, mensaje.to_id360, mensaje.date_created, mensaje.time_created, false);
-            }else{
-                let group = mensaje.idGroup !== undefined && mensaje.idGroup !== null ? true: false;
+            if (mensaje.id360 === undefined || mensaje.id360 === null) {
+                despliegaMensajeSistema(mensaje.message, mensaje.to_id360, mensaje.date_created, mensaje.time_created, false);
+            } else {
+                let group = mensaje.idGroup !== undefined && mensaje.idGroup !== null ? true : false;
                 recibir_chat(mensaje, false, group, true);
             }
         }
     };
-    
+
     const nuevoParticipanteGrupoChat = (mensaje) => {
         let idGrupo = mensaje.idGrupo;
-                
-        console.log(mensaje.participantes);    
+
+        console.log(mensaje.participantes);
         let participantesGrupos = mensaje.participantes;
-        let ulParticipantes = $("#listadoParticipantesGrupo_"+idGrupo);
+        let ulParticipantes = $("#listadoParticipantesGrupo_" + idGrupo);
         $.each(participantesGrupos, (index, participante) => {
 
             let id360Participante = participante;
 
             let userGrupo = null;
-            if( id360Participante === sesion_cookie.idUsuario_Sys ){
+            if (id360Participante === sesion_cookie.idUsuario_Sys) {
                 userGrupo = {
                     img: perfil.img,
-                    id360 : sesion_cookie.idUsuario_Sys,
+                    id360: sesion_cookie.idUsuario_Sys,
                     apellido_paterno: sesion_cookie.apellido_p,
                     apellido_materno: sesion_cookie.apellido_m,
                     nombre: sesion_cookie.nombre
@@ -497,32 +499,32 @@ const funcionesSocket = () => {
                 input.removeAttr("disabled");
                 input.attr("placeholder", "Escribe un mensaje aqui....");
                 input.css({
-                    "text-align":"left",
-                    "font-weight":"normal",
+                    "text-align": "left",
+                    "font-weight": "normal",
                     "text-transform": "none"
                 });
                 button.removeAttr("disabled");
 
-            }else{
+            } else {
                 userGrupo = buscaEnDirectorioCompleto(id360Participante);
             }
 
-            if(userGrupo !== undefined){
+            if (userGrupo !== undefined) {
                 let liParticipante = $("<li></li>");
-                liParticipante.attr("id", idGrupo + "_" +  id360Participante);
+                liParticipante.attr("id", idGrupo + "_" + id360Participante);
                 liParticipante.css({
-                    "text-align":"left",
-                    "color":"#32465a",
-                    "font-size":"1.4rem",
-                    "cursor":"pointer",
-                    "padding":"15px 0 15px 20px"
+                    "text-align": "left",
+                    "color": "#32465a",
+                    "font-size": "1.4rem",
+                    "cursor": "pointer",
+                    "padding": "15px 0 15px 20px"
                 });
                 let imgParticipante = $("<img>");
-                imgParticipante.attr("src", userGrupo.img );
+                imgParticipante.attr("src", userGrupo.img);
                 imgParticipante.css({
-                    "width":"30px",
-                    "height":"30px",
-                    "border-radius":"50%"
+                    "width": "30px",
+                    "height": "30px",
+                    "border-radius": "50%"
                 });
                 let spanParticipante = $("<span></span>").addClass("ml-2");
                 spanParticipante.text(userGrupo.nombre + " " + userGrupo.apellido_paterno + " " + userGrupo.apellido_materno);
@@ -538,58 +540,58 @@ const funcionesSocket = () => {
                     liParticipante.css({"background-color": "transparent"});
                 });
 
-                if(userGrupo.id360 !== sesion_cookie.idUsuario_Sys){
+                if (userGrupo.id360 !== sesion_cookie.idUsuario_Sys) {
                     liParticipante.click(() => {
                         $("#profile_chat" + userGrupo.id360).click();
                     });
                 }
 
-                if(userGrupo.id360 !== sesion_cookie.idUsuario_Sys){
+                if (userGrupo.id360 !== sesion_cookie.idUsuario_Sys) {
 
-                    liParticipante.on('contextmenu', function(e) {
+                    liParticipante.on('contextmenu', function (e) {
                         e.preventDefault();
 
                         var myMenu = [{
-                            icon: 'fa fa-trash',
-                            label: 'Eliminar participante',
-                            action: function(option, contextMenuIndex, optionIndex) {
-                                eliminaParticipanteGrupo(id360Participante, idGrupo);
-                            },
-                            submenu: null,
-                            disabled: false 
-                        }];
+                                icon: 'fa fa-trash',
+                                label: 'Eliminar participante',
+                                action: function (option, contextMenuIndex, optionIndex) {
+                                    eliminaParticipanteGrupo(id360Participante, idGrupo);
+                                },
+                                submenu: null,
+                                disabled: false
+                            }];
 
                         let opcionHacerAdmin = {
                             icon: 'fas fa-user-shield',
                             label: 'Designar como administrador',
-                            action: function(option, contextMenuIndex, optionIndex) {
+                            action: function (option, contextMenuIndex, optionIndex) {
                                 hacerAdministrador(id360Participante, idGrupo);
                             },
                             submenu: null,
-                            disabled: false 
+                            disabled: false
                         };
                         myMenu.push(opcionHacerAdmin);
 
                         superCm.createMenu(myMenu, e);
                     });
-                }else{
-                   liParticipante.on('contextmenu', function(e) {
+                } else {
+                    liParticipante.on('contextmenu', function (e) {
                         e.preventDefault();
 
                         var myMenu = [{
-                            label: '(vacío)',
-                            submenu: null,
-                            disabled: true 
-                        }];
+                                label: '(vacío)',
+                                submenu: null,
+                                disabled: true
+                            }];
 
                         superCm.createMenu(myMenu, e);
-                    }); 
+                    });
                 }
 
             }
-        }); 
+        });
     };
-    
+
     const edicionMensajeChatEmpresarial = (mensaje) => {
         const li = $("#mensaje_" + mensaje.idMensaje);
         let pMensaje = $("#mensaje_" + mensaje.idMensaje).find("p");
@@ -608,7 +610,7 @@ const funcionesSocket = () => {
         let spanEdit = $("<span></span>");
         let iconEdit = $("<li></li>").addClass("fas fa-edit");
         spanEdit.append(iconEdit);
-        iconEdit.attr("id","historial_ediciones_" + mensaje.idMensaje);
+        iconEdit.attr("id", "historial_ediciones_" + mensaje.idMensaje);
 
         //ICONO MENU DE OPCION PARA EL MENSAJE
 
@@ -630,16 +632,16 @@ const funcionesSocket = () => {
 
                     let services;
 
-                    if(tipo === 0){
+                    if (tipo === 0) {
                         services = "/API/empresas360/eliminaMensaje";
                         dataMensaje.id360 = sesion_cookie.idUsuario_Sys;
                         dataMensaje.to_id360 = mensaje.to_id360;
 
-                        if(mensaje.nuevo.idGroup !== undefined && mensaje.nuevo.idGroup !== null && mensaje.nuevo.idGroup !== ""){
+                        if (mensaje.nuevo.idGroup !== undefined && mensaje.nuevo.idGroup !== null && mensaje.nuevo.idGroup !== "") {
                             dataMensaje.esGrupo = true;
                         }
 
-                    }else{
+                    } else {
                         services = "/API/empresas360/eliminaMensajeParaMi";
                         dataMensaje.idUser = sesion_cookie.idUsuario_Sys;
                     }
@@ -666,24 +668,24 @@ const funcionesSocket = () => {
 
         console.log("Menu context");
         let myMenu = [{
-            icon: 'fas fa-trash-alt',
-            label: 'Eliminar mensaje para mi',
-            action: function(option, contextMenuIndex, optionIndex) {
-                eliminaMensaje(1);
-            },
-            submenu: null,
-            disabled: false 
-        }];
+                icon: 'fas fa-trash-alt',
+                label: 'Eliminar mensaje para mi',
+                action: function (option, contextMenuIndex, optionIndex) {
+                    eliminaMensaje(1);
+                },
+                submenu: null,
+                disabled: false
+            }];
 
         console.log("Eliminar para todos");
         myMenu.push({
             icon: 'fas fa-trash',
             label: 'Eliminar mensaje para todos',
-            action: function(option, contextMenuIndex, optionIndex) {
+            action: function (option, contextMenuIndex, optionIndex) {
                 eliminaMensaje(0);
             },
             submenu: null,
-            disabled: false 
+            disabled: false
         });
 
         console.log("Editar");
@@ -692,13 +694,13 @@ const funcionesSocket = () => {
             myMenu.push({
                 icon: 'fas fa-edit',
                 label: 'Editar mensaje',
-                action: function(option, contextMenuIndex, optionIndex) {
+                action: function (option, contextMenuIndex, optionIndex) {
 
                     let idSeguir = null;
-                    if(mensaje.nuevo.idGroup !== undefined && mensaje.nuevo.idGroup !== null && mensaje.nuevo.idGroup !== ""){
+                    if (mensaje.nuevo.idGroup !== undefined && mensaje.nuevo.idGroup !== null && mensaje.nuevo.idGroup !== "") {
                         idSeguir = mensaje.nuevo.idGroup;
                         banderaEditandoGrupo = true;
-                    }else{
+                    } else {
                         banderaEditandoGrupo = false;
                         idSeguir = mensaje.nuevo.to_id360;
                     }
@@ -715,7 +717,7 @@ const funcionesSocket = () => {
 
                 },
                 submenu: null,
-                disabled: false 
+                disabled: false
             });
 
         }
@@ -724,30 +726,30 @@ const funcionesSocket = () => {
         myMenu.push({
             icon: 'fas fa-share-square',
             label: 'Reenviar mensaje',
-            action: function(option, contextMenuIndex, optionIndex) {
+            action: function (option, contextMenuIndex, optionIndex) {
                 reenviaMensaje(mensaje.mensaje_editado, mensaje.nuevo.type);
             },
             submenu: null,
-            disabled: false 
+            disabled: false
         });
 
         console.log("Responder");
         myMenu.push({
             icon: 'fas fa-reply',
             label: 'Responder mensaje',
-            action: function(option, contextMenuIndex, optionIndex) {
+            action: function (option, contextMenuIndex, optionIndex) {
                 responderMensaje();
             },
             submenu: null,
-            disabled: false 
+            disabled: false
         });
 
         console.log("Destacar o no destacar");
-        if(mensaje.nuevo.destacado === "0"){
+        if (mensaje.nuevo.destacado === "0") {
             myMenu.push({
                 icon: 'fas fa-star',
                 label: 'Destacar mensaje',
-                action: function(option, contextMenuIndex, optionIndex) {
+                action: function (option, contextMenuIndex, optionIndex) {
 
                     let dataDestacar = {
                         "idUser": sesion_cookie.idUsuario_Sys,
@@ -767,13 +769,13 @@ const funcionesSocket = () => {
 
                 },
                 submenu: null,
-                disabled: false 
+                disabled: false
             });
-        }else{
+        } else {
             myMenu.push({
                 icon: 'fas fa-times',
                 label: 'No destacar mensaje',
-                action: function(option, contextMenuIndex, optionIndex) {
+                action: function (option, contextMenuIndex, optionIndex) {
 
                     let dataDestacar = {
                         "idUser": sesion_cookie.idUsuario_Sys,
@@ -793,7 +795,7 @@ const funcionesSocket = () => {
 
                 },
                 submenu: null,
-                disabled: false 
+                disabled: false
             });
         }
 
@@ -816,7 +818,7 @@ const funcionesSocket = () => {
             iconOpciones.css({"display": "none"});
         });
 
-        if(mensaje.nuevo.idResponse !== null && mensaje.nuevo.idResponse !== undefined){
+        if (mensaje.nuevo.idResponse !== null && mensaje.nuevo.idResponse !== undefined) {
             let mensajeRespuesta = mensaje.nuevo.mensajeRespuesta === undefined ? mensaje.mensajeRespondido.message : mensaje.nuevo.mensajeRespuesta;
             let smallRespuesta = $("<small></small>").addClass("respuesta-mensaje");
             smallRespuesta.text(mensajeRespuesta);
@@ -827,37 +829,37 @@ const funcionesSocket = () => {
                 const remarcaMensaje = (idMensaje) => {
                     document.querySelector("#mensaje_" + idMensaje).scrollIntoView();
                     let resaltar = setInterval(() => {
-                        $("#mensaje_"+ idMensaje).toggleClass("respondida");
+                        $("#mensaje_" + idMensaje).toggleClass("respondida");
                     }, 250);
 
                     setTimeout(() => {
                         clearInterval(resaltar);
-                        $("#mensaje_"+ idMensaje).removeClass("respondida");
+                        $("#mensaje_" + idMensaje).removeClass("respondida");
                     }, 2000);
                 };
 
-                if( $("#mensaje_" + mensaje.nuevo.idResponse).length ){
+                if ($("#mensaje_" + mensaje.nuevo.idResponse).length) {
 
                     remarcaMensaje(mensaje.nuevo.idResponse);
 
-                }else{
+                } else {
 
                     const buscaMensajeRespuesta = () => {
-                        if( $("#contact_messaging" + mensaje.to_id360).find(".liMasMensajes").length ){
+                        if ($("#contact_messaging" + mensaje.to_id360).find(".liMasMensajes").length) {
                             let esGrupo = mensaje.idGroup !== undefined && mensaje.idGroup !== null ? true : false;
                             cargaMasMensajes(mensaje.to_id360, esGrupo).then((response) => {
-                                if( $("#mensaje_" + mensaje.nuevo.idResponse).length ){
+                                if ($("#mensaje_" + mensaje.nuevo.idResponse).length) {
                                     remarcaMensaje(mensaje.nuevo.idResponse);
-                                }else if(response){
+                                } else if (response) {
                                     buscaMensajeRespuesta();
-                                }else{
+                                } else {
                                     NotificacionToas.fire({
                                         title: 'No se ha encontrado el mensaje'
                                     });
                                 }
 
                             });
-                        }else{
+                        } else {
                             NotificacionToas.fire({
                                 title: 'No se ha encontrado el mensaje'
                             });
@@ -880,34 +882,34 @@ const funcionesSocket = () => {
 
         apagaValores();
     };
-    
+
     const eliminacionMensajeChatEmpresarial = (mensaje) => {
-        let liMensaje = $("#mensaje_"+mensaje.idMensaje);
+        let liMensaje = $("#mensaje_" + mensaje.idMensaje);
         let pMensaje = liMensaje.find('p');
         pMensaje.empty();
         pMensaje.text("Mensaje eliminado");
         let iconMensajeEliminado = $("<i></i>").addClass("fas fa-comment-slash");
 
-        if(mensaje.eliminacion_mensaje_chat_empresarial_mio){
-            iconMensajeEliminado.css({"margin-right":"10px"});
+        if (mensaje.eliminacion_mensaje_chat_empresarial_mio) {
+            iconMensajeEliminado.css({"margin-right": "10px"});
             pMensaje.prepend(iconMensajeEliminado);
-        }else{
-            iconMensajeEliminado.css({"margin-left":"10px"});
+        } else {
+            iconMensajeEliminado.css({"margin-left": "10px"});
             pMensaje.append(iconMensajeEliminado);
         }
         pMensaje.css({
-            "background-color":"transparent",
-            "font-style":"italic",
-            "font-size":"1.1rem",
-            "color":"#434343"
+            "background-color": "transparent",
+            "font-style": "italic",
+            "font-size": "1.1rem",
+            "color": "#434343"
         });
     };
-    
+
     const eliminacionMensajeChatEmpresarialMio = (mensaje) => {
-        let liMensaje = $("#mensaje_"+mensaje.idMensaje);
+        let liMensaje = $("#mensaje_" + mensaje.idMensaje);
         liMensaje.remove();
     };
-    
+
 };
 
 funcionesSocket();
@@ -926,8 +928,8 @@ const NotificacionToas = Swal.mixin({
     showConfirmButton: false,
     timer: 3000,
     onOpen: (toast) => {
-      toast.addEventListener('mouseenter', Swal.stopTimer);
-      toast.addEventListener('mouseleave', Swal.resumeTimer);
+        toast.addEventListener('mouseenter', Swal.stopTimer);
+        toast.addEventListener('mouseleave', Swal.resumeTimer);
     }
 });
 
@@ -944,19 +946,19 @@ const buscaEnDirectorioCompleto = (id360) => {
 
 /*FILTRAR SOLO FAVORITOS */
 $("#soloFavoritos").change(() => {
-    if( $('#soloFavoritos').prop('checked') ) {
-        
+    if ($('#soloFavoritos').prop('checked')) {
+
         $(".contactoNoFavorito").slideToggle();
-        
+
         $("#filtrarFavoritos label").css({
-            "background":"darkcyan"
+            "background": "darkcyan"
         });
-    }else{
-        
+    } else {
+
         $(".contactoNoFavorito").slideToggle();
-        
+
         $("#filtrarFavoritos label").css({
-            "background":"transparent"
+            "background": "transparent"
         });
     }
 });
@@ -976,49 +978,49 @@ $("body").append(buttonNotificacionLlamada);
 var reproduccionSonidoNotificacion = document.getElementById('sonido1');
 
 const reproduceNotificacion = (tipo) => {
-    
-    if( configuracionUsuario !== null && configuracionUsuario[tipo] !== undefined ){
-        
+
+    if (configuracionUsuario !== null && configuracionUsuario[tipo] !== undefined) {
+
         let tonoUsuario = configuracionUsuario[tipo];
-        
-        if(tonoUsuario !== "silenciado"){
+
+        if (tonoUsuario !== "silenciado") {
             reproduccionSonidoNotificacion = document.getElementById(tonoUsuario);
-        
+
             reproduccionSonidoNotificacion.muted = true;
             reproduccionSonidoNotificacion.muted = false;
-            if(tipo === "tono_llamada"){
+            if (tipo === "tono_llamada") {
                 reproduccionSonidoNotificacion.loop = true;
             }
             reproduccionSonidoNotificacion.play();
         }
-        
-    }else{
+
+    } else {
         reproduccionSonidoNotificacion = document.getElementById('sonido1');
         reproduccionSonidoNotificacion.muted = true;
         reproduccionSonidoNotificacion.muted = false;
-        if(tipo === "tono_llamada"){
+        if (tipo === "tono_llamada") {
             reproduccionSonidoNotificacion.loop = true;
         }
         reproduccionSonidoNotificacion.play();
     }
-    
+
 };
 
 buttonNotificacionMensaje.click(() => {
-    
+
     reproduceNotificacion("tono_mensaje");
-    
+
 });
 
 buttonNotificacionLlamada.click(() => {
-    
+
     reproduceNotificacion("tono_llamada");
-    
+
 });
 
 let buttonConfiguracion = $("#settings");
 
-let arrayTonos = ['sonido1','sonido2', 'sonido3','sonido4','sonido5','sonido6','sonido7', 'sonido8', 'sonido9', 'sonido10'];
+let arrayTonos = ['sonido1', 'sonido2', 'sonido3', 'sonido4', 'sonido5', 'sonido6', 'sonido7', 'sonido8', 'sonido9', 'sonido10'];
 
 let contenedorConfig = $("<div></div>");
 
@@ -1026,7 +1028,7 @@ let formGroupTonoMensaje = $("<div></div>").addClass("form-group mb-4");
 let labelTonoMensaje = $("<label></label>");
 labelTonoMensaje.text("Tono para mensajes");
 let selectTonoMensaje = $("<select></select>").addClass("form-control custom-select");
-selectTonoMensaje.attr("id","seleccionarTonoMensaje");
+selectTonoMensaje.attr("id", "seleccionarTonoMensaje");
 selectTonoMensaje.attr("onchange", "escuchaSonido(this.value)");
 formGroupTonoMensaje.append(labelTonoMensaje);
 formGroupTonoMensaje.append(selectTonoMensaje);
@@ -1035,22 +1037,22 @@ let formGroupTonoLlamada = $("<div></div>").addClass("form-group");
 let labelTonoLlamada = $("<label></label>");
 labelTonoLlamada.text("Tono para llamadas");
 let selectTonoLlamada = $("<select></select>").addClass("form-control custom-select");
-selectTonoLlamada.attr("id","seleccionarTonoLLamada");
+selectTonoLlamada.attr("id", "seleccionarTonoLLamada");
 selectTonoLlamada.attr("onchange", "escuchaSonido(this.value)");
 formGroupTonoLlamada.append(labelTonoLlamada);
 formGroupTonoLlamada.append(selectTonoLlamada);
 
 $.each(arrayTonos, (index, tono) => {
     let option = $("<option></option>");
-    option.attr("value",tono);
-    option.text("Tono " + (index+1));
+    option.attr("value", tono);
+    option.text("Tono " + (index + 1));
     selectTonoMensaje.append(option);
 });
 
 $.each(arrayTonos, (index, tono) => {
     let option = $("<option></option>");
-    option.attr("value",tono);
-    option.text("Tono " + (index+1));
+    option.attr("value", tono);
+    option.text("Tono " + (index + 1));
     selectTonoLlamada.append(option);
 });
 
@@ -1061,7 +1063,7 @@ contenedorConfig.append(formGroupTonoMensaje);
 contenedorConfig.append(formGroupTonoLlamada);
 
 const escuchaSonido = (sonido) => {
-    if(sonido !== "silenciado"){
+    if (sonido !== "silenciado") {
         let sonidoPreview = document.getElementById(sonido);
         sonidoPreview.muted = true;
         sonidoPreview.muted = false;
@@ -1070,7 +1072,7 @@ const escuchaSonido = (sonido) => {
 };
 
 buttonConfiguracion.click(() => {
-    
+
     Swal.fire({
         html: contenedorConfig,
         showCancelButton: true,
@@ -1086,41 +1088,41 @@ buttonConfiguracion.click(() => {
                 "fecha": getFecha(),
                 "hora": getHora()
             };
-            
+
             RequestPOST("/API/empresas360/cambiaConfiguracionUsuario", data).then((response) => {
-                
+
                 configuracionUsuario = {};
                 configuracionUsuario.id360 = sesion_cookie.idUsuario_Sys;
                 configuracionUsuario.tono_mensaje = $("#seleccionarTonoMensaje").val();
                 configuracionUsuario.tono_llamada = $("#seleccionarTonoLLamada").val();
-                
-                swal.fire({text:'Se ha guardado tu configuracion exitosamente'});
-                
+
+                swal.fire({text: 'Se ha guardado tu configuracion exitosamente'});
+
             });
- 
+
         }
     });
-    
+
 });
 
 var participantesParaGrupo = null;
 vuewModalParticipantesGrupo = (id_componente, participantes) => {
-  
+
     participantesParaGrupo = new Array();
     var json = directorio_usuario;
-    
+
     //quitar los participantes del grupo para el select
-    if(participantes !== undefined && participantes !== null){
-        
+    if (participantes !== undefined && participantes !== null) {
+
         json = [];
         $.each(directorio_usuario, (index, user) => {
-            if( participantes.indexOf(user.id360) === -1 ){
+            if (participantes.indexOf(user.id360) === -1) {
                 json.push(user);
             }
         });
-        
+
     }
-    
+
     vue = new Vue({
         components: {
             Multiselect: window.VueMultiselect.default
@@ -1150,7 +1152,7 @@ vuewModalParticipantesGrupo = (id_componente, participantes) => {
 
         }
     }).$mount('#' + id_componente);
-    
+
 };
 
 /*
@@ -1163,17 +1165,17 @@ vuewModalParticipantesGrupo = (id_componente, participantes) => {
 let contenedorAgregarGrupo = $("<div></div>");
 
 let formCreaGrupo = $("<form></form>");
-formCreaGrupo.attr("id","formCreaGrupo");
-formCreaGrupo.attr("autocomplete","off");
+formCreaGrupo.attr("id", "formCreaGrupo");
+formCreaGrupo.attr("autocomplete", "off");
 
 let formGroupNombreGrupo = $("<div></div>").addClass("form-group");
 let labelNombreGrupo = $("<label></label>");
 labelNombreGrupo.text("Título del grupo");
-labelNombreGrupo.attr("for","inputNombreGrupo");
+labelNombreGrupo.attr("for", "inputNombreGrupo");
 let inputNombreGrupo = $("<input>").addClass("form-control");
-inputNombreGrupo.attr("id","inputNombreGrupo");
-inputNombreGrupo.attr("type","text");
-inputNombreGrupo.attr("required","true");
+inputNombreGrupo.attr("id", "inputNombreGrupo");
+inputNombreGrupo.attr("type", "text");
+inputNombreGrupo.attr("required", "true");
 formGroupNombreGrupo.append(labelNombreGrupo);
 formGroupNombreGrupo.append(inputNombreGrupo);
 formCreaGrupo.append(formGroupNombreGrupo);
@@ -1181,11 +1183,11 @@ formCreaGrupo.append(formGroupNombreGrupo);
 let formGroupDescripcionGrupo = $("<div></div>").addClass("form-group");
 let labelDescripcionGrupo = $("<label></label>");
 labelDescripcionGrupo.text("Descripción breve");
-labelDescripcionGrupo.attr("for","inputDescripcionGrupo");
+labelDescripcionGrupo.attr("for", "inputDescripcionGrupo");
 let inputDescripcionGrupo = $("<input>").addClass("form-control");
-inputDescripcionGrupo.attr("id","inputDescripcionGrupo");
-inputDescripcionGrupo.attr("type","text");
-inputDescripcionGrupo.attr("required","true");
+inputDescripcionGrupo.attr("id", "inputDescripcionGrupo");
+inputDescripcionGrupo.attr("type", "text");
+inputDescripcionGrupo.attr("required", "true");
 formGroupDescripcionGrupo.append(labelDescripcionGrupo);
 formGroupDescripcionGrupo.append(inputDescripcionGrupo);
 formCreaGrupo.append(formGroupDescripcionGrupo);
@@ -1194,82 +1196,83 @@ let formGroupParticipantesGrupo = $("<div></div>").addClass("form-group");
 let labelParticipantesGrupo = $("<label></label>");
 labelParticipantesGrupo.text("Participantes");
 let selectParticipantesGrupo = '<div class="col-12" id="agregaParticipantesGrupo">' +
-                                    '<multiselect ' +
-                                    'placeholder=""' +
-                                    'v-model="value" ' +
-                                    ':options="options"' +
-                                    'track-by="id360"' +
-                                    ':multiple="true"' +
-                                    ':taggable="false"' +
-                                    ':close-on-select="false"' +
-                                    ':custom-label="customLabel" ' +
-                                    ':select-label="\'Seleccionar\'" ' +
-                                    ':selected-Label="\'Seleccionado\'"' +
-                                    ':deselect-Label="\'Remover\'"' +
-                                    ':hide-selected="true"' +
-                                    '@select="onSelect"' +
-                                    '@Close="onClose"' +
-                                    '@Remove="onRemove">' +
-                                    '</multiselect>' +
-                                    '<pre class="language-json" style="display:none"><code>{{ value  }}</code></pre>' +
-                                '</div>';
+        '<multiselect ' +
+        'placeholder=""' +
+        'v-model="value" ' +
+        ':options="options"' +
+        'track-by="id360"' +
+        ':multiple="true"' +
+        ':taggable="false"' +
+        ':close-on-select="false"' +
+        ':custom-label="customLabel" ' +
+        ':select-label="\'Seleccionar\'" ' +
+        ':selected-Label="\'Seleccionado\'"' +
+        ':deselect-Label="\'Remover\'"' +
+        ':hide-selected="true"' +
+        '@select="onSelect"' +
+        '@Close="onClose"' +
+        '@Remove="onRemove">' +
+        '</multiselect>' +
+        '<pre class="language-json" style="display:none"><code>{{ value  }}</code></pre>' +
+        '</div>';
 formGroupParticipantesGrupo.append(labelParticipantesGrupo);
 formGroupParticipantesGrupo.append(selectParticipantesGrupo);
 formCreaGrupo.append(formGroupParticipantesGrupo);
 
 let buttonSubmitCreaGrupo = $("<button></button>").addClass("btn btn-danger btn-block mt-4");
-buttonSubmitCreaGrupo.attr("type","submit");
+buttonSubmitCreaGrupo.attr("type", "submit");
 buttonSubmitCreaGrupo.text("Crear Grupo");
 formCreaGrupo.append(buttonSubmitCreaGrupo);
 
 contenedorAgregarGrupo.append(formCreaGrupo);
 
 const mensajeSistema = (mensaje, id, esGrupo) => {
-  
+
     let input = $("<input>");
     input.val(mensaje);
 
-    let ulJS = document.getElementById("contact_messaging"+id);
+    let ulJS = document.getElementById("contact_messaging" + id);
     let ul = $(ulJS);
 
-    let previewJS = document.getElementById("preview_"+id);
+    let previewJS = document.getElementById("preview_" + id);
     let preview = $(previewJS);
 
-    let messagesJS = document.getElementById("messages_"+id);
+    let messagesJS = document.getElementById("messages_" + id);
     let messages = $(messagesJS);
 
-    let user = {"id360":id, "mensajeSistema":true};
-    
-    if(esGrupo){
+    let user = {"id360": id, "mensajeSistema": true};
+
+    if (esGrupo) {
         user.idGroup = id;
-    };
+    }
+    ;
 
     let rutaAdjunto = null;
 
     console.log("A enviar mensaje del sistema");
     send_chat_messages(input, ul, preview, user, messages, rutaAdjunto);
-  
+
 };
 
 const despliegaMensajeSistema = (mensaje, idChat, fecha, hora, viejo) => {
-  
-  if($("#contact_messaging" + idChat).length){
-    let li = $("<li></li>").addClass("mensajeSistema");
-    li.text(mensaje + " - ");
-    if( fecha !== undefined && hora !== undefined ){
-      let smallFecha = $("<small></small>");
-      let fechaMoment = moment(fecha + " " + hora);
-      smallFecha.text(fechaMoment.format("DD/MMM/YY hh:mm A"));
-      li.append(smallFecha);
+
+    if ($("#contact_messaging" + idChat).length) {
+        let li = $("<li></li>").addClass("mensajeSistema");
+        li.text(mensaje + " - ");
+        if (fecha !== undefined && hora !== undefined) {
+            let smallFecha = $("<small></small>");
+            let fechaMoment = moment(fecha + " " + hora);
+            smallFecha.text(fechaMoment.format("DD/MMM/YY hh:mm A"));
+            li.append(smallFecha);
+        }
+        if (viejo)
+            $("#contact_messaging" + idChat).prepend(li);
+        else {
+            $("#contact_messaging" + idChat).append(li);
+            $("#preview_" + idChat).text(mensaje);
+        }
     }
-    if(viejo)
-        $("#contact_messaging" + idChat).prepend(li);
-    else{
-        $("#contact_messaging" + idChat).append(li);
-        $("#preview_" + idChat).text(mensaje);
-    }
-  }
-    
+
 };
 
 const nuevoMensaje = () => {
@@ -1277,28 +1280,28 @@ const nuevoMensaje = () => {
 };
 
 const nuevoGrupo = () => {
-    
+
     Swal.fire({
         html: contenedorAgregarGrupo,
         showCancelButton: true,
         showConfirmButton: false,
         cancelButtonText: 'Cancelar',
         allowOutsideClick: false,
-        allowEscapeKey : false
+        allowEscapeKey: false
     });
-    
+
     vuewModalParticipantesGrupo("agregaParticipantesGrupo");
-    
-    $("#agregaParticipantesGrupo .multiselect__content-wrapper").css({"background-color":"#fff"});
-    
+
+    $("#agregaParticipantesGrupo .multiselect__content-wrapper").css({"background-color": "#fff"});
+
     $("#formCreaGrupo").submit((e) => {
-        
+
         e.preventDefault();
         let nombreGrupo = $("#inputNombreGrupo").val().trim();
         let descripcionGrupo = $("#inputDescripcionGrupo").val().trim();
-        
-        if( participantesParaGrupo.length ){
-            
+
+        if (participantesParaGrupo.length) {
+
             let dataGrupo = {
                 "idUser": sesion_cookie.idUsuario_Sys,
                 "nombre_grupo": nombreGrupo,
@@ -1308,17 +1311,17 @@ const nuevoGrupo = () => {
                 "hora": getHora(),
                 "participantes": participantesParaGrupo
             };
-            
+
             muestraSpin();
             RequestPOST("/API/empresas360/crear_grupo", dataGrupo).then((response) => {
-                
-                if(response.success){
-                    
+
+                if (response.success) {
+
                     let idGrupo = response.id_grupo;
-                    
+
                     Swal.close();
                     participantesParaGrupo.push(sesion_cookie.idUsuario_Sys);
-                    
+
                     let dataContac = {
                         "id360": idGrupo,
                         "nombre_grupo": nombreGrupo,
@@ -1328,55 +1331,55 @@ const nuevoGrupo = () => {
                     };
 
                     contacto_chat(dataContac, true);
-                    $("#profile_chat"+idGrupo).click();
-                    
+                    $("#profile_chat" + idGrupo).click();
+
                     let mensajeBienvenida = sesion_cookie.nombre + " " + sesion_cookie.apellidos + " ha creado este grupo";
                     console.log("Mensaje de Bienvenida");
                     console.log("Id del grupo: " + idGrupo);
                     console.log(mensajeBienvenida);
                     mensajeSistema(mensajeBienvenida, idGrupo, true);
-                    
+
                     ocultaSpin();
                     swal.fire({text: "Invitación enviada a los participantes"});
                 }
-                
+
             });
-            
-        }else{
-            
-            
-            
+
+        } else {
+
+
+
         }
-        
+
     });
-    
+
 };
 /*
  * FIN CREACION DE GRUPO
  */
 
-$("#nuevaConversacion").on('click', function(e) {
+$("#nuevaConversacion").on('click', function (e) {
 
     var myMenu = [{
-        icon: 'fa fa-user-plus',
-        label: 'Nuevo mensaje',
-        action: function(option, contextMenuIndex, optionIndex) {
-            nuevoMensaje();
-        },
-        submenu: null,
-        disabled: false 
-    },{
-        icon: 'fas fa-users',
-        label: 'Nuevo grupo',
-        action: function(option, contextMenuIndex, optionIndex) {
-            nuevoGrupo();
-        },
-        submenu: null,
-        disabled: false 
-    }];
+            icon: 'fa fa-user-plus',
+            label: 'Nuevo mensaje',
+            action: function (option, contextMenuIndex, optionIndex) {
+                nuevoMensaje();
+            },
+            submenu: null,
+            disabled: false
+        }, {
+            icon: 'fas fa-users',
+            label: 'Nuevo grupo',
+            action: function (option, contextMenuIndex, optionIndex) {
+                nuevoGrupo();
+            },
+            submenu: null,
+            disabled: false
+        }];
 
     superCm.createMenu(myMenu, e);
-    
+
 });
 
 const cerrarDestacados = () => {
@@ -1387,77 +1390,77 @@ const cerrarDestacados = () => {
 };
 
 const agregarItemMensajeDestacado = (mensaje, ul, alInicio) => {
-    
+
     let usuarioEnvia = {};
     let leyenda = "";
-    if(mensaje.id360 === sesion_cookie.idUsuario_Sys){
+    if (mensaje.id360 === sesion_cookie.idUsuario_Sys) {
         usuarioEnvia = {
             img: perfil.img,
-            id360 : sesion_cookie.idUsuario_Sys,
+            id360: sesion_cookie.idUsuario_Sys,
             apellido_paterno: sesion_cookie.apellido_p,
             apellido_materno: sesion_cookie.apellido_m,
             nombre: sesion_cookie.nombre
         };
         leyenda += "Tú > ";
-    }else{
+    } else {
         usuarioEnvia = buscaEnDirectorioCompleto(mensaje.id360);
         leyenda += usuarioEnvia.nombre + " " + usuarioEnvia.apellido_paterno + " " + usuarioEnvia.apellido_materno + " > ";
     }
-    
+
     let usuarioRecibe = {};
-    if(mensaje.to_id360 === sesion_cookie.idUsuario_Sys){
+    if (mensaje.to_id360 === sesion_cookie.idUsuario_Sys) {
         usuarioRecibe = {
             img: perfil.img,
-            id360 : sesion_cookie.idUsuario_Sys,
+            id360: sesion_cookie.idUsuario_Sys,
             apellido_paterno: sesion_cookie.apellido_p,
             apellido_materno: sesion_cookie.apellido_m,
             nombre: sesion_cookie.nombre
         };
         leyenda += "Tú";
-    }else{
+    } else {
         usuarioRecibe = buscaEnDirectorioCompleto(mensaje.to_id360);
         leyenda += usuarioRecibe.nombre + " " + usuarioRecibe.apellido_paterno + " " + usuarioRecibe.apellido_materno;
     }
-    
+
     let item = $("<li></li>").addClass("mensajeDestacado");
-    item.attr("id","itemMensajeDestacado" + mensaje.id);
+    item.attr("id", "itemMensajeDestacado" + mensaje.id);
     let contenedor = $("<div></div>").addClass("contenidoMensajeDestacado");
-    
+
     let cabecera = $("<div></div>").addClass("cabeceraDestacado");
-    
+
     let imgUsuario = $("<img>");
     imgUsuario.attr("src", usuarioEnvia.img);
-    
+
     let leyendaEnvio = $("<p></p>");
     leyendaEnvio.text(leyenda);
-    
+
     let fechaDestacado = $("<span></span>");
     fechaDestacado.text(mensaje.fechaDestacado + " >");
-    
+
     cabecera.append(imgUsuario);
     cabecera.append(leyendaEnvio);
     cabecera.append(fechaDestacado);
     contenedor.append(cabecera);
-    
+
     let contenedorMensaje = $("<div></div>").addClass("mensaje");
-    if(mensaje.id360 === sesion_cookie.idUsuario_Sys){
+    if (mensaje.id360 === sesion_cookie.idUsuario_Sys) {
         contenedorMensaje.addClass("mio");
     }
-    
-    if(mensaje.type === "text"){
+
+    if (mensaje.type === "text") {
         contenedorMensaje.text(mensaje.message);
-    }else{
-        
+    } else {
+
         let imgPreview = $("<img>");
         let extension = mensaje.type;
-        
+
         imgPreview.attr("src", PathRecursos + "images/icono_default.png");
         imgPreview.css({
             "max-height": "80px"
         });
 
         switch (extension) {
-            
+
             case "jpg":
             case "png":
             case "gif":
@@ -1497,43 +1500,44 @@ const agregarItemMensajeDestacado = (mensaje, ul, alInicio) => {
                 break;
 
         }
-        
+
         contenedorMensaje.append(imgPreview);
-        
+
         let partesPorDiagonal = mensaje.message.split("/");
         let nombreCorto = partesPorDiagonal[partesPorDiagonal.length - 1];
 
-        let nombreAdjunto = $("<p></p>").addClass("text-center");;
+        let nombreAdjunto = $("<p></p>").addClass("text-center");
+        ;
         nombreAdjunto.css({
-            "color":"black",
-            "word-break":"break-all"
+            "color": "black",
+            "word-break": "break-all"
         });
         nombreAdjunto.text(nombreCorto.replaceAll("%20", " ") + " ");
         contenedorMensaje.append(nombreAdjunto);
-        
+
         let pBotonera = $("<p></p>").addClass("text-center");
-        
+
         let botonDescargar = $("<a></a>").addClass("btn btn-sm btn-light mr-3");
         botonDescargar.attr("href", mensaje.message);
         botonDescargar.attr("download", nombreCorto);
         botonDescargar.attr("target", "_blank");
         botonDescargar.html('<i class="fas fa-download"></i>');
         pBotonera.append(botonDescargar);
-        
-        if(extension === "pdf"){
+
+        if (extension === "pdf") {
 
             let buttonVerPreview = $("<button></button>").addClass("btn btn-sm btn-light");
-            buttonVerPreview.attr("type","button");
+            buttonVerPreview.attr("type", "button");
             buttonVerPreview.append('<i class="far fa-eye"></i>');
 
             /* IFRAME */
             let iframePreviewPDF = $("<iframe></iframe>");
             iframePreviewPDF.css({
-                "height":"500px",
+                "height": "500px",
                 "width": "700px"
             });
-            iframePreviewPDF.attr("frameborder","0");
-            iframePreviewPDF.attr("src",mensaje.message);
+            iframePreviewPDF.attr("frameborder", "0");
+            iframePreviewPDF.attr("src", mensaje.message);
 
             buttonVerPreview.click(() => {
                 Swal.fire({
@@ -1547,78 +1551,78 @@ const agregarItemMensajeDestacado = (mensaje, ul, alInicio) => {
             pBotonera.append(buttonVerPreview);
 
         }
-        
+
         contenedorMensaje.append(nombreAdjunto);
         contenedorMensaje.append(pBotonera);
-        
+
     }
-    
+
     contenedor.append(contenedorMensaje);
-    
+
     item.append(contenedor);
-    
-    if(alInicio){
+
+    if (alInicio) {
         ul.prepend(item);
-    }else{
+    } else {
         ul.append(item);
     }
-    
+
     item.click(() => {
-        
+
         console.log(mensaje.id);
         console.log("To_id360: " + mensaje.to_id360);
         console.log("id360: " + mensaje.id360);
-        
+
         let id360Seguir = null;
-        if(mensaje.id360 === sesion_cookie.idUsuario_Sys){
+        if (mensaje.id360 === sesion_cookie.idUsuario_Sys) {
             id360Seguir = mensaje.to_id360;
-        }else{
-            if(mensaje.idGroup !== null){
+        } else {
+            if (mensaje.idGroup !== null) {
                 id360Seguir = mensaje.idGroup;
-            }else{
+            } else {
                 id360Seguir = mensaje.id360;
             }
         }
         console.log(id360Seguir);
-        
+
         const remarcaMensaje = (idMensaje) => {
             document.querySelector("#mensaje_" + idMensaje).scrollIntoView();
             document.querySelector("#mensaje_" + idMensaje).scrollIntoView();
             let resaltar = setInterval(() => {
-                $("#mensaje_"+ idMensaje).toggleClass("respondida");
+                $("#mensaje_" + idMensaje).toggleClass("respondida");
             }, 250);
 
             setTimeout(() => {
                 clearInterval(resaltar);
-                $("#mensaje_"+ idMensaje).removeClass("respondida");
+                $("#mensaje_" + idMensaje).removeClass("respondida");
             }, 2000);
         };
-        
+
         const iniciaBusqueda = () => {
             console.log($("#mensaje_" + mensaje.id).length);
-            if( $("#mensaje_" + mensaje.id).length ){
+            if ($("#mensaje_" + mensaje.id).length) {
 
                 remarcaMensaje(mensaje.id);
 
-            }else{
+            } else {
 
                 const buscaMensajeRespuesta = () => {
-                    if( $("#contact_messaging" + id360Seguir).find(".liMasMensajes").length ){
+                    if ($("#contact_messaging" + id360Seguir).find(".liMasMensajes").length) {
                         console.log("Voy a buscar mas mensajes " + id360Seguir);
                         let esGrupo = mensaje.idGroup !== undefined && mensaje.idGroup !== null ? true : false;
                         cargaMasMensajes(id360Seguir, esGrupo).then((response) => {
-                            if( $("#mensaje_" +mensaje.id).length ){
+                            if ($("#mensaje_" + mensaje.id).length) {
                                 remarcaMensaje(mensaje.id);
-                            }else if(response){
+                            } else if (response) {
                                 buscaMensajeRespuesta();
-                            }else{
+                            } else {
                                 NotificacionToas.fire({
                                     title: 'No se ha encontrado el mensaje'
                                 });
                             }
 
                         });
-                    }else{
+                    } else {
                         NotificacionToas.fire({
                             title: 'No se ha encontrado el mensaje'
                         });
@@ -1629,38 +1633,40 @@ const agregarItemMensajeDestacado = (mensaje, ul, alInicio) => {
 
             }
         };
-        
-        if( $("#contenedor_mensajes_" + id360Seguir).hasClass("d-none") ){
-            $("#profile_chat"+id360Seguir).click();
-            setTimeout(function(){ iniciaBusqueda(); }, 250);
-        }else{
+
+        if ($("#contenedor_mensajes_" + id360Seguir).hasClass("d-none")) {
+            $("#profile_chat" + id360Seguir).click();
+            setTimeout(function () {
+                iniciaBusqueda();
+            }, 250);
+        } else {
             iniciaBusqueda();
         }
-        
+
     });
-    
+
 };
 
 $("#verMensajesDestacados").click(() => {
-    
-    if( $("#panelMensajesDestacados").css("display") === "none" ){
+
+    if ($("#panelMensajesDestacados").css("display") === "none") {
         let dataVerDestacados = {
             "idUser": sesion_cookie.idUsuario_Sys
         };
 
-        RequestPOST( "/API/empresas360/consultar_mensajes_destacados", dataVerDestacados ).then((response) => {
+        RequestPOST("/API/empresas360/consultar_mensajes_destacados", dataVerDestacados).then((response) => {
 
             const panelMensajesDestacados = $("#panelMensajesDestacados");
 
             panelMensajesDestacados.find("p").remove();
             panelMensajesDestacados.find("ul").remove();
 
-            if(response.length){
+            if (response.length) {
 
                 let ulMensajes = $("<ul></ul>").addClass("listadoMensajesDestacados");
 
                 $.each(response, (index, mensaje) => {
-                    if(mensaje.idGroup !== null){
+                    if (mensaje.idGroup !== null) {
                         mensaje.to_id360 = mensaje.idGroup;
                     }
                     agregarItemMensajeDestacado(mensaje, ulMensajes, false);
@@ -1668,7 +1674,7 @@ $("#verMensajesDestacados").click(() => {
 
                 panelMensajesDestacados.append(ulMensajes);
 
-            }else{
+            } else {
                 panelMensajesDestacados.append("<p class='sinMensajesDestacados'>Sin mensajes destacados</p>");
             }
 
@@ -1678,141 +1684,141 @@ $("#verMensajesDestacados").click(() => {
             $("#panelMensajesDestacados").slideDown("slow");
         });
     }
-    
+
 });
 
 $("#btnCerrarMensajesDestacados").click(() => {
-    
+
     cerrarDestacados();
-    
+
 });
 
 $("#eliminarTodosLosMensajesDestacados").click(() => {
-    
+
     swalConfirmDialog(
             "¿Seguro deseas eliminar todos los mensajes destacados?",
             "Si, eliminar",
             "Mantener mensajes"
-    ).then((response) => {
-        if(response){
-            
+            ).then((response) => {
+        if (response) {
+
             console.log("Eliminando mensajes destacados");
-            
+
         }
     });
-    
+
 });
 
 let contenedorNuevosParticipantes = $("<div></div>");
 
 let formNuevosParticipantes = $("<form></form>");
-formNuevosParticipantes.attr("id","formAgregaParticipantesGrupo");
-formNuevosParticipantes.attr("autocomplete","off");
+formNuevosParticipantes.attr("id", "formAgregaParticipantesGrupo");
+formNuevosParticipantes.attr("autocomplete", "off");
 
 let formGroupNuevosParticipantes = $("<div></div>").addClass("form-group");
 let labelNuevosParticipantes = $("<label></label>");
 labelNuevosParticipantes.text("Participantes");
 let selectNuevosParticipantes = '<div class="col-12" id="agregarNuevosParticipantes">' +
-                                    '<multiselect ' +
-                                    'placeholder=""' +
-                                    'v-model="value" ' +
-                                    ':options="options"' +
-                                    'track-by="id360"' +
-                                    ':multiple="true"' +
-                                    ':taggable="false"' +
-                                    ':close-on-select="false"' +
-                                    ':custom-label="customLabel" ' +
-                                    ':select-label="\'Seleccionar\'" ' +
-                                    ':selected-Label="\'Seleccionado\'"' +
-                                    ':deselect-Label="\'Remover\'"' +
-                                    ':hide-selected="true"' +
-                                    '@select="onSelect"' +
-                                    '@Close="onClose"' +
-                                    '@Remove="onRemove">' +
-                                    '</multiselect>' +
-                                    '<pre class="language-json" style="display:none"><code>{{ value  }}</code></pre>' +
-                                '</div>';
+        '<multiselect ' +
+        'placeholder=""' +
+        'v-model="value" ' +
+        ':options="options"' +
+        'track-by="id360"' +
+        ':multiple="true"' +
+        ':taggable="false"' +
+        ':close-on-select="false"' +
+        ':custom-label="customLabel" ' +
+        ':select-label="\'Seleccionar\'" ' +
+        ':selected-Label="\'Seleccionado\'"' +
+        ':deselect-Label="\'Remover\'"' +
+        ':hide-selected="true"' +
+        '@select="onSelect"' +
+        '@Close="onClose"' +
+        '@Remove="onRemove">' +
+        '</multiselect>' +
+        '<pre class="language-json" style="display:none"><code>{{ value  }}</code></pre>' +
+        '</div>';
 formGroupNuevosParticipantes.append(labelNuevosParticipantes);
 formGroupNuevosParticipantes.append(selectNuevosParticipantes);
 formNuevosParticipantes.append(formGroupNuevosParticipantes);
 
 let buttonSubmitNuevosParticipantes = $("<button></button>").addClass("btn btn-danger btn-block mt-4");
-buttonSubmitNuevosParticipantes.attr("type","submit");
+buttonSubmitNuevosParticipantes.attr("type", "submit");
 buttonSubmitNuevosParticipantes.text("Agregar participantes");
 formNuevosParticipantes.append(buttonSubmitNuevosParticipantes);
 
 contenedorNuevosParticipantes.append(formNuevosParticipantes);
 
 const agregarParticipanteGrupo = (id_grupo, participantes) => {
-    
+
     Swal.fire({
         html: contenedorNuevosParticipantes,
         showCancelButton: true,
         showConfirmButton: false,
         cancelButtonText: 'Cancelar',
         allowOutsideClick: false,
-        allowEscapeKey : false
+        allowEscapeKey: false
     });
-    
+
     vuewModalParticipantesGrupo("agregarNuevosParticipantes", participantes);
-    
-    $("#agregarNuevosParticipantes .multiselect__content-wrapper").css({"background-color":"#fff"});
-    
+
+    $("#agregarNuevosParticipantes .multiselect__content-wrapper").css({"background-color": "#fff"});
+
     $("#formAgregaParticipantesGrupo").submit((e) => {
-        
+
         e.preventDefault();
-        
-        if( participantesParaGrupo.length ){
-            
+
+        if (participantesParaGrupo.length) {
+
             let dataGrupo = {
                 "idGrupo": id_grupo,
                 "participantes": participantesParaGrupo
             };
-            
+
             muestraSpin();
             RequestPOST("/API/empresas360/agrega_participantes_grupo_chat_empresarial", dataGrupo).then((response) => {
-                
-                if(response.success){
-                    
+
+                if (response.success) {
+
                     let idGrupo = response.id_grupo;
-                    
+
                     Swal.close();
                     let msj = "Se agregó a ";
-                                        
-                    let cantidadParticipantes = participantesParaGrupo.length;                    
+
+                    let cantidadParticipantes = participantesParaGrupo.length;
                     $.each(participantesParaGrupo, (index, participante) => {
-                        
+
                         let userGrupo = buscaEnDirectorioCompleto(participante);
 
-                        if(userGrupo !== undefined){
-                            
+                        if (userGrupo !== undefined) {
+
                             let nombre_eliminado = buscaEnDirectorioCompleto(participante).nombre;
-                            if(index === 0){
+                            if (index === 0) {
                                 msj += nombre_eliminado;
-                            }else if(index === (cantidadParticipantes-2) ){
+                            } else if (index === (cantidadParticipantes - 2)) {
                                 msj += ", " + nombre_eliminado;
-                            }else{
+                            } else {
                                 msj += " y a " + nombre_eliminado;
                             }
 
                         }
-                        
+
                     });
-                    
+
                     msj += " al grupo";
                     mensajeSistema(msj, id_grupo, true);
-                    
+
                     participantesParaGrupo = [];
                     ocultaSpin();
                     swal.fire({text: "Invitación enviada a los participantes"});
                 }
-                
+
             });
-            
+
         }
-        
+
     });
-    
+
 };
 
 const eliminaParticipanteGrupo = (id_participante, id_grupo) => {
@@ -1821,25 +1827,25 @@ const eliminaParticipanteGrupo = (id_participante, id_grupo) => {
             "¿Seguro deseas eliminar este participante del grupo?",
             "Si, eliminar",
             "Mantener en el grupo"
-    ).then((response) => {
-        if(response){
-            
+            ).then((response) => {
+        if (response) {
+
             let data = {
                 idGroup: id_grupo,
                 id360: id_participante
             };
-            
+
             RequestPOST("/API/empresas360/elimina_participante_grupo", data).then((response) => {
-                if(response.success){
+                if (response.success) {
                     let nombre_eliminado = buscaEnDirectorioCompleto(id_participante).nombre;
                     let msj = "Se eliminó a " + nombre_eliminado + " del grupo";
                     mensajeSistema(msj, id_grupo, true);
                 }
             });
-            
+
         }
     });
-    
+
 };
 
 const hacerAdministrador = (id_participante, id_grupo) => {
@@ -1848,55 +1854,55 @@ const hacerAdministrador = (id_participante, id_grupo) => {
             "¿Dar permisos de administrador?",
             "Si, hacer administrador",
             "Cancelar"
-    ).then((response) => {
-        if(response){
-            
+            ).then((response) => {
+        if (response) {
+
             let data = {
                 idGroup: id_grupo,
                 id360: id_participante
             };
-            
+
             RequestPOST("/API/empresas360/agrega_administrador_grupo", data).then((response) => {
-                if(response.success){
+                if (response.success) {
                     let iconAdmin = $("<i></i>").addClass("mr-2");
                     iconAdmin.addClass("fas fa-user-shield");
                     let liParticipante = $("#" + id_grupo + "_" + id_participante);
-                    
+
                     liParticipante.off();
-                    liParticipante.on('contextmenu', function(e) {
+                    liParticipante.on('contextmenu', function (e) {
                         e.preventDefault();
 
                         var myMenu = [{
-                            icon: 'fa fa-trash',
-                            label: 'Eliminar participante',
-                            action: function(option, contextMenuIndex, optionIndex) {
-                                eliminaParticipanteGrupo(id_participante, id_grupo);
-                            },
-                            submenu: null,
-                            disabled: false 
-                        },{
-                            icon: 'fas fa-user-times',
-                            label: 'Descartar como administrador',
-                            action: function(option, contextMenuIndex, optionIndex) {
-                                quitarAdministrador(id_participante, id_grupo);
-                            },
-                            submenu: null,
-                            disabled: false 
-                        }];
+                                icon: 'fa fa-trash',
+                                label: 'Eliminar participante',
+                                action: function (option, contextMenuIndex, optionIndex) {
+                                    eliminaParticipanteGrupo(id_participante, id_grupo);
+                                },
+                                submenu: null,
+                                disabled: false
+                            }, {
+                                icon: 'fas fa-user-times',
+                                label: 'Descartar como administrador',
+                                action: function (option, contextMenuIndex, optionIndex) {
+                                    quitarAdministrador(id_participante, id_grupo);
+                                },
+                                submenu: null,
+                                disabled: false
+                            }];
 
                         superCm.createMenu(myMenu, e);
                     });
-                    
+
                     liParticipante.find("span").prepend(iconAdmin);
                     let nombre_eliminado = buscaEnDirectorioCompleto(id_participante).nombre;
                     let msj = "Se designó a " + nombre_eliminado + " como administrador";
                     mensajeSistema(msj, id_grupo, true);
                 }
             });
-            
+
         }
     });
-    
+
 };
 
 const quitarAdministrador = (id_participante, id_grupo) => {
@@ -1905,55 +1911,55 @@ const quitarAdministrador = (id_participante, id_grupo) => {
             "¿Quitar permisos de administrador?",
             "Si, quitar administrador",
             "Cancelar"
-    ).then((response) => {
-        if(response){
-            
+            ).then((response) => {
+        if (response) {
+
             let data = {
                 idGroup: id_grupo,
                 id360: id_participante
             };
-            
+
             RequestPOST("/API/empresas360/elimina_administrador_grupo", data).then((response) => {
-                if(response.success){
+                if (response.success) {
                     let iconAdmin = $("<i></i>").addClass("mr-2");
                     iconAdmin.addClass("fas fa-user-shield");
                     let liParticipante = $("#" + id_grupo + "_" + id_participante);
-                    
+
                     liParticipante.off();
-                    liParticipante.on('contextmenu', function(e) {
+                    liParticipante.on('contextmenu', function (e) {
                         e.preventDefault();
 
                         var myMenu = [{
-                            icon: 'fa fa-trash',
-                            label: 'Eliminar participante',
-                            action: function(option, contextMenuIndex, optionIndex) {
-                                eliminaParticipanteGrupo(id_participante, id_grupo);
-                            },
-                            submenu: null,
-                            disabled: false 
-                        },{
-                            icon: 'fas fa-user-times',
-                            label: 'Designar como administrador',
-                            action: function(option, contextMenuIndex, optionIndex) {
-                                hacerAdministrador(id_participante, id_grupo);
-                            },
-                            submenu: null,
-                            disabled: false 
-                        }];
+                                icon: 'fa fa-trash',
+                                label: 'Eliminar participante',
+                                action: function (option, contextMenuIndex, optionIndex) {
+                                    eliminaParticipanteGrupo(id_participante, id_grupo);
+                                },
+                                submenu: null,
+                                disabled: false
+                            }, {
+                                icon: 'fas fa-user-times',
+                                label: 'Designar como administrador',
+                                action: function (option, contextMenuIndex, optionIndex) {
+                                    hacerAdministrador(id_participante, id_grupo);
+                                },
+                                submenu: null,
+                                disabled: false
+                            }];
 
                         superCm.createMenu(myMenu, e);
                     });
-                    
+
                     liParticipante.find("span").find("svg").remove();
                     let nombre_eliminado = buscaEnDirectorioCompleto(id_participante).nombre;
                     let msj = "Se denegó a " + nombre_eliminado + " como administrador";
                     mensajeSistema(msj, id_grupo, true);
                 }
             });
-            
+
         }
     });
-    
+
 };
 
 function agregar_chat_enviado(mensaje, viejo) {
@@ -1966,10 +1972,10 @@ function agregar_chat_enviado(mensaje, viejo) {
             }
         });
     } else {
-        if( mensaje.idGroup !== undefined && mensaje.idGroup !== null ){
+        if (mensaje.idGroup !== undefined && mensaje.idGroup !== null) {
             let user = sesion_cookie;
             agregar_chat(mensaje, user, "replies", viejo);
-        }else{
+        } else {
             let user = null;
             $.each(directorio_usuario, (i) => {
                 if (mensaje.to_id360 === directorio_usuario[i].id360) {
@@ -1984,31 +1990,31 @@ function agregar_chat_enviado(mensaje, viejo) {
 
 }
 function recibir_chat(mensaje, viejo, group, aumenta) {
-    
+
     const aumentaMensajeNoLeido = () => {
         /*
          * desplegar mensaje no leido
          */
-        if(mensaje.id360 !== sesion_cookie.idUsuario_Sys){
-            
+        if (mensaje.id360 !== sesion_cookie.idUsuario_Sys) {
+
             let idParaAumentar = null;
-            if(mensaje.idGroup !== undefined && mensaje.idGroup !== null && mensaje.idGroup !== ""){
+            if (mensaje.idGroup !== undefined && mensaje.idGroup !== null && mensaje.idGroup !== "") {
                 idParaAumentar = mensaje.idGroup;
-            }else{
+            } else {
                 idParaAumentar = mensaje.id360;
             }
-            
+
             let contenedorMensajesNoLeidos = $("#mensajesNoLeidos_" + idParaAumentar);
             if (CantidadMensajesPorChat[idParaAumentar] !== undefined) {
-                if(CantidadMensajesPorChat[idParaAumentar].cantidadMensajesNoLeidos <= 0){
+                if (CantidadMensajesPorChat[idParaAumentar].cantidadMensajesNoLeidos <= 0) {
                     contenedorMensajesNoLeidos.removeClass("d-none");
                 }
                 CantidadMensajesPorChat[idParaAumentar].cantidadMensajesNoLeidos++;
                 CantidadMensajesPorChat[idParaAumentar].mensajesNoLeidos.push(mensaje.id);
                 contenedorMensajesNoLeidos.find("span.cantidadMensajesNoLeidos").text(CantidadMensajesPorChat[idParaAumentar].cantidadMensajesNoLeidos);
-                
+
                 let divMensajesNoLeidosPadre = $("#contenedor_mensajes_" + idParaAumentar);
-                if( !divMensajesNoLeidosPadre.hasClass("d-none") ){
+                if (!divMensajesNoLeidosPadre.hasClass("d-none")) {
                     $("#mensajesNoLeidos_" + idParaAumentar).addClass("d-none");
                     CantidadMensajesPorChat[idParaAumentar].cantidadMensajesNoLeidos = 0;
                     let chats = {
@@ -2016,10 +2022,12 @@ function recibir_chat(mensaje, viejo, group, aumenta) {
                     };
                     CantidadMensajesPorChat[idParaAumentar].mensajesNoLeidos = [];
 
-                    RequestPOST("/API/empresas360/marcar_chats_leidos", chats).then((response) => {});
-                }else console.log("Fuera de la conversacion");
-                
-            }else{
+                    RequestPOST("/API/empresas360/marcar_chats_leidos", chats).then((response) => {
+                    });
+                } else
+                    console.log("Fuera de la conversacion");
+
+            } else {
                 //Crear el componente
                 CantidadMensajesPorChat[idParaAumentar] = {
                     cantidad: 1,
@@ -2028,8 +2036,8 @@ function recibir_chat(mensaje, viejo, group, aumenta) {
                 };
                 contenedorMensajesNoLeidos.find("span.cantidadMensajesNoLeidos").text("1");
                 contenedorMensajesNoLeidos.removeClass("d-none");
-                
-                if( !divMensajesNoLeidosPadre.hasClass("d-none") ){
+
+                if (!divMensajesNoLeidosPadre.hasClass("d-none")) {
                     console.log("Dentro de la conversacion");
                     $("#mensajesNoLeidos_" + idParaAumentar).addClass("d-none");
                     CantidadMensajesPorChat[idParaAumentar].cantidadMensajesNoLeidos = 0;
@@ -2038,18 +2046,21 @@ function recibir_chat(mensaje, viejo, group, aumenta) {
                     };
                     CantidadMensajesPorChat[idParaAumentar].mensajesNoLeidos = [];
 
-                    RequestPOST("/API/empresas360/marcar_chats_leidos", chats).then((response) => {});
-                }else console.log("Fuera de la conversacion");
-                
+                    RequestPOST("/API/empresas360/marcar_chats_leidos", chats).then((response) => {
+                    });
+                } else
+                    console.log("Fuera de la conversacion");
+
             }
-        }else console.log("Es un mensaje mio, asi que no aumento");
+        } else
+            console.log("Es un mensaje mio, asi que no aumento");
     };
-    
+
     if (!$("#profile_chat" + mensaje.id360).length) {
-        if( mensaje.idGroup !== undefined && mensaje.idGroup !== null ){
+        if (mensaje.idGroup !== undefined && mensaje.idGroup !== null) {
             if (!$("#profile_chat" + mensaje.to_id360).length) {
                 console.log("Tampoco existe el componente del grupo");
-            }else{
+            } else {
                 let user = null;
                 $.each(directorio_usuario, (i) => {
                     if (mensaje.id360 === directorio_usuario[i].id360) {
@@ -2075,15 +2086,17 @@ function recibir_chat(mensaje, viejo, group, aumenta) {
                     }
 
                     agregar_chat(mensaje, user, "send", viejo);
-                    if(aumenta) aumentaMensajeNoLeido();
-                }else console.log( "No encontre al usuario" );
+                    if (aumenta)
+                        aumentaMensajeNoLeido();
+                } else
+                    console.log("No encontre al usuario");
             }
-        }else{
-            if(group){
-                RequestPOST("/API/empresas360/infoGrupo", {"id_grupo":mensaje.idGroup}).then((response) => {
+        } else {
+            if (group) {
+                RequestPOST("/API/empresas360/infoGrupo", {"id_grupo": mensaje.idGroup}).then((response) => {
                     console.log(response);
                 });
-            }else{
+            } else {
                 console.log("****************************************");
                 console.log("No existe el usuario");
                 console.log("****************************************");
@@ -2091,15 +2104,16 @@ function recibir_chat(mensaje, viejo, group, aumenta) {
                     if (response.success) {
                         contacto_chat(response);
                         directorio_usuario.push(response);
-                        
+
                         CantidadMensajesPorChat[mensaje.id360] = {
                             cantidad: 1,
                             cantidadMensajesNoLeidos: 1,
                             mensajesNoLeidos: [mensaje.id]
                         };
-            
+
                         agregar_chat(mensaje, response, "send", viejo);
-                        if(aumenta) aumentaMensajeNoLeido();
+                        if (aumenta)
+                            aumentaMensajeNoLeido();
                     }
                 });
             }
@@ -2130,8 +2144,10 @@ function recibir_chat(mensaje, viejo, group, aumenta) {
             }
 
             agregar_chat(mensaje, user, "send", viejo);
-            if(aumenta) aumentaMensajeNoLeido();
-        }else console.log( "No encontre al usuario" );
+            if (aumenta)
+                aumentaMensajeNoLeido();
+        } else
+            console.log("No encontre al usuario");
     }
 
 }
@@ -2163,7 +2179,7 @@ function notificacion_mensaje(title, body, onclick) {
 }
 
 vuewModalReenviaMensaje = () => {
-  
+
     usuariosReenviaMensaje = new Array();
     var json = directorio_usuario;
     vue = new Vue({
@@ -2198,45 +2214,45 @@ vuewModalReenviaMensaje = () => {
 
         }
     }).$mount('#usuariosReenviaMensaje');
-    
+
 };
 
 const reenviaMensaje = (mensaje, type) => {
     let contenedorReenviaMensaje = $("<div></div>");
 
     let formReenviaMensaje = $("<form></form>");
-    formReenviaMensaje.attr("id","formReenviaMensaje");
-    formReenviaMensaje.attr("autocomplete","off");
+    formReenviaMensaje.attr("id", "formReenviaMensaje");
+    formReenviaMensaje.attr("autocomplete", "off");
 
     let formGroupReenviaMensaje = $("<div></div>").addClass("form-group");
     let labelUsuariosReenvia = $("<label></label>");
     labelUsuariosReenvia.text("Reenviar a:");
     let selectUsuariosReenvia = '<div class="col-12" id="usuariosReenviaMensaje">' +
-                                        '<multiselect ' +
-                                        'placeholder=""' +
-                                        'v-model="value" ' +
-                                        ':options="options"' +
-                                        'track-by="id360"' +
-                                        ':multiple="true"' +
-                                        ':taggable="false"' +
-                                        ':close-on-select="false"' +
-                                        ':custom-label="customLabel" ' +
-                                        ':select-label="\'Seleccionar\'" ' +
-                                        ':selected-Label="\'Seleccionado\'"' +
-                                        ':deselect-Label="\'Remover\'"' +
-                                        ':hide-selected="true"' +
-                                        '@select="onSelect"' +
-                                        '@Close="onClose"' +
-                                        '@Remove="onRemove">' +
-                                        '</multiselect>' +
-                                        '<pre class="language-json" style="display:none"><code>{{ value  }}</code></pre>' +
-                                    '</div>';
+            '<multiselect ' +
+            'placeholder=""' +
+            'v-model="value" ' +
+            ':options="options"' +
+            'track-by="id360"' +
+            ':multiple="true"' +
+            ':taggable="false"' +
+            ':close-on-select="false"' +
+            ':custom-label="customLabel" ' +
+            ':select-label="\'Seleccionar\'" ' +
+            ':selected-Label="\'Seleccionado\'"' +
+            ':deselect-Label="\'Remover\'"' +
+            ':hide-selected="true"' +
+            '@select="onSelect"' +
+            '@Close="onClose"' +
+            '@Remove="onRemove">' +
+            '</multiselect>' +
+            '<pre class="language-json" style="display:none"><code>{{ value  }}</code></pre>' +
+            '</div>';
     formGroupReenviaMensaje.append(labelUsuariosReenvia);
     formGroupReenviaMensaje.append(selectUsuariosReenvia);
     formReenviaMensaje.append(formGroupReenviaMensaje);
 
     let buttonSubmitReenviaMensaje = $("<button></button>").addClass("btn btn-danger btn-block mt-4");
-    buttonSubmitReenviaMensaje.attr("type","submit");
+    buttonSubmitReenviaMensaje.attr("type", "submit");
     buttonSubmitReenviaMensaje.text("Reenviar mensaje");
     formReenviaMensaje.append(buttonSubmitReenviaMensaje);
 
@@ -2248,7 +2264,7 @@ const reenviaMensaje = (mensaje, type) => {
         showConfirmButton: false,
         cancelButtonText: 'Cancelar',
         allowOutsideClick: false,
-        allowEscapeKey : false
+        allowEscapeKey: false
     }).then((result) => {
         if (!result.value) {
             apagaValores();
@@ -2257,16 +2273,16 @@ const reenviaMensaje = (mensaje, type) => {
 
     vuewModalReenviaMensaje();
 
-    $("#usuariosReenviaMensaje .multiselect__content-wrapper").css({"background-color":"#fff"});
+    $("#usuariosReenviaMensaje .multiselect__content-wrapper").css({"background-color": "#fff"});
 
     $("#formReenviaMensaje").submit((e) => {
 
         e.preventDefault();
-console.log(usuariosReenviaMensaje);
-        if( usuariosReenviaMensaje.length ){
-            
+        console.log(usuariosReenviaMensaje);
+        if (usuariosReenviaMensaje.length) {
+
             Swal.close();
-            
+
             const buscaYreenvia = (id) => {
                 console.log("****************************************");
                 console.log("No existe el usuario");
@@ -2278,30 +2294,31 @@ console.log(usuariosReenviaMensaje);
                     }
                 });
             };
-            
+
             const enviaElMensaje = (id) => {
                 let input = $("<input>");
                 input.val(mensaje);
 
-                let ulJS = document.getElementById("contact_messaging"+id);
+                let ulJS = document.getElementById("contact_messaging" + id);
                 let ul = $(ulJS);
 
-                let previewJS = document.getElementById("preview_"+id);
+                let previewJS = document.getElementById("preview_" + id);
                 let preview = $(previewJS);
 
-                let messagesJS = document.getElementById("messages_"+id);
+                let messagesJS = document.getElementById("messages_" + id);
                 let messages = $(messagesJS);
 
-                let user = {"id360":id};
+                let user = {"id360": id};
 
                 let rutaAdjunto = null;
-                if(type !== "text") rutaAdjunto = mensaje;
+                if (type !== "text")
+                    rutaAdjunto = mensaje;
 
                 send_chat_messages(input, ul, preview, user, messages, rutaAdjunto);
             };
 
             let cantidadU = usuariosReenviaMensaje.length;
-            for( let x = 0; x<cantidadU; x++ ){
+            for (let x = 0; x < cantidadU; x++) {
                 let id = usuariosReenviaMensaje[x];
                 console.log(id);
                 if (!$("#profile_chat" + id).length) {
@@ -2309,7 +2326,7 @@ console.log(usuariosReenviaMensaje);
                 } else {
                     enviaElMensaje(id);
                 }
-                
+
             }
 
         }
@@ -2327,35 +2344,35 @@ const apagaValores = () => {
 };
 
 const mensajeViejo = (viejo, nuevo) => {
-    
+
     let div = $("<div></div>");
-    
+
     let formGroupViejo = $("<div></div>").addClass("form-group");
     let labelViejo = $("<label></label>");
     labelViejo.text("Mensaje Anterior");
     let inputViejo = $("<textarea>").addClass("form-control");
-    inputViejo.attr("disabled","true");
+    inputViejo.attr("disabled", "true");
     inputViejo.val(viejo);
     formGroupViejo.append(labelViejo);
     formGroupViejo.append(inputViejo);
-    
+
     let formGroupNuevo = $("<div></div>").addClass("form-group");
     let labelNuevo = $("<label></label>");
     labelNuevo.text("Mensaje Actual");
     let inputNuevo = $("<textarea>").addClass("form-control");
-    inputNuevo.attr("disabled","true");
+    inputNuevo.attr("disabled", "true");
     inputNuevo.val(nuevo);
     formGroupNuevo.append(labelNuevo);
     formGroupNuevo.append(inputNuevo);
-    
+
     div.append(formGroupViejo);
     div.append(formGroupNuevo);
-    
+
     Swal.fire({
         html: div,
         showConfirmButton: false
     });
-    
+
 };
 
 const verificaLinks = (mensaje) => {
@@ -2364,9 +2381,9 @@ const verificaLinks = (mensaje) => {
     $.each(partesMensaje, (index, parte) => {
 
         if (parte.slice(0, 7) === "http://" || parte.slice(0, 8) === "https://" || parte.slice(0, 4) === "www.") {
-            if(parte.slice(0, 4) === "www."){
+            if (parte.slice(0, 4) === "www.") {
                 cadenaConLinks += "<a style='color: currentColor; text-decoration: underline;' href='http://" + parte + "' target='_blank'>" + parte + "</a> ";
-            }else{
+            } else {
                 cadenaConLinks += "<a style='color: currentColor; text-decoration: underline;' href='" + parte + "' target='_blank'>" + parte + "</a> ";
             }
         } else {
@@ -2400,15 +2417,15 @@ function agregar_chat(msj, user, type, viejo) {
             });
         }
         let message = $("<p></p>");
-        
+
         let id = null;
-        if( msj.idGroup !== undefined && msj.idGroup !== null ){
+        if (msj.idGroup !== undefined && msj.idGroup !== null) {
             id = msj.idGroup;
-        }else{
+        } else {
             id = type === "replies" ? msj.to_id360 : msj.id360;
         }
         let previewMesagge;
-        
+
         if (msj.activo === "0") {
 
             message.empty();
@@ -2433,22 +2450,22 @@ function agregar_chat(msj, user, type, viejo) {
             li.append(message);
 
         } else {
-            
+
             message.html(verificaLinks(mensaje));
             message.css({
                 "word-break": "break-all"
             });
-            
-            if( msj.idGroup !== undefined && msj.idGroup !== null && type === "send" ){
+
+            if (msj.idGroup !== undefined && msj.idGroup !== null && type === "send") {
                 let iNombreUsuario = $("<i></i>").addClass("nombreUsuarioGrupo");
                 let nU = user.nombre;
-                if(user.apellido_paterno !== undefined && user.apellido_paterno !== null){
+                if (user.apellido_paterno !== undefined && user.apellido_paterno !== null) {
                     nU += user.apellido_paterno;
                 }
-                if(user.apellido_materno !== undefined && user.apellido_materno !== null){
+                if (user.apellido_materno !== undefined && user.apellido_materno !== null) {
                     nU += user.apellido_materno;
                 }
-                iNombreUsuario.text( nU );
+                iNombreUsuario.text(nU);
                 iNombreUsuario.click(() => {
                     $("#profile_chat" + user.id360).click();
                 });
@@ -2465,7 +2482,7 @@ function agregar_chat(msj, user, type, viejo) {
             let fechaMoment = moment(msj.fecha).format("DD-MM-YY");
             let partesHoraMensaje = msj.hora.split(":");
             let horaMoment = moment();
-            horaMoment.set("hour",partesHoraMensaje[0]);
+            horaMoment.set("hour", partesHoraMensaje[0]);
             horaMoment.set("minute", partesHoraMensaje[1]);
             horaMoment.set("second", partesHoraMensaje[2]);
 
@@ -2474,29 +2491,31 @@ function agregar_chat(msj, user, type, viejo) {
             let spanEdit = $("<span></span>");
             let iconEdit = $("<li></li>").addClass("fas fa-edit");
             spanEdit.append(iconEdit);
-            iconEdit.attr("id","historial_ediciones_" + msj.id);
-            
+            iconEdit.attr("id", "historial_ediciones_" + msj.id);
+
             if (type === "replies") {
                 fecha.append(iconClock);
-                if(msj.time_updated !== null && msj.time_updated !== undefined) fecha.append(spanEdit);
+                if (msj.time_updated !== null && msj.time_updated !== undefined)
+                    fecha.append(spanEdit);
                 iconClock.addClass("ml-2");
                 iconEdit.addClass("ml-2");
             } else {
                 fecha.prepend(iconClock);
-                if(msj.time_updated !== null && msj.time_updated !== undefined) fecha.prepend(spanEdit);
+                if (msj.time_updated !== null && msj.time_updated !== undefined)
+                    fecha.prepend(spanEdit);
                 iconClock.addClass("mr-2");
                 iconEdit.addClass("mr-2");
             }
-            
+
             iconEdit.css({
-                "cursor":"pointer"
+                "cursor": "pointer"
             });
 
             message.append(fecha);
 
             li.append(img_message);
             li.append(message);
-            
+
             spanEdit.click(() => {
                 mensajeViejo(msj.oldMessage, mensaje);
             });
@@ -2577,19 +2596,19 @@ function agregar_chat(msj, user, type, viejo) {
                 message.empty().append(imagenPreview);
                 message.append(saltoLinea);
                 if (!(extension === "jpg" || extension === "png" || extension === "jpeg" || extension === "gif")) {
-                    if(extension === "pdf"){
-                        
+                    if (extension === "pdf") {
+
                         imagenPreview.css({"cursor": "pointer"});
-                        
+
                         /* IFRAME */
                         let iframePreviewPDF = $("<iframe></iframe>");
                         iframePreviewPDF.css({
-                            "height":"500px",
+                            "height": "500px",
                             "width": "700px"
                         });
-                        iframePreviewPDF.attr("frameborder","0");
-                        iframePreviewPDF.attr("src",mensaje);
-                        
+                        iframePreviewPDF.attr("frameborder", "0");
+                        iframePreviewPDF.attr("src", mensaje);
+
                         imagenPreview.click(() => {
                             Swal.fire({
                                 width: 800,
@@ -2598,21 +2617,21 @@ function agregar_chat(msj, user, type, viejo) {
                                 html: iframePreviewPDF
                             });
                         });
-                        
+
                     }
-                    
+
                     message.append(nombreAdjunto);
-                    
+
                 } else {
-                    imagenPreview.css({"cursor": "pointer", "max-width": "250px","max-height":"250px"});
-                    
+                    imagenPreview.css({"cursor": "pointer", "max-width": "250px", "max-height": "250px"});
+
                     let imagenPreviewCopy = $("<img>");
                     imagenPreviewCopy.attr("src", mensaje);
                     imagenPreviewCopy.css({
                         "max-width": "650px",
-                        "max-height":"650px"
+                        "max-height": "650px"
                     });
-                    
+
                     imagenPreview.click(() => {
                         Swal.fire({
                             width: 700,
@@ -2624,15 +2643,15 @@ function agregar_chat(msj, user, type, viejo) {
                 }
                 message.append(fecha);
             }
-            
-            if(msj.destacado === "1"){
+
+            if (msj.destacado === "1") {
                 let iconoDestacado = $("<span></span>").addClass("iconoDestacado");
                 iconoDestacado.append('<i class="fas fa-star"></i>');
                 message.append(iconoDestacado);
             }
 
             //ICONO MENU DE OPCION PARA EL MENSAJE
-            
+
             let iconOpciones = $("<span></span>").addClass("iconOpciones");
             let iconDespliegaMenu = $('<i class="fas fa-chevron-down"></i>');
             iconOpciones.append(iconDespliegaMenu);
@@ -2650,16 +2669,16 @@ function agregar_chat(msj, user, type, viejo) {
 
                         let services;
 
-                        if(tipo === 0){
+                        if (tipo === 0) {
                             services = "/API/empresas360/eliminaMensaje";
                             dataMensaje.id360 = sesion_cookie.idUsuario_Sys;
                             dataMensaje.to_id360 = user.id360;
-                            
-                            if(msj.idGroup !== undefined && msj.idGroup !== null && msj.idGroup !== ""){
+
+                            if (msj.idGroup !== undefined && msj.idGroup !== null && msj.idGroup !== "") {
                                 dataMensaje.esGrupo = true;
                             }
-                            
-                        }else{
+
+                        } else {
                             services = "/API/empresas360/eliminaMensajeParaMi";
                             dataMensaje.idUser = sesion_cookie.idUsuario_Sys;
                         }
@@ -2683,45 +2702,45 @@ function agregar_chat(msj, user, type, viejo) {
                 banderaRespondiendo = true;
                 idMensajeRespondiendo = msj.id;
             };
-            
+
             let myMenu = [{
-                icon: 'fas fa-trash-alt',
-                label: 'Eliminar mensaje para mi',
-                action: function(option, contextMenuIndex, optionIndex) {
-                    eliminaMensaje(1);
-                },
-                submenu: null,
-                disabled: false 
-            }];
-        
+                    icon: 'fas fa-trash-alt',
+                    label: 'Eliminar mensaje para mi',
+                    action: function (option, contextMenuIndex, optionIndex) {
+                        eliminaMensaje(1);
+                    },
+                    submenu: null,
+                    disabled: false
+                }];
+
             if (type === "replies") {
-                
+
                 myMenu.push({
                     icon: 'fas fa-trash',
                     label: 'Eliminar mensaje para todos',
-                    action: function(option, contextMenuIndex, optionIndex) {
+                    action: function (option, contextMenuIndex, optionIndex) {
                         eliminaMensaje(0);
                     },
                     submenu: null,
-                    disabled: false 
+                    disabled: false
                 });
-                
+
                 if (msj.type === "text") {
-                    
+
                     myMenu.push({
                         icon: 'fas fa-edit',
                         label: 'Editar mensaje',
-                        action: function(option, contextMenuIndex, optionIndex) {
-                            
+                        action: function (option, contextMenuIndex, optionIndex) {
+
                             let idSeguir = null;
-                            if(msj.idGroup !== undefined && msj.idGroup !== null && msj.idGroup !== ""){
+                            if (msj.idGroup !== undefined && msj.idGroup !== null && msj.idGroup !== "") {
                                 idSeguir = msj.idGroup;
                                 banderaEditandoGrupo = true;
-                            }else{
+                            } else {
                                 idSeguir = user.id360;
                                 banderaEditandoGrupo = false;
                             }
-                            
+
                             let contenedorReenvia = $("#filaMensajesOperaciones_" + idSeguir);
                             contenedorReenvia.removeClass("d-none");
                             $("#accionMensajesOpciones_" + idSeguir).text("Editando");
@@ -2731,41 +2750,41 @@ function agregar_chat(msj, user, type, viejo) {
                             $("#accionMensajesOpciones_" + idSeguir).text("Editando");
                             banderaEditando = true;
                             idMensajeEditando = msj.id;
-                            
+
                         },
                         submenu: null,
-                        disabled: false 
+                        disabled: false
                     });
-                    
+
                 }
-                
+
             }
-            
+
             myMenu.push({
                 icon: 'fas fa-share-square',
                 label: 'Reenviar mensaje',
-                action: function(option, contextMenuIndex, optionIndex) {
+                action: function (option, contextMenuIndex, optionIndex) {
                     reenviaMensaje(mensaje, msj.type);
                 },
                 submenu: null,
-                disabled: false 
+                disabled: false
             });
-            
+
             myMenu.push({
                 icon: 'fas fa-reply',
                 label: 'Responder mensaje',
-                action: function(option, contextMenuIndex, optionIndex) {
+                action: function (option, contextMenuIndex, optionIndex) {
                     responderMensaje();
                 },
                 submenu: null,
-                disabled: false 
+                disabled: false
             });
-            
-            if(msj.destacado === "0"){
+
+            if (msj.destacado === "0") {
                 myMenu.push({
                     icon: 'fas fa-star',
                     label: 'Destacar mensaje',
-                    action: function(option, contextMenuIndex, optionIndex) {
+                    action: function (option, contextMenuIndex, optionIndex) {
 
                         let dataDestacar = {
                             "idUser": sesion_cookie.idUsuario_Sys,
@@ -2785,13 +2804,13 @@ function agregar_chat(msj, user, type, viejo) {
 
                     },
                     submenu: null,
-                    disabled: false 
+                    disabled: false
                 });
-            }else{
+            } else {
                 myMenu.push({
                     icon: 'fas fa-times',
                     label: 'No destacar mensaje',
-                    action: function(option, contextMenuIndex, optionIndex) {
+                    action: function (option, contextMenuIndex, optionIndex) {
 
                         let dataDestacar = {
                             "idUser": sesion_cookie.idUsuario_Sys,
@@ -2811,14 +2830,14 @@ function agregar_chat(msj, user, type, viejo) {
 
                     },
                     submenu: null,
-                    disabled: false 
+                    disabled: false
                 });
             }
 
             iconOpciones.click((e) => {
                 superCm.createMenu(myMenu, e);
             });
-            
+
             li.dblclick(() => {
                 responderMensaje();
             });
@@ -2828,64 +2847,64 @@ function agregar_chat(msj, user, type, viejo) {
             }).mouseleave(() => {
                 iconOpciones.css({"display": "none"});
             });
-            
-            if(msj.idResponse !== null && msj.idResponse !== undefined){
+
+            if (msj.idResponse !== null && msj.idResponse !== undefined) {
                 let mensajeRespuesta = msj.mensajeRespuesta === undefined ? msj.mensajeRespondido.message : msj.mensajeRespuesta;
                 let smallRespuesta = $("<small></small>").addClass("respuesta-mensaje");
                 smallRespuesta.text(mensajeRespuesta);
                 message.prepend(smallRespuesta);
 
                 smallRespuesta.click(() => {
-                    
+
                     const remarcaMensaje = (idMensaje) => {
                         document.querySelector("#mensaje_" + idMensaje).scrollIntoView();
                         let resaltar = setInterval(() => {
-                            $("#mensaje_"+ idMensaje).toggleClass("respondida");
+                            $("#mensaje_" + idMensaje).toggleClass("respondida");
                         }, 250);
 
                         setTimeout(() => {
                             clearInterval(resaltar);
-                            $("#mensaje_"+ idMensaje).removeClass("respondida");
+                            $("#mensaje_" + idMensaje).removeClass("respondida");
                         }, 2000);
                     };
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-                    if( $("#mensaje_" + msj.idResponse).length ){
-                        
+
+                    if ($("#mensaje_" + msj.idResponse).length) {
+
                         remarcaMensaje(msj.idResponse);
-                        
-                    }else{
-                        
+
+                    } else {
+
                         const buscaMensajeRespuesta = () => {
-                            
+
                             let idSeguir = user.id360;
-                            if(msj.idGroup !== undefined && msj.idGroup !== null && msj.idGroup !== "" ){
+                            if (msj.idGroup !== undefined && msj.idGroup !== null && msj.idGroup !== "") {
                                 idSeguir = msj.idGroup;
                             }
-                            
-                            if( $("#contact_messaging" + idSeguir).find(".liMasMensajes").length ){
+
+                            if ($("#contact_messaging" + idSeguir).find(".liMasMensajes").length) {
                                 console.log("Voy a buscar mas mensajes " + idSeguir);
                                 let esGrupo = msj.idGroup !== undefined && msj.idGroup !== null ? true : false;
                                 cargaMasMensajes(idSeguir, esGrupo).then((response) => {
-                                    if( $("#mensaje_" + msj.idResponse).length ){
+                                    if ($("#mensaje_" + msj.idResponse).length) {
                                         remarcaMensaje(msj.idResponse);
-                                    }else if(response){
+                                    } else if (response) {
                                         buscaMensajeRespuesta();
-                                    }else{
+                                    } else {
                                         NotificacionToas.fire({
                                             title: 'No se ha encontrado el mensaje'
                                         });
                                     }
-                                    
+
                                 });
-                            }else{
+                            } else {
                                 NotificacionToas.fire({
                                     title: 'No se ha encontrado el mensaje'
                                 });
                             }
                         };
-                        
+
                         buscaMensajeRespuesta();
-                        
+
                     }
 
                 });
@@ -3002,10 +3021,10 @@ RequestPOST("/API/ConsultarDirectorio", {
         let cantidadDirectorio = directorio.length;
 
         let fueraDeDirectorio = [];
-        let grupos = []; 
+        let grupos = [];
 
         $.each(response, (index, contacto) => {
-            
+
             let mensajesNoLeidos = contacto.mensajesNoLeidos !== null ? contacto.mensajesNoLeidos.split(",") : [];
             let esFavorito = contacto.esFavorito === "0" ? false : true;
 
@@ -3015,8 +3034,8 @@ RequestPOST("/API/ConsultarDirectorio", {
                 mensajesNoLeidos: mensajesNoLeidos,
                 esFavorito: esFavorito
             };
-            
-            if(contacto.esGrupo === null){
+
+            if (contacto.esGrupo === null) {
                 let encontrado = false;
                 for (let i = 0; i < cantidadDirectorio; i++)
                     if (directorio[i].id360 === contacto.id360chat) {
@@ -3027,7 +3046,7 @@ RequestPOST("/API/ConsultarDirectorio", {
 
                 if (!encontrado)
                     fueraDeDirectorio.push({"id360": contacto.id360chat});
-            }else{
+            } else {
                 grupos.push(contacto.id360chat);
             }
 
@@ -3038,12 +3057,12 @@ RequestPOST("/API/ConsultarDirectorio", {
                 id360: sesion_cookie.id_usuario
             }).then((response) => {
                 for (var i = 0; i < (response.length); i++) {
-                    if(response[i].idGroup !== null){
+                    if (response[i].idGroup !== null) {
                         response[i].to_id360 = response[i].idGroup;
                     }
-                    if( response[i].id360 === null ){
-                        despliegaMensajeSistema( response[i].message, response[i].to_id360, response[i].date_created, response[i].time_created, false);
-                    }else{
+                    if (response[i].id360 === null) {
+                        despliegaMensajeSistema(response[i].message, response[i].to_id360, response[i].date_created, response[i].time_created, false);
+                    } else {
                         if (response[i].id360 === sesion_cookie.id_usuario) {
                             agregar_chat_enviado(response[i], false);
                         } else {
@@ -3056,20 +3075,20 @@ RequestPOST("/API/ConsultarDirectorio", {
                 ocultaSpin();
             });
         };
-        
+
         const verificaGrupos = () => {
-            if(grupos.length > 0){
-                
-                RequestPOST("/API/empresas360/informacion_grupos", {"grupos":grupos, "idUser": sesion_cookie.idUsuario_Sys}).then((response) => {
-                    
+            if (grupos.length > 0) {
+
+                RequestPOST("/API/empresas360/informacion_grupos", {"grupos": grupos, "idUser": sesion_cookie.idUsuario_Sys}).then((response) => {
+
                     $.each(response, function (index, grupo) {
                         //directorio.push(empleado);
                         //directorio_usuario.push(empleado);
-                        
+
                         let participantesConGuion = grupo.participantes.split(",");
                         let participantes = [];
                         let csg = participantesConGuion.length;
-                        for(let x = 0; x<csg; x++){
+                        for (let x = 0; x < csg; x++) {
                             let partesParticipantes = participantesConGuion[x].split("-");
                             participantes.push(partesParticipantes[0]);
                         }
@@ -3081,7 +3100,7 @@ RequestPOST("/API/ConsultarDirectorio", {
                             "participantes": participantes.toString(),
                             "participantesRol": participantesConGuion
                         };
-                        
+
                         let paraDirectorio = {
                             "nombre": grupo.nombre_grupo,
                             "apellido_paterno": "",
@@ -3090,17 +3109,17 @@ RequestPOST("/API/ConsultarDirectorio", {
                             "id360": grupo.id_grupo
                         };
                         directorio_usuario.push(paraDirectorio);
-                        
-                        let estatusEnGrupo = grupo.estatusEnGrupo === "0" ? false: true;
-                        
+
+                        let estatusEnGrupo = grupo.estatusEnGrupo === "0" ? false : true;
+
                         contacto_chat(dataContac, true, estatusEnGrupo);
                     });
-                    
+
                     cargaBackUp();
-                    
+
                 });
-                
-            }else
+
+            } else
                 cargaBackUp();
         };
 
@@ -3128,7 +3147,7 @@ RequestPOST("/API/ConsultarDirectorio", {
 
 const cargaMasMensajes = (id360, esGrupo) => {
 
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         let init, limit;
 
         init = (CantidadMensajesPorChat[id360].cantidad - 20) < 0 ? 0 : CantidadMensajesPorChat[id360].cantidad - 20;
@@ -3140,8 +3159,9 @@ const cargaMasMensajes = (id360, esGrupo) => {
             "init": init,
             "limit": limit
         };
-        
-        if(esGrupo) dataMasMensajes.grupo = true;
+
+        if (esGrupo)
+            dataMasMensajes.grupo = true;
 
         RequestPOST("/API/empresas360/carga_mas_mensajes_chat", dataMasMensajes).then((response) => {
 
@@ -3154,12 +3174,12 @@ const cargaMasMensajes = (id360, esGrupo) => {
                 CantidadMensajesPorChat[id360].cantidad -= 20;
                 NotificacionesActivadas = false;
                 if (response.length === 1) {
-                    if(response[0].idGroup !== null){
+                    if (response[0].idGroup !== null) {
                         response[0].to_id360 = response[0].idGroup;
                     }
-                    if( response[0].id360 === null ){
-                        despliegaMensajeSistema( response[0].message, response[0].to_id360, response[0].date_created, response[0].time_created, true);
-                    }else{
+                    if (response[0].id360 === null) {
+                        despliegaMensajeSistema(response[0].message, response[0].to_id360, response[0].date_created, response[0].time_created, true);
+                    } else {
                         if (response[0].id360 === sesion_cookie.id_usuario) {
                             agregar_chat_enviado(response[0], true);
                         } else {
@@ -3168,12 +3188,12 @@ const cargaMasMensajes = (id360, esGrupo) => {
                     }
                 } else {
                     for (var i = response.length - 1; i >= 0; i--) {
-                        if(response[i].idGroup !== null){
+                        if (response[i].idGroup !== null) {
                             response[i].to_id360 = response[i].idGroup;
                         }
-                        if( response[i].id360 === null ){
-                            despliegaMensajeSistema( response[i].message, response[i].to_id360, response[i].date_created, response[i].time_created, true);
-                        }else{
+                        if (response[i].id360 === null) {
+                            despliegaMensajeSistema(response[i].message, response[i].to_id360, response[i].date_created, response[i].time_created, true);
+                        } else {
                             if (response[i].id360 === sesion_cookie.id_usuario) {
                                 agregar_chat_enviado(response[i], true);
                             } else {
@@ -3208,10 +3228,10 @@ const cargaMasMensajes = (id360, esGrupo) => {
                         console.log("Voy a buscar más mensajes de " + id360);
                         cargaMasMensajes(id360, esGrupo);
                     });
-                    
+
                     resolve(true);
 
-                }else
+                } else
                     resolve(false);
 
             });
@@ -3221,21 +3241,21 @@ const cargaMasMensajes = (id360, esGrupo) => {
 
 };
 
-function entraDrag (e, id) {
+function entraDrag(e, id) {
     let contenedorArrastra = $("#" + id);
-    if( contenedorArrastra.length ){
+    if (contenedorArrastra.length) {
         contenedorArrastra.removeClass("d-none");
     }
     console.log("Entra");
 }
 
-function saleDrag (e, id) {
+function saleDrag(e, id) {
     console.log("sale");
 }
 
-function terminaDrag (e, id){
+function terminaDrag(e, id) {
     let contenedorArrastra = $("#" + id);
-    if( contenedorArrastra.length ){
+    if (contenedorArrastra.length) {
         contenedorArrastra.addClass("d-none");
     }
 }
@@ -3245,9 +3265,9 @@ function contacto_chat(user, group, statusGroup) {
     if (!$("#profile_chat" + user.id360).length && user.id360 !== undefined) {
 
         let li = $("<li></li>").addClass("contact");
-        if(CantidadMensajesPorChat[user.id360] !== undefined && CantidadMensajesPorChat[user.id360].esFavorito){
+        if (CantidadMensajesPorChat[user.id360] !== undefined && CantidadMensajesPorChat[user.id360].esFavorito) {
             li.addClass("contactoFavorito");
-        }else{
+        } else {
             li.addClass("contactoNoFavorito");
         }
         li.attr("id", "profile_chat" + user.id360);
@@ -3264,7 +3284,7 @@ function contacto_chat(user, group, statusGroup) {
         });
         let meta = $("<div></div>").addClass("meta");
         let name = $("<p></p>").addClass("name");
-        if(group)
+        if (group)
             name.text(user.nombre_grupo);
         else
             name.text(user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno);
@@ -3274,9 +3294,9 @@ function contacto_chat(user, group, statusGroup) {
         meta.append(preview);
 
         let social_media = $("<div></div>").addClass("social-media");
-        
+
         let div_search = $("<div></div>");
-        div_search.css({"display":"contents"});
+        div_search.css({"display": "contents"});
         let icon_search = $("<i class=\"fas fa-search\"></i>");
         icon_search.css({
             "background": "#fff",
@@ -3284,12 +3304,12 @@ function contacto_chat(user, group, statusGroup) {
             "font-size": "60px",
             "width": "50px",
             "cursor": "pointer",
-            "color":"rgb(64, 71, 79)"
+            "color": "rgb(64, 71, 79)"
         });
-        
+
         let div_favorito = $("<div></div>");
-        div_favorito.attr("id","iconoFavorito"+user.id360);
-        div_favorito.css({"display":"contents"});
+        div_favorito.attr("id", "iconoFavorito" + user.id360);
+        div_favorito.css({"display": "contents"});
         let icon_favorito = $("<i></i>");
         icon_favorito.css({
             "background": "#fff",
@@ -3297,48 +3317,48 @@ function contacto_chat(user, group, statusGroup) {
             "font-size": "60px",
             "width": "50px",
             "cursor": "pointer",
-            "color":"yellowgreen"
+            "color": "yellowgreen"
         });
-        
-        div_favorito.click(() =>{
-            
+
+        div_favorito.click(() => {
+
             let dataFavorito = {
                 "id360": sesion_cookie.idUsuario_Sys,
                 "id360Favorito": user.id360,
                 "fecha": getFecha(),
                 "hora": getHora()
             };
-            
+
             dataFavorito.esGrupo = group ? 1 : 0;
-            
+
             let services = CantidadMensajesPorChat[user.id360] !== undefined && CantidadMensajesPorChat[user.id360].esFavorito ? "/API/empresas360/eliminar_usuario_favorito" : "/API/empresas360/agregar_usuario_favorito";
-            
+
             RequestPOST(services, dataFavorito).then((response) => {
-                
-                if(services === "/API/empresas360/eliminar_usuario_favorito"){
+
+                if (services === "/API/empresas360/eliminar_usuario_favorito") {
                     NotificacionToas.fire({
                         title: 'Contacto eliminado como favorito'
                     });
-                }else{
+                } else {
                     NotificacionToas.fire({
                         title: 'Contacto favorito'
                     });
                 }
-                
+
                 console.log(response);
                 console.log("Se debio enviar por socket");
             });
-            
+
         });
-        
-        if(CantidadMensajesPorChat[user.id360] !== undefined && CantidadMensajesPorChat[user.id360].esFavorito){
+
+        if (CantidadMensajesPorChat[user.id360] !== undefined && CantidadMensajesPorChat[user.id360].esFavorito) {
             icon_favorito.addClass("fas fa-star");
-        }else{
+        } else {
             icon_favorito.addClass("far fa-star");
         }
-        
+
         let div_menu_chat = $("<div></div>");
-        div_menu_chat.css({"display":"contents","position":"relative"});
+        div_menu_chat.css({"display": "contents", "position": "relative"});
         let icon_menu_chat = $("<i class=\"fas fa-ellipsis-h\"></i>");
         icon_menu_chat.css({
             "background": "#40474f",
@@ -3347,26 +3367,26 @@ function contacto_chat(user, group, statusGroup) {
             "width": "50px",
             "cursor": "pointer"
         });
-        
+
         let menu_chat = $("<ul></ul>");
         menu_chat.addClass("menu_chat");
-        
+
         let opcionIniciarLlamada = $("<li></li>").addClass("opcion_menu_chat");
         opcionIniciarLlamada.text("Iniciar llamada");
         let iconOpcionIniciarLlamada = $("<i class=\"fas fa-phone\"></i>");
-        iconOpcionIniciarLlamada.css({"margin-right":"10px"});
+        iconOpcionIniciarLlamada.css({"margin-right": "10px"});
         opcionIniciarLlamada.prepend(iconOpcionIniciarLlamada);
         menu_chat.append(opcionIniciarLlamada);
-        
+
         let opcionVaciarChat = $("<li></li>").addClass("opcion_menu_chat");
         opcionVaciarChat.text("Vaciar chat");
         let iconVaciarChat = $("<i class=\"fas fa-trash\"></i>");
-        iconVaciarChat.css({"margin-right":"10px"});
+        iconVaciarChat.css({"margin-right": "10px"});
         opcionVaciarChat.prepend(iconVaciarChat);
         menu_chat.append(opcionVaciarChat);
-        
+
         div_menu_chat.append(menu_chat);
-        
+
         /*
          * CONTROLES PARA LLAMADA Y MENSAJES
          */
@@ -3382,17 +3402,17 @@ function contacto_chat(user, group, statusGroup) {
 
         divControlesChat.append(buttonEnviarMensaje);
         divControlesChat.append(buttonRealizarLlamadaChat);
-        
+
         /*
          * CONTENEDOR MENSAJES NO LEIDOS
          */
         let divMensajesNoLeidos = $("<div></div>").addClass("mensajesNoLeidos");
-        divMensajesNoLeidos.attr("id","mensajesNoLeidos_" + user.id360);
+        divMensajesNoLeidos.attr("id", "mensajesNoLeidos_" + user.id360);
         let spanMensajesNoLeidos = $("<span></span>").addClass("badge cantidadMensajesNoLeidos");
         divMensajesNoLeidos.append(spanMensajesNoLeidos);
         if (CantidadMensajesPorChat[user.id360] !== undefined && CantidadMensajesPorChat[user.id360].cantidadMensajesNoLeidos > 0) {
             spanMensajesNoLeidos.text(CantidadMensajesPorChat[user.id360].cantidadMensajesNoLeidos);
-        }else{
+        } else {
             divMensajesNoLeidos.addClass("d-none");
         }
 
@@ -3410,13 +3430,13 @@ function contacto_chat(user, group, statusGroup) {
         let content = $("<div></div>").addClass("content");
         let divAux = $("<div></div>");
         divAux.css({
-            "float":"left",
-            "width":"100%",
-            "height":"100%",
-            "overflow-y":"scroll",
-            "position":"relative"
+            "float": "left",
+            "width": "100%",
+            "height": "100%",
+            "overflow-y": "scroll",
+            "position": "relative"
         });
-        content.attr("id","contenedor_mensajes_" + user.id360);
+        content.attr("id", "contenedor_mensajes_" + user.id360);
         content.addClass("d-none");
         let contact_profile = $("<div></div>").addClass("contact-profile");
         let img_profile = $("<div></div>").addClass("img");
@@ -3427,20 +3447,20 @@ function contacto_chat(user, group, statusGroup) {
             "background-repeat": "no-repeat"
         });
         let nombre = $("<p></p>");
-        if(group)
+        if (group)
             nombre.text(user.nombre_grupo);
         else
             nombre.text(user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno);
 
         let messages = $("<div></div>").addClass("messages");
         messages.attr("id", "messages_" + user.id360);
-        if(group) {
-            messages.data("grupo","true");
+        if (group) {
+            messages.data("grupo", "true");
             messages.data("participantes", user.participantes);
         }
-        messages.attr("ondragenter","entraDrag(event,'contenedor-drag-drop_"+user.id360+"')");
-        messages.attr("onmouseout","terminaDrag(event,'contenedor-drag-drop_"+user.id360+"')");
-        messages.attr("ondragend","terminaDrag(event,'contenedor-drag-drop_"+user.id360+"')");
+        messages.attr("ondragenter", "entraDrag(event,'contenedor-drag-drop_" + user.id360 + "')");
+        messages.attr("onmouseout", "terminaDrag(event,'contenedor-drag-drop_" + user.id360 + "')");
+        messages.attr("ondragend", "terminaDrag(event,'contenedor-drag-drop_" + user.id360 + "')");
         let ul = $("<ul></ul>").addClass("p-0");
         //    ul.id = "contact_messaging" + user.id360;
         ul.attr("id", "contact_messaging" + user.id360);
@@ -3497,7 +3517,7 @@ function contacto_chat(user, group, statusGroup) {
 
         /* BOTON ENVIAR MENSAJE */
         let button = $("<button></button>").addClass("submit btn btn-block");
-        button.attr("id", "btn_enviar"+user.id360);
+        button.attr("id", "btn_enviar" + user.id360);
         let paper_plane = $("<i class=\"fa fa-paper-plane\" aria-hidden=\"true\"></i>").addClass("wrap");
         button.append(paper_plane);
 
@@ -3505,37 +3525,37 @@ function contacto_chat(user, group, statusGroup) {
         let buttonAttachment = $("<button></button>").addClass("btn btn-block");
         let paperclip = $(" <i class=\"fa fa-paperclip\" aria-hidden=\"true\"></i>").addClass("wrap");
         buttonAttachment.attr("type", "button");
-        buttonAttachment.attr("id", "btn-adjunto-"+user.id360);
+        buttonAttachment.attr("id", "btn-adjunto-" + user.id360);
         buttonAttachment.append(paperclip);
         buttonAttachment.css({"background-color": "grey"});
-        
+
         /* BOTON DE EMOJI */
         let buttonEmoji = $("<button></button>").addClass("btn btn-block btnEmoji");
         let iconEmoji = $(" <i class=\"far fa-smile-beam\" aria-hidden=\"true\"></i>").addClass("wrap");
         buttonEmoji.append(iconEmoji);
-        buttonEmoji.attr("id","btn-emoji-"+user.id360);
+        buttonEmoji.attr("id", "btn-emoji-" + user.id360);
         buttonEmoji.attr("type", "button");
         buttonEmoji.css({"background-color": "teal"});
-        
+
         /* CONTROLES CHAT */
         let containerChat = $("<div class=\"contenedor-chat-controles\"></div>");
         let rowChat = $("<div style=\"padding:0 !important;\" class=\"row\"></div>");
-        
+
         let emojiPicker = $("<emoji-picker></emoji-picker>");
         emojiPicker.addClass("d-none emojipicker");
         emojiPicker.css({
-            "width":"75%"
+            "width": "75%"
         });
-        emojiPicker.attr("id","emojipicket" + user.id360);
-        emojiPicker.data("idcontacto",user.id360);
+        emojiPicker.attr("id", "emojipicket" + user.id360);
+        emojiPicker.data("idcontacto", user.id360);
         rowChat.prepend(emojiPicker);
         buttonEmoji.click(() => {
             emojiPicker.toggleClass("d-none");
         });
-      
+
         let colInput = $("<div style=\"padding:0 !important;\" class=\"col-9\"></div>");
         colInput.append(input);
-        
+
         let colButtonEmoji = $("<div style=\"padding:0 !important;\" class=\"col-1\"></div>");
         colButtonEmoji.append(buttonEmoji);
 
@@ -3551,14 +3571,14 @@ function contacto_chat(user, group, statusGroup) {
         inputAttachment.attr("class", "d-none");
         inputAttachment.attr("type", "file");
         inputAttachment.attr("name", "attachment");
-        
+
         /* Input para arrastrar y soltar */
         let inputArrastraSuelta = $("<input>").addClass("inputAttachmentArrastra");
         inputArrastraSuelta.attr("id", "inputAttachmentArrastra" + user.id360);
         inputArrastraSuelta.attr("type", "file");
         inputArrastraSuelta.attr("name", "attachment");
         let contenedorArrastraYSuelta = $("<div></div>").addClass("contenedor-drag-drop d-none");
-        contenedorArrastraYSuelta.attr("id","contenedor-drag-drop_" + user.id360);
+        contenedorArrastraYSuelta.attr("id", "contenedor-drag-drop_" + user.id360);
         contenedorArrastraYSuelta.append(inputArrastraSuelta);
 
         /* Controles preview*/
@@ -3597,26 +3617,26 @@ function contacto_chat(user, group, statusGroup) {
         });
         colName.append(nameFile);
         rowNameFile.append(colName);
-        
+
         let rowContenidoMensajeOperaciones = $("<div></div>").addClass("row filaMensajesOperaciones d-none");
-        rowContenidoMensajeOperaciones.attr("id","filaMensajesOperaciones_" + user.id360);
+        rowContenidoMensajeOperaciones.attr("id", "filaMensajesOperaciones_" + user.id360);
         let colContenidoMensajeOperaciones = $("<div></div>").addClass("col-12").css({"padding": "0"});
-        let contenidoMensajeOperaciones = $("<p></p>").attr("id","contenidoMensajeOperaciones_" + user.id360);
-        
+        let contenidoMensajeOperaciones = $("<p></p>").attr("id", "contenidoMensajeOperaciones_" + user.id360);
+
         contenidoMensajeOperaciones.css({
             "margin": "0",
             "background-color": "gray",
             "padding": "10px",
             "text-align": "left"
         });
-        
+
         let spanAccion = $("<span></span>");
-        spanAccion.attr("id","accionMensajesOpciones_" + user.id360);
+        spanAccion.attr("id", "accionMensajesOpciones_" + user.id360);
         spanAccion.css({
             "font-size": "1.3rem",
             "font-style": "italic"
         });
-        
+
         let spanContenidoMensajeOperaciones = $("<span></span>");
         spanContenidoMensajeOperaciones.css({
             "padding-right": "5%",
@@ -3626,10 +3646,10 @@ function contacto_chat(user, group, statusGroup) {
         let buttonCerrarContenidoMensajeOperaciones = $("<button></button>").addClass("btn");
         buttonCerrarContenidoMensajeOperaciones.text("x");
         buttonCerrarContenidoMensajeOperaciones.css({
-            "position":"absolute",
+            "position": "absolute",
             "top": "0",
             "right": "20px",
-            "background-color":"transparent",
+            "background-color": "transparent",
             "height": "100%",
             "padding": "10px"
         });
@@ -3643,7 +3663,7 @@ function contacto_chat(user, group, statusGroup) {
             idMensajeEditando = null;
             idMensajeRespondiendo = null;
         });
-        
+
         contenidoMensajeOperaciones.append(spanAccion);
         contenidoMensajeOperaciones.append(spanContenidoMensajeOperaciones);
         contenidoMensajeOperaciones.append(buttonCerrarContenidoMensajeOperaciones);
@@ -3654,20 +3674,20 @@ function contacto_chat(user, group, statusGroup) {
         rowChat.append(colButtonEmoji);
         rowChat.append(colButtonAttachment);
         rowChat.append(colButtonSubmit);
-        
-        if(group){
-            
-            if( statusGroup !== undefined && statusGroup !== null && statusGroup === false ){
+
+        if (group) {
+
+            if (statusGroup !== undefined && statusGroup !== null && statusGroup === false) {
                 input.attr("disabled", true);
                 input.attr("placeholder", "No puedes enviar mensajes en este chat");
                 input.css({
-                    "text-align":"center",
-                    "font-weight":"bold",
+                    "text-align": "center",
+                    "font-weight": "bold",
                     "text-transform": "uppercase"
                 });
                 button.attr("disabled", true);
             }
-            
+
         }
 
         rowChat.append(inputAttachment);
@@ -3682,7 +3702,7 @@ function contacto_chat(user, group, statusGroup) {
 
         message_input.append(wrap);
         messages.append(ul);
-        
+
         div_menu_chat.click(() => {
             menu_chat.toggleClass("desplegado");
         });
@@ -3701,59 +3721,59 @@ function contacto_chat(user, group, statusGroup) {
         divAux.append(messages);
         divAux.append(message_input);
         divAux.prepend(contenedorArrastraYSuelta);
-        
+
         let divDescripcionContacto;
         let divBusccador;
         let divDocumentosCompartidos;
-        
+
         /*
          * PANEL DE ARCHIVOS COMPARTIDOS CON EL CHAT
          */
         divDocumentosCompartidos = $("<div></div>").addClass("d-none pt-5");
         divDocumentosCompartidos.css({
-            "width":"30%",
-            "height":"100%",
-            "background-color":"rgba(64,71,79,0.1)",
-            "float":"left",
-            "overflow-y":"scroll",
-            "padding-bottom":"50px",
-            "position":"relative"
+            "width": "30%",
+            "height": "100%",
+            "background-color": "rgba(64,71,79,0.1)",
+            "float": "left",
+            "overflow-y": "scroll",
+            "padding-bottom": "50px",
+            "position": "relative"
         });
-        
+
         let buttonCerrarArchivosCompartidos = $("<button></button>").addClass("btn");
         buttonCerrarArchivosCompartidos.append('<i class="fas fa-arrow-left"></i>');
         buttonCerrarArchivosCompartidos.css({
-            "position":"absolute",
-            "top":"0",
-            "left":"0",
-            "font-size":"2rem"
+            "position": "absolute",
+            "top": "0",
+            "left": "0",
+            "font-size": "2rem"
         });
-        
+
         divDocumentosCompartidos.append(buttonCerrarArchivosCompartidos);
-        
+
         /*
          * CONTENIDO DE LA DESCRIPCIÓN DEL CONTACTO.
          * PANEL DERECHO AL DARLE CLICK AL NOMBRE DEL USUARIOS
          */
         divBusccador = $("<div></div>").addClass("d-none pt-5");
         divBusccador.css({
-            "width":"30%",
-            "height":"100%",
-            "background-color":"rgba(64,71,79,0.1)",
-            "float":"left",
-            "overflow-y":"scroll",
-            "padding-bottom":"50px"
+            "width": "30%",
+            "height": "100%",
+            "background-color": "rgba(64,71,79,0.1)",
+            "float": "left",
+            "overflow-y": "scroll",
+            "padding-bottom": "50px"
         });
-        
+
         let buttonCerrarBuscador = $("<button></button>").addClass("btn");
         buttonCerrarBuscador.append('<i class="far fa-times-circle"></i>');
         buttonCerrarBuscador.css({
-            "position":"absolute",
-            "top":"0",
-            "right":"0",
-            "font-size":"2rem"
+            "position": "absolute",
+            "top": "0",
+            "right": "0",
+            "font-size": "2rem"
         });
-        
+
         divBusccador.append(buttonCerrarBuscador);
         buttonCerrarBuscador.click(() => {
             divBusccador.addClass("d-none");
@@ -3761,109 +3781,109 @@ function contacto_chat(user, group, statusGroup) {
                 width: '100%'
             }, 500);
         });
-        
+
         let formGroupBuscador = $("<div></div>").addClass("form-group");
         formGroupBuscador.css({
-            "padding":"10px"
+            "padding": "10px"
         });
         let inputBuscador = $("<input>").addClass("form-control");
-        inputBuscador.attr("type","search");
-        inputBuscador.attr("placeholder","Buscar mensaje...");
+        inputBuscador.attr("type", "search");
+        inputBuscador.attr("placeholder", "Buscar mensaje...");
         inputBuscador.css({
-            "border-radius":"10px"
+            "border-radius": "10px"
         });
         formGroupBuscador.append(inputBuscador);
         divBusccador.append(formGroupBuscador);
-        
+
         let mensajeInicioBuscador = $("<p></p>");
         mensajeInicioBuscador.css({
-            "color":"black"
+            "color": "black"
         });
         let nombreBienBus = user.nombre !== undefined && user.nombre !== null ? user.nombre : user.nombre_grupo;
         mensajeInicioBuscador.text("Buscar mensajes con " + nombreBienBus);
         divBusccador.append(mensajeInicioBuscador);
-        
+
         let mensajeBuscando = $("<p></p>").addClass("d-none");
         mensajeBuscando.css({
-            "color":"black"
+            "color": "black"
         });
         mensajeBuscando.text("Buscando mensajes...");
         divBusccador.append(mensajeBuscando);
-        
+
         let sinMensajesEncontrados = $("<p></p>").addClass("d-none");
         sinMensajesEncontrados.css({
-            "color":"black"
+            "color": "black"
         });
         sinMensajesEncontrados.text("No se encontraron mensajes");
         divBusccador.append(sinMensajesEncontrados);
-        
+
         let valBusca;
         inputBuscador.keyup(() => {
-            
+
             valBusca = inputBuscador.val();
             divBusccador.find("ul").remove();
-            
+
             sinMensajesEncontrados.addClass("d-none");
-            if(valBusca.length < 2){
+            if (valBusca.length < 2) {
                 mensajeInicioBuscador.removeClass("d-none");
                 mensajeBuscando.addClass("d-none");
-            }else{
+            } else {
                 mensajeBuscando.removeClass("d-none");
                 mensajeInicioBuscador.addClass("d-none");
-                
+
                 let dataBusqueda = {
                     "id360-1": user.id360,
                     "id360-2": sesion_cookie.idUsuario_Sys,
                     "busqueda": valBusca
                 };
-                
-                if(group){
+
+                if (group) {
                     dataBusqueda.esGrupo = true;
                 }
-                
+
                 RequestPOST("/API/empresas360/buscar_mensajes", dataBusqueda).then((response) => {
                     mensajeBuscando.addClass("d-none");
-                    
-                    if(response.length>0){
-                        
+
+                    if (response.length > 0) {
+
                         divBusccador.find("ul").remove();
                         let ulResultadosBusqueda = $("<ul></ul>");
                         ulResultadosBusqueda.css({
-                            "padding-left":"0",
-                            "list-style":"none"
+                            "padding-left": "0",
+                            "list-style": "none"
                         });
-                        
+
                         $.each(response, (index, mensaje) => {
-                            
+
                             let liMensajeBusqueda = $("<li></li>");
                             let smallTexto = $("<small></small>");
                             smallTexto.css({
-                                "display":"block",
+                                "display": "block",
                                 "padding": "10px 0"
                             });
                             smallTexto.text(mensaje.message);
                             liMensajeBusqueda.html(smallTexto);
-                            
+
                             liMensajeBusqueda.css({
-                                "text-align":"left",
-                                "padding":"10px",
-                                "font-weight":"400",
-                                "white-space":"nowrap",
-                                "overflow":"hidden",
-                                "text-overflow":"ellipsis",
-                                "color":"black",
-                                "border-bottom":"1px solid lightslategray",
-                                "cursor":"pointer"
+                                "text-align": "left",
+                                "padding": "10px",
+                                "font-weight": "400",
+                                "white-space": "nowrap",
+                                "overflow": "hidden",
+                                "text-overflow": "ellipsis",
+                                "color": "black",
+                                "border-bottom": "1px solid lightslategray",
+                                "cursor": "pointer"
                             });
-                            
+
                             let fechaMensajeBusqueda = moment(mensaje.date_created);
                             let smallFecha = $("<small></small>");
                             smallFecha.text(fechaMensajeBusqueda.format("DD/MMM/YY"));
                             smallFecha.css({
-                                "display":"block"
+                                "display": "block"
                             });
                             liMensajeBusqueda.prepend(smallFecha);
-                            
+
                             liMensajeBusqueda.mouseenter(() => {
                                 liMensajeBusqueda.css({"background-color": "rgba(0, 0, 0, 0.1)"});
                             }).mouseleave(() => {
@@ -3871,44 +3891,44 @@ function contacto_chat(user, group, statusGroup) {
                             });
 
                             liMensajeBusqueda.click(() => {
-                                            
-                                console.log(mensaje.id);            
-                                            
+
+                                console.log(mensaje.id);
+
                                 const remarcaMensaje = (idMensaje) => {
                                     document.querySelector("#mensaje_" + idMensaje).scrollIntoView();
                                     let resaltar = setInterval(() => {
-                                        $("#mensaje_"+ idMensaje).toggleClass("respondida");
+                                        $("#mensaje_" + idMensaje).toggleClass("respondida");
                                     }, 250);
 
                                     setTimeout(() => {
                                         clearInterval(resaltar);
-                                        $("#mensaje_"+ idMensaje).removeClass("respondida");
+                                        $("#mensaje_" + idMensaje).removeClass("respondida");
                                     }, 2000);
                                 };
 
-                                if( $("#mensaje_" + mensaje.id).length ){
+                                if ($("#mensaje_" + mensaje.id).length) {
 
                                     remarcaMensaje(mensaje.id);
 
-                                }else{
+                                } else {
 
                                     const buscaMensajeRespuesta = () => {
-                                        if( $("#contact_messaging" + user.id360).find(".liMasMensajes").length ){
+                                        if ($("#contact_messaging" + user.id360).find(".liMasMensajes").length) {
                                             console.log("Voy a buscar mas mensajes " + user.id360);
                                             let esGrupo = mensaje.idGroup !== undefined && mensaje.idGroup !== null ? true : false;
                                             cargaMasMensajes(user.id360, esGrupo).then((response) => {
-                                                if( $("#mensaje_" +mensaje.id).length ){
+                                                if ($("#mensaje_" + mensaje.id).length) {
                                                     remarcaMensaje(mensaje.id);
-                                                }else if(response){
+                                                } else if (response) {
                                                     buscaMensajeRespuesta();
-                                                }else{
+                                                } else {
                                                     NotificacionToas.fire({
                                                         title: 'No se ha encontrado el mensaje'
                                                     });
                                                 }
 
                                             });
-                                        }else{
+                                        } else {
                                             NotificacionToas.fire({
                                                 title: 'No se ha encontrado el mensaje'
                                             });
@@ -3920,73 +3940,73 @@ function contacto_chat(user, group, statusGroup) {
                                 }
 
                             });
-                            
+
                             ulResultadosBusqueda.append(liMensajeBusqueda);
-                            
+
                         });
-                        
+
                         divBusccador.append(ulResultadosBusqueda);
-                        
-                    }else{
+
+                    } else {
                         sinMensajesEncontrados.removeClass("d-none");
                     }
-                    
+
                 });
-                
+
             }
         });
-        
+
         div_search.click(() => {
-            
+
             inputBuscador.val("");
             divBusccador.find("ul").remove();
-            
+
             divDescripcionContacto.addClass("d-none");
             divBusccador.addClass("d-none");
-            if( divBusccador.hasClass("d-none") ){
-                
+            if (divBusccador.hasClass("d-none")) {
+
                 divAux.animate({
                     width: '70%'
-                }, 500, function() {
-                  divBusccador.removeClass("d-none");
+                }, 500, function () {
+                    divBusccador.removeClass("d-none");
                 });
-                
-            }else{
+
+            } else {
                 divBusccador.addClass("d-none");
                 divAux.animate({
                     width: '100%'
                 }, 500);
             }
-            
+
         });
-        
+
         /*
          * CONTENIDO DE LA DESCRIPCIÓN DEL CONTACTO.
          * PANEL DERECHO AL DARLE CLICK AL NOMBRE DEL USUARIOS
          */
-        
+
         divDescripcionContacto = $("<div></div>").addClass("d-none pt-5");
         divDescripcionContacto.css({
-            "width":"30%",
-            "height":"100%",
-            "background-color":"rgba(64,71,79,0.1)",
-            "float":"left",
-            "overflow-y":"scroll",
-            "padding-bottom":"50px"
+            "width": "30%",
+            "height": "100%",
+            "background-color": "rgba(64,71,79,0.1)",
+            "float": "left",
+            "overflow-y": "scroll",
+            "padding-bottom": "50px"
         });
-        
+
         buttonCerrarArchivosCompartidos.click(() => {
             divDocumentosCompartidos.addClass("d-none");
             divDescripcionContacto.removeClass("d-none");
         });
-        
+
         let buttonCerrarDescripcion = $("<button></button>").addClass("btn");
         buttonCerrarDescripcion.append('<i class="far fa-times-circle"></i>');
         buttonCerrarDescripcion.css({
-            "position":"absolute",
-            "top":"0",
-            "right":"0",
-            "font-size":"2rem"
+            "position": "absolute",
+            "top": "0",
+            "right": "0",
+            "font-size": "2rem"
         });
         divDescripcionContacto.append(buttonCerrarDescripcion);
         buttonCerrarDescripcion.click(() => {
@@ -3995,33 +4015,33 @@ function contacto_chat(user, group, statusGroup) {
                 width: '100%'
             }, 500);
         });
-        
+
         let imgUserDescripcion = $("<img>");
         imgUserDescripcion.css({
-            "width":"85%",
+            "width": "85%",
             "max-height": "250px",
-            "border-radius":"50%",
-            "margin-bottom":"30px",
-            "cursor":"pointer"
+            "border-radius": "50%",
+            "margin-bottom": "30px",
+            "cursor": "pointer"
         });
-        imgUserDescripcion.attr("alt","Foto de Perfil");
-        imgUserDescripcion.attr("src",user.img);
-        imgUserDescripcion.attr("id","imagenPanelDescripcion_" + user.id360);
-        
+        imgUserDescripcion.attr("alt", "Foto de Perfil");
+        imgUserDescripcion.attr("src", user.img);
+        imgUserDescripcion.attr("id", "imagenPanelDescripcion_" + user.id360);
+
         /*Input attachment */
         let inputFotoPerfil = $("<input />").addClass("d-none");
         inputFotoPerfil.attr("id", "inputFotoPerfil_" + user.id360);
         inputFotoPerfil.attr("type", "file");
         inputFotoPerfil.attr("name", "fotoPerfil");
         divDescripcionContacto.append(inputFotoPerfil);
-        
+
         inputFotoPerfil.change((e) => {
             guarda_adjunto_chat("inputFotoPerfil_" + user.id360, user.id360).then((response) => {
 
                 console.log(response);
                 let imagenCambio = response;
                 inputFotoPerfil.val(null);
-                
+
                 let dataEditaFotoGrupo = {
                     "fecha": getFecha(),
                     "hora": getHora(),
@@ -4029,116 +4049,116 @@ function contacto_chat(user, group, statusGroup) {
                     "columna": "icono_grupo",
                     "valor": imagenCambio
                 };
-                
+
                 RequestPOST("/API/empresas360/cambiar_parametro_grupo", dataEditaFotoGrupo).then((response) => {
-                    if(response.success){
+                    if (response.success) {
                         console.log("Se cambio la foto exitosamente");
                         console.log("Se debio enviar por socket");
                         let mensajeCambio = sesion_cookie.nombre + " " + sesion_cookie.apellidos + " ha cambiado la foto del grupo";
-                        mensajeSistema(mensajeCambio, user.id360, true );
+                        mensajeSistema(mensajeCambio, user.id360, true);
                     }
                 });
 
             });
         });
-        
+
         imgUserDescripcion.click((e) => {
-            
+
             let imagenPreview = $("<img>");
             imagenPreview.attr("src", $("#imagenPanelDescripcion_" + user.id360).attr("src"));
             imagenPreview.css({
                 "max-width": "650px",
-                "max-height":"650px"
+                "max-height": "650px"
             });
-            
+
             let myMenu = [{
-                icon: 'fa fa-eye',
-                label: 'Ver foto',
-                action: function(option, contextMenuIndex, optionIndex) {
-                    Swal.fire({
-                        width: 700,
-                        showCancelButton: false,
-                        showConfirmButton: false,
-                        html: imagenPreview
-                    });
-                },
-                submenu: null,
-                disabled: false 
-            }];
-        
-            if(group){
+                    icon: 'fa fa-eye',
+                    label: 'Ver foto',
+                    action: function (option, contextMenuIndex, optionIndex) {
+                        Swal.fire({
+                            width: 700,
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            html: imagenPreview
+                        });
+                    },
+                    submenu: null,
+                    disabled: false
+                }];
+
+            if (group) {
                 myMenu.push({
                     icon: 'fa fa-edit',
                     label: 'Cambiar foto',
-                    action: function(option, contextMenuIndex, optionIndex) {
+                    action: function (option, contextMenuIndex, optionIndex) {
                         inputFotoPerfil.click();
                     },
                     submenu: null,
-                    disabled: false 
+                    disabled: false
                 });
             }
 
             superCm.createMenu(myMenu, e);
         });
-        
+
         let pNombreDescripcion = $("<p></p>");
-        pNombreDescripcion.attr("id","tituloGrupoDescripcion_" + user.id360);
+        pNombreDescripcion.attr("id", "tituloGrupoDescripcion_" + user.id360);
         pNombreDescripcion.css({
-            "color":"#40474f",
-            "font-size":"1.3rem",
+            "color": "#40474f",
+            "font-size": "1.3rem",
             "text-align": "left",
             "padding-left": "20px"
         });
-        
-        if(group){
+
+        if (group) {
             pNombreDescripcion.text(" " + user.nombre_grupo);
-            
+
             //opcion para editar
             let buttonEditaNombre = $("<button></button>").addClass("btn");
             let iconEditarNombre = $("<i></i>").addClass("fas fa-edit ml-2");
-            buttonEditaNombre.css("cursor","pointer");
+            buttonEditaNombre.css("cursor", "pointer");
             buttonEditaNombre.append(iconEditarNombre);
             pNombreDescripcion.append(buttonEditaNombre);
-            
+
             buttonEditaNombre.click(() => {
                 let contenedorNombreGrupo = $("<div></div>");
 
                 let formNombreGrupo = $("<form></form>");
-                formNombreGrupo.attr("id","formCambiaTituloGrupo");
-                formNombreGrupo.attr("autocomplete","off");
+                formNombreGrupo.attr("id", "formCambiaTituloGrupo");
+                formNombreGrupo.attr("autocomplete", "off");
 
                 let formGroupNombreGrupo = $("<div></div>").addClass("form-group");
                 let labelNombreGrupo = $("<label></label>");
                 labelNombreGrupo.text("Título del grupo");
-                labelNombreGrupo.attr("for","inputNombreGrupo");
+                labelNombreGrupo.attr("for", "inputNombreGrupo");
                 let inputNombreGrupo = $("<input>").addClass("form-control");
-                inputNombreGrupo.attr("id","inputNombreGrupo");
-                inputNombreGrupo.attr("type","text");
-                inputNombreGrupo.attr("required","true");
+                inputNombreGrupo.attr("id", "inputNombreGrupo");
+                inputNombreGrupo.attr("type", "text");
+                inputNombreGrupo.attr("required", "true");
                 formGroupNombreGrupo.append(labelNombreGrupo);
                 formGroupNombreGrupo.append(inputNombreGrupo);
                 formNombreGrupo.append(formGroupNombreGrupo);
-                
+
                 let buttonSubmitCreaGrupo = $("<button></button>").addClass("btn btn-danger btn-block mt-4");
-                buttonSubmitCreaGrupo.attr("type","submit");
+                buttonSubmitCreaGrupo.attr("type", "submit");
                 buttonSubmitCreaGrupo.text("Cambiar titulo");
                 formNombreGrupo.append(buttonSubmitCreaGrupo);
-                
+
                 contenedorNombreGrupo.append(formNombreGrupo);
-                
+
                 inputNombreGrupo.val(user.nombre_grupo);
-                
+
                 Swal.fire({
                     html: contenedorNombreGrupo,
                     showCancelButton: true,
                     showConfirmButton: false,
                     cancelButtonText: 'Cancelar',
                     allowOutsideClick: false,
-                    allowEscapeKey : false
+                    allowEscapeKey: false
                 });
-                
+
                 $("#formCambiaTituloGrupo").submit((e) => {
-        
+
                     e.preventDefault();
                     let nombreGrupo = $("#inputNombreGrupo").val().trim();
 
@@ -4151,86 +4171,86 @@ function contacto_chat(user, group, statusGroup) {
                     };
 
                     RequestPOST("/API/empresas360/cambiar_parametro_grupo", dataEditaTituloGrupo).then((response) => {
-                        if(response.success){
+                        if (response.success) {
                             Swal.close();
                             let mensajeCambio = sesion_cookie.nombre + " " + sesion_cookie.apellidos + " ha cambiado el título del grupo";
-                            mensajeSistema(mensajeCambio, user.id360, true );
+                            mensajeSistema(mensajeCambio, user.id360, true);
                         }
                     });
 
                 });
-                
+
             });
-            
-        }else
+
+        } else
             pNombreDescripcion.text(" " + user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno);
-        
+
         pNombreDescripcion.prepend('<i class="far fa-id-badge"></i>');
-        
+
         divDescripcionContacto.append(imgUserDescripcion);
         divDescripcionContacto.append(pNombreDescripcion);
-        
-        if( user.telefono !== undefined && user.telefono !== null ){
+
+        if (user.telefono !== undefined && user.telefono !== null) {
             let pTelefonoDescripcion = $("<a>");
             pTelefonoDescripcion.css({
-                "color":"#40474f",
-                "font-size":"1.3rem",
+                "color": "#40474f",
+                "font-size": "1.3rem",
                 "text-align": "left",
                 "padding-left": "20px",
-                "display":"block",
-                "margin-bottom":"1rem"
+                "display": "block",
+                "margin-bottom": "1rem"
             });
-            pTelefonoDescripcion.attr("href","tel:" + user.telefono);
-            pTelefonoDescripcion.text(" "+user.telefono);
+            pTelefonoDescripcion.attr("href", "tel:" + user.telefono);
+            pTelefonoDescripcion.text(" " + user.telefono);
             pTelefonoDescripcion.prepend('<i class="fas fa-phone"></i>');
             divDescripcionContacto.append(pTelefonoDescripcion);
         }
-        
-        if( user.correo !== undefined && user.correo !== null ){
+
+        if (user.correo !== undefined && user.correo !== null) {
             let pCorreoDescripcion = $("<a>");
             pCorreoDescripcion.css({
-                "color":"#40474f",
-                "font-size":"1.3rem",
+                "color": "#40474f",
+                "font-size": "1.3rem",
                 "text-align": "left",
-                "padding-left": "20px", 
-                "display":"block",
-                "margin-bottom":"1rem",
-                "word-break":"break-all"
+                "padding-left": "20px",
+                "display": "block",
+                "margin-bottom": "1rem",
+                "word-break": "break-all"
             });
-            pCorreoDescripcion.attr("href","mailto:" + user.correo);
-            pCorreoDescripcion.text(" "+user.correo);
+            pCorreoDescripcion.attr("href", "mailto:" + user.correo);
+            pCorreoDescripcion.text(" " + user.correo);
             pCorreoDescripcion.prepend('<i class="fas fa-envelope-open-text"></i>');
             divDescripcionContacto.append(pCorreoDescripcion);
         }
-        
+
         nombre.click(() => {
-            
+
             divBusccador.addClass("d-none");
-            if( divDescripcionContacto.hasClass("d-none") ){
-                
+            if (divDescripcionContacto.hasClass("d-none")) {
+
                 divAux.animate({
                     width: '70%'
-                }, 500, function() {
-                  divDescripcionContacto.removeClass("d-none");
+                }, 500, function () {
+                    divDescripcionContacto.removeClass("d-none");
                 });
-                
-            }else{
+
+            } else {
                 divDescripcionContacto.addClass("d-none");
                 divAux.animate({
                     width: '100%'
                 }, 500);
             }
-            
+
         });
-        
+
         let agregaEnlaceArchivosCompartidos = () => {
             let enlaceArchivosCompartidas = $("<button></button>").addClass("btn btn-link btn-block");
             enlaceArchivosCompartidas.css({
-                "text-align":"left",
-                "padding-left":"20px"
+                "text-align": "left",
+                "padding-left": "20px"
             });
             enlaceArchivosCompartidas.html('<i class="fas fa-file-archive"></i>  Archivos compartidas');
-            
+
             enlaceArchivosCompartidas.click(() => {
 
                 divDescripcionContacto.addClass("d-none");
@@ -4244,32 +4264,33 @@ function contacto_chat(user, group, statusGroup) {
                     "id360-2": sesion_cookie.idUsuario_Sys
                 };
 
-                if(group){
+                if (group) {
                     dataFotosCompartidas.esGrupo = true;
                 }
 
                 RequestPOST("/API/empresas360/buscar_mensajes_archivos", dataFotosCompartidas).then((response) => {
 
-                    if(response.length>0){
-                        
+                    if (response.length > 0) {
+
                         let contenedorArchivosEncontrados = $("<div></div>").addClass("container pt-3 gridArchivosCompartidos");
-                        
+
                         $.each(response, (index, mensaje) => {
-                            
+
                             let divArchivo = $("<div></div>").addClass("row");
                             divArchivo.css({
                                 "padding": "0 10px",
-                                "margin-bottom":"10px",
-                                "cursor":"pointer"
+                                "margin-bottom": "10px",
+                                "cursor": "pointer"
                             });
-                            
+
                             let divImgTipo = $("<div></div>").addClass("col-3");
-                            let imgTipo = $("<img>").attr("src", PathRecursos + "images/icono_default.png");;
+                            let imgTipo = $("<img>").attr("src", PathRecursos + "images/icono_default.png");
+                            ;
                             imgTipo.css({
                                 "height": "40px",
                                 "width": "40px"
                             });
-                            
+
                             switch (mensaje.type) {
 
                                 case "docx":
@@ -4305,31 +4326,31 @@ function contacto_chat(user, group, statusGroup) {
                                     break;
 
                             }
-                            
+
                             divImgTipo.append(imgTipo);
-                            
+
                             let divNombreArchivo = $("<div></div>").addClass("col-6");
                             divNombreArchivo.css({
-                                "display":"flex",
-                                "justify-content":"center",
-                                "align-items":"center"
+                                "display": "flex",
+                                "justify-content": "center",
+                                "align-items": "center"
                             });
                             let partesPorDiagonal = mensaje.message.split("/");
                             let nombreCorto = partesPorDiagonal[partesPorDiagonal.length - 1];
-                            
+
                             let nombreAdjunto = $("<p></p>");
                             nombreAdjunto.css({
-                                "color":"black",
-                                "word-break":"break-all"
+                                "color": "black",
+                                "word-break": "break-all"
                             });
                             nombreAdjunto.text(nombreCorto.replaceAll("%20", " ") + " ");
                             divNombreArchivo.append(nombreAdjunto);
 
                             let divBotonDescarga = $("<div></div>").addClass("col-1");
                             divBotonDescarga.css({
-                                "display":"flex",
-                                "justify-content":"center",
-                                "align-items":"center"
+                                "display": "flex",
+                                "justify-content": "center",
+                                "align-items": "center"
                             });
                             let buttonDownloadAttachment = $("<a></a>").addClass("btn btn-light");
                             buttonDownloadAttachment.attr("href", mensaje.message);
@@ -4337,34 +4358,34 @@ function contacto_chat(user, group, statusGroup) {
                             buttonDownloadAttachment.attr("target", "_blank");
                             buttonDownloadAttachment.html('<i class="fas fa-download"></i>');
                             divBotonDescarga.append(buttonDownloadAttachment);
-                            
+
                             divArchivo.append(divImgTipo);
                             divArchivo.append(divNombreArchivo);
                             divArchivo.append(divBotonDescarga);
-                            
+
                             let extension = mensaje.type;
-                            
-                            if(extension === "pdf"){
-                                
+
+                            if (extension === "pdf") {
+
                                 let divBotonPreview = $("<div></div>").addClass("col-1");
                                 divBotonPreview.css({
-                                    "display":"flex",
-                                    "justify-content":"center",
-                                    "align-items":"center"
+                                    "display": "flex",
+                                    "justify-content": "center",
+                                    "align-items": "center"
                                 });
-                                
+
                                 let buttonVerPreview = $("<button></button>").addClass("btn btn-light");
-                                buttonVerPreview.attr("type","button");
+                                buttonVerPreview.attr("type", "button");
                                 buttonVerPreview.append('<i class="far fa-eye"></i>');
 
                                 /* IFRAME */
                                 let iframePreviewPDF = $("<iframe></iframe>");
                                 iframePreviewPDF.css({
-                                    "height":"500px",
+                                    "height": "500px",
                                     "width": "700px"
                                 });
-                                iframePreviewPDF.attr("frameborder","0");
-                                iframePreviewPDF.attr("src",mensaje.message);
+                                iframePreviewPDF.attr("frameborder", "0");
+                                iframePreviewPDF.attr("src", mensaje.message);
 
                                 buttonVerPreview.click(() => {
                                     Swal.fire({
@@ -4374,16 +4395,16 @@ function contacto_chat(user, group, statusGroup) {
                                         html: iframePreviewPDF
                                     });
                                 });
-                                
+
                                 divBotonPreview.append(buttonVerPreview);
                                 divArchivo.append(divBotonPreview);
 
-                            }else{
+                            } else {
                                 divBotonDescarga.removeClass("col-1").addClass("col-2");
                             }
-                            
+
                             contenedorArchivosEncontrados.append(divArchivo);
-                            
+
                             divArchivo.mouseenter(() => {
                                 divArchivo.css({"background-color": "rgba(0, 0, 0, 0.1)"});
                             }).mouseleave(() => {
@@ -4395,38 +4416,38 @@ function contacto_chat(user, group, statusGroup) {
                                 const remarcaMensaje = (idMensaje) => {
                                     document.querySelector("#mensaje_" + idMensaje).scrollIntoView();
                                     let resaltar = setInterval(() => {
-                                        $("#mensaje_"+ idMensaje).toggleClass("respondida");
+                                        $("#mensaje_" + idMensaje).toggleClass("respondida");
                                     }, 250);
 
                                     setTimeout(() => {
                                         clearInterval(resaltar);
-                                        $("#mensaje_"+ idMensaje).removeClass("respondida");
+                                        $("#mensaje_" + idMensaje).removeClass("respondida");
                                     }, 2000);
                                 };
 
-                                if( $("#mensaje_" + mensaje.id).length ){
+                                if ($("#mensaje_" + mensaje.id).length) {
 
                                     remarcaMensaje(mensaje.id);
 
-                                }else{
+                                } else {
 
                                     const buscaMensajeRespuesta = () => {
-                                        if( $("#contact_messaging" + user.id360).find(".liMasMensajes").length ){
+                                        if ($("#contact_messaging" + user.id360).find(".liMasMensajes").length) {
                                             console.log("Voy a buscar mas mensajes " + user.id360);
                                             let esGrupo = mensaje.idGroup !== undefined && mensaje.idGroup !== null ? true : false;
                                             cargaMasMensajes(user.id360, esGrupo).then((response) => {
-                                                if( $("#mensaje_" +mensaje.id).length ){
+                                                if ($("#mensaje_" + mensaje.id).length) {
                                                     remarcaMensaje(mensaje.id);
-                                                }else if(response){
+                                                } else if (response) {
                                                     buscaMensajeRespuesta();
-                                                }else{
+                                                } else {
                                                     NotificacionToas.fire({
                                                         title: 'No se ha encontrado el mensaje'
                                                     });
                                                 }
 
                                             });
-                                        }else{
+                                        } else {
                                             NotificacionToas.fire({
                                                 title: 'No se ha encontrado el mensaje'
                                             });
@@ -4438,15 +4459,15 @@ function contacto_chat(user, group, statusGroup) {
                                 }
 
                             });
-                            
+
                         });
-                        
+
                         divDocumentosCompartidos.append(contenedorArchivosEncontrados);
 
-                    }else{
+                    } else {
                         let mensajeSinFotos = $("<p></p>");
                         mensajeSinFotos.css({
-                            "color":"black"
+                            "color": "black"
                         });
                         mensajeSinFotos.text("Sin archivos compartidos");
                         divDocumentosCompartidos.find("p").remove();
@@ -4456,80 +4477,80 @@ function contacto_chat(user, group, statusGroup) {
                 });
 
             });
-            
+
             divDescripcionContacto.append(enlaceArchivosCompartidas);
         };
-        
+
         let agregaEnlaceVinculosCompartidos = () => {
             let enlaceVinculosCompartidos = $("<button></button>").addClass("btn btn-link btn-block");
             enlaceVinculosCompartidos.css({
-                "text-align":"left",
-                "padding-left":"20px"
+                "text-align": "left",
+                "padding-left": "20px"
             });
             enlaceVinculosCompartidos.html('<i class="fas fa-link"></i> Vinculos compartidas');
-            
+
             enlaceVinculosCompartidos.click(() => {
 
                 divDescripcionContacto.addClass("d-none");
                 divDocumentosCompartidos.removeClass("d-none");
 
                 divDocumentosCompartidos.find(".gridArchivosCompartidos").remove();
-                
+
                 let dataFotosCompartidas = {
                     "id360-1": user.id360,
                     "id360-2": sesion_cookie.idUsuario_Sys
                 };
 
-                if(group){
+                if (group) {
                     dataFotosCompartidas.esGrupo = true;
                 }
 
                 RequestPOST("/API/empresas360/buscar_mensajes_vinculos", dataFotosCompartidas).then((response) => {
 
-                    if(response.length>0){
-                        
+                    if (response.length > 0) {
+
                         divBusccador.find("ul").remove();
                         let ulResultadosBusqueda = $("<ul></ul>").addClass("gridArchivosCompartidos");
                         ulResultadosBusqueda.css({
-                            "padding-left":"0",
-                            "list-style":"none"
+                            "padding-left": "0",
+                            "list-style": "none"
                         });
-                        
+
                         $.each(response, (index, mensaje) => {
-                            
+
                             let liMensajeBusqueda = $("<li></li>");
-                            
+
                             liMensajeBusqueda.css({
-                                "text-align":"left",
-                                "padding":"10px",
-                                "font-weight":"400",
-                                "white-space":"nowrap",
-                                "overflow":"hidden",
-                                "text-overflow":"ellipsis",
-                                "color":"black",
-                                "border-bottom":"1px solid lightslategray",
-                                "cursor":"pointer"
+                                "text-align": "left",
+                                "padding": "10px",
+                                "font-weight": "400",
+                                "white-space": "nowrap",
+                                "overflow": "hidden",
+                                "text-overflow": "ellipsis",
+                                "color": "black",
+                                "border-bottom": "1px solid lightslategray",
+                                "cursor": "pointer"
                             });
-                            
+
                             let link = $("<a></a>");
                             link.text(mensaje.message);
                             link.prepend('<i class="fas fa-link mr-3"></i>');
-                            link.attr("target","_blank");
+                            link.attr("target", "_blank");
                             link.css({
-                                "display":"block",
+                                "display": "block",
                                 "padding": "10px 0"
                             });
-                            
+
                             liMensajeBusqueda.prepend(link);
-                            
+
                             let fechaMensajeBusqueda = moment(mensaje.date_created);
                             let smallFecha = $("<small></small>");
                             smallFecha.text(fechaMensajeBusqueda.format("DD/MMM/YY"));
                             smallFecha.css({
-                                "display":"block"
+                                "display": "block"
                             });
                             liMensajeBusqueda.prepend(smallFecha);
-                            
+
                             liMensajeBusqueda.mouseenter(() => {
                                 liMensajeBusqueda.css({"background-color": "rgba(0, 0, 0, 0.1)"});
                             }).mouseleave(() => {
@@ -4541,38 +4562,38 @@ function contacto_chat(user, group, statusGroup) {
                                 const remarcaMensaje = (idMensaje) => {
                                     document.querySelector("#mensaje_" + idMensaje).scrollIntoView();
                                     let resaltar = setInterval(() => {
-                                        $("#mensaje_"+ idMensaje).toggleClass("respondida");
+                                        $("#mensaje_" + idMensaje).toggleClass("respondida");
                                     }, 250);
 
                                     setTimeout(() => {
                                         clearInterval(resaltar);
-                                        $("#mensaje_"+ idMensaje).removeClass("respondida");
+                                        $("#mensaje_" + idMensaje).removeClass("respondida");
                                     }, 2000);
                                 };
 
-                                if( $("#mensaje_" + mensaje.id).length ){
+                                if ($("#mensaje_" + mensaje.id).length) {
 
                                     remarcaMensaje(mensaje.id);
 
-                                }else{
+                                } else {
 
                                     const buscaMensajeRespuesta = () => {
-                                        if( $("#contact_messaging" + user.id360).find(".liMasMensajes").length ){
+                                        if ($("#contact_messaging" + user.id360).find(".liMasMensajes").length) {
                                             console.log("Voy a buscar mas mensajes " + user.id360);
                                             let esGrupo = mensaje.idGroup !== undefined && mensaje.idGroup !== null ? true : false;
                                             cargaMasMensajes(user.id360, esGrupo).then((response) => {
-                                                if( $("#mensaje_" +mensaje.id).length ){
+                                                if ($("#mensaje_" + mensaje.id).length) {
                                                     remarcaMensaje(mensaje.id);
-                                                }else if(response){
+                                                } else if (response) {
                                                     buscaMensajeRespuesta();
-                                                }else{
+                                                } else {
                                                     NotificacionToas.fire({
                                                         title: 'No se ha encontrado el mensaje'
                                                     });
                                                 }
 
                                             });
-                                        }else{
+                                        } else {
                                             NotificacionToas.fire({
                                                 title: 'No se ha encontrado el mensaje'
                                             });
@@ -4584,34 +4605,34 @@ function contacto_chat(user, group, statusGroup) {
                                 }
 
                             });
-                            
+
                             ulResultadosBusqueda.append(liMensajeBusqueda);
-                            
+
                         });
-                        
+
                         divDocumentosCompartidos.append(ulResultadosBusqueda);
-                        
-                    }else{
+
+                    } else {
                         let mensajeSinFotos = $("<p></p>");
                         mensajeSinFotos.css({
-                            "color":"black"
+                            "color": "black"
                         });
                         mensajeSinFotos.text("Sin hipervínculos compartidas");
                         divDocumentosCompartidos.find("p").remove();
                         divDocumentosCompartidos.append(mensajeBuscando);
                     }
-                    
+
                 });
-            
+
             });
-            
+
             divDescripcionContacto.append(enlaceVinculosCompartidos);
         };
-        
+
         let agregaEnlaceCompartidos = () => {
             let enlaceFotosCompartidas = $("<button></button>").addClass("btn btn-link btn-block");
             enlaceFotosCompartidas.css({
-                "text-align":"left",
+                "text-align": "left",
                 "padding-left": "20px"
             });
             enlaceFotosCompartidas.html('<i class="fas fa-images"></i> Fotos compartidas');
@@ -4628,30 +4649,30 @@ function contacto_chat(user, group, statusGroup) {
                     "id360-2": sesion_cookie.idUsuario_Sys
                 };
 
-                if(group){
+                if (group) {
                     dataFotosCompartidas.esGrupo = true;
                 }
 
                 RequestPOST("/API/empresas360/buscar_mensajes_imagenes", dataFotosCompartidas).then((response) => {
 
-                    if(response.length>0){
+                    if (response.length > 0) {
 
                         let divGrid = $("<div></div>").addClass("w-100 gridArchivosCompartidos");
                         divGrid.css({
-                            "padding":"10px",
-                            "display":"grid",
+                            "padding": "10px",
+                            "display": "grid",
                             "grid-template-columns": "1fr 1fr 1fr",
-                            "grid-gap":"10px"
+                            "grid-gap": "10px"
                         });
 
                         $.each(response, (index, mensaje) => {
 
                             let divFoto = $("<div></div>").addClass("w-100");
                             let img = $("<img>").addClass("w-100");
-                            img.attr("src",mensaje.message);
+                            img.attr("src", mensaje.message);
                             img.css({
                                 "height": "100px",
-                                "cursor":"pointer"
+                                "cursor": "pointer"
                             });
                             divFoto.append(img);
 
@@ -4659,7 +4680,7 @@ function contacto_chat(user, group, statusGroup) {
                             imagenPreview.attr("src", mensaje.message);
                             imagenPreview.css({
                                 "max-width": "650px",
-                                "max-height":"650px"
+                                "max-height": "650px"
                             });
 
                             img.click(() => {
@@ -4677,10 +4698,10 @@ function contacto_chat(user, group, statusGroup) {
 
                         divDocumentosCompartidos.append(divGrid);
 
-                    }else{
+                    } else {
                         let mensajeSinFotos = $("<p></p>");
                         mensajeSinFotos.css({
-                            "color":"black"
+                            "color": "black"
                         });
                         mensajeSinFotos.text("Sin fotografías compartidas");
                         divDocumentosCompartidos.find("p").remove();
@@ -4693,60 +4714,60 @@ function contacto_chat(user, group, statusGroup) {
 
             divDescripcionContacto.append(enlaceFotosCompartidas);
         };
-        
-        if(group){
-            
+
+        if (group) {
+
             let pDescripcionGrupo = $("<p></p>");
-            pDescripcionGrupo.attr("id","descripcionGrupoDescripcion_" + user.id360);
+            pDescripcionGrupo.attr("id", "descripcionGrupoDescripcion_" + user.id360);
             pDescripcionGrupo.css({
-                "color":"#40474f",
-                "font-size":"1.3rem",
+                "color": "#40474f",
+                "font-size": "1.3rem",
                 "text-align": "left",
                 "padding-left": "20px"
             });
-            pDescripcionGrupo.text(" " +user.descripcion_grupo);
+            pDescripcionGrupo.text(" " + user.descripcion_grupo);
             pDescripcionGrupo.prepend('<i class="fas fa-info-circle"></i>');
             divDescripcionContacto.append(pDescripcionGrupo);
-            
+
             agregaEnlaceCompartidos();
             agregaEnlaceArchivosCompartidos();
             agregaEnlaceVinculosCompartidos();
-            
+
             //opcion para editar
             let buttonEditaDescripcion = $("<button></button>").addClass("btn");
             let iconEditarDescripcion = $("<i></i>").addClass("fas fa-edit ml-2");
-            buttonEditaDescripcion.css("cursor","pointer");
+            buttonEditaDescripcion.css("cursor", "pointer");
             buttonEditaDescripcion.append(iconEditarDescripcion);
             pDescripcionGrupo.append(buttonEditaDescripcion);
-            
+
             buttonEditaDescripcion.click(() => {
                 let contenedorDescripcionGrupo = $("<div></div>");
 
                 let formDescripcionGrupo = $("<form></form>");
-                formDescripcionGrupo.attr("id","formCambiaDescripcionGrupo");
-                formDescripcionGrupo.attr("autocomplete","off");
+                formDescripcionGrupo.attr("id", "formCambiaDescripcionGrupo");
+                formDescripcionGrupo.attr("autocomplete", "off");
 
                 let formGroupDescripcionGrupo = $("<div></div>").addClass("form-group");
                 let labelDescripcionGrupo = $("<label></label>");
                 labelDescripcionGrupo.text("Descripción del grupo");
-                labelDescripcionGrupo.attr("for","inputDescripcionGrupo");
+                labelDescripcionGrupo.attr("for", "inputDescripcionGrupo");
                 let inputDescripcionGrupo = $("<input>").addClass("form-control");
-                inputDescripcionGrupo.attr("id","inputDescripcionGrupo");
-                inputDescripcionGrupo.attr("type","text");
-                inputDescripcionGrupo.attr("required","true");
+                inputDescripcionGrupo.attr("id", "inputDescripcionGrupo");
+                inputDescripcionGrupo.attr("type", "text");
+                inputDescripcionGrupo.attr("required", "true");
                 formGroupDescripcionGrupo.append(labelDescripcionGrupo);
                 formGroupDescripcionGrupo.append(inputDescripcionGrupo);
                 formDescripcionGrupo.append(formGroupDescripcionGrupo);
-                
+
                 let buttonSubmitCreaGrupo = $("<button></button>").addClass("btn btn-danger btn-block mt-4");
-                buttonSubmitCreaGrupo.attr("type","submit");
+                buttonSubmitCreaGrupo.attr("type", "submit");
                 buttonSubmitCreaGrupo.text("Cambiar descripción");
                 formDescripcionGrupo.append(buttonSubmitCreaGrupo);
-                
+
                 contenedorDescripcionGrupo.append(formDescripcionGrupo);
-                
+
                 inputDescripcionGrupo.val(user.descripcion_grupo);
-                
+
                 console.log("Cargar modal para la descripcion");
                 Swal.fire({
                     html: contenedorDescripcionGrupo,
@@ -4754,11 +4775,11 @@ function contacto_chat(user, group, statusGroup) {
                     showConfirmButton: false,
                     cancelButtonText: 'Cancelar',
                     allowOutsideClick: false,
-                    allowEscapeKey : false
+                    allowEscapeKey: false
                 });
-                
+
                 $("#formCambiaDescripcionGrupo").submit((e) => {
-        
+
                     e.preventDefault();
                     let descripcionGrupo = $("#inputDescripcionGrupo").val().trim();
 
@@ -4771,69 +4792,69 @@ function contacto_chat(user, group, statusGroup) {
                     };
 
                     RequestPOST("/API/empresas360/cambiar_parametro_grupo", dataEditaTituloGrupo).then((response) => {
-                        if(response.success){
+                        if (response.success) {
                             Swal.close();
                             console.log("Se cambio la descripcion exitosamente");
                             console.log("Se debio enviar por socket");
                             let mensajeCambio = sesion_cookie.nombre + " " + sesion_cookie.apellidos + " ha cambiado la descripción del grupo";
-                            mensajeSistema(mensajeCambio, user.id360, true );
+                            mensajeSistema(mensajeCambio, user.id360, true);
                         }
                     });
 
                 });
-                
+
             });
-            
+
             let pParticipantesLabel = $("<p></p>");
             pParticipantesLabel.css({
-                "color":"#40474f",
-                "font-size":"1.3rem",
-                "margin-top":"30px",
+                "color": "#40474f",
+                "font-size": "1.3rem",
+                "margin-top": "30px",
                 "text-align": "left",
                 "padding-left": "20px"
             });
             pParticipantesLabel.text("Participantes");
             divDescripcionContacto.append(pParticipantesLabel);
-            
+
             let ulParticipantes = $("<ul></ul>");
-            ulParticipantes.attr("id","listadoParticipantesGrupo_" + user.id360);
+            ulParticipantes.attr("id", "listadoParticipantesGrupo_" + user.id360);
             ulParticipantes.css({
-                "list-style":"none",
+                "list-style": "none",
                 "padding-left": "0"
             });
-            
+
             let liAgregaParticipante = $("<li></li>");
             liAgregaParticipante.css({
-                "text-align":"left",
-                "color":"#32465a",
-                "font-size":"1.4rem",
-                "cursor":"pointer",
-                "padding":"15px 0 15px 20px"
+                "text-align": "left",
+                "color": "#32465a",
+                "font-size": "1.4rem",
+                "cursor": "pointer",
+                "padding": "15px 0 15px 20px"
             });
             let buttonAgregaParticipante = $("<button></button>").addClass("btn");
             buttonAgregaParticipante.css({
-                "background-color":"rgb(50, 70, 90)",
-                "border-color":"rgb(50, 70, 90)",
+                "background-color": "rgb(50, 70, 90)",
+                "border-color": "rgb(50, 70, 90)",
                 "border-radius": "50%",
-                "width":"30px",
-                "height":"30px",
-                "color":"#fff"
+                "width": "30px",
+                "height": "30px",
+                "color": "#fff"
             });
             buttonAgregaParticipante.append('<i class="fas fa-plus"></i>');
-            
+
             let spanAgregaParticipante = $("<span></span>").addClass("ml-2");
             spanAgregaParticipante.text("Agregar Participante");
-            
+
             liAgregaParticipante.append(buttonAgregaParticipante);
             liAgregaParticipante.append(spanAgregaParticipante);
-            
+
             liAgregaParticipante.mouseenter(() => {
                 liAgregaParticipante.css({"background-color": "rgba(0, 0, 0, 0.1)"});
             }).mouseleave(() => {
                 liAgregaParticipante.css({"background-color": "transparent"});
             }).click(() => {
                 muestraSpin();
-                RequestPOST("/API/empresas360/consultar_participantes_grupos", {"idGroup":user.id360}).then((response) => {
+                RequestPOST("/API/empresas360/consultar_participantes_grupos", {"idGroup": user.id360}).then((response) => {
                     ocultaSpin();
                     let pa = [];
                     $.each(response, (index, user) => {
@@ -4842,139 +4863,139 @@ function contacto_chat(user, group, statusGroup) {
                     agregarParticipanteGrupo(user.id360, pa);
                 });
             });
-            
+
             ulParticipantes.append(liAgregaParticipante);
-            
+
             let participantesGrupos = user.participantesRol;
             $.each(participantesGrupos, (index, participante) => {
-                
+
                 let partesParticipantes = participante.split("-");
                 let id360Participante = partesParticipantes[0];
                 let rolParticipante = parseInt(partesParticipantes[1]);
-                
+
                 let userGrupo = null;
-                if( id360Participante === sesion_cookie.idUsuario_Sys ){
+                if (id360Participante === sesion_cookie.idUsuario_Sys) {
                     userGrupo = {
                         img: perfil.img,
-                        id360 : sesion_cookie.idUsuario_Sys,
+                        id360: sesion_cookie.idUsuario_Sys,
                         apellido_paterno: sesion_cookie.apellido_p,
                         apellido_materno: sesion_cookie.apellido_m,
                         nombre: sesion_cookie.nombre
                     };
-                }else{
+                } else {
                     userGrupo = buscaEnDirectorioCompleto(id360Participante);
                 }
-               
-                if(userGrupo !== undefined){
+
+                if (userGrupo !== undefined) {
                     let liParticipante = $("<li></li>");
-                    liParticipante.attr("id", user.id360 + "_" +  id360Participante);
+                    liParticipante.attr("id", user.id360 + "_" + id360Participante);
                     liParticipante.css({
-                        "text-align":"left",
-                        "color":"#32465a",
-                        "font-size":"1.4rem",
-                        "cursor":"pointer",
-                        "padding":"15px 0 15px 20px"
+                        "text-align": "left",
+                        "color": "#32465a",
+                        "font-size": "1.4rem",
+                        "cursor": "pointer",
+                        "padding": "15px 0 15px 20px"
                     });
                     let imgParticipante = $("<img>");
-                    imgParticipante.attr("src", userGrupo.img );
+                    imgParticipante.attr("src", userGrupo.img);
                     imgParticipante.css({
-                        "width":"30px",
-                        "height":"30px",
-                        "border-radius":"50%"
+                        "width": "30px",
+                        "height": "30px",
+                        "border-radius": "50%"
                     });
                     let spanParticipante = $("<span></span>").addClass("ml-2");
                     spanParticipante.text(userGrupo.nombre + " " + userGrupo.apellido_paterno + " " + userGrupo.apellido_materno);
-                    
-                    if(rolParticipante > 0){
+
+                    if (rolParticipante > 0) {
                         let iconAdmin = $("<i></i>").addClass("mr-2");
-                        if(rolParticipante === 1){
+                        if (rolParticipante === 1) {
                             iconAdmin.addClass("fas fa-user-shield");
-                        }else{
+                        } else {
                             iconAdmin.addClass("fas fa-crown");
                         }
                         spanParticipante.prepend(iconAdmin);
                     }
-                    
+
                     liParticipante.append(imgParticipante);
                     liParticipante.append(spanParticipante);
-                    
+
                     ulParticipantes.append(liParticipante);
-                    
+
                     liParticipante.mouseenter(() => {
                         liParticipante.css({"background-color": "rgba(0, 0, 0, 0.1)"});
                     }).mouseleave(() => {
                         liParticipante.css({"background-color": "transparent"});
                     });
-                    
-                    if(userGrupo.id360 !== sesion_cookie.idUsuario_Sys){
+
+                    if (userGrupo.id360 !== sesion_cookie.idUsuario_Sys) {
                         liParticipante.click(() => {
                             $("#profile_chat" + userGrupo.id360).click();
                         });
                     }
-                    
-                    if(userGrupo.id360 !== sesion_cookie.idUsuario_Sys && rolParticipante !== 2){
-                        
-                        liParticipante.on('contextmenu', function(e) {
+
+                    if (userGrupo.id360 !== sesion_cookie.idUsuario_Sys && rolParticipante !== 2) {
+
+                        liParticipante.on('contextmenu', function (e) {
                             e.preventDefault();
 
                             var myMenu = [{
-                                icon: 'fa fa-trash',
-                                label: 'Eliminar participante',
-                                action: function(option, contextMenuIndex, optionIndex) {
-                                    eliminaParticipanteGrupo(id360Participante, user.id360);
-                                },
-                                submenu: null,
-                                disabled: false 
-                            }];
-                        
-                            if(rolParticipante !== 2 && rolParticipante !== 1){
+                                    icon: 'fa fa-trash',
+                                    label: 'Eliminar participante',
+                                    action: function (option, contextMenuIndex, optionIndex) {
+                                        eliminaParticipanteGrupo(id360Participante, user.id360);
+                                    },
+                                    submenu: null,
+                                    disabled: false
+                                }];
+
+                            if (rolParticipante !== 2 && rolParticipante !== 1) {
                                 let opcionHacerAdmin = {
                                     icon: 'fas fa-user-shield',
                                     label: 'Designar como administrador',
-                                    action: function(option, contextMenuIndex, optionIndex) {
+                                    action: function (option, contextMenuIndex, optionIndex) {
                                         hacerAdministrador(id360Participante, user.id360);
                                     },
                                     submenu: null,
-                                    disabled: false 
+                                    disabled: false
                                 };
                                 myMenu.push(opcionHacerAdmin);
                             }
-                            
-                            if(rolParticipante === 1){
+
+                            if (rolParticipante === 1) {
                                 let opcionHacerAdmin = {
                                     icon: 'fas fa-user-times',
                                     label: 'Descartar como administrador',
-                                    action: function(option, contextMenuIndex, optionIndex) {
+                                    action: function (option, contextMenuIndex, optionIndex) {
                                         quitarAdministrador(id360Participante, user.id360);
                                     },
                                     submenu: null,
-                                    disabled: false 
+                                    disabled: false
                                 };
                                 myMenu.push(opcionHacerAdmin);
                             }
 
                             superCm.createMenu(myMenu, e);
                         });
-                    }else{
-                       liParticipante.on('contextmenu', function(e) {
+                    } else {
+                        liParticipante.on('contextmenu', function (e) {
                             e.preventDefault();
 
                             var myMenu = [{
-                                label: '(vacío)',
-                                submenu: null,
-                                disabled: true 
-                            }];
+                                    label: '(vacío)',
+                                    submenu: null,
+                                    disabled: true
+                                }];
 
                             superCm.createMenu(myMenu, e);
-                        }); 
+                        });
                     }
-                    
+
                 }
             });
-            
+
             divDescripcionContacto.append(ulParticipantes);
-            
-        }else{
+
+        } else {
             agregaEnlaceCompartidos();
             agregaEnlaceArchivosCompartidos();
             agregaEnlaceVinculosCompartidos();
@@ -4992,10 +5013,10 @@ function contacto_chat(user, group, statusGroup) {
         });
 
         buttonAttachment.click(() => {
-            if(banderaEditando)
-                swal.fire({text:"Solo se permiten editar mensajes de texto"});
+            if (banderaEditando)
+                swal.fire({text: "Solo se permiten editar mensajes de texto"});
             else
-            inputAttachment.click();
+                inputAttachment.click();
         });
 
         inputAttachment.change((e) => {
@@ -5104,9 +5125,9 @@ function contacto_chat(user, group, statusGroup) {
             //guarda_adjunto(inputAttachment.attr("id"));
             divCargando.removeClass("d-none");
             let idInput = "";
-            if(inputAttachment.val() !== undefined && inputAttachment.val() !== null && inputAttachment.val() !== ""){
+            if (inputAttachment.val() !== undefined && inputAttachment.val() !== null && inputAttachment.val() !== "") {
                 idInput = inputAttachment.attr("id");
-            }else{
+            } else {
                 idInput = inputArrastraSuelta.attr("id");
             }
             console.log(idInput);
@@ -5210,7 +5231,7 @@ function contacto_chat(user, group, statusGroup) {
             if (e.which == 13) {
                 send_chat_messages(input, ul, preview, user, messages);
                 return false;
-            }else if(e.which == 27){
+            } else if (e.which == 27) {
                 apagaValores();
                 return false;
             }
@@ -5225,38 +5246,39 @@ function contacto_chat(user, group, statusGroup) {
         });
 
         const clickVerMensaje = () => {
-            
+
             let idPrimerMensajeNoLeido = "";
-            
+
             if (CantidadMensajesPorChat[user.id360] !== undefined && CantidadMensajesPorChat[user.id360].cantidadMensajesNoLeidos > 0) {
-                
-                idPrimerMensajeNoLeido = CantidadMensajesPorChat[user.id360].mensajesNoLeidos[CantidadMensajesPorChat[user.id360].mensajesNoLeidos.length-1];
-                
+
+                idPrimerMensajeNoLeido = CantidadMensajesPorChat[user.id360].mensajesNoLeidos[CantidadMensajesPorChat[user.id360].mensajesNoLeidos.length - 1];
+
                 divMensajesNoLeidos.addClass("d-none");
                 CantidadMensajesPorChat[user.id360].cantidadMensajesNoLeidos = 0;
                 let chats = {
                     chats: CantidadMensajesPorChat[user.id360].mensajesNoLeidos
                 };
                 CantidadMensajesPorChat[user.id360].mensajesNoLeidos = [];
-                
-                RequestPOST("/API/empresas360/marcar_chats_leidos", chats).then((response) => {});
-                
-            }else{
+
+                RequestPOST("/API/empresas360/marcar_chats_leidos", chats).then((response) => {
+                });
+
+            } else {
                 idPrimerMensajeNoLeido = "";
             }
-            
+
             $(".content").addClass("d-none");
             content.removeClass("d-none");
-            
+
             //if(idPrimerMensajeNoLeido === ""){
-                $(".messages").animate({scrollTop: $(document).height() + 100000}, "fast");
+            $(".messages").animate({scrollTop: $(document).height() + 100000}, "fast");
             //}else{
-                /*if($("#mensaje_" + idPrimerMensajeNoLeido).length){
-                    document.querySelector("#mensaje_" + idPrimerMensajeNoLeido).scrollIntoView();
-                    document.querySelector("#mensaje_" + idPrimerMensajeNoLeido).scrollIntoView();
-                }*/
+            /*if($("#mensaje_" + idPrimerMensajeNoLeido).length){
+             document.querySelector("#mensaje_" + idPrimerMensajeNoLeido).scrollIntoView();
+             document.querySelector("#mensaje_" + idPrimerMensajeNoLeido).scrollIntoView();
+             }*/
             //}
-            
+
             $("#message_input_" + user.id360).focus();
         };
 
@@ -5275,13 +5297,13 @@ function contacto_chat(user, group, statusGroup) {
         });
 
         const clickIniciarLlamada = () => {
-            
+
             let nombreLlamada;
-            if(group)
+            if (group)
                 nombreLlamada = user.nombre_grupo;
             else
                 nombreLlamada = user.nombre + " " + user.apellido_paterno + " " + user.apellido_materno;
-            
+
             Swal.fire({
                 text: "Iniciar una llamada con: " + nombreLlamada,
                 showCancelButton: true,
@@ -5304,52 +5326,69 @@ function contacto_chat(user, group, statusGroup) {
                     //initCall();  
                     RequestPOST("/API/notificacion/llamada360", id360).then((msj) => {
                         dataLlamada = msj;
+                        if (mensaje.credenciales.RoomName) {
+                            RequestPOST("/API/cuenta360/access_token", {
+                                "token": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).token,
+                                "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+                                "id_sesion": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_sesion
+                            }).then(function (response) {
+                                if (response.success) {
+                                    //access_token
+                                    let nombre = sesion_cookie.nombre + " " + sesion_cookie.apellido_p + " " + sesion_cookie.apellido_m;
+                                    window.open('https://meeting.claro360.com/room/' + msj.credenciales.RoomName + "/usr360/" + sesion_cookie.id_usuario + "/" + sesion_cookie.id_sesion + "/" + sesion_cookie.tipo_usuario + "/" + sesion_cookie.tipo_servicio + "/" + sesion_cookie.tipo_area + "/" + response.access_token + "/" + normalize_text(nombre) + "/" + mensaje.registro_llamada.idLlamada, '_blank');
 
-                        Swal.fire({
-                            text: '¿Cómo quieres continuar la llamada? (Selecciona ventana externa.)',
-                            showCancelButton: true,
-                            confirmButtonText: `Ventana externa`,
-                            cancelButtonText: `Aquí mismo.`
-                        }).then((result) => {
-                            /* Read more about isConfirmed, isDenied below */
-                            console.log("Presionado " + result.isConfirmed);
-                            console.log(result);
-                            if (result.value) {
-                                console.log("Externa");
-                                window.open('https://empresas.claro360.com/plataforma360_dev/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');
-                            } else {
-                                console.log("Aquí mismo");
-                                console.log(result);
-                                $("#menu_section_Comunicación").click();
-                                initCall();
-                            }
-                        });
+                                }
+
+                            });
+
+                        } else {
+                            window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
+                        }
+//                        Swal.fire({
+//                            text: '¿Cómo quieres continuar la llamada? (Selecciona ventana externa.)',
+//                            showCancelButton: true,
+//                            confirmButtonText: `Ventana externa`,
+//                            cancelButtonText: `Aquí mismo.`
+//                        }).then((result) => {
+//                            /* Read more about isConfirmed, isDenied below */
+//                            console.log("Presionado " + result.isConfirmed);
+//                            console.log(result);
+//                            if (result.value) {
+//                                console.log("Externa");
+//                                window.open('https://empresas.claro360.com/plataforma360_dev/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');
+//                            } else {
+//                                console.log("Aquí mismo");
+//                                console.log(result);
+//                                $("#menu_section_Comunicación").click();
+//                                initCall();
+//                            }
+//                        });
 
                     });
                 }
             });
         };
-        
+
         opcionVaciarChat.click(() => {
-            swalConfirmDialog("¿Vaciar chat?","Vaciar","Cancelar").then((response) => {
+            swalConfirmDialog("¿Vaciar chat?", "Vaciar", "Cancelar").then((response) => {
                 apagaValores();
-                if(response){
+                if (response) {
                     let dataChat = {
                         "idUser": sesion_cookie.idUsuario_Sys,
                         "idContact": user.id360
                     };
-                    
+
                     RequestPOST("/API/empresas360/vaciarChat", dataChat).then((response) => {
-                        if(response){
+                        if (response) {
                             ul.empty();
                             preview.text("");
                         }
                     });
-                    
+
                 }
             });
         });
-        
+
         inputArrastraSuelta.fileinput({
             theme: 'fa',
             language: 'es',
@@ -5357,9 +5396,9 @@ function contacto_chat(user, group, statusGroup) {
             showRemove: false,
             showUpload: false,
             showDownload: false
-        }).on('fileselect', function(event, numFiles, label) {
+        }).on('fileselect', function (event, numFiles, label) {
             contenedorArrastraYSuelta.addClass("d-none");
-            
+
             let reader = new FileReader();
 
             reader.readAsDataURL(event.target.files[0]);
@@ -5452,40 +5491,40 @@ function contacto_chat(user, group, statusGroup) {
         });
 
         divAux.find(".file-drop-zone").css({
-            "display":"flex",
-            "justify-content":"center",
-            "align-items":"center"
+            "display": "flex",
+            "justify-content": "center",
+            "align-items": "center"
         });
 
         divAux.find(".input-group, .file-preview-thumbnails").addClass("d-none");
-        
+
         $("#emojipicket" + user.id360).on("emoji-click", (event) => {
             let emojiPicker = $("#emojipicket" + user.id360);
             let idContacto = emojiPicker.data("idcontacto");
             let input = $("#message_input_" + idContacto);
-            let textDefault = input.val();            
-            input.val( textDefault + event.detail.unicode );
+            let textDefault = input.val();
+            input.val(textDefault + event.detail.unicode);
         });
-        
+
     }
 
 }
 
 function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
-    
+
     let mensaje = input.val();
     $(".filaMensajesOperaciones").addClass("d-none");
-    
+
     //Retornar si el mensaje está vació
     if ($.trim(mensaje) === '' && rutaAdjunto === "") {
         return false;
     }
-    
+
     //Proceso en caso de que se está editando un mensaje
-    if(banderaEditando){
-        
+    if (banderaEditando) {
+
         let id = idMensajeEditando;
-        
+
         let data = {
             "mensaje_editado": mensaje,
             "fecha_edita": getFecha(),
@@ -5494,19 +5533,19 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
             "to_id360": user.id360,
             "id360": sesion_cookie.idUsuario_Sys
         };
-        
-        if(banderaEditandoGrupo){
+
+        if (banderaEditandoGrupo) {
             data.esGrupo = true;
         }
-        
-        RequestPOST("/API/empresas360/edita_mensaje", data).then((response) => {  
-            if( response.success ){
+
+        RequestPOST("/API/empresas360/edita_mensaje", data).then((response) => {
+            if (response.success) {
                 console.log("Se envió la edición del mensaje");
                 console.log("Debe llegar por socket");
                 input.val("");
             }
         });
-        
+
         return false;
     }
 
@@ -5516,7 +5555,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
 
     //Validar si es un mensaje de sistema o es un mensaje enviado por el usuario    
     let quienEnvia = user.mensajeSistema ? null : sesion_cookie.id_usuario;
-    
+
     //data del mensaje
     let json = {
         "to_id360": user.id360,
@@ -5528,33 +5567,33 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
         "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
         "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
     };
-    
+
     //Si no es un mensaje de sistema, el id360 es el id del usuario
-    if(quienEnvia !== null){
+    if (quienEnvia !== null) {
         json.id360 = sesion_cookie.id_usuario;
     }
-    
+
     //En caso de ser una respuesta se debe agregar la llave con el id del mensaje respondido
-    if(banderaRespondiendo){
+    if (banderaRespondiendo) {
         json.idResponse = idMensajeRespondiendo;
     }
-    
+
     //Validar si el mensaje es para un grupo de chat
-    let esGrupo = $("#messages_"+user.id360).data("grupo");
-    if(esGrupo !== undefined && esGrupo !== null && esGrupo === "true"){
+    let esGrupo = $("#messages_" + user.id360).data("grupo");
+    if (esGrupo !== undefined && esGrupo !== null && esGrupo === "true") {
         //En caso de serlo se agrega el id del grupo y los participantes a los que se le debe enviar
         json.idGroup = user.id360;
-        let participantes = $("#messages_"+user.id360).data("participantes").split(",");
+        let participantes = $("#messages_" + user.id360).data("participantes").split(",");
         json.participantes = participantes;
     }
 
     //En caso de que el mensaje sea una ruta de adjunto, el tipo de texto será la extensión del mismo
-    if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== ""){
+    if (rutaAdjunto !== undefined && rutaAdjunto !== null && rutaAdjunto !== "") {
         let extension = '';
         let extensionNormal = $("#inputAttachment" + user.id360).data("extension");
-        if(extensionNormal !== undefined && extensionNormal !== null && extensionNormal !== ""){
+        if (extensionNormal !== undefined && extensionNormal !== null && extensionNormal !== "") {
             extension = extensionNormal;
-        }else{
+        } else {
             extension = $("#inputAttachmentArrastra" + user.id360).data("extension");
             $("#inputAttachmentArrastra" + user.id360).fileinput("clear");
         }
@@ -5564,7 +5603,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
     //Envío del chat
     console.log(json);
     RequestPOST("/API/empresas360/chat", json).then((response) => {
-        if (response.success){
+        if (response.success) {
             console.log("Se ha enviado el mensaje exitosamente.");
             console.log("Se debe desplegar a través de socket");
             input.val("");
