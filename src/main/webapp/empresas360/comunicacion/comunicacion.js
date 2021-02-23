@@ -5326,7 +5326,7 @@ function contacto_chat(user, group, statusGroup) {
                     //initCall();  
                     RequestPOST("/API/notificacion/llamada360", id360).then((msj) => {
                         dataLlamada = msj;
-                        if (msj.credenciales.RoomName) {
+                        if (msj.credenciales.roomName) {
                             RequestPOST("/API/cuenta360/access_token", {
                                 "token": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).token,
                                 "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
