@@ -1032,11 +1032,9 @@ var init_archivo = (json) => {
     $("#archivos_envio").fileinput({
         theme: 'fa',
         language: 'es',
-        maxFileCount: 5,
-        showRemove: true,
-        showUpload: false,
-        showDownload: false,
-        initialPreviewFileType: 'image'
+        maxFileCount: 4,
+        validateInitialCount: true,
+        overwriteInitial: false
     });
     
     $('#descripcionArchivo').summernote();
@@ -1252,8 +1250,8 @@ var init_archivo = (json) => {
 
                     promise.then((data)=>{
 
-                        arregloBanderas[x] = false;
-                        cadenaArchivos = data.Location;
+                        arregloBanderas[x] = true;
+                        cadenaArchivos += data.Location + ",";
 
                     },(error)=>{
                         console.log("error",error);
@@ -1262,6 +1260,7 @@ var init_archivo = (json) => {
                 }
                 
                 const registraArchivosDB = () => {
+                    cadenaArchivos = cadenaArchivos.slice(0,-1);
                     let dataArchivo = {
                         'titulo_archivo': $("#tituloArchivo").val(),
                         'descripcion_archivo': $("#descripcionArchivo").summernote('code'),
@@ -1277,8 +1276,6 @@ var init_archivo = (json) => {
                     RequestPOST("/API/empresas360/guardar_archivo_empresas", dataArchivo).then((response) => {
 
                         ocultaLoaderArchivo();
-
-                        buscaArchivosEnviado();
 
                         if( response.success ){
                             formEnvioArchivo[0].reset();
@@ -1307,7 +1304,6 @@ var init_archivo = (json) => {
                 };
                 
                 var esperaCarga = setInterval(function(){
-                    
                     let yaAcabo = true;
                     let cantidadArchivos = arregloBanderas.length;
                     for(let x = 0; x<cantidadArchivos; x++){
@@ -1321,7 +1317,7 @@ var init_archivo = (json) => {
                         
                         registraArchivosDB();
                         
-                        clearInterval(yaAcabo);
+                        clearInterval(esperaCarga);
                     }
                     
                 }, 500);
