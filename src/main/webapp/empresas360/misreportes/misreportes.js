@@ -24,7 +24,7 @@ $(document).ready(async function () {
      console.log("Ocurrio un problema en la llamada jornadas Laborales Empleado", err)
      }
      })*/
-    jornadas_laborales_empleado = [perfil_usuario]
+    jornadas_laborales_empleado = await [perfil_usuario]
 
     let datosVistaReporteDetallado
     if (jornadas_laborales_empleado[0]) {
@@ -40,7 +40,7 @@ $(document).ready(async function () {
         };
         if (location_user !== null) {
             if (location_user.municipio !== null && location_user.estado !== null) {
-                datosVistaReporteDetallado.direccion = location_user.colonia + " " + location_user.municipio + " " + location_user.estado_long
+                datosVistaReporteDetallado.direccion = await location_user.colonia + " " + location_user.municipio + " " + location_user.estado_long
             }
         } else {
             datosVistaReporteDetallado.direccion = " - - - - "
@@ -265,305 +265,305 @@ $(document).ready(async function () {
     }
 
     //RENDIMIENTO MENSUAL
-    const rendimientoMensual = async (numeroMes) => {
-        //SERVIDOR        
-        const inicioMes = moment().set('month', numeroMes).startOf('month').format('YYYY-MM-DD');
-        const finMes = moment().set('month', numeroMes).endOf('month').format('YYYY-MM-DD');
-
-        let mesEnRevision = today
-        mesEnRevision.setMonth(numeroMes)
-        let mesString = mesEnRevision.toLocaleDateString('es-ES', {month: 'long'})
-        const primerLetraMes = mesString.charAt(0).toUpperCase()
-        const restoCadenaMes = mesString.substring(1, mesString.length)
-        mesString = primerLetraMes.concat(restoCadenaMes)
-        $("#stringMesRendimientoMensualMisReportes").text(mesString)
-        //SERVIDOR
-        let jornadasLaboralesMesEmpleado = await $.ajax({
-            type: 'POST',
-            url: 'https://empresas.claro360.com/plataforma360/API/empresas360/jornadas_laborales',
-            contentType: "application/json",
-            dataType: "json",
-            data: JSON.stringify({
-                id: id360Estatico,
-                inicio: inicioMes,
-                fin: finMes
-            }),
-            success: function (response) {
-                //console.log("RES JSON1: ", response)
-            },
-            error: function (err) {
-                console.log("Ocurrio un problema en la llamada jornadasLaboralesMesEmpleado", err)
-            }
-        })
-
-        let horaEntrada2 = undefined
-        let tiempoCreado2 = undefined
-        retardos = {}
-        let retardos3 = []
-        puntuales = {}
-        let puntuales3 = []
-        let puntualidad = 0
-        let numeroRetardos = 1
-        let horasMesEmpleado = 0
-
-        if (jornadasLaboralesMesEmpleado.data) {
-            jornadasLaboralesMesEmpleado.data.forEach(element => {
-                tiempoCreado2 = moment(element.date_created + "T" + element.time_created)
-                horaEntrada2 = moment(element.date_created + "T" + jornadas_laborales_empleado[0].horario_entrada)
-                horaEntrada2.add(moment.duration("00:01:00"))
-                if (element.time_finished) {
-                    tiempoTerminado2 = moment(element.date_updated + "T" + element.time_finished)
-                    horasMesEmpleado += tiempoTerminado2.diff(tiempoCreado2, 'hours') - 2
-                }
-                if (tiempoCreado2 >= horaEntrada2) {
-                    retardos[new Date(element.date_created + "T00:00")] = new Date(element.date_created + "T00:00")
-                    retardos3.push(element)
-                } else {
-                    puntuales[new Date(element.date_created + "T00:00")] = new Date(element.date_created + "T00:00")
-                    puntuales3.push(element)
-                }
-            })
-            puntualidad = puntuales3.length
-            numeroRetardos = retardos3.length
-        }
-
-        google.charts.load("current", {packages: ["corechart"]});
-        google.charts.setOnLoadCallback(drawChartMisReportesPuntualidad);
-        function drawChartMisReportesPuntualidad() {
-            var data = google.visualization.arrayToDataTable([
-                ['Task', 'Hours per Day'],
-                ['Puntualidad', puntualidad],
-                ['Inpuntualidad', numeroRetardos]
-            ]);
-            var options = {
-                //title: 'Puntualidad',
-                //width: '100%',
-                pieHole: 0.8,
-                colors: ['#D54152', 'C6C6C4'],
-                backgroundColor: '#f5f5f5',
-                legend: 'none',
-                pieSliceText: 'none',
-                pieSliceTextStyle: {
-                    color: 'black',
-                    //fontSize: 20
-                    bold: true
-                },
-                chartArea: {
-                    left: 0,
-                    height: "90%",
-                    //top: "0%",
-                    width: "100%"
-                }
-            }
-            ;
-            var chart = new google.visualization.PieChart(document.getElementById('donutchart3MisReportes'));
-            chart.draw(data, options);
-        }
-
-
-        //RESUMEN GENERAL
-        //TOTAL DE DIAS RENDIMIENTO MENSUAL    
-        var from = moment(inicioMes, "YYYY-MM-DD"),
-                to = moment(finMes, "YYYY-MM-DD"),
-                diasTotales = 0;
-        faltas = {}
-        let faltasArreglo = []
-        let numeroFaltas = 1
-        let faltaEncontrada = false
-        while (!from.isAfter(to)) {
-            // Si no es sabado ni domingo
-            if (from.isoWeekday() !== 6 && from.isoWeekday() !== 7) {
-                diasTotales++;
-                diasFestivos.forEach(element => {
-                    if (from.format('YYYY-MM-DD') === element.format("YYYY-MM-DD")) {
-                        diasTotales--
-                    }
-                })
-                if (jornadasLaboralesMesEmpleado.data) {
-                    faltaEncontrada = false
-                    for (let i = 0; i < jornadasLaboralesMesEmpleado.data.length; i++) {
-                        if (from.format('YYYY-MM-DD') === jornadasLaboralesMesEmpleado.data[i].date_created) {
-                            faltaEncontrada = false
-                            break
-                        } else {
-                            //faltaEncontrada = true
-                            for (let j = 0; j < diasFestivos.length; j++) {
-                                if (from.format('YYYY-MM-DD') === diasFestivos[j].format("YYYY-MM-DD")) {
-                                    faltaEncontrada = false
-                                    break;
-                                } else {
-                                    //faltaEncontrada = true
-                                    if (from.format('YYYY-MM-DD') < moment().format('YYYY-MM-DD')) {
-                                        faltaEncontrada = true
-                                    } else {
-                                        faltaEncontrada = false
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    numeroFaltas = faltasArreglo.length
-                }
-                if (faltaEncontrada) {
-                    faltas[new Date(from.format('YYYY-MM-DD') + "T00:00")] = new Date(from.format('YYYY-MM-DD') + "T00:00")
-                    faltasArreglo.push(from.format('YYYY-MM-DD'))
-                    numeroFaltas = faltasArreglo.length
-                }
-            }
-            from.add(1, 'days');
-        }
-
-        let horasTotalesLaboralesMesEmpleado = diasTotales * 8
-        let inactividadMensual = horasTotalesLaboralesMesEmpleado - horasMesEmpleado
-        if (inactividadMensual < 0) {
-            inactividadMensual = 0
-        }
-        let porcentajeProductividadMensual = 0
-        porcentajeProductividadMensual = ((horasMesEmpleado / horasTotalesLaboralesMesEmpleado) * 100)
-        porcentajeProductividadMensual = porcentajeProductividadMensual > 100 ? 100 : porcentajeProductividadMensual.toFixed()
-
-        google.charts.load("current", {packages: ["corechart"]});
-        google.charts.setOnLoadCallback(drawChart3MisReportes);
-        function drawChart3MisReportes() {
-            var data = google.visualization.arrayToDataTable([
-                ['Task', 'Hours per Day'],
-                ['Productividad', horasMesEmpleado],
-                ['Inactividad', inactividadMensual]
-            ]);
-            var options = {
-                //title: 'Productividad',
-                //width: '100%',                
-                pieHole: 0.8,
-                colors: ['#93C12A', '#C6C6C4'],
-                backgroundColor: '#f5f5f5',
-                legend: 'none',
-                pieSliceText: 'none',
-                pieSliceTextStyle: {
-                    color: 'black',
-                    //fontSize: 20
-                    bold: true
-                },
-                chartArea: {
-                    left: "0",
-                    height: "90%",
-                    //top: "0%",
-                    width: "100%"
-                }
-            };
-            var chart = new google.visualization.PieChart(document.getElementById('donutchart2MisReportes'));
-            chart.draw(data, options);
-        }
-        let diasLaboraloMesEmpleado = 0
-        let porcentajePuntualidad = 0
-        let porcentajeCumplimiento = 0
-        if (jornadasLaboralesMesEmpleado.data) {
-            diasLaboraloMesEmpleado = jornadasLaboralesMesEmpleado.data.length
-            porcentajePuntualidad = ((puntualidad / diasLaboraloMesEmpleado) * 100)
-            porcentajePuntualidad = porcentajePuntualidad > 100 ? 100 : porcentajePuntualidad.toFixed()
-            porcentajeCumplimiento = ((diasLaboraloMesEmpleado / (diasLaboraloMesEmpleado + numeroFaltas)) * 100)
-            porcentajeCumplimiento = porcentajeCumplimiento > 100 ? 100 : porcentajeCumplimiento.toFixed()
-        }
-        await google.charts.load("current", {packages: ["corechart"]});
-        await google.charts.setOnLoadCallback(drawChart4MisReportes);
-        async function drawChart4MisReportes() {
-            var data = google.visualization.arrayToDataTable([
-                ['Task', 'Hours per Day'],
-                ['Cumplimiento', diasLaboraloMesEmpleado],
-                ['Incumplimiento', numeroFaltas]
-            ]);
-            var options = {
-                //title: 'Cumplimiento',
-                //width: '100%',
-                pieHole: 0.8,
-                colors: ['#683982', 'C6C6C4'],
-                backgroundColor: '#f5f5f5',
-                legend: 'none',
-                pieSliceText: 'none',
-                pieSliceTextStyle: {
-                    color: 'black',
-                    //fontSize: 20
-                    bold: true
-                },
-                chartArea: {
-                    left: 0,
-                    height: "90%",
-                    //top: "0%",
-                    width: "100%"
-                }
-            };
-            var chart = new google.visualization.PieChart(document.getElementById('donutchart4MisReportes'));
-            await chart.draw(data, options);
-        }
-        $('#diasLaboralesMesEmpleadoMisReportes').text(diasLaboraloMesEmpleado)
-        $('#diasTotalesLaboralesMesEmpleadoMisReportes').text(diasTotales)
-        $('#horasLaboralesMesEmpleadoMisReportes').text(horasMesEmpleado)
-        $('#horasTotalesLaboralesMesEmpleadoMisReportes').text(horasTotalesLaboralesMesEmpleado)
-        $('#retardosLaboralesMesEmpleadoMisReportes').text(retardos3.length)
-        $('#faltasLaboralesMesEmpleadoMisReportes').text(faltasArreglo.length)
-        $("#jornadas_laborales_productividad_mensual_porcentajeMisReportes").text(porcentajeProductividadMensual);
-        $("#jornadas_laborales_puntualidad_porcentajeMisReportes").text(porcentajePuntualidad);
-        $("#jornadas_laborales_cumplimiento_porcentajeMisReportes").text(porcentajeCumplimiento);
-
-        //CALENDARIO
-        $.datepicker.regional['es'] = {
-            closeText: 'Cerrar',
-            prevText: '< ',
-            nextText: ' >',
-            currentText: 'Hoy',
-            monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-            monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-            dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-            dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
-            dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
-            weekHeader: 'Sm',
-            dateFormat: 'dd/mm/yy',
-            firstDay: 1,
-            isRTL: false,
-            showMonthAfterYear: false,
-            yearSuffix: ''
-        };
-        $.datepicker.setDefaults($.datepicker.regional['es']);
-
-        let vacaciones = {};
-        vacaciones[ new Date('01/29/2021')] = new Date('01/29/2021');
-        vacaciones[ new Date('01/30/2021')] = new Date('01/30/2021');
-        vacaciones[ new Date('01/31/2021')] = new Date('01/31/2021');
-
-        $("#calendarioRendimientoMensualMisReportes").datepicker("refresh")
-
-        await $("#calendarioRendimientoMensualMisReportes").datepicker({
-            firstDay: 0,
-            beforeShowDay: function (date) {
-                var highlight = puntuales[date];
-                var highlight2 = retardos[date];
-                var highlight3 = faltas[date];
-                var highlight4 = vacaciones[date];
-                if (highlight) {
-                    return [true, "puntuales", 'Tooltip text'];
-                }
-                if (highlight2) {
-                    return [true, "retardos", 'Tooltip text'];
-                }
-                if (highlight3) {
-                    return [true, "faltas", 'Tooltip text'];
-                }
-                if (highlight4) {
-                    return [true, "vacaciones", 'Tooltip text'];
-                } else {
-                    return [true, '', ''];
-                }
-            },
-            onChangeMonthYear: async function (year, month) {
-                await rendimientoMensual(month - 1)
-            }
-        });
-    }
-    await rendimientoMensual(moment().month())
-
-    const conResultados = $("#empleadoConHistorialLaboralMisReportes");
-    const sinResultados = $("#empleadoSinHistorialLaboralMisReportes");
-    conResultados.addClass("d-none");
-    sinResultados.addClass("d-none");
+    /*const rendimientoMensual = async (numeroMes) => {
+     //SERVIDOR        
+     const inicioMes = moment().set('month', numeroMes).startOf('month').format('YYYY-MM-DD');
+     const finMes = moment().set('month', numeroMes).endOf('month').format('YYYY-MM-DD');
+     
+     let mesEnRevision = today
+     mesEnRevision.setMonth(numeroMes)
+     let mesString = mesEnRevision.toLocaleDateString('es-ES', {month: 'long'})
+     const primerLetraMes = mesString.charAt(0).toUpperCase()
+     const restoCadenaMes = mesString.substring(1, mesString.length)
+     mesString = primerLetraMes.concat(restoCadenaMes)
+     $("#stringMesRendimientoMensualMisReportes").text(mesString)
+     //SERVIDOR
+     let jornadasLaboralesMesEmpleado = await $.ajax({
+     type: 'POST',
+     url: 'https://empresas.claro360.com/plataforma360/API/empresas360/jornadas_laborales',
+     contentType: "application/json",
+     dataType: "json",
+     data: JSON.stringify({
+     id: id360Estatico,
+     inicio: inicioMes,
+     fin: finMes
+     }),
+     success: function (response) {
+     //console.log("RES JSON1: ", response)
+     },
+     error: function (err) {
+     console.log("Ocurrio un problema en la llamada jornadasLaboralesMesEmpleado", err)
+     }
+     })
+     
+     let horaEntrada2 = undefined
+     let tiempoCreado2 = undefined
+     retardos = {}
+     let retardos3 = []
+     puntuales = {}
+     let puntuales3 = []
+     let puntualidad = 0
+     let numeroRetardos = 1
+     let horasMesEmpleado = 0
+     
+     if (jornadasLaboralesMesEmpleado.data) {
+     jornadasLaboralesMesEmpleado.data.forEach(element => {
+     tiempoCreado2 = moment(element.date_created + "T" + element.time_created)
+     horaEntrada2 = moment(element.date_created + "T" + jornadas_laborales_empleado[0].horario_entrada)
+     horaEntrada2.add(moment.duration("00:01:00"))
+     if (element.time_finished) {
+     tiempoTerminado2 = moment(element.date_updated + "T" + element.time_finished)
+     horasMesEmpleado += tiempoTerminado2.diff(tiempoCreado2, 'hours') - 2
+     }
+     if (tiempoCreado2 >= horaEntrada2) {
+     retardos[new Date(element.date_created + "T00:00")] = new Date(element.date_created + "T00:00")
+     retardos3.push(element)
+     } else {
+     puntuales[new Date(element.date_created + "T00:00")] = new Date(element.date_created + "T00:00")
+     puntuales3.push(element)
+     }
+     })
+     puntualidad = puntuales3.length
+     numeroRetardos = retardos3.length
+     }
+     
+     google.charts.load("current", {packages: ["corechart"]});
+     google.charts.setOnLoadCallback(drawChartMisReportesPuntualidad);
+     function drawChartMisReportesPuntualidad() {
+     var data = google.visualization.arrayToDataTable([
+     ['Task', 'Hours per Day'],
+     ['Puntualidad', puntualidad],
+     ['Inpuntualidad', numeroRetardos]
+     ]);
+     var options = {
+     //title: 'Puntualidad',
+     //width: '100%',
+     pieHole: 0.8,
+     colors: ['#D54152', 'C6C6C4'],
+     backgroundColor: '#f5f5f5',
+     legend: 'none',
+     pieSliceText: 'none',
+     pieSliceTextStyle: {
+     color: 'black',
+     //fontSize: 20
+     bold: true
+     },
+     chartArea: {
+     left: 0,
+     height: "90%",
+     //top: "0%",
+     width: "100%"
+     }
+     }
+     ;
+     var chart = new google.visualization.PieChart(document.getElementById('donutchart3MisReportes'));
+     chart.draw(data, options);
+     }
+     
+     
+     //RESUMEN GENERAL
+     //TOTAL DE DIAS RENDIMIENTO MENSUAL    
+     var from = moment(inicioMes, "YYYY-MM-DD"),
+     to = moment(finMes, "YYYY-MM-DD"),
+     diasTotales = 0;
+     faltas = {}
+     let faltasArreglo = []
+     let numeroFaltas = 1
+     let faltaEncontrada = false
+     while (!from.isAfter(to)) {
+     // Si no es sabado ni domingo
+     if (from.isoWeekday() !== 6 && from.isoWeekday() !== 7) {
+     diasTotales++;
+     diasFestivos.forEach(element => {
+     if (from.format('YYYY-MM-DD') === element.format("YYYY-MM-DD")) {
+     diasTotales--
+     }
+     })
+     if (jornadasLaboralesMesEmpleado.data) {
+     faltaEncontrada = false
+     for (let i = 0; i < jornadasLaboralesMesEmpleado.data.length; i++) {
+     if (from.format('YYYY-MM-DD') === jornadasLaboralesMesEmpleado.data[i].date_created) {
+     faltaEncontrada = false
+     break
+     } else {
+     //faltaEncontrada = true
+     for (let j = 0; j < diasFestivos.length; j++) {
+     if (from.format('YYYY-MM-DD') === diasFestivos[j].format("YYYY-MM-DD")) {
+     faltaEncontrada = false
+     break;
+     } else {
+     //faltaEncontrada = true
+     if (from.format('YYYY-MM-DD') < moment().format('YYYY-MM-DD')) {
+     faltaEncontrada = true
+     } else {
+     faltaEncontrada = false
+     }
+     }
+     }
+     }
+     }
+     numeroFaltas = faltasArreglo.length
+     }
+     if (faltaEncontrada) {
+     faltas[new Date(from.format('YYYY-MM-DD') + "T00:00")] = new Date(from.format('YYYY-MM-DD') + "T00:00")
+     faltasArreglo.push(from.format('YYYY-MM-DD'))
+     numeroFaltas = faltasArreglo.length
+     }
+     }
+     from.add(1, 'days');
+     }
+     
+     let horasTotalesLaboralesMesEmpleado = diasTotales * 8
+     let inactividadMensual = horasTotalesLaboralesMesEmpleado - horasMesEmpleado
+     if (inactividadMensual < 0) {
+     inactividadMensual = 0
+     }
+     let porcentajeProductividadMensual = 0
+     porcentajeProductividadMensual = ((horasMesEmpleado / horasTotalesLaboralesMesEmpleado) * 100)
+     porcentajeProductividadMensual = porcentajeProductividadMensual > 100 ? 100 : porcentajeProductividadMensual.toFixed()
+     
+     google.charts.load("current", {packages: ["corechart"]});
+     google.charts.setOnLoadCallback(drawChart3MisReportes);
+     function drawChart3MisReportes() {
+     var data = google.visualization.arrayToDataTable([
+     ['Task', 'Hours per Day'],
+     ['Productividad', horasMesEmpleado],
+     ['Inactividad', inactividadMensual]
+     ]);
+     var options = {
+     //title: 'Productividad',
+     //width: '100%',                
+     pieHole: 0.8,
+     colors: ['#93C12A', '#C6C6C4'],
+     backgroundColor: '#f5f5f5',
+     legend: 'none',
+     pieSliceText: 'none',
+     pieSliceTextStyle: {
+     color: 'black',
+     //fontSize: 20
+     bold: true
+     },
+     chartArea: {
+     left: "0",
+     height: "90%",
+     //top: "0%",
+     width: "100%"
+     }
+     };
+     var chart = new google.visualization.PieChart(document.getElementById('donutchart2MisReportes'));
+     chart.draw(data, options);
+     }
+     let diasLaboraloMesEmpleado = 0
+     let porcentajePuntualidad = 0
+     let porcentajeCumplimiento = 0
+     if (jornadasLaboralesMesEmpleado.data) {
+     diasLaboraloMesEmpleado = jornadasLaboralesMesEmpleado.data.length
+     porcentajePuntualidad = ((puntualidad / diasLaboraloMesEmpleado) * 100)
+     porcentajePuntualidad = porcentajePuntualidad > 100 ? 100 : porcentajePuntualidad.toFixed()
+     porcentajeCumplimiento = ((diasLaboraloMesEmpleado / (diasLaboraloMesEmpleado + numeroFaltas)) * 100)
+     porcentajeCumplimiento = porcentajeCumplimiento > 100 ? 100 : porcentajeCumplimiento.toFixed()
+     }
+     await google.charts.load("current", {packages: ["corechart"]});
+     await google.charts.setOnLoadCallback(drawChart4MisReportes);
+     async function drawChart4MisReportes() {
+     var data = google.visualization.arrayToDataTable([
+     ['Task', 'Hours per Day'],
+     ['Cumplimiento', diasLaboraloMesEmpleado],
+     ['Incumplimiento', numeroFaltas]
+     ]);
+     var options = {
+     //title: 'Cumplimiento',
+     //width: '100%',
+     pieHole: 0.8,
+     colors: ['#683982', 'C6C6C4'],
+     backgroundColor: '#f5f5f5',
+     legend: 'none',
+     pieSliceText: 'none',
+     pieSliceTextStyle: {
+     color: 'black',
+     //fontSize: 20
+     bold: true
+     },
+     chartArea: {
+     left: 0,
+     height: "90%",
+     //top: "0%",
+     width: "100%"
+     }
+     };
+     var chart = new google.visualization.PieChart(document.getElementById('donutchart4MisReportes'));
+     await chart.draw(data, options);
+     }
+     $('#diasLaboralesMesEmpleadoMisReportes').text(diasLaboraloMesEmpleado)
+     $('#diasTotalesLaboralesMesEmpleadoMisReportes').text(diasTotales)
+     $('#horasLaboralesMesEmpleadoMisReportes').text(horasMesEmpleado)
+     $('#horasTotalesLaboralesMesEmpleadoMisReportes').text(horasTotalesLaboralesMesEmpleado)
+     $('#retardosLaboralesMesEmpleadoMisReportes').text(retardos3.length)
+     $('#faltasLaboralesMesEmpleadoMisReportes').text(faltasArreglo.length)
+     $("#jornadas_laborales_productividad_mensual_porcentajeMisReportes").text(porcentajeProductividadMensual);
+     $("#jornadas_laborales_puntualidad_porcentajeMisReportes").text(porcentajePuntualidad);
+     $("#jornadas_laborales_cumplimiento_porcentajeMisReportes").text(porcentajeCumplimiento);
+     
+     //CALENDARIO
+     $.datepicker.regional['es'] = {
+     closeText: 'Cerrar',
+     prevText: '< ',
+     nextText: ' >',
+     currentText: 'Hoy',
+     monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+     monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+     dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+     dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+     dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+     weekHeader: 'Sm',
+     dateFormat: 'dd/mm/yy',
+     firstDay: 1,
+     isRTL: false,
+     showMonthAfterYear: false,
+     yearSuffix: ''
+     };
+     $.datepicker.setDefaults($.datepicker.regional['es']);
+     
+     let vacaciones = {};
+     vacaciones[ new Date('01/29/2021')] = new Date('01/29/2021');
+     vacaciones[ new Date('01/30/2021')] = new Date('01/30/2021');
+     vacaciones[ new Date('01/31/2021')] = new Date('01/31/2021');
+     
+     $("#calendarioRendimientoMensualMisReportes").datepicker("refresh")
+     
+     await $("#calendarioRendimientoMensualMisReportes").datepicker({
+     firstDay: 0,
+     beforeShowDay: function (date) {
+     var highlight = puntuales[date];
+     var highlight2 = retardos[date];
+     var highlight3 = faltas[date];
+     var highlight4 = vacaciones[date];
+     if (highlight) {
+     return [true, "puntuales", 'Tooltip text'];
+     }
+     if (highlight2) {
+     return [true, "retardos", 'Tooltip text'];
+     }
+     if (highlight3) {
+     return [true, "faltas", 'Tooltip text'];
+     }
+     if (highlight4) {
+     return [true, "vacaciones", 'Tooltip text'];
+     } else {
+     return [true, '', ''];
+     }
+     },
+     onChangeMonthYear: async function (year, month) {
+     await rendimientoMensual(month - 1)
+     }
+     });
+     }
+     await rendimientoMensual(moment().month())
+     
+     const conResultados = $("#empleadoConHistorialLaboralMisReportes");
+     const sinResultados = $("#empleadoSinHistorialLaboralMisReportes");
+     conResultados.addClass("d-none");
+     sinResultados.addClass("d-none");*/
 });
 
 const init_misreportes = async (json) => {
@@ -589,167 +589,164 @@ const init_misreportes = async (json) => {
      //$("#reporteJornadasLaborales").hide()
      //$("#reporteEmpleadoJornadasLaborales").show()
      })*/
-    let tablaHistorialLaboralEmpleado
-    let id360Estatico
-    let jornadas_laborales_empleado
-    let puntuales = {}
-    let retardos = {}
-    let faltas = {}
-    const botonObtenerJornadasReporteEmpleado = async (id360Estatico, jornadas_laborales_empleado) => {
-        if (tablaHistorialLaboralEmpleado !== null && tablaHistorialLaboralEmpleado !== undefined) {
-            tablaHistorialLaboralEmpleado.destroy()
-            tablaHistorialLaboralEmpleado = undefined
-        }
-        const tablaHistorialLaboralEmpleado2 = $("#tablaHistorialLaboralEmpleadoMisReportes")
-        const conResultados = $("#empleadoConHistorialLaboralMisReportes");
-        const sinResultados = $("#empleadoSinHistorialLaboralMisReportes");
-        let jornadas_laborales_rango_empleado_tabla = []
-        let rangoInicioEmpleado = $("#fecha_inicio_historial_laboral2MisReportes").val()
-        let rangoFinEmpleado = $("#fecha_fin_historial_laboral2MisReportes").val()
-        //SERVIDOR
-        let jornadas_laborales_rango_empleado = await $.ajax({
-            type: 'POST',
-            url: 'https://empresas.claro360.com/plataforma360/API/empresas360/jornadas_laborales',
-            contentType: "application/json",
-            dataType: "json",
-            data: JSON.stringify({
-                id: id360Estatico,
-                inicio: rangoInicioEmpleado,
-                fin: rangoFinEmpleado
-            }),
-            success: function (response) {
-                //console.log("RES JSON1: ", response)
-            },
-            error: function (err) {
-                console.log("Ocurrio un problema en la llamada jornadas_laborales_rango_empleado", err)
-            }
-        })
-
-        if (jornadas_laborales_rango_empleado.data) {
-            //tablaHistorialLaboralEmpleado = $("#tablaHistorialLaboralEmpleado")
-            //const cuerpoTablaHistorialLaboralEmpleado = tablaHistorialLaboralEmpleado.find("tbody");        
-            conResultados.addClass("d-none");
-            sinResultados.addClass("d-none");
-            //cuerpoTablaHistorialLaboralEmpleado.empty();
-
-            conResultados.removeClass("d-none");
-            sinResultados.addClass("d-none");
-
-            //let horasLaboralesTotales = 0
-            let puntualHistorialLaboral = 0
-            let retardoHistorialLaboral = 0
-            let totalSegundosDiferencia = 0
-            let totalMinutosDiferencia = 0
-            let totalHorasDiferencia = 0
-            jornadas_laborales_rango_empleado.data.forEach(element => {
-                let elemento = {
-                    dia: new Date(element.date_created + "T" + element.time_created).toLocaleDateString('es-MX', {weekday: 'long'}),
-                    fecha: new Date(element.date_created + "T" + element.time_created).toLocaleDateString('es-MX', {year: 'numeric', month: 'long', day: 'numeric'}),
-                    horaEntrada: element.time_created,
-                    horaSalida: element.time_finished,
-                    horasLaborales: null,
-                    contadorDesconexion: element.contadorDesconexion,
-                    observaciones: '<i class="text-success fas fa-star"></i>'
-                }
-                let horarioEntradaUser = moment(element.date_created + "T" + jornadas_laborales_empleado[0].horario_entrada)
-                horarioEntradaUser.add(moment.duration("00:01:00"))
-                let horarioSalidaUser = moment(element.date_created + "T" + jornadas_laborales_empleado[0].horario_salida)
-                let horaEntradaUser = moment(element.date_created + "T" + element.time_created)
-                let horasDiferencia = 0
-                if (element.time_finished) {
-                    let horaFinalizada = moment(element.date_updated + "T" + element.time_finished)
-                    if (horaEntradaUser > horaFinalizada) {
-                        horaFinalizada = moment(element.date_created + "T" + element.time_finished)
-                    }
-                    if (horaEntradaUser <= horaFinalizada) {
-                        if (horaFinalizada.diff(horaEntradaUser, 'hours') > 5) {
-                            horasDiferencia = horaFinalizada.diff(horaEntradaUser, 'hours') - 2
-                            minutosDiferencia = moment(moment(horaFinalizada, "HH:mm:ss").diff(moment(horaEntradaUser, "HH:mm:ss"))).format("mm")
-                            segundosDiferencia = moment(horaFinalizada.diff(horaEntradaUser)).format("ss")
-                            totalHorasDiferencia += horasDiferencia
-                            totalSegundosDiferencia += parseInt(segundosDiferencia)
-                            if (totalSegundosDiferencia >= 60) {
-                                totalMinutosDiferencia++
-                                totalSegundosDiferencia -= 60
-                            }
-                            totalMinutosDiferencia += parseInt(minutosDiferencia)
-                            if (totalMinutosDiferencia >= 60) {
-                                totalHorasDiferencia++
-                                totalMinutosDiferencia -= 60
-                            }
-                            elemento.horasLaborales = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-light">' + horasDiferencia + ":" + minutosDiferencia + ":" + segundosDiferencia + '</span>'
-                        } else {
-                            horasDiferencia = horaFinalizada.diff(horaEntradaUser, 'hours')
-                            minutosDiferencia = moment(moment(horaFinalizada, "HH:mm:ss").diff(moment(horaEntradaUser, "HH:mm:ss"))).format("mm")
-                            segundosDiferencia = moment(horaFinalizada.diff(horaEntradaUser)).format("ss")
-                            totalHorasDiferencia += horasDiferencia
-                            totalSegundosDiferencia += parseInt(segundosDiferencia)
-                            if (totalSegundosDiferencia >= 60) {
-                                totalMinutosDiferencia++
-                                totalSegundosDiferencia -= 60
-                            }
-                            totalMinutosDiferencia += parseInt(minutosDiferencia)
-                            if (totalMinutosDiferencia >= 60) {
-                                totalHorasDiferencia++
-                                totalMinutosDiferencia -= 60
-                            }
-                            elemento.horasLaborales = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-light">' + horasDiferencia + ":" + minutosDiferencia + ":" + segundosDiferencia + '</span>'
-                        }
-                    }
-                    if (horaFinalizada < horarioSalidaUser) {
-                        elemento.horaSalida = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-warning">' + horaFinalizada.format('HH:mm:ss A') + '</span>'
-                        //elemento.observaciones = '<i class="text-warning fas fa-star"></i>'
-                    } else {
-                        elemento.horaSalida = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-success">' + horaFinalizada.format('HH:mm:ss A') + '</span>'
-                    }
-                }
-                /*if (!isNaN(elemento.horasLaborales)) {
-                 horasLaboralesTotales += elemento.horasLaborales
-                 }*/
-                if (horaEntradaUser >= horarioEntradaUser) {
-                    elemento.horaEntrada = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-warning">' + horaEntradaUser.format('HH:mm:ss A') + '</span>'
-                    elemento.observaciones = '<i class="text-danger fas fa-clock"></i>'
-                    retardoHistorialLaboral++
-                } else {
-                    elemento.horaEntrada = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-success">' + horaEntradaUser.format('HH:mm:ss A') + '</span>'
-                    if (horasDiferencia > 8) {
-                        elemento.observaciones = '<i class="text-success fas fa-star"></i> + ' + (horasDiferencia - 8)
-                    } else {
-                        elemento.observaciones = '<i class="text-success fas fa-star"></i>'
-                    }
-
-                    puntualHistorialLaboral++
-                }
-                jornadas_laborales_rango_empleado_tabla.push(elemento)
-            })
-            $("#horasLaboralesTotalesMisReportes").text("Total: " + totalHorasDiferencia + " hrs " + totalMinutosDiferencia + " min " + totalSegundosDiferencia + " seg")
-            $("#puntualHistorialLaboralMisReportes").text(puntualHistorialLaboral)
-            $("#retardoHistorialLaboralMisReportes").text(retardoHistorialLaboral)
-
-            tablaHistorialLaboralEmpleado = tablaHistorialLaboralEmpleado2.DataTable({
-                dom: 'Bfrtip',
-                order: [],
-                paging: false,
-                buttons: [
-                    'print'
-                ],
-                "data": jornadas_laborales_rango_empleado_tabla,
-                "columns": [{"data": "dia"},
-                    {"data": "fecha"},
-                    {"data": "horaEntrada"},
-                    {"data": "horaSalida"},
-                    {"data": "horasLaborales"},
-                    {"data": "contadorDesconexion"},
-                    {"data": "observaciones"}
-                ]
-            });
-        } else {
-            conResultados.addClass("d-none");
-            sinResultados.removeClass("d-none");
-        }
-    }
-//BOTON BUSCAR EMPLEADO  
-    $('#buscar_reportes_personalesMisReportes').click(async () => {
-        await botonObtenerJornadasReporteEmpleado(id360Estatico, jornadas_laborales_empleado)
-    });
+    /*let tablaHistorialLaboralEmpleado
+     let id360Estatico
+     let jornadas_laborales_empleado
+     let puntuales = {}
+     let retardos = {}
+     let faltas = {}
+     const botonObtenerJornadasReporteEmpleado = async (id360Estatico, jornadas_laborales_empleado) => {
+     if (tablaHistorialLaboralEmpleado !== null && tablaHistorialLaboralEmpleado !== undefined) {
+     tablaHistorialLaboralEmpleado.destroy()
+     tablaHistorialLaboralEmpleado = undefined
+     }
+     const tablaHistorialLaboralEmpleado2 = $("#tablaHistorialLaboralEmpleadoMisReportes")
+     const conResultados = $("#empleadoConHistorialLaboralMisReportes");
+     const sinResultados = $("#empleadoSinHistorialLaboralMisReportes");
+     let jornadas_laborales_rango_empleado_tabla = []
+     let rangoInicioEmpleado = $("#fecha_inicio_historial_laboral2MisReportes").val()
+     let rangoFinEmpleado = $("#fecha_fin_historial_laboral2MisReportes").val()
+     //SERVIDOR
+     let jornadas_laborales_rango_empleado = await $.ajax({
+     type: 'POST',
+     url: 'https://empresas.claro360.com/plataforma360/API/empresas360/jornadas_laborales',
+     contentType: "application/json",
+     dataType: "json",
+     data: JSON.stringify({
+     id: id360Estatico,
+     inicio: rangoInicioEmpleado,
+     fin: rangoFinEmpleado
+     }),
+     success: function (response) {
+     //console.log("RES JSON1: ", response)
+     },
+     error: function (err) {
+     console.log("Ocurrio un problema en la llamada jornadas_laborales_rango_empleado", err)
+     }
+     })
+     
+     if (jornadas_laborales_rango_empleado.data) {
+     //tablaHistorialLaboralEmpleado = $("#tablaHistorialLaboralEmpleado")
+     //const cuerpoTablaHistorialLaboralEmpleado = tablaHistorialLaboralEmpleado.find("tbody");        
+     conResultados.addClass("d-none");
+     sinResultados.addClass("d-none");
+     //cuerpoTablaHistorialLaboralEmpleado.empty();
+     
+     conResultados.removeClass("d-none");
+     sinResultados.addClass("d-none");
+     
+     //let horasLaboralesTotales = 0
+     let puntualHistorialLaboral = 0
+     let retardoHistorialLaboral = 0
+     let totalSegundosDiferencia = 0
+     let totalMinutosDiferencia = 0
+     let totalHorasDiferencia = 0
+     jornadas_laborales_rango_empleado.data.forEach(element => {
+     let elemento = {
+     dia: new Date(element.date_created + "T" + element.time_created).toLocaleDateString('es-MX', {weekday: 'long'}),
+     fecha: new Date(element.date_created + "T" + element.time_created).toLocaleDateString('es-MX', {year: 'numeric', month: 'long', day: 'numeric'}),
+     horaEntrada: element.time_created,
+     horaSalida: element.time_finished,
+     horasLaborales: null,
+     contadorDesconexion: element.contadorDesconexion,
+     observaciones: '<i class="text-success fas fa-star"></i>'
+     }
+     let horarioEntradaUser = moment(element.date_created + "T" + jornadas_laborales_empleado[0].horario_entrada)
+     horarioEntradaUser.add(moment.duration("00:01:00"))
+     let horarioSalidaUser = moment(element.date_created + "T" + jornadas_laborales_empleado[0].horario_salida)
+     let horaEntradaUser = moment(element.date_created + "T" + element.time_created)
+     let horasDiferencia = 0
+     if (element.time_finished) {
+     let horaFinalizada = moment(element.date_updated + "T" + element.time_finished)
+     if (horaEntradaUser > horaFinalizada) {
+     horaFinalizada = moment(element.date_created + "T" + element.time_finished)
+     }
+     if (horaEntradaUser <= horaFinalizada) {
+     if (horaFinalizada.diff(horaEntradaUser, 'hours') > 5) {
+     horasDiferencia = horaFinalizada.diff(horaEntradaUser, 'hours') - 2
+     minutosDiferencia = moment(moment(horaFinalizada, "HH:mm:ss").diff(moment(horaEntradaUser, "HH:mm:ss"))).format("mm")
+     segundosDiferencia = moment(horaFinalizada.diff(horaEntradaUser)).format("ss")
+     totalHorasDiferencia += horasDiferencia
+     totalSegundosDiferencia += parseInt(segundosDiferencia)
+     if (totalSegundosDiferencia >= 60) {
+     totalMinutosDiferencia++
+     totalSegundosDiferencia -= 60
+     }
+     totalMinutosDiferencia += parseInt(minutosDiferencia)
+     if (totalMinutosDiferencia >= 60) {
+     totalHorasDiferencia++
+     totalMinutosDiferencia -= 60
+     }
+     elemento.horasLaborales = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-light">' + horasDiferencia + ":" + minutosDiferencia + ":" + segundosDiferencia + '</span>'
+     } else {
+     horasDiferencia = horaFinalizada.diff(horaEntradaUser, 'hours')
+     minutosDiferencia = moment(moment(horaFinalizada, "HH:mm:ss").diff(moment(horaEntradaUser, "HH:mm:ss"))).format("mm")
+     segundosDiferencia = moment(horaFinalizada.diff(horaEntradaUser)).format("ss")
+     totalHorasDiferencia += horasDiferencia
+     totalSegundosDiferencia += parseInt(segundosDiferencia)
+     if (totalSegundosDiferencia >= 60) {
+     totalMinutosDiferencia++
+     totalSegundosDiferencia -= 60
+     }
+     totalMinutosDiferencia += parseInt(minutosDiferencia)
+     if (totalMinutosDiferencia >= 60) {
+     totalHorasDiferencia++
+     totalMinutosDiferencia -= 60
+     }
+     elemento.horasLaborales = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-light">' + horasDiferencia + ":" + minutosDiferencia + ":" + segundosDiferencia + '</span>'
+     }
+     }
+     if (horaFinalizada < horarioSalidaUser) {
+     elemento.horaSalida = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-warning">' + horaFinalizada.format('HH:mm:ss A') + '</span>'
+     //elemento.observaciones = '<i class="text-warning fas fa-star"></i>'
+     } else {
+     elemento.horaSalida = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-success">' + horaFinalizada.format('HH:mm:ss A') + '</span>'
+     }
+     }
+     if (horaEntradaUser >= horarioEntradaUser) {
+     elemento.horaEntrada = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-warning">' + horaEntradaUser.format('HH:mm:ss A') + '</span>'
+     elemento.observaciones = '<i class="text-danger fas fa-clock"></i>'
+     retardoHistorialLaboral++
+     } else {
+     elemento.horaEntrada = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-success">' + horaEntradaUser.format('HH:mm:ss A') + '</span>'
+     if (horasDiferencia > 8) {
+     elemento.observaciones = '<i class="text-success fas fa-star"></i> + ' + (horasDiferencia - 8)
+     } else {
+     elemento.observaciones = '<i class="text-success fas fa-star"></i>'
+     }
+     
+     puntualHistorialLaboral++
+     }
+     jornadas_laborales_rango_empleado_tabla.push(elemento)
+     })
+     $("#horasLaboralesTotalesMisReportes").text("Total: " + totalHorasDiferencia + " hrs " + totalMinutosDiferencia + " min " + totalSegundosDiferencia + " seg")
+     $("#puntualHistorialLaboralMisReportes").text(puntualHistorialLaboral)
+     $("#retardoHistorialLaboralMisReportes").text(retardoHistorialLaboral)
+     
+     tablaHistorialLaboralEmpleado = tablaHistorialLaboralEmpleado2.DataTable({
+     dom: 'Bfrtip',
+     order: [],
+     paging: false,
+     buttons: [
+     'print'
+     ],
+     "data": jornadas_laborales_rango_empleado_tabla,
+     "columns": [{"data": "dia"},
+     {"data": "fecha"},
+     {"data": "horaEntrada"},
+     {"data": "horaSalida"},
+     {"data": "horasLaborales"},
+     {"data": "contadorDesconexion"},
+     {"data": "observaciones"}
+     ]
+     });
+     } else {
+     conResultados.addClass("d-none");
+     sinResultados.removeClass("d-none");
+     }
+     }
+     //BOTON BUSCAR EMPLEADO  
+     $('#buscar_reportes_personalesMisReportes').click(async () => {
+     await botonObtenerJornadasReporteEmpleado(id360Estatico, jornadas_laborales_empleado)
+     });*/
 };
