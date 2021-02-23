@@ -191,8 +191,7 @@ const init_misreportes = async (json) => {
         await botonObtenerJornadasReporteEmpleado(id360Estatico, jornadas_laborales_empleado)
     });
 
-
-    $(window).load(async function () {
+    $(window).on('load', async function () {
         const verReporteDetallado = async empleado => {
 
             //VISTA REPORTE EMPLEADO
