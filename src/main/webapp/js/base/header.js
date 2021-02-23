@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-$( window ).on( "load", function() { 
+$(window).on("load", function () {
     console.log("loaded");
     /*$('.segmentos').mouseover(function() {
      $('.servicios').addClass('d-none');
@@ -48,14 +48,14 @@ $( window ).on( "load", function() {
     });
 
 
-   $(document).click((e) => {
-        if (e.target.id !== "servicios" && e.target.id !=="iconServ" && e.target.nodeName !=="path" && e.target.nodeName !=="svg" && e.target.className !=="expand_menu" && e.target.className !=="expanded_menu") {
+    $(document).click((e) => {
+        if (e.target.id !== "servicios" && e.target.id !== "iconServ" && e.target.nodeName !== "path" && e.target.nodeName !== "svg" && e.target.className !== "expand_menu" && e.target.className !== "expanded_menu") {
             $("#menuServicios").removeClass("show_servicios");
-        }else{
+        } else {
             $("#cbmenuToggle").prop("checked", false);
         }
 
-        if(e.target.className ==="expand_menu"){
+        if (e.target.className === "expand_menu") {
             $(".expand_menu").addClass("d-none");
             $("#servicios_grid").css({
                 "max-height": "calc(100%)"
@@ -64,7 +64,7 @@ $( window ).on( "load", function() {
                 "max-height": "calc(100% - 90px)"
             });
         }
-        if(e.target.className ==="expanded_menu"){
+        if (e.target.className === "expanded_menu") {
             $(".expand_menu").removeClass("d-none");
             $("#servicios_grid").removeAttr("style")
             $("#menuServicios").removeAttr("style")
@@ -128,12 +128,16 @@ $( window ).on( "load", function() {
             acceso_externo_ruta("https://claro360.com/plataforma360/", "app");
         });
         /*Cambios fernando*/
-        if (sesion_cookie.gc.toString() === "1") {
-            $("#logo360").removeClass("d-none");
-            $("#logo360").css({
-                "background-image": "url('"+sesion_cookie.logotipo_empresa+"')"
-            });
-        }else{
+        if (sesion_cookie.gc) {
+            if (sesion_cookie.gc.toString() === "1") {
+                $("#logo360").removeClass("d-none");
+                $("#logo360").css({
+                    "background-image": "url('" + sesion_cookie.logotipo_empresa + "')"
+                });
+            } else {
+                $("#logo360").removeClass("d-none");
+            }
+        } else {
             $("#logo360").removeClass("d-none");
         }
         /******************/
