@@ -14,13 +14,13 @@ const init_misreportes = async (json) => {
 
     //el id del json de entrada corresponde al id_menu
     //consultar si el tutorial de la vista ya fue consultada 
-    RequestPOST("/API/empresas360/consulta_vistatutorial", {
+    /*RequestPOST("/API/empresas360/consulta_vistatutorial", {
         "id360": perfil_usuario.id360,
         "id_menu": json.id
     }).then((response) => {
         console.log("Estatus de la vista tutorial de mis reportes");
         console.log(response);
-    });
+    });*/
 //GENERAR REPORTE DE JORNADAS LABORALES
     /*$(document).ready(() => {
      $("#reporteEmpleadoJornadasLaborales").hide()
