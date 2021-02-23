@@ -3,10 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+
+ 
 var date = new Date();
 var usuario_id = perfil_usuario.id360; //TU LO MOFICAS
 var zona_horaria = "America/Mexico_City";//TU LO MODIFICAS
 var eventos_usuario = []
+var participantes = []
+var participantes_update = []
 
 var nuevoModal = new bootstrap.Modal(document.getElementById('nuevoModal'), {
     keyboard: false
@@ -160,6 +165,10 @@ function showEmailEventForm(evento_id){
 
 $("#nuevoEvento").on("submit", function (event) {
     event.preventDefault();
+
+    let participantes_id = participantes.map(function(part){
+        return part.id360
+    });
     // data = 
     // console.log(data);
     fetch("https://agenda360.ml/api/eventos", {
@@ -171,7 +180,7 @@ $("#nuevoEvento").on("submit", function (event) {
         },
         body: JSON.stringify({
             'usuario_id': usuario_id,
-            'participantes_id':$("#participantes_id").val(),
+            'participantes_id':participantes_id,
             'titulo': $("#titulo").val(),
             'descripcion': $("#descripcion").val(),
             'direccion': $("#direccion").val(),
@@ -201,6 +210,9 @@ $("#nuevoEvento").on("submit", function (event) {
 $("#updateEvento").on("submit", function (event) {
     event.preventDefault()
     let evento_id = $("#evento_id").val();
+    let participantes_id = participantes_update.map(function(part){
+        return part.id360
+    })
     fetch("https://agenda360.ml/api/eventos/" + evento_id, {
         method: "POST",
         headers: {
@@ -210,7 +222,7 @@ $("#updateEvento").on("submit", function (event) {
         },
         body: JSON.stringify({
             'usuario_id': usuario_id,
-            'participantes_id':$("#update_participantes_id").val(),
+            'participantes_id':participantes_id,
             '_method': "PUT",
             'titulo': $("#update_titulo").val(),
             'descripcion': $("#update_descripcion").val(),
@@ -444,78 +456,81 @@ console.log(json);
 }
 
 new Vue({
-    el: "#event_new",
-    components: {
-        "multiselect": window.VueMultiselect.default
-    },
-    data() {
-        return {
-            value: [],
-            options: directorio_usuario
-        };
-    },
-    methods: {
-        customLabel(option) {
-            return option.nombre + " " + option.apellido_paterno + " " + option.apellido_materno + " ";
+        el: "#event_new",
+        components: {
+            "multiselect": window.VueMultiselect.default
         },
-        onClosed(value) {
-            //console.log(value);
+        data() {
+            return {
+                value: [],
+                options: directorio_usuario
+            };
+        },
+        methods: {
+            customLabel(option) {
+                return option.nombre + " " + option.apellido_paterno + " " + option.apellido_materno + " ";
+            },
+            onClosed(value) {
+                console.log('onClosed',value);
+                participantes = value
 
-        },
+            },
 
-        onTag(value) {
-            //console.log(value);
-        },
+            onTag(value) {
+                console.log('OnTag',value);
+            },
 
-        onRemove(value) {
-            //console.log(value);
-        },
+            onRemove(value) {
+                console.log('onRemove',value);
+            },
 
-        onInput(value) {
-            document.getElementById("menu_sidebar" + value.id360).scrollIntoView();
-            document.getElementsByClassName("home_empleado")[0].scrollIntoView();
-        },
-        onOpen(value) {
-            this.value = null;
+            onInput(value) {
+                console.log('onInput',value)
+                document.getElementById("menu_sidebar" + value.id360).scrollIntoView();
+                document.getElementsByClassName("home_empleado")[0].scrollIntoView();
+            },
+            onOpen(value) {
+                this.value = null;
+            }
         }
-    }
-});
+    });
 
 new Vue({
-    el: "#update_event",
-    components: {
-        "multiselect": window.VueMultiselect.default
-    },
-    data() {
-        return {
-            value: [],
-            options: directorio_usuario
-        };
-    },
-    methods: {
-        customLabel(option) {
-            return option.nombre + " " + option.apellido_paterno + " " + option.apellido_materno + " ";
+        el: "#update_event",
+        components: {
+            "multiselect": window.VueMultiselect.default
         },
-        onClosed(value) {
-            //console.log(value);
+        data() {
+            return {
+                value: [],
+                options: directorio_usuario
+            };
+        },
+        methods: {
+            customLabel(option) {
+                return option.nombre + " " + option.apellido_paterno + " " + option.apellido_materno + " ";
+            },
+            onClosed(value) {
+                //console.log(value);
+                participantes_update = value
 
-        },
+            },
 
-        onTag(value) {
-            //console.log(value);
-        },
+            onTag(value) {
+                //console.log(value);
+            },
 
-        onRemove(value) {
-            //console.log(value);
-        },
+            onRemove(value) {
+                //console.log(value);
+            },
 
-        onInput(value) {
-            document.getElementById("menu_sidebar" + value.id360).scrollIntoView();
-            document.getElementsByClassName("home_empleado")[0].scrollIntoView();
-        },
-        onOpen(value) {
-            this.value = null;
+            onInput(value) {
+                document.getElementById("menu_sidebar" + value.id360).scrollIntoView();
+                document.getElementsByClassName("home_empleado")[0].scrollIntoView();
+            },
+            onOpen(value) {
+                this.value = null;
+            }
         }
-    }
-});
+    });
 
