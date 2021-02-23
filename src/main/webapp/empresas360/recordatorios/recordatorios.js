@@ -298,7 +298,7 @@ const init_recordatorios = (json) => {
            llena_lista_recordatorios();
         $(".cld-days li").attr("data-bs-toggle","modal");
         $(".cld-days li").attr('data-bs-target','#exampleModal');
-        setInterval(checa_recordatorios,1000);
+        //setInterval(checa_recordatorios,1000);
 
      function llena_lista_recordatorios(){
         var lista = $("#lista_recordatorios");
