@@ -15,12 +15,12 @@ const init_misreportes = async (json) => {
     //el id del json de entrada corresponde al id_menu
     //consultar si el tutorial de la vista ya fue consultada 
     /*RequestPOST("/API/empresas360/consulta_vistatutorial", {
-        "id360": perfil_usuario.id360,
-        "id_menu": json.id
-    }).then((response) => {
-        console.log("Estatus de la vista tutorial de mis reportes");
-        console.log(response);
-    });*/
+     "id360": perfil_usuario.id360,
+     "id_menu": json.id
+     }).then((response) => {
+     console.log("Estatus de la vista tutorial de mis reportes");
+     console.log(response);
+     });*/
 //GENERAR REPORTE DE JORNADAS LABORALES
     /*$(document).ready(() => {
      $("#reporteEmpleadoJornadasLaborales").hide()
@@ -190,7 +190,7 @@ const init_misreportes = async (json) => {
     $('#buscar_reportes_personalesMisReportes').click(async () => {
         await botonObtenerJornadasReporteEmpleado(id360Estatico, jornadas_laborales_empleado)
     });
-
+    await google.charts.load("current", {packages: ["corechart"]});
     $(window).on('load', async function () {
         const verReporteDetallado = async empleado => {
 
@@ -372,9 +372,9 @@ const init_misreportes = async (json) => {
             let porcentajeProductividadSemanal = 0
             porcentajeProductividadSemanal = ((horasSemanaEmpleado / horasLaboralesSemana) * 100)
             porcentajeProductividadSemanal = porcentajeProductividadSemanal > 100 ? 100 : porcentajeProductividadSemanal.toFixed()
-            google.charts.load("current", {packages: ["corechart"]});
+
             await google.charts.setOnLoadCallback(drawChart2MisReportes);
-            function drawChart2MisReportes() {
+            async function drawChart2MisReportes() {
                 var data = google.visualization.arrayToDataTable([
                     ['Task', 'Hours per Day'],
                     ['Productividad', horasSemanaEmpleado],
@@ -401,7 +401,7 @@ const init_misreportes = async (json) => {
                     }
                 };
                 var chart = new google.visualization.PieChart(document.getElementById('donutchartMisReportes'));
-                chart.draw(data, options);
+                await chart.draw(data, options);
             }
 
             /*$(window).resize(function () {
@@ -651,9 +651,9 @@ const init_misreportes = async (json) => {
                     porcentajeCumplimiento = ((diasLaboraloMesEmpleado / (diasLaboraloMesEmpleado + numeroFaltas)) * 100)
                     porcentajeCumplimiento = porcentajeCumplimiento > 100 ? 100 : porcentajeCumplimiento.toFixed()
                 }
-                google.charts.load("current", {packages: ["corechart"]});
-                google.charts.setOnLoadCallback(drawChart4MisReportes);
-                function drawChart4MisReportes() {
+                await google.charts.load("current", {packages: ["corechart"]});
+                await google.charts.setOnLoadCallback(drawChart4MisReportes);
+                async function drawChart4MisReportes() {
                     var data = google.visualization.arrayToDataTable([
                         ['Task', 'Hours per Day'],
                         ['Cumplimiento', diasLaboraloMesEmpleado],
@@ -680,7 +680,7 @@ const init_misreportes = async (json) => {
                         }
                     };
                     var chart = new google.visualization.PieChart(document.getElementById('donutchart4MisReportes'));
-                    chart.draw(data, options);
+                    await chart.draw(data, options);
                 }
                 $('#diasLaboralesMesEmpleadoMisReportes').text(diasLaboraloMesEmpleado)
                 $('#diasTotalesLaboralesMesEmpleadoMisReportes').text(diasTotales)
