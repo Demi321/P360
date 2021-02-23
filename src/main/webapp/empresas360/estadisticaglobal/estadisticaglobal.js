@@ -18,6 +18,10 @@ var init_estadisticaglobal = (json) => {
     let tipo_area = json.tipo_area;    
     var h =0;
     var m =0;
+    var p =0;
+    var puntual=0;
+    var r =0;
+    var retardo=0;
     var r_e1=0;
     var r_e2=0;
     var r_e3=0;
@@ -312,7 +316,7 @@ var init_estadisticaglobal = (json) => {
               textStyle: {color: '#252528'},
               ticks: [ {v: 0, f:"0%"}, {v: 50, f:"50%"}, {v: 70, f:"70%"}, {v: 100, f:"100%"} ]
           },
-          backgroundColor: '#252528'
+          backgroundColor: '#ffffff'
       };
 
       var chart = new google.visualization.LineChart(document.getElementById('chart_div4'));
@@ -376,9 +380,25 @@ var init_estadisticaglobal = (json) => {
     }).responseText;
     
     var parserJornadaData = JSON.parse(DatosJornada);
+    for (var i = 0; i < parserJornadaData.length; i++) {
+        var hora_entrada = parserJornadaData[i].time_created;      
+        if(hora_entrada >= '09:00:00' && hora_entrada <= '09:15:00'){
+            console.log("puntual");
+            p++;
+        }else if(hora_entrada > '09:15:01 '){
+            console.log("retardo");
+            r++;
+        }
+    }
+    puntual = p/100 * parserJornadaData.length;
+    retardo = r/100 * parserJornadaData.length;
+    document.getElementById("PorcentajePuntales").innerHTML = puntual + "%";
+    document.getElementById("PorcentajeRetardos").innerHTML = retardo + "%";
+    puntual = parseInt(puntual);
+    retardo = parseInt(retardo);    
     document.addEventListener("load", setColorBasal(2,'Faltas'));
-    document.addEventListener("load", setColorBasal(6,'Retardos'));
-    document.addEventListener("load", setColorBasal(8,'Puntales'));
+    document.addEventListener("load", setColorBasal(retardo,'Retardos'));
+    document.addEventListener("load", setColorBasal(puntual,'Puntales'));
     function setColorBasal(numero, clase) { 
         numero = parseInt(numero);        
         switch (clase) {

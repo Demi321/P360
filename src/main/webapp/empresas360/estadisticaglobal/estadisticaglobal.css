@@ -221,6 +221,7 @@ and open the template in the editor.
     background: white;
     display: inline-table;
     border-radius: 15px;
+    margin: 20px;
 }
 .Contenedor .DistribucionSexo {
     grid-area: DistribucionSexo;
@@ -252,8 +253,7 @@ and open the template in the editor.
     grid-area: EmpleadosRCT;
     background: white;
     border-radius: 20px;
-    margin: 20px;
-    width: 100%
+    margin: 20px;    
 }
 
 .Contenedor .Sexo {
