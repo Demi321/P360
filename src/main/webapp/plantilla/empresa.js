@@ -292,7 +292,7 @@ function notificacion_llamada(mensaje) {
 //                if (result.value) {
 //                    console.log("Externa");
             //revisar si credenciales trae roomname 
-            if (mensaje.credenciales.RoomName) {
+            if (mensaje.credenciales.roomName) {
                 RequestPOST("/API/cuenta360/access_token", {
                     "token": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).token,
                     "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
@@ -346,7 +346,7 @@ function prueba_notificacion(mensaje) {
 
             reproduccionSonidoNotificacion.loop = false;
             reproduccionSonidoNotificacion.pause();
-            if (mensaje.credenciales.RoomName) {
+            if (mensaje.credenciales.roomName) {
                 RequestPOST("/API/cuenta360/access_token", {
                     "token": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).token,
                     "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
