@@ -301,7 +301,7 @@ function notificacion_llamada(mensaje) {
                     if (response.success) {
                         //access_token
                         let nombre = sesion_cookie.nombre + " " + sesion_cookie.apellido_p + " " + sesion_cookie.apellido_m;
-                        window.open('https://meeting.claro360.com/room/' + mensaje.credenciales.RoomName + "/usr360/" + sesion_cookie.id_usuario + "/" + sesion_cookie.id_sesion + "/" + sesion_cookie.tipo_usuario + "/" + sesion_cookie.tipo_servicio + "/" + sesion_cookie.tipo_area + "/" + response.access_token + "/" + normalize_text(nombre) + "/" + mensaje.registro_llamada.idLlamada, '_blank');
+                        window.open('https://meeting.claro360.com/room/' + mensaje.credenciales.roomName + "/usr360/" + sesion_cookie.id_usuario + "/" + sesion_cookie.id_sesion + "/" + sesion_cookie.tipo_usuario + "/" + sesion_cookie.tipo_servicio + "/" + sesion_cookie.tipo_area + "/" + response.access_token + "/" + normalize_text(nombre) + "/" + mensaje.registro_llamada.idLlamada, '_blank');
 
                     }
 
@@ -355,7 +355,7 @@ function prueba_notificacion(mensaje) {
                     if (response.success) {
                         //access_token
                         let nombre = sesion_cookie.nombre + " " + sesion_cookie.apellido_p + " " + sesion_cookie.apellido_m;
-                        window.open('https://meeting.claro360.com/room/' + mensaje.credenciales.RoomName + "/usr360/" + sesion_cookie.id_usuario + "/" + sesion_cookie.id_sesion + "/" + sesion_cookie.tipo_usuario + "/" + sesion_cookie.tipo_servicio + "/" + sesion_cookie.tipo_area + "/" + response.access_token + "/" + normalize_text(nombre) + "/" + mensaje.registro_llamada.idLlamada, '_blank');
+                        window.open('https://meeting.claro360.com/room/' + mensaje.credenciales.roomName + "/usr360/" + sesion_cookie.id_usuario + "/" + sesion_cookie.id_sesion + "/" + sesion_cookie.tipo_usuario + "/" + sesion_cookie.tipo_servicio + "/" + sesion_cookie.tipo_area + "/" + response.access_token + "/" + normalize_text(nombre) + "/" + mensaje.registro_llamada.idLlamada, '_blank');
 
                     }
 

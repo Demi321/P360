@@ -5335,7 +5335,7 @@ function contacto_chat(user, group, statusGroup) {
                                 if (response.success) {
                                     //access_token
                                     let nombre = sesion_cookie.nombre + " " + sesion_cookie.apellido_p + " " + sesion_cookie.apellido_m;
-                                    window.open('https://meeting.claro360.com/room/' + msj.credenciales.RoomName + "/usr360/" + sesion_cookie.id_usuario + "/" + sesion_cookie.id_sesion + "/" + sesion_cookie.tipo_usuario + "/" + sesion_cookie.tipo_servicio + "/" + sesion_cookie.tipo_area + "/" + response.access_token + "/" + normalize_text(nombre) + "/" + msj.registro_llamada.idLlamada, '_blank');
+                                    window.open('https://meeting.claro360.com/room/' + msj.credenciales.roomName + "/usr360/" + sesion_cookie.id_usuario + "/" + sesion_cookie.id_sesion + "/" + sesion_cookie.tipo_usuario + "/" + sesion_cookie.tipo_servicio + "/" + sesion_cookie.tipo_area + "/" + response.access_token + "/" + normalize_text(nombre) + "/" + msj.registro_llamada.idLlamada, '_blank');
 
                                 }
 
