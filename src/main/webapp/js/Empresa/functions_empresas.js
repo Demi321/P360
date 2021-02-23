@@ -1871,16 +1871,15 @@ function prueba_notificacion(mensaje) {
     console.log("prueba_notificacion");
     if (Notification) {
         if (Notification.permission !== "granted") {
-            Notification.requestPermission()
+            Notification.requestPermission();
         }
         var title = "Llamada entrante:";
         var extra = {
             icon: mensaje.emisor.img,
             body: mensaje.emisor.nombre + " " + mensaje.emisor.apellido_paterno + " " + mensaje.emisor.apellido_materno,
-            timeout: 8000, // Timeout before notification closes automatically.
+            timeout: 5000, // Timeout before notification closes automatically.
             vibrate: [100, 100, 100] // An array of vibration pulses for mobile devices.
         };
-        console.log(title);
         var notificar = new Notification(title, extra);
         notificar.onclick = function () {
             console.log('notification.Click');

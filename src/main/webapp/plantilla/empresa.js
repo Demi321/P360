@@ -114,7 +114,7 @@ function showPosition(position) {
                 console.warn(e);
             }
 
-            
+
         }
     });
 
@@ -129,70 +129,70 @@ WebSocketGeneral.onmessage = function (message) {
         credenciales = mensaje;
     }
     try {
-        
-        if(mensaje.archivo_recibido){
+
+        if (mensaje.archivo_recibido) {
             console.log("Socket archivos");
             recibirArchivoSocket(mensaje);
         }
-        
-        if(mensaje.eliminado_grupo){
+
+        if (mensaje.eliminado_grupo) {
             eliminadoParticipanteGrupoChat(mensaje);
         }
-        
-        if(mensaje.mensaje_destacado){
+
+        if (mensaje.mensaje_destacado) {
             nuevoMensajeDestacado(mensaje);
         }
-        
-        if(mensaje.eliminado_mensaje_destacado){
+
+        if (mensaje.eliminado_mensaje_destacado) {
             eliminarMensajeDestacado(mensaje);
         }
-        
-        if(mensaje.nuevo_usuario_favorito){
+
+        if (mensaje.nuevo_usuario_favorito) {
             nuevoUsuarioFavorito(mensaje);
         }
-        
-        if(mensaje.elimina_usuario_favorito){
+
+        if (mensaje.elimina_usuario_favorito) {
             eliminaUsuarioFavorito(mensaje);
         }
-        
-        if(mensaje.cambio_parametro_grupo){
+
+        if (mensaje.cambio_parametro_grupo) {
             cambioParametroGrupoChat(mensaje);
         }
-        
-        if(mensaje.grupo_chat_empresarial){
+
+        if (mensaje.grupo_chat_empresarial) {
             nuevoGrupoChatEmpresarial(mensaje);
         }
-        
-        if(mensaje.chat_empresarial){
+
+        if (mensaje.chat_empresarial) {
             nuevoMensajeChatEmpresarial(mensaje);
         }
-        
-        if(mensaje.agregado_grupo_chat_empresarial){ 
+
+        if (mensaje.agregado_grupo_chat_empresarial) {
             nuevoParticipanteGrupoChat(mensaje);
         }
-        
-        if(mensaje.edicion_mensaje_chat_empresarial){
+
+        if (mensaje.edicion_mensaje_chat_empresarial) {
             edicionMensajeChatEmpresarial(mensaje);
         }
-        
-        if(mensaje.eliminacion_mensaje_chat_empresarial){
+
+        if (mensaje.eliminacion_mensaje_chat_empresarial) {
             eliminacionMensajeChatEmpresarial(mensaje);
         }
-        
-        if(mensaje.eliminacion_mensaje_chat_empresarial_solo_mio){
+
+        if (mensaje.eliminacion_mensaje_chat_empresarial_solo_mio) {
             eliminacionMensajeChatEmpresarialMio(mensaje);
         }
-        
+
         if (mensaje.inicializacionSG) {
             idSocketOperador = mensaje.idSocket;
         }
-        
+
         if (mensaje.llamada_multiplataforma) {
             buttonNotificacionLlamada.click();
             notificacion_llamada(mensaje);
             prueba_notificacion(mensaje);
         }
-        
+
         if (mensaje.video_empleado) {
             //Verificar si el modulo de videowall empleado existe 
             if ($("#base_modulo_VideoWallEmpleados").length) {
@@ -201,7 +201,7 @@ WebSocketGeneral.onmessage = function (message) {
                 actualizacion_listado_video_empleados(mensaje);
             }
         }
-        
+
         if (mensaje.sesionelemento) {
             initializeSessionElemento(mensaje);
         }
@@ -252,7 +252,180 @@ WebSocketGeneral.onmessage = function (message) {
             }
         }
     } catch (e) {
- console.warn(e);
+        console.warn(e);
     }
 
 };
+
+
+function notificacion_llamada(mensaje) {
+    swal.fire({
+//        title: 'Sweet!',
+//        text: 'Modal with a custom image.',
+//        imageUrl: mensaje.emisor.img,
+//        imageWidth: 400,
+//        imageHeight: 200,
+//        imageAlt: 'Custom image',
+        html: content_notification_call(mensaje.emisor),
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonText: 'Atender llamada!',
+        cancelButtonText: 'No, atender!',
+        allowOutsideClick: false,
+        reverseButtons: true
+    }).then((result) => {
+        console.log(result);
+        reproduccionSonidoNotificacion.loop = false;
+        reproduccionSonidoNotificacion.pause();
+        if (result.value) {
+            console.log(mensaje);
+//
+//            Swal.fire({
+//                text: '¿Cómo quieres continuar la llamada? (Selecciona ventana externa.)',
+//                showCancelButton: true,
+//                confirmButtonText: `Ventana externa`,
+//                cancelButtonText: `Aquí mismo.`
+//            }).then((result) => {
+//                /* Read more about isConfirmed, isDenied below */
+//                console.log("Presionado " + result.isConfirmed);
+//                console.log(result);
+//                if (result.value) {
+//                    console.log("Externa");
+            //revisar si credenciales trae roomname 
+            if (mensaje.credenciales.RoomName) {
+                RequestPOST("/API/cuenta360/access_token", {
+                    "token": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).token,
+                    "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+                    "id_sesion": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_sesion
+                }).then(function (response) {
+                    if (response.success) {
+                        //access_token
+                        let nombre = sesion_cookie.nombre + " " + sesion_cookie.apellido_p + " " + sesion_cookie.apellido_m;
+                        window.open('https://meeting.claro360.com/room/' + mensaje.credenciales.RoomName + "/usr360/" + sesion_cookie.id_usuario + "/" + sesion_cookie.id_sesion + "/" + sesion_cookie.tipo_usuario + "/" + sesion_cookie.tipo_servicio + "/" + sesion_cookie.tipo_area + "/" + response.access_token + "/" + normalize_text(nombre) + "/" + mensaje.registro_llamada.idLlamada, '_blank');
+
+                    }
+
+                });
+
+            } else {
+                window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
+            }
+//                } else {
+//                    console.log("Aquí mismo");
+//                    console.log(result);
+//                    $("#menu_section_Comunicación").click();
+//                    initCall(mensaje);
+//                }
+//            });
+
+        }
+    });
+    $(".swal2-actions").addClass("m-0");
+    $(".swal2-cancel").addClass("mt-0");
+    $(".swal2-confirm").addClass("mt-0");
+
+
+}
+
+function prueba_notificacion(mensaje) {
+    console.log("prueba_notificacion");
+    if (Notification) {
+        if (Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
+        var title = "Llamada entrante:";
+        var extra = {
+            icon: mensaje.emisor.img,
+            body: mensaje.emisor.nombre + " " + mensaje.emisor.apellido_paterno + " " + mensaje.emisor.apellido_materno,
+            timeout: 5000, // Timeout before notification closes automatically.
+            vibrate: [100, 100, 100] // An array of vibration pulses for mobile devices.
+        };
+        var notificar = new Notification(title, extra);
+        notificar.onclick = function () {
+            console.log('notification.Click');
+
+            reproduccionSonidoNotificacion.loop = false;
+            reproduccionSonidoNotificacion.pause();
+            if (mensaje.credenciales.RoomName) {
+                RequestPOST("/API/cuenta360/access_token", {
+                    "token": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).token,
+                    "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+                    "id_sesion": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_sesion
+                }).then(function (response) {
+                    if (response.success) {
+                        //access_token
+                        let nombre = sesion_cookie.nombre + " " + sesion_cookie.apellido_p + " " + sesion_cookie.apellido_m;
+                        window.open('https://meeting.claro360.com/room/' + mensaje.credenciales.RoomName + "/usr360/" + sesion_cookie.id_usuario + "/" + sesion_cookie.id_sesion + "/" + sesion_cookie.tipo_usuario + "/" + sesion_cookie.tipo_servicio + "/" + sesion_cookie.tipo_area + "/" + response.access_token + "/" + normalize_text(nombre) + "/" + mensaje.registro_llamada.idLlamada, '_blank');
+
+                    }
+
+                });
+
+            } else {
+                window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
+            }
+
+//            Swal.fire({
+//                text: '¿Cómo quieres continuar la llamada? (Selecciona ventana externa.)',
+//                showCancelButton: true,
+//                confirmButtonText: `Ventana externa`,
+//                cancelButtonText: `Aquí mismo.`
+//            }).then((result) => {
+//                /* Read more about isConfirmed, isDenied below */
+//                console.log("Presionado " + result.isConfirmed);
+//                console.log(result);
+//                if (result.value) {
+//                    console.log("Externa");
+//                    window.open('https://empresas.claro360.com/plataforma360_dev_moises/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');  
+//                } else{
+//                    console.log("Aquí mismo");
+//                    Swal.close();
+//                    $("#menu_section_Comunicación").click();
+//                    initCall(mensaje); 
+//                }
+//            });
+
+        };
+        notificar.onerror = function () {
+            console.log('notification.Error');
+        };
+        notificar.onshow = function () {
+            console.log('notification.Show');
+        };
+        notificar.onclose = function () {
+            console.log('notification.Close');
+        };
+    }
+    return true;
+}
+
+function content_notification_call(emisor) {
+
+    var img = emisor.img;
+
+
+    if (emisor.telefono === null || emisor.telefono === "null") {
+        emisor.telefono = "-";
+    }
+
+
+    let html = '<div class="row col-12 m-0 p-0 w-100">' +
+            '<div class="col-4 m-0 p-0" style=" height: calc(130px - 1rem);">' +
+            '<div class="infowindow-img" style="background-image: url(' + img + ');"></div>' +
+            '</div>' +
+            '<div class="col-8 m-0 p-0 pl-2" >' +
+            '<div class="col-12 m-0 p-0">' +
+            '<h2 class="title text-light text-center border-bottom py-2">' + emisor.nombre + " " + emisor.apellido_paterno + " " + emisor.apellido_materno + '</h2>' +
+            '</div>' +
+            '<h2 class="title text-white m-0 px-2 py-1">' + emisor.correo + '</h2>' +
+            '<h2 class="subtitle text-white m-0 px-2 py-1">Teléfono: ' + emisor.telefono + '</h2>' +
+            '<div class="row col-12 m-0 px-2 py-1">' +
+            '<label class="col-6 p-0 m-0 subtitle text-white">Fecha:<label class="text text-white" >' + getFecha() + '</label></label>' +
+            '<label class="col-6 p-0 m-0 subtitle text-white">Hora:<label class="text text-white">' + getHora() + '</label></label>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+
+    return html;
+}
+
