@@ -30,10 +30,17 @@ let clock = () => {
 
 let vue_contactos = (directorio) => {
     console.log(directorio);
-
+    //eliminar al usuario del directorio 
+    for (var i = 0; i < directorio.length; i++) {
+        if (directorio[i].id360 === directorio.id_usuario) {
+            directorio.splice(i,1);
+        }
+    }
     for (var i = 0; i < directorio.length; i++) {
         card_contacto(directorio[i]);
+
     }
+
     new Vue({
         el: "#directorio_contactos",
         components: {
