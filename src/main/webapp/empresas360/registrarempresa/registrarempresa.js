@@ -14,6 +14,10 @@ const init_registrarempresa = (json) => {
 }
 
   load_file_img("upFile_logo_nueva_empresa");
+  
+    $("#subir_img").click(() => {
+        $("#upFile_logo_nueva_empresa").click();
+    });
     $("#upFile_logo_nueva_empresa_logotipo_preview").click(() => {
         $("#upFile_logo_nueva_empresa").click();
     });
