@@ -59,6 +59,27 @@ function showEvent(evento_id) {
             .then(response => response.json())
             .then((data) => {
                 evento = data.data
+                console.log(evento)
+                var participantes_event = directorio_usuario.filter(element=>{
+                    if(evento.participantes.includes(parseInt(element.id360))){
+                        return element
+                    }
+                })
+                var li_html = ""
+                multiselect_update.value=[]
+                if (participantes_event.length !== 0){
+                    li_html = `<div class="col-12 mt-2">
+                                                <label>Participantes</label>
+                                                <ul class="list-group">`
+                    for(var i=0;i<participantes_event.length; i++){
+                        li_html=li_html+`<li class="list-group-item disabled">${participantes_event[i]['nombre']+" "+participantes_event[i]['apellido_paterno']+" "+participantes_event[i]['apellido_materno']}</li>`
+                    }  
+                    li_html +=` </ul>
+                                        </div>`
+                    multiselect_update.value = participantes_event
+                    console.log( multiselect_update.value)
+                    
+                }
                 body_html = `
                                 <div class="row">
                                         <div class="col-12 col-md-4 mt-2">
@@ -109,6 +130,9 @@ function showEvent(evento_id) {
                                                 <label>URL</label>
                                                 <input class="form-control" type="text" readonly="" value="${evento.url ? evento.url : "N/A"}">
                                         </div>
+                                        
+                                        ${li_html}
+                                               
                                         <div class="col-12 mt-3 d-flex justify-content-between">
                                                         <button type="button" class="btn btn-warning" onclick="showUpdateForm(${evento.id})">Editar</button>
                                                         <button type="button" class="btn btn-info" onclick="showEmailEventForm(${evento.id})">Enviar por correo</button>
@@ -495,7 +519,7 @@ new Vue({
         }
     });
 
-new Vue({
+var multiselect_update = new Vue({
         el: "#update_event",
         components: {
             "multiselect": window.VueMultiselect.default
