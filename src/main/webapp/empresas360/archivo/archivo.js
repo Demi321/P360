@@ -7,7 +7,7 @@
 
 /* global RequestPOST, directorio_usuario, AWS, sesion_cookie, NotificacionToas, moment, Swal, lottieLoader_blockpage, superCm, swal, Notification, PathRecursos, pdfjsLib, perfil */
 
-var vueArchivos, tablaArchivos, detailRows = [], usuariosReenviaArchivo = [], tipoVistaArchivos = 0;
+var vueArchivos, tablaArchivos, detailRows = [], usuariosReenviaArchivo = [], tipoVistaArchivos = 0, creandoNuevoEnvioArchivo = false;
 var banderaD = false, banderaR = false;
 const selectOrigen = $("#origenArchivo");
 const destinatarioArchivo = $("#destinatarioArchivo");
@@ -107,7 +107,7 @@ const initVistaArchivos = () => {
 
     function detalleArchivo ( d ) {
 
-        let destinatarios = d[13];
+        let destinatarios = d[12];
         let arrayDestinatarios = destinatarios.split(",");
         let msjDestinatarios = "";
 
@@ -118,7 +118,14 @@ const initVistaArchivos = () => {
 
             if(user !== undefined){
 
-                let nombre = buscaEnDirectorioCompletoArchivos(destinatario).nombre;
+                let nombre = "";
+                
+                if(destinatario !== perfil.id360){
+                    nombre = buscaEnDirectorioCompletoArchivos(destinatario).nombre;
+                }else{
+                    nombre = perfil.nombre;
+                }
+                
                 if(index === 0){
                     msjDestinatarios += nombre;
                 }else if(index === (cantidadDestinatarios-2) ){
@@ -130,48 +137,28 @@ const initVistaArchivos = () => {
             }
 
         });
+        
+        let nombreRemitente = "";
+        if(d[11] !== perfil.id360){
+           nombreRemitente = buscaEnDirectorioCompletoArchivos(d[11]).nombre; 
+        }else{
+            nombreRemitente = perfil.nombre;
+        }
 
         let detalle =   '<table cellpadding="5" class="tablaDetalle" cellspacing="0" border="0" style="padding-left:50px; width: 100%;">'+
                             '<tr>'+
                                 '<td>Remitente:</td>'+
-                                '<td>'+d[12]+'</td>'+
+                                '<td>'+nombreRemitente+'</td>'+
                             '</tr>'+
                             '<tr>'+
                                 '<td style="width: 15%;">Compartido con:</td>'+
                                 '<td style="width: 30%;">'+msjDestinatarios+'</td>'+
                                 '<td rowspan="5" style="width: 55%; text-align: center;">';
-
-        let extension = d[3];
-
-        if(extension === "pdf"){
-
-            let canvas = '<div id="my_pdf_viewer'+d[9]+'">' +
-                            '<div style="max-width: 100%; height: 450px; overflow: auto; background: #333;text-align: center; border: solid 3px;" id="canvas_container'+d[9]+'">' +
-                                '<canvas id="pdf_renderer'+d[9]+'"></canvas>' +
-                                '<div id="navigation_controls'+d[9]+'">' +
-                                    '<button id="go_previous'+d[9]+'">Previous</button>' +
-                                    '<input id="current_page'+d[9]+'" value="1" type="number" />' +
-                                    '<button id="go_next'+d[9]+'">Next</button>' +
-                                '</div>' +
-                                '<div id="zoom_controls'+d[9]+'">' +
-                                    '<button id="zoom_in'+d[9]+'">+</button>' +
-                                    '<button id="zoom_out'+d[9]+'">-</button>' +
-                                '</div>' +
-                            '</div>' +
-                        '</div>';
-
-            //detalle +=              '<embed type="application/pdf" style="width: 100%; height: 300px;" frameborder="0" src="'+d[10]+'" >';
-            //detalle +=              '<object data="'+d[10]+'" type="application/pdf"><p>The PDF couldn\'t be displayed</p</object>';
-            detalle +=              canvas;
-        }else if( extension === "gif"|| extension === "GIF" || extension === "jpg" || extension === "JPG" || extension === "jpeg" || extension === "JPEG" || extension === "png" || extension === "PNG"){
-            detalle +=              '<img style="max-width: 100%; max-height: 300px" src="'+d[10]+'" />';
-        }
-
         detalle +=              '</td>'+
                             '</tr>'+
                             '<tr>'+
                                 '<td>Proyecto:</td>'+
-                                '<td>'+d[4]+'</td>'+
+                                '<td>'+d[3]+'</td>'+
                             '</tr>'+
                             '<tr>'+
                                 '<td>Título:</td>'+
@@ -179,11 +166,7 @@ const initVistaArchivos = () => {
                             '</tr>'+
                             '<tr>'+
                                 '<td>Descripción:</td>'+
-                                '<td>'+d[11]+'</td>'+
-                            '</tr>'+
-                            '<tr>'+
-                                '<td>Extensión:</td>'+
-                                '<td>'+extension+'</td>'+
+                                '<td>'+d[10]+'</td>'+
                             '</tr>'+
                         '</table>';
 
@@ -192,7 +175,6 @@ const initVistaArchivos = () => {
 
     const buscaArchivosEnviado = (tituloDefault) => {
 
-        console.log("Filtrar: " + tituloDefault);
         muestraLoaderArchivo();
 
         let services = "/API/empresas360/consultar_archivos_empresas";
@@ -238,7 +220,7 @@ const initVistaArchivos = () => {
                 let arrayArchivos = [];
                 $.each(archivos, (index, archivo) => {
 
-                    let iconSeleccionar = '<i class="fas fa-hand-point-right"></i>';
+                    let iconSeleccionar = '<input type="checkbox">';
                     let buttonCompartir = '<button class="btn btn-app"><i class="fas fa-share"></i></button>';
                     let buttonDescargar = '<a href="'+archivo.ruta_archivo+'" download="'+archivo.titulo_archivo+'" target="_blank" class="btn btn-app"><i class="fas fa-cloud-download-alt"></i></a>';
 
@@ -246,7 +228,6 @@ const initVistaArchivos = () => {
                         iconSeleccionar,
                         "",
                         archivo.titulo_archivo,
-                        archivo.tipo_archivo,
                         archivo.nombre_proyecto,
                         archivo.fecha_envio,
                         archivo.hora_envio,
@@ -278,7 +259,6 @@ const initVistaArchivos = () => {
                             "defaultContent": ""
                         },
                         { "title": "Título" },
-                        { "title": "Tipo" },
                         { "title": "Proyecto" },
                         { "title": "Fecha de envío" },
                         { "title": "Hora de envío" },
@@ -294,7 +274,7 @@ const initVistaArchivos = () => {
                     ],
                     "order": [[1, 'asc']],
                     initComplete: function() {
-                        this.api().columns([2,3,4,5]).every(function() {
+                        this.api().columns([2,3,4]).every(function() {
                             var column = this;
 
                             var containerSelect = $("<div></div>");
@@ -343,7 +323,7 @@ const initVistaArchivos = () => {
                 $('.archivo tbody').off();
 
                 /* SELECCIONAR FILA */
-                $('.archivo tbody').on( 'click', 'tr td.seleccionar-archivo', function () {
+                $('.archivo tbody').on( 'click', 'tr td.seleccionar-archivo input', function () {
                     $(this).parent().toggleClass('selected');
                 } );
 
@@ -476,115 +456,6 @@ const initVistaArchivos = () => {
                             "border-radius":"20px"
                         });
 
-                        if(row.data()[3] === "pdf"){
-                            let myState = {
-                                pdf: null,
-                                currentPage: 1,
-                                zoom: 1
-                            };
-
-                            let render = () => {
-                                try{
-                                    myState.pdf.getPage(myState.currentPage).then((page) => {
-
-                                        let canvas = document.getElementById("pdf_renderer"+ row.data()[9]);
-                                        let ctx = canvas.getContext('2d');
-
-                                        let viewport = page.getViewport(myState.zoom);
-                                        canvas.width = viewport.width;
-                                        canvas.height = viewport.height;
-                                        page.render({
-                                            canvasContext: ctx,
-                                            viewport: viewport
-                                        });
-
-                                    });
-                                }catch(e){
-                                    console.log(e);
-                                }
-
-                            };
-
-                            pdfjsLib.getDocument(row.data()[10]).then((pdf) => {
-
-                                myState.pdf = pdf;
-                                render();
-
-                                document.getElementById('go_previous'+ row.data()[9])
-                                    .addEventListener('click', (e) => {
-                                        try{
-                                            if (myState.pdf === null || myState.currentPage === 1) return;
-                                            myState.currentPage -= 1;
-                                            document.getElementById("current_page"+ row.data()[9])
-                                                .value = myState.currentPage;
-                                            render();
-                                        }catch(e){
-                                            console.log(e);
-                                        }
-                                    });
-
-                                document.getElementById('go_next'+ row.data()[9])
-                                    .addEventListener('click', (e) => {
-                                        try{
-                                            if (myState.pdf === null ||
-                                                myState.currentPage > myState.pdf
-                                                ._pdfInfo.numPages)
-                                                return;
-
-                                            myState.currentPage += 1;
-                                            document.getElementById("current_page"+ row.data()[9])
-                                                .value = myState.currentPage;
-                                            render();
-                                        }catch(e){
-                                            console.log(e);
-                                        }
-                                    });
-
-                                document.getElementById('current_page'+ row.data()[9])
-                                    .addEventListener('keypress', (e) => {
-                                        try{
-                                            if (myState.pdf === null) return;
-
-                                            // Get key code
-                                            var code = (e.keyCode ? e.keyCode : e.which);
-
-                                            // If key code matches that of the Enter key
-                                            if (code === 13) {
-                                                var desiredPage =
-                                                    document.getElementById('current_page'+ row.data()[9])
-                                                    .valueAsNumber;
-
-                                                if (desiredPage >= 1 &&
-                                                    desiredPage <= myState.pdf
-                                                    ._pdfInfo.numPages) {
-                                                    myState.currentPage = desiredPage;
-                                                    document.getElementById("current_page"+ row.data()[9])
-                                                        .value = desiredPage;
-                                                    render();
-                                                }
-                                            }
-                                        }catch(e){
-                                            console.log(e);
-                                        }
-                                    });
-
-                                document.getElementById('zoom_in'+ row.data()[9])
-                                    .addEventListener('click', (e) => {
-                                        if (myState.pdf === null) return;
-                                        myState.zoom += 0.5;
-                                        render();
-                                    });
-
-                                document.getElementById('zoom_out'+ row.data()[9])
-                                    .addEventListener('click', (e) => {
-                                        if (myState.pdf === null || myState.zoom === 0.5) return;
-                                        myState.zoom -= 0.5;
-                                        render();
-                                    });
-
-                            });
-                        }
-
                     }
                 } );
 
@@ -592,6 +463,10 @@ const initVistaArchivos = () => {
                     $("#contentArchivos input").val( tituloDefault );
                     tablaArchivos.columns(2).search( tituloDefault ).draw();
                 }
+
+                $("#tablaArchivos_wrapper").css({
+                    "padding-bottom":"10rem"
+                });
 
                 archivosEncontrados.removeClass("d-none");
                 archivosNoEncontrados.addClass("d-none");
@@ -605,6 +480,12 @@ const initVistaArchivos = () => {
             }
 
             ocultaLoaderArchivo();
+            
+            if(!creandoNuevoEnvioArchivo){
+                $("#padreArchivosVistaCorreo").slideUp("fast", () => {
+                    $("#padreArchivosVistaArchivos").slideDown("fast");
+                });
+            }
 
         });
 
@@ -649,7 +530,7 @@ const initVistaArchivos = () => {
                 let agrupadores = [];
                 $.each(tablaArchivos.rows('.selected').data(), (index, archivo) => {
 
-                    let agrupador = archivo[14];
+                    let agrupador = archivo[13];
                     agrupadores.push(agrupador);
 
                 });
@@ -773,6 +654,8 @@ const initVistaCorreo = () => {
         "id360": sesion_cookie.idUsuario_Sys
     };
     
+    muestraLoaderArchivo();
+    
     RequestPOST("/API/empresas360/consultar_proyectos_mios", dataProyectosMios).then((response) => {
         
         listadoProyectos.empty();
@@ -789,6 +672,12 @@ const initVistaCorreo = () => {
             label.text(text);
             
             let cantidadArchivosProyecto = $("<span></span>").addClass("badge bg-secondary");
+            cantidadArchivosProyecto.css({
+                "position":"absolute",
+                "right":"5px",
+                "color":"#fff"
+            });
+            cantidadArchivosProyecto.text(cantidad);
             label.append(cantidadArchivosProyecto);
             
             div.append(input);
@@ -807,15 +696,19 @@ const initVistaCorreo = () => {
         
         $.each(response, (index, proyecto) => {
             
-            suma += proyecto.cantidadArchivos;
+            suma += parseInt(proyecto.cantidadArchivos);
             agregaDivProyecto(proyecto.id_proyecto, "proyectoArchivos_" + proyecto.id_proyecto, proyecto.nombre_proyecto, proyecto.cantidadArchivos, false);
             
         });
+        
+        $("input[name=proyectoSeleccionado]:eq(0)").find("span").text(suma);
         
         const contenedorArchivos = $("#archivosVistaCorreo .listadoArchivosVistaCorreo");
         const contenedorDetalleArchivo = $("#archivosVistaCorreo .detalleArchivo");
         
         const cargaArchivosPorProyecto = (proyecto) => {
+            
+            muestraLoaderArchivo();
             
             let dataSolicitaArchivos = {
                 "id360": sesion_cookie.idUsuario_Sys
@@ -883,11 +776,13 @@ const initVistaCorreo = () => {
                 
                 div.click(() => {
                     
+                    muestraLoaderArchivo();
+                    
                     contenedorDetalleArchivo.html('<h5 class="text-center">Detalle de mensaje</h5>');
                     
                     let divDetalle = $("<div></div>");
                     divDetalle.css({
-                        "padding":"20px"
+                        "padding":"20px 0"
                     });
                     
                     /* TITULO CON BOTONES */
@@ -974,10 +869,108 @@ const initVistaCorreo = () => {
                     let divCuerpoArchivo = $("<div></div>").addClass("w-100 mt-3");
                     divCuerpoArchivo.html(data.descripcion_archivo);
                     
+                    let divAdjuntos = $("<div></div>").addClass("w-100 adjuntosDetalleArchivo");
+                    divAdjuntos.css({
+                        "display":"grid",
+                        "grid-template-columns": "1fr 1fr 1fr 1fr",
+                        "grid-gap":"10px"
+                    });
+                    
+                    let rutasAdjuntos = data.ruta_archivo.split(",");
+                    $.each(rutasAdjuntos, (index, ruta) => {
+                        
+                        console.log(ruta);
+                        let partes = ruta.split(".");
+                        let extension = partes[ partes.length-1 ];
+                        
+                        let imgPreview = $("<img>").addClass("w-100");
+                        imgPreview.attr("src", PathRecursos + "images/icono_default.png");
+                        imgPreview.css({
+                            "max-height": "100px"
+                        });
+
+                        switch (extension) {
+
+                            case "jpg":
+                            case "png":
+                            case "gif":
+                            case "jpeg":
+                                imgPreview.attr("src", ruta);
+                                break;
+
+                            case "docx":
+                            case "docm":
+                            case "dotx":
+                            case "dotm":
+                            case "doc":
+                                imgPreview.attr("src", PathRecursos + "images/icono_word.png");
+                                break;
+
+                            case "xlsx":
+                            case "xlsm":
+                            case "xlsb":
+                            case "xltx":
+                            case "xltm":
+                            case "xls":
+                            case "xlt":
+                                imgPreview.attr("src", PathRecursos + "images/icono_excel.png");
+                                break;
+
+                            case "pptx":
+                            case "pptm":
+                            case "ppt":
+                            case "xps":
+                            case "potx":
+                            case "ppsx":
+                                imgPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
+                                break;
+
+                            case "pdf":
+                                imgPreview.attr("src", PathRecursos + "images/icono_pdf.png");
+                                break;
+
+                        }
+                        
+                        let divAdjunto = $("<div></div>").addClass("w-100");
+                        divAdjunto.css({
+                            "display":"grid"
+                        });
+                        
+                        let divImagen = $("<div></div>").addClass("w-100");
+                        divImagen.css({
+                            "height":"100px",
+                            "display":"flex",
+                            "justify-content":"center",
+                            "align-items":"center"
+                        });
+                        divImagen.append(imgPreview);
+                        
+                        let partesPorDiagonal = ruta.split("/");
+                        let nombreCorto = partesPorDiagonal[partesPorDiagonal.length - 1];
+                        let botonDescargar = $("<a></a>").addClass("btn btn-block btn-ligth");
+                        botonDescargar.css({
+                            "background-color":"#0097a9",
+                            "border-color":"#0097a9",
+                            "color":"#fff"
+                        });
+                        botonDescargar.attr("href", ruta);
+                        botonDescargar.attr("download", nombreCorto);
+                        botonDescargar.attr("target", "_blank");
+                        botonDescargar.html('<i class="fas fa-download"></i>');
+                        
+                        divAdjunto.append(divImagen);
+                        divAdjunto.append(botonDescargar);
+                        divAdjuntos.append(divAdjunto);
+                        
+                    });
+                    
                     contenedorDetalleArchivo.append(divDetalle);
                     contenedorDetalleArchivo.append(divInfo);
                     contenedorDetalleArchivo.append(divDestinatarios);
                     contenedorDetalleArchivo.append(divCuerpoArchivo);
+                    contenedorDetalleArchivo.append(divAdjuntos);
+                    
+                    ocultaLoaderArchivo();
                     
                 });
                 
@@ -996,6 +989,8 @@ const initVistaCorreo = () => {
                     contenedorArchivos.append("<p class='sinResultados'>sin resultados</p>");
                 }
                 
+                ocultaLoaderArchivo();
+                
             });
             
         };
@@ -1012,6 +1007,16 @@ const initVistaCorreo = () => {
         });
         
         $("#padreArchivosVistaCorreo").css("display","block");
+        
+        ocultaLoaderArchivo();
+        
+        if(!creandoNuevoEnvioArchivo){
+            $("#padreArchivosVistaArchivos").slideUp("fast", () => {
+                $("#padreArchivosVistaCorreo").slideDown("fast");
+            });
+        }
+        
+        $("input[name=proyectoSeleccionado]").first().next().find("span").text(suma);
         
     });
     
@@ -1032,7 +1037,7 @@ var init_archivo = (json) => {
     $("#archivos_envio").fileinput({
         theme: 'fa',
         language: 'es',
-        maxFileCount: 4,
+        maxFileCount: 5,
         validateInitialCount: true,
         overwriteInitial: false
     });
@@ -1099,7 +1104,7 @@ var init_archivo = (json) => {
 
     buttonNuevoEnvio.click(() => {
 
-        console.log("Nuevo envio");
+        creandoNuevoEnvioArchivo = true;
         if( contenedorNuevoEnvio.css("display") === "none" ){
             formEnvioArchivo[0].reset();
 
@@ -1283,19 +1288,15 @@ var init_archivo = (json) => {
                             //Limpiar el input del vue
                             vueArchivos.value=null;
                             contenedorNuevoEnvio.slideUp("fast", () => {
+                                creandoNuevoEnvioArchivo = false;
                                 if(tipoVistaArchivos === 0){
-                                    contenedorVistaCorreo.slideDown("fast", () => {
-                                        NotificacionToasArchivos.fire({
-                                            title: 'Archivo enviado'
-                                        });
-                                    });
+                                    initVistaArchivos();
                                 }else{
-                                    contenedorVistaArchivos.slideDown("fast", () => {
-                                        NotificacionToasArchivos.fire({
-                                            title: 'Archivo enviado'
-                                        });
-                                    });
+                                    initVistaArchivos();
                                 }
+                                NotificacionToasArchivos.fire({
+                                    title: 'Archivo enviado'
+                                });
                             });
 
                         }
@@ -1331,6 +1332,16 @@ var init_archivo = (json) => {
     
     /* LLAMADA A LA VISTA DESEADA */ 
     initVistaCorreo();
+    
+    $(".archivo input[name=tVista]").change(() => {
+        tipoVistaArchivos = parseInt( $(".archivo input[name=tVista]:checked").val() );
+        
+        if(tipoVistaArchivos === 0)
+            initVistaCorreo();
+        else
+            initVistaArchivos();
+                
+    });
     
     recibirArchivoSocket = (mensaje) => {
     
