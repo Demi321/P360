@@ -1005,7 +1005,96 @@ const initVistaCorreo = () => {
                         
                     }
                     
-                    ocultaLoaderArchivo();
+                    let dataConsultaConversacion = {
+                        "agrupador": data.agrupador
+                    };
+                    
+                    RequestPOST("/API/empresas360/consultar_conversacion_archivo", dataConsultaConversacion).then((response) => {
+                        
+                        if(response.length>0){
+                            
+                            $.each(response, (index, mensaje) => {
+                                
+                                
+                                
+                            });
+                            
+                        }
+                        
+                        let divBotonResponde = $("<div></div>").addClass("w-100 mt-4");
+                        let buttonResponder = $("<button></button>").addClass("btn btn-ligth mr-3");
+                        buttonResponder.html('<i class="fas fa-reply"></i> Añadir respuesta');
+                        divBotonResponde.append(buttonResponder);
+                        contenedorDetalleArchivo.append(divBotonResponde);
+                        
+                        /* CONTENEDOR PARA RESPONDER CORREO */
+                        let divEnviarMensaje = $("<div></div>").addClass("w-100 mt-4");
+                        divEnviarMensaje.css({
+                            "padding": "10px",
+                            "border": "0.5px solid lightgray",
+                            "display": "none"
+                        });
+                        
+                        let pLeyendaEnviarMensaje = $("<p></p>");
+                        pLeyendaEnviarMensaje.text( "Responder" );
+                        divEnviarMensaje.append( pLeyendaEnviarMensaje );
+                        
+                        let formGroupContenido = $("<div></div>").addClass("form-group");
+                        let textareaContenido = $('<textarea></textarea>').addClass("form-control");
+                        textareaContenido.attr("row","15");
+                        formGroupContenido.append(textareaContenido);
+                        divEnviarMensaje.append(formGroupContenido);
+                        
+                        let formGroupAdjuntos = $("<div></div>").addClass("form-group");
+                        let divFileInput = $("<div></div>").addClass("file-loading");
+                        let fileInput = $("<input>");
+                        fileInput.attr("name","adjuntos[]");
+                        fileInput.attr("type","file");
+                        fileInput.attr("multiple","true");
+                        divFileInput.append(fileInput);
+                        formGroupAdjuntos.append(divFileInput);
+                        divEnviarMensaje.append(formGroupAdjuntos);
+                        
+                        let divBotonera = $("<div></div>").addClass("w-100 mt-2");
+                        let buttonCancelarResponde = $("<button></button>").addClass("btn btn-dark");
+                        buttonCancelarResponde.text("Cancelar");
+                        divBotonera.append(buttonCancelarResponde);
+                        let buttonGuardarRespuesta = $("<button></button>").addClass("btn btn-danger");
+                        buttonGuardarRespuesta.text("Responder");
+                        divBotonera.append(buttonGuardarRespuesta);
+                        divEnviarMensaje.append(divBotonera);
+                        
+                        contenedorDetalleArchivo.append(divEnviarMensaje);
+                        
+                        ocultaLoaderArchivo();
+                        
+                        fileInput.fileinput({
+                            theme: 'fa',
+                            language: 'es',
+                            maxFileCount: 5,
+                            validateInitialCount: true,
+                            overwriteInitial: false
+                        });
+                        
+                        textareaContenido.summernote();
+                        
+                        buttonResponder.click(() => {
+                            
+                            divBotonResponde.slideUp("fast", () => {
+                                divEnviarMensaje.slideDown("fast");
+                            });
+                            
+                        });
+                        
+                        buttonCancelarResponde.click(() => {
+                            
+                            divEnviarMensaje.slideUp("fast", () => {
+                                divBotonResponde.slideDown("fast");
+                            });
+                            
+                        });
+                        
+                    });
                     
                 });
                 
