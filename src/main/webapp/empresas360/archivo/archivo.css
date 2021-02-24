@@ -104,6 +104,12 @@ and open the template in the editor.
     right: 50px;
 }
 
+#remitenteVistaCorreos,
+#destinatarioVistaCorreos{
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 15px;
+}
+
 /* ESTILOS VISTA DE CORREOS */
 
 #archivosVistaCorreo .listadoDeProyectos,
@@ -121,6 +127,7 @@ and open the template in the editor.
 .formulario-lista{
     max-height: 200px;
     overflow: auto;
+    border-bottom: 1px solid lightgray;
 }
 
 .formulario-lista label {

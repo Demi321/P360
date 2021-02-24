@@ -8,7 +8,7 @@
 /* global RequestPOST, directorio_usuario, AWS, sesion_cookie, NotificacionToas, moment, Swal, lottieLoader_blockpage, superCm, swal, Notification, PathRecursos, pdfjsLib, perfil */
 
 var vueArchivos, tablaArchivos, detailRows = [], usuariosReenviaArchivo = [], tipoVistaArchivos = 0, creandoNuevoEnvioArchivo = false;
-var banderaD = false, banderaR = false;
+var banderaD = false, banderaR = false, banderaDCorreos = false, banderaRCorreos = false;
 const selectOrigen = $("#origenArchivo");
 const destinatarioArchivo = $("#destinatarioArchivo");
 const remitenteArchivo = $("#remitenteArchivo");
@@ -17,6 +17,10 @@ const archivosNoEncontrados = $("#sinArchivos");
 const buttonBorrarArchivos = $("#eliminarArchivos");
 const refrescarArchivos = $("#refrescarArchivos");
 var recibirArchivoSocket;
+
+/*VARIABLES GLOBALES VISTA DE CORREOS */
+const remitenteArchivoVistaCorreos = $("#remitenteVistaCorreosValor");
+const destinatarioArchivoVistaCorreos = $("#destinatarioVistaCorreosValor");
 
 const loaderArchivos = $("#loaderArchivos");
 
@@ -648,6 +652,7 @@ const initVistaArchivos = () => {
 const initVistaCorreo = () => {
     
     const listadoProyectos = $(".listadoDeProyectos .radio-proyectos");
+    let cargaArchivosPorProyecto;
     
     let dataProyectosMios = {
         "tipo_usuario": sesion_cookie.tipo_usuario,
@@ -706,19 +711,45 @@ const initVistaCorreo = () => {
         const contenedorArchivos = $("#archivosVistaCorreo .listadoArchivosVistaCorreo");
         const contenedorDetalleArchivo = $("#archivosVistaCorreo .detalleArchivo");
         
-        const cargaArchivosPorProyecto = (proyecto) => {
+        cargaArchivosPorProyecto = () => {
             
             muestraLoaderArchivo();
             
             let dataSolicitaArchivos = {
-                "id360": sesion_cookie.idUsuario_Sys
+                "id360": sesion_cookie.idUsuario_Sys,
+                "sinFiltros": "true"
             } ;
             
+            let proyecto = $("input[name=proyectoSeleccionado]:checked").val();
             if(proyecto !== "0") {
-                
                 dataSolicitaArchivos.proyecto = proyecto;
-                
             };
+            
+            let origen = $("input[name=origenSeleccionado]:checked").val();
+            if( origen !== "0" ){
+                dataSolicitaArchivos.sinFiltros = "false";
+                if(origen === "1"){
+                    dataSolicitaArchivos.to_id360 = perfil.id360;
+                    
+                    let remitente = remitenteArchivoVistaCorreos.val();
+                    if(remitente !== "0"){
+                        dataSolicitaArchivos.id360 = remitente;
+                        dataSolicitaArchivos.conversacion = true;
+                    }
+                    
+                }else{
+                    dataSolicitaArchivos.id360 = perfil.id360;
+                    
+                    let destinatario = destinatarioArchivoVistaCorreos.val();
+                    if(destinatario !== "0"){
+                        dataSolicitaArchivos.to_id360 = destinatario;
+                        dataSolicitaArchivos.conversacion = true;
+                    }
+                    
+                }
+            }
+            
+            console.log(dataSolicitaArchivos);
             
             const agregaItemArchivo = (data) => {
                 
@@ -979,7 +1010,6 @@ const initVistaCorreo = () => {
             RequestPOST( "/API/empresas360/consultar_archivos_empresas_filtros", dataSolicitaArchivos ).then((response) => {
                 
                 contenedorArchivos.empty();
-                contenedorDetalleArchivo.html('<h5 class="text-center">Seleccione un archivo</h5>');
                 
                 if(response.length > 0){
                     $.each(response, (index, archivo) => {
@@ -995,14 +1025,13 @@ const initVistaCorreo = () => {
             
         };
         
-        cargaArchivosPorProyecto('0');
+        cargaArchivosPorProyecto();
 
         const proyectosDOM = $("input[name=proyectoSeleccionado]");
         proyectosDOM.off();
         proyectosDOM.change(function(){
             
-            console.log("Cambio de proyecto");
-            cargaArchivosPorProyecto($("input[name=proyectoSeleccionado]:checked").val());
+            cargaArchivosPorProyecto();
             
         });
         
@@ -1018,6 +1047,54 @@ const initVistaCorreo = () => {
         
         $("input[name=proyectoSeleccionado]").first().next().find("span").text(suma);
         
+    });
+    
+    const origenVistaCorreos = $("input[name=origenSeleccionado]");
+    origenVistaCorreos.off();
+    origenVistaCorreos.change(function(){
+        
+        let opcionOrigen = parseInt( $("input[name=origenSeleccionado]:checked").val() );
+        
+        banderaDCorreos = false;
+        banderaRCorreos = false;
+        
+        destinatarioArchivoVistaCorreos.val("0");
+        destinatarioArchivoVistaCorreos.trigger("change");
+        remitenteArchivoVistaCorreos.val("0");
+        remitenteArchivoVistaCorreos.trigger("change");
+        
+        switch(opcionOrigen){
+            case 0:
+                    destinatarioArchivoVistaCorreos.parent().addClass("d-none");
+                    remitenteArchivoVistaCorreos.parent().addClass("d-none");
+                break;
+            case 1:
+                    destinatarioArchivoVistaCorreos.parent().addClass("d-none");
+                    remitenteArchivoVistaCorreos.parent().removeClass("d-none");
+                break;
+            case 2:
+                    destinatarioArchivoVistaCorreos.parent().removeClass("d-none");
+                    remitenteArchivoVistaCorreos.parent().addClass("d-none");
+                break;
+        }
+        
+        banderaDCorreos = true;
+        banderaRCorreos = true;
+        
+        cargaArchivosPorProyecto();
+        
+    });
+    
+    destinatarioArchivoVistaCorreos.change(() => {
+        if(banderaDCorreos){
+            cargaArchivosPorProyecto();
+        }
+    });
+    
+    remitenteArchivoVistaCorreos.change(() => {
+        if(banderaRCorreos){
+            cargaArchivosPorProyecto();
+        }
     });
     
 };
@@ -1383,5 +1460,33 @@ var init_archivo = (json) => {
 
 
     };
+    
+    /* LLENADO DE SELECT REMITENTES Y DESTINATARIOS CON EL DIRECTORIO GENERAL */
+    
+    let optionTodosR = $("<option value='0'>Todos</option>");
+    let optionTodosD = $("<option value='0'>Todos</option>");
+    destinatarioArchivoVistaCorreos.append(optionTodosR);
+    remitenteArchivoVistaCorreos.append(optionTodosD);
+    
+    $.each(directorio_usuario, (index, usuario) => {
+        let optionR = $("<option></option>");
+        optionR.text( usuario.nombre + " " + usuario.apellido_paterno + " " + usuario.apellido_materno );
+        optionR.attr("value",usuario.id360);
+        
+        let optionD = $("<option></option>");
+        optionD.text( usuario.nombre + " " + usuario.apellido_paterno + " " + usuario.apellido_materno );
+        optionD.attr("value",usuario.id360);
+        
+        destinatarioArchivoVistaCorreos.append(optionD);
+        remitenteArchivoVistaCorreos.append(optionR);
+        
+    });
+    
+    remitenteArchivoVistaCorreos.select2();
+    destinatarioArchivoVistaCorreos.select2();
+    
+    $(".archivo .select2").css({
+        "width":"100%"
+    });
     
 };
