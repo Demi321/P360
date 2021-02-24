@@ -21,9 +21,11 @@ var recibirArchivoSocket;
 /*VARIABLES GLOBALES VISTA DE CORREOS */
 const remitenteArchivoVistaCorreos = $("#remitenteVistaCorreosValor");
 const destinatarioArchivoVistaCorreos = $("#destinatarioVistaCorreosValor");
+var agregarRespuestaDeCorreo;
 
 const loaderArchivos = $("#loaderArchivos");
 
+/* VENTANA MODAL PARA CONFIRMAR O DECLINAR UNA ACCION */
 const confirmArchivos = (message, textConfirm, textCancel) => {
     return new Promise((resolve, reject) => {
         swal.fire({
@@ -39,15 +41,18 @@ const confirmArchivos = (message, textConfirm, textCancel) => {
         });
     });
 };
-    
+
+/* METODO PARA MOSTRAR UN LOADER DE CARGA PARA PROCESOS CON RETRASO */
 const muestraLoaderArchivo = () => {
     loaderArchivos.removeClass("d-none");
 };
 
+/* METODO PARA ELIMINAR EL LOADER DE CARGA */
 const ocultaLoaderArchivo = () => {
     loaderArchivos.addClass("d-none");
 };
 
+/* METODO PARA REALIZAR UNA NOTIFICACION TOAST DENTRO DEL MODULO */
 const NotificacionToasArchivos = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -59,6 +64,7 @@ const NotificacionToasArchivos = Swal.mixin({
     }
 });
 
+/* METODO PARA BUSCAR UN ID360 DENTRO DEL DIRECTORIO Y DEVOLVER LA DATA COMPLETA */
 const buscaEnDirectorioCompletoArchivos = (id360) => {
     let user;
     $.each(directorio_usuario, (i) => {
@@ -68,6 +74,52 @@ const buscaEnDirectorioCompletoArchivos = (id360) => {
         }
     });
     return user;
+};
+
+agregarRespuestaDeCorreo = (respuesta) => {
+    
+    let contenedorRespuestas = $("#contenedorRespuestasCorreo_" + respuesta.id_archivo);
+    
+    if( contenedorRespuestas.length ){
+        let divRespuesta = $("<div></div>").addClass("w-100 respuestaCorreo");
+    
+        let usuario = null;
+        if(respuesta.id360 === perfil.id360){
+            usuario = {
+                "img": perfil.img,
+                "nombre": perfil.nombre,
+                "apellido_paterno": perfil.apellido_paterno,
+                "apellido_materno": perfil.apellido_materno
+            };
+        }else{
+            usuario = buscaEnDirectorioCompletoArchivos(respuesta.id360);
+        }
+
+        let divCabecera = $("<div></div>").addClass("w-100");
+
+        let divFoto = $("<div></div>").addClass("w-100");
+        let foto = $("<img>").addClass("w-100");
+        foto.attr("src",usuario.img);
+        foto.css({
+            "max-height":"100%",
+            "border-radius":"50%"
+        });
+        divFoto.append(foto);
+        divCabecera.append(divFoto);
+
+        let divNombre = $("<div></div>").addClass("w-100");
+        divNombre.text( usuario.nombre + " " + usuario.apellido_paterno + " " + usuario.apellido_materno );
+        divCabecera.append(divNombre);
+
+        let divFecha = $("<div></div>").addClass("w-100");
+        divFecha.text( moment(respuesta.date_created + " " + respuesta.time_created).Moment.format("DD-MMM-YY hh:mm A") );
+        divCabecera.append(divFecha);
+
+        divRespuesta.append(divFecha);
+        
+        contenedorRespuestas.append(divRespuesta);
+    }
+    
 };
 
 const initVistaArchivos = () => {
@@ -683,7 +735,7 @@ const initVistaCorreo = () => {
                 "color":"#fff"
             });
             cantidadArchivosProyecto.text(cantidad);
-            label.append(cantidadArchivosProyecto);
+            //label.append(cantidadArchivosProyecto);
             
             div.append(input);
             div.append(label);
@@ -807,9 +859,15 @@ const initVistaCorreo = () => {
                 
                 div.click(() => {
                     
+                    if( $("#detalleDeArchivo_" + data.id_archivo).length ) return false;
+                    
+                    contenedorDetalleArchivo.empty();
+                    let divPadre = $("<div></div>").addClass("w-100");
+                    divPadre.attr("id","detalleDeArchivo_" + data.id_archivo);
+                    
                     muestraLoaderArchivo();
                     
-                    contenedorDetalleArchivo.html('<h5 class="text-center">Detalle de mensaje</h5>');
+                    divPadre.html('<h5 class="text-center">Detalle de mensaje</h5>');
                     
                     let divDetalle = $("<div></div>");
                     divDetalle.css({
@@ -865,7 +923,7 @@ const initVistaCorreo = () => {
                     let divNombre = $("<div></div>").addClass("pl-3");
                     let nDetalle = nombreRemitente;
                     if(correoRemitente !== ""){
-                        nDetalle = nDetalle + "<<a href='mailto:'"+correoRemitente+">"+correoRemitente+"</a>>";
+                        nDetalle = nDetalle + " <<a href='mailto:'"+correoRemitente+">"+correoRemitente+"</a>>";
                     }
                     divNombre.html(nDetalle);
                     divInfo.append(divNombre);
@@ -900,10 +958,10 @@ const initVistaCorreo = () => {
                     let divCuerpoArchivo = $("<div></div>").addClass("w-100 mt-3");
                     divCuerpoArchivo.html(data.descripcion_archivo);
                     
-                    contenedorDetalleArchivo.append(divDetalle);
-                    contenedorDetalleArchivo.append(divInfo);
-                    contenedorDetalleArchivo.append(divDestinatarios);
-                    contenedorDetalleArchivo.append(divCuerpoArchivo);
+                    divPadre.append(divDetalle);
+                    divPadre.append(divInfo);
+                    divPadre.append(divDestinatarios);
+                    divPadre.append(divCuerpoArchivo);
                     
                     if(data.ruta_archivo !== "N/A"){
                         let divAdjuntos = $("<div></div>").addClass("w-100 adjuntosDetalleArchivo");
@@ -1001,12 +1059,16 @@ const initVistaCorreo = () => {
 
                         });
                         
-                        contenedorDetalleArchivo.append(divAdjuntos);
+                        divPadre.append(divAdjuntos);
                         
                     }
                     
+                    let divRespuestasDeCorreo = $("<div></div>").addClass("w-100 mt-4");
+                    divRespuestasDeCorreo.attr("id","contenedorRespuestasCorreo_" + data.id_archivo);
+                    divPadre.append(divRespuestasDeCorreo);
+                    
                     let dataConsultaConversacion = {
-                        "agrupador": data.agrupador
+                        "id_archivo": data.id_archivo
                     };
                     
                     RequestPOST("/API/empresas360/consultar_conversacion_archivo", dataConsultaConversacion).then((response) => {
@@ -1015,17 +1077,17 @@ const initVistaCorreo = () => {
                             
                             $.each(response, (index, mensaje) => {
                                 
-                                
+                                agregarRespuestaDeCorreo(mensaje);
                                 
                             });
                             
                         }
                         
                         let divBotonResponde = $("<div></div>").addClass("w-100 mt-4");
-                        let buttonResponder = $("<button></button>").addClass("btn btn-ligth mr-3");
+                        let buttonResponder = $("<button></button>").addClass("btn btn-ligth");
                         buttonResponder.html('<i class="fas fa-reply"></i> Añadir respuesta');
                         divBotonResponde.append(buttonResponder);
-                        contenedorDetalleArchivo.append(divBotonResponde);
+                        divPadre.append(divBotonResponde);
                         
                         /* CONTENEDOR PARA RESPONDER CORREO */
                         let divEnviarMensaje = $("<div></div>").addClass("w-100 mt-4");
@@ -1048,6 +1110,7 @@ const initVistaCorreo = () => {
                         let formGroupAdjuntos = $("<div></div>").addClass("form-group");
                         let divFileInput = $("<div></div>").addClass("file-loading");
                         let fileInput = $("<input>");
+                        fileInput.attr("id","inputArchivosRespuestaCorreo_" + data.id_archivo);
                         fileInput.attr("name","adjuntos[]");
                         fileInput.attr("type","file");
                         fileInput.attr("multiple","true");
@@ -1056,7 +1119,7 @@ const initVistaCorreo = () => {
                         divEnviarMensaje.append(formGroupAdjuntos);
                         
                         let divBotonera = $("<div></div>").addClass("w-100 mt-2");
-                        let buttonCancelarResponde = $("<button></button>").addClass("btn btn-dark");
+                        let buttonCancelarResponde = $("<button></button>").addClass("btn btn-dark mr-3");
                         buttonCancelarResponde.text("Cancelar");
                         divBotonera.append(buttonCancelarResponde);
                         let buttonGuardarRespuesta = $("<button></button>").addClass("btn btn-danger");
@@ -1064,7 +1127,7 @@ const initVistaCorreo = () => {
                         divBotonera.append(buttonGuardarRespuesta);
                         divEnviarMensaje.append(divBotonera);
                         
-                        contenedorDetalleArchivo.append(divEnviarMensaje);
+                        divPadre.append(divEnviarMensaje);
                         
                         ocultaLoaderArchivo();
                         
@@ -1077,6 +1140,7 @@ const initVistaCorreo = () => {
                         });
                         
                         textareaContenido.summernote();
+                        $(".detalleArchivo .note-editing-area").css("height","150px");
                         
                         buttonResponder.click(() => {
                             
@@ -1094,7 +1158,131 @@ const initVistaCorreo = () => {
                             
                         });
                         
+                        buttonGuardarRespuesta.click(() => {
+                            
+                            let filesRespuesta = document.getElementById("inputArchivosRespuestaCorreo_" + data.id_archivo).files;
+                            let cantidadFilesRespuesta = filesRespuesta.length;
+                            if( textareaContenido.summernote('code') === "" && cantidadFilesRespuesta === 0)
+                                    return false;
+                            
+                            muestraLoaderArchivo();
+                            
+                            let arregloBanderasRespuesta = [];
+                            let cadenaArchivosRespuesta = '';
+                            
+                            let registraArchivosDBRespuesta = () => {
+
+                                if(cadenaArchivosRespuesta !== ""){
+                                    cadenaArchivosRespuesta = cadenaArchivosRespuesta.slice(0,-1);
+                                }else{
+                                    cadenaArchivosRespuesta = "N/A";
+                                }
+
+                                let dataNuevaRespuesta = {
+                                    "id_archivo": data.id_archivo,
+                                    "id360": perfil.id360,
+                                    "cuerpo_conversacion": textareaContenido.summernote('code'),
+                                    "archivos_conversacion": cadenaArchivosRespuesta
+                                };
+                                
+                                RequestPOST("/API/empresas360/guardar_archivo_empresas_respuesta", dataNuevaRespuesta).then((response) => {
+                                    
+                                    if(response.success){
+                                        console.log("Respuesta registrada, se debe enviar por socket");
+                                    }
+                                    ocultaLoaderArchivo();
+                                    buttonCancelarResponde.click();
+                                    
+                                });
+                                
+                            };
+
+                            let addFileRespuesta = () => {
+
+                                let bucketName="proyecto-backend";
+                                let bucketRegion="us-east-1" ;
+                                let IdentityPoolId = "us-east-1:715df460-b915-49bc-81a9-501b8e9177b6";
+
+                                AWS.config.update({
+                                    region: bucketRegion,
+                                    credentials: new AWS.CognitoIdentityCredentials({
+                                    IdentityPoolId: IdentityPoolId
+                                    })
+                                });
+
+                                let s3 = new AWS.S3({
+                                        apiVersion: "2006-03-01",
+                                    params: {Bucket: bucketName}
+                                });
+
+                                arregloBanderasRespuesta = [];
+                                cadenaArchivosRespuesta = '';
+
+                                for( let x = 0; x<cantidadFilesRespuesta; x++ ){
+
+                                    arregloBanderasRespuesta[x] = false;
+                                    let file = filesRespuesta[x];
+                                    let file_name = file.name;
+                                    let file_storage_key=encodeURIComponent("Prueba") + "/";
+                                    let file_key= file_storage_key+file_name;
+                                    let upload = new AWS.S3.ManagedUpload({
+                                        partSize: 5 * 1024 * 1024, // 5 MB
+                                        params : {
+                                                Bucket: bucketName,
+                                                Key: file_key,
+                                                Body: file
+                                        }
+                                    });
+
+                                    let promise = upload.on('httpUploadProgress', function(evt) {
+
+                                        console.log("Cargando :: " + parseInt((evt.loaded * 100) / evt.total)+'%');
+
+                                    }).promise();
+
+                                    promise.then((data)=>{
+
+                                        arregloBanderasRespuesta[x] = true;
+                                        cadenaArchivosRespuesta += data.Location + ",";
+
+                                    },(error)=>{
+                                        console.log("error",error);
+                                    });
+
+                                }
+
+                                var esperaCargaRespuesta = setInterval(function(){
+                                    let yaAcabo = true;
+                                    let cantidadArchivos = arregloBanderasRespuesta.length;
+                                    for(let x = 0; x<cantidadArchivos; x++){
+                                        if(!arregloBanderasRespuesta[x]){
+                                            yaAcabo = false;
+                                            break;
+                                        }
+                                    }
+
+                                    if(yaAcabo){
+
+                                        registraArchivosDBRespuesta();
+
+                                        clearInterval(esperaCargaRespuesta);
+                                    }
+
+                                }, 500);
+
+                            };
+
+                            if(cantidadFilesRespuesta>0){
+                                addFileRespuesta();
+                            }else{
+                                registraArchivosDBRespuesta();
+                            }
+                            
+                        });
+                        
                     });
+                    
+                    contenedorDetalleArchivo.append(divPadre);
                     
                 });
                 
@@ -1138,7 +1326,7 @@ const initVistaCorreo = () => {
             });
         }
         
-        $("input[name=proyectoSeleccionado]").first().next().find("span").text(suma);
+        //$("input[name=proyectoSeleccionado]").first().next().find("span").text(suma);
         
     });
     

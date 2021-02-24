@@ -225,3 +225,20 @@ and open the template in the editor.
     margin: 20px;
     text-transform: capitalize;
 }
+
+.detalleArchivo .krajee-default.file-preview-frame .file-thumbnail-footer{
+    height: auto !important;
+}
+
+.detalleArchivo .file-drop-zone{
+    min-height: 0;
+}
+
+.detalleArchivo .file-actions,
+.detalleArchivo .file-upload-indicator{
+    display: none !important;
+}
+
+.detalleArchivo .file-footer-caption{
+    margin-bottom: 0 !important;
+}
