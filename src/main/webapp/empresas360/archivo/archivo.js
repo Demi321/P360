@@ -81,7 +81,7 @@ agregarRespuestaDeCorreo = (respuesta) => {
     let contenedorRespuestas = $("#contenedorRespuestasCorreo_" + respuesta.id_archivo);
     
     if( contenedorRespuestas.length ){
-        let divRespuesta = $("<div></div>").addClass("w-100 respuestaCorreo");
+        let divRespuesta = $("<div></div>").addClass("w-100 respuestaCorreo card");
     
         let usuario = null;
         if(respuesta.id360 === perfil.id360){
@@ -95,27 +95,143 @@ agregarRespuestaDeCorreo = (respuesta) => {
             usuario = buscaEnDirectorioCompletoArchivos(respuesta.id360);
         }
 
-        let divCabecera = $("<div></div>").addClass("w-100");
+        let divCabecera = $("<div></div>").addClass("w-100 card-header");
+        divCabecera.attr("id","cabeceraRespuestaCorreo_" + respuesta.id_archivo_conversacion);
+        divCabecera.attr("data-toggle","collapse");
+        divCabecera.attr("data-target", "#cuerpoRespuestaCorreo_" + respuesta.id_archivo_conversacion);
+        divCabecera.attr("aria-expanded","true");
+        divCabecera.attr("aria-controls","cuerpoRespuestaCorreo_" + respuesta.id_archivo_conversacion);
 
         let divFoto = $("<div></div>").addClass("w-100");
         let foto = $("<img>").addClass("w-100");
         foto.attr("src",usuario.img);
-        foto.css({
-            "max-height":"100%",
-            "border-radius":"50%"
-        });
         divFoto.append(foto);
         divCabecera.append(divFoto);
 
-        let divNombre = $("<div></div>").addClass("w-100");
-        divNombre.text( usuario.nombre + " " + usuario.apellido_paterno + " " + usuario.apellido_materno );
+        let divNombre = $("<div></div>").addClass("w-100 text-left");
+        divNombre.text( usuario.nombre + " " + usuario.apellido_paterno + " " + usuario.apellido_materno + " " );
+        divNombre.append(" <<a href='mailto:'"+usuario.correo+">"+usuario.correo+"</a>>");
         divCabecera.append(divNombre);
 
-        let divFecha = $("<div></div>").addClass("w-100");
-        divFecha.text( moment(respuesta.date_created + " " + respuesta.time_created).Moment.format("DD-MMM-YY hh:mm A") );
+        let divFecha = $("<div></div>").addClass("w-100 text-right");
+        
+        divFecha.text( moment(respuesta.date_created + " " + respuesta.time_created).format("DD-MMM-YY hh:mm A") );
+        divFecha.append('<i class="fas fa-reply ml-3"></i>');
         divCabecera.append(divFecha);
+        
+        let divCuerpo = $("<div></div>").addClass("w-100 collapse");
+        divCuerpo.attr("aria-labelledby", "cabeceraRespuestaCorreo_" + respuesta.id_archivo_conversacion);
+        divCuerpo.attr("id", "cuerpoRespuestaCorreo_" + respuesta.id_archivo_conversacion);
+        let divContenido = $("<div></div>").addClass("card-body");
+        
+        let descripcion = $("<div></div>").addClass("w-100");
+        descripcion.html( respuesta.cuerpo_conversacion );
+        
+        divContenido.append(descripcion);
+        divCuerpo.append(divContenido);
+        
+        if( respuesta.archivos_conversacion !== "N/A" ){
+            
+            let adjuntos = $("<div></div>").addClass("w-100");
+            
+            adjuntos.css({
+                "display":"grid",
+                "grid-template-columns": "1fr 1fr 1fr 1fr 1fr",
+                "grid-gap":"10px"
+            });
 
-        divRespuesta.append(divFecha);
+            let rutasAdjuntos = respuesta.archivos_conversacion.split(",");
+            $.each(rutasAdjuntos, (index, ruta) => {
+
+                let partes = ruta.split(".");
+                let extension = partes[ partes.length-1 ];
+
+                let imgPreview = $("<img>").addClass("w-100");
+                imgPreview.attr("src", PathRecursos + "images/icono_default.png");
+                imgPreview.css({
+                    "max-height": "100px"
+                });
+
+                switch (extension) {
+
+                    case "jpg":
+                    case "png":
+                    case "gif":
+                    case "jpeg":
+                        imgPreview.attr("src", ruta);
+                        break;
+
+                    case "docx":
+                    case "docm":
+                    case "dotx":
+                    case "dotm":
+                    case "doc":
+                        imgPreview.attr("src", PathRecursos + "images/icono_word.png");
+                        break;
+
+                    case "xlsx":
+                    case "xlsm":
+                    case "xlsb":
+                    case "xltx":
+                    case "xltm":
+                    case "xls":
+                    case "xlt":
+                        imgPreview.attr("src", PathRecursos + "images/icono_excel.png");
+                        break;
+
+                    case "pptx":
+                    case "pptm":
+                    case "ppt":
+                    case "xps":
+                    case "potx":
+                    case "ppsx":
+                        imgPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
+                        break;
+
+                    case "pdf":
+                        imgPreview.attr("src", PathRecursos + "images/icono_pdf.png");
+                        break;
+
+                }
+
+                let divAdjunto = $("<div></div>").addClass("w-100");
+                divAdjunto.css({
+                    "display":"grid"
+                });
+
+                let divImagen = $("<div></div>").addClass("w-100");
+                divImagen.css({
+                    "height":"100px",
+                    "display":"flex",
+                    "justify-content":"center",
+                    "align-items":"center"
+                });
+                divImagen.append(imgPreview);
+
+                let partesPorDiagonal = ruta.split("/");
+                let nombreCorto = partesPorDiagonal[partesPorDiagonal.length - 1];
+                let botonDescargar = $("<a></a>").addClass("btn btn-block btn-ligth mt-2");
+                botonDescargar.css({
+                    "background-color":"#0097a9",
+                    "border-color":"#0097a9",
+                    "color":"#fff"
+                });
+                botonDescargar.attr("href", ruta);
+                botonDescargar.attr("download", nombreCorto);
+                botonDescargar.attr("target", "_blank");
+                botonDescargar.html('<i class="fas fa-download"></i>');
+
+                divAdjunto.append(divImagen);
+                divAdjunto.append(botonDescargar);
+                adjuntos.append(divAdjunto);
+
+            });
+            
+            divContenido.append(adjuntos);
+        }
+
+        divRespuesta.append(divCabecera);
+        divRespuesta.append(divCuerpo);
         
         contenedorRespuestas.append(divRespuesta);
     }
@@ -967,14 +1083,13 @@ const initVistaCorreo = () => {
                         let divAdjuntos = $("<div></div>").addClass("w-100 adjuntosDetalleArchivo");
                         divAdjuntos.css({
                             "display":"grid",
-                            "grid-template-columns": "1fr 1fr 1fr 1fr",
+                            "grid-template-columns": "1fr 1fr 1fr 1fr 1fr",
                             "grid-gap":"10px"
                         });
 
                         let rutasAdjuntos = data.ruta_archivo.split(",");
                         $.each(rutasAdjuntos, (index, ruta) => {
 
-                            console.log(ruta);
                             let partes = ruta.split(".");
                             let extension = partes[ partes.length-1 ];
 
@@ -1042,7 +1157,7 @@ const initVistaCorreo = () => {
 
                             let partesPorDiagonal = ruta.split("/");
                             let nombreCorto = partesPorDiagonal[partesPorDiagonal.length - 1];
-                            let botonDescargar = $("<a></a>").addClass("btn btn-block btn-ligth");
+                            let botonDescargar = $("<a></a>").addClass("btn btn-block btn-ligth mt-2");
                             botonDescargar.css({
                                 "background-color":"#0097a9",
                                 "border-color":"#0097a9",
@@ -1063,7 +1178,7 @@ const initVistaCorreo = () => {
                         
                     }
                     
-                    let divRespuestasDeCorreo = $("<div></div>").addClass("w-100 mt-4");
+                    let divRespuestasDeCorreo = $("<div></div>").addClass("w-100 mt-4 accordion contenedorRespuestas");
                     divRespuestasDeCorreo.attr("id","contenedorRespuestasCorreo_" + data.id_archivo);
                     divPadre.append(divRespuestasDeCorreo);
                     
@@ -1182,7 +1297,9 @@ const initVistaCorreo = () => {
                                     "id_archivo": data.id_archivo,
                                     "id360": perfil.id360,
                                     "cuerpo_conversacion": textareaContenido.summernote('code'),
-                                    "archivos_conversacion": cadenaArchivosRespuesta
+                                    "archivos_conversacion": cadenaArchivosRespuesta,
+                                    "fecha": getFecha(),
+                                    "hora": getHora()
                                 };
                                 
                                 RequestPOST("/API/empresas360/guardar_archivo_empresas_respuesta", dataNuevaRespuesta).then((response) => {
