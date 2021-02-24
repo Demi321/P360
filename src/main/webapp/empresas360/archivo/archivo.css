@@ -242,3 +242,33 @@ and open the template in the editor.
 .detalleArchivo .file-footer-caption{
     margin-bottom: 0 !important;
 }
+
+.detalleArchivo .contenedorRespuestas .card-header{
+    border: 0.5px solid lightgray !important;
+    background-color: #fff;
+    display: grid;
+    grid-template-columns: 30px 1fr 200px;
+    color: black;
+    align-items: center;
+    grid-gap: 10px;
+    cursor: pointer;
+}
+
+.detalleArchivo .contenedorRespuestas .card-body{
+    background-color: #fff;
+    color: #000;
+}
+
+.detalleArchivo .contenedorRespuestas .card-header img{
+    max-height: 30px;
+    border-radius: 50%;
+}
+
+.detalleArchivo .contenedorRespuestas .card-header:hover,
+.detalleArchivo .contenedorRespuestas .card-header:nth-child(even){
+    background-color: rgba(0,0,0,0.1);
+}
+
+.detalleArchivo .contenedorRespuestas .card-header:nth-child(even):hover{
+    background-color: rgba(0,0,0,0.2);
+}

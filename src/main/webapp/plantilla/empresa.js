@@ -130,7 +130,7 @@ WebSocketGeneral.onmessage = function (message) {
     }
     try {
 
-        if(mensaje.nueva_respuesta_de_arrchivo){
+        if(mensaje.nueva_respuesta_de_archivo){
             agregarRespuestaDeCorreo(mensaje);
         }
 
