@@ -176,8 +176,7 @@ and open the template in the editor.
 }
 .Contenedor {
     height: 100%;
-    width: 90%;
-    max-width: 1000px;
+    width: 100%;    
     margin: 20px auto;
     display: grid;
     grid-gap: 2px;
@@ -187,16 +186,7 @@ and open the template in the editor.
         "DistribucionSucursales       DistribucionSucursales        ActividadesLaborales        ActividadesLaborales      ActividadesLaborales"
         "ProductividadSucursal       ProductividadSucursal          ProductividadSucursal        ProductividadSucursal          ProductividadSucursal"
         "InversionTiempo        InversionTiempo         InversionTiempo         InversionTiempo         InversionTiempo"
-        "HistoralLaboral        HistoralLaboral         HistoralLaboral         HistoralLaboral         HistoralLaboral"
-        /*"AntecedentesRB AntecedentesRB  AntecedentesRB  AntecedentesRB     AntecedentesRB"
-        "MedidadAE      MedidadAE       MedidadAE       MedidadAE          MedidadAE"
-        "Botones        Botones         Botones         Botones            Botones"
-        "EmpleadosRCT   EmpleadosRCT           Sexo            Sexo      Sexo"
-        "DistribucionG       DistribucionG        DistribucionG        DistribucionE      DistribucionE"
-        "EstadoDE       EstadoDE        DistribucionE        DistribucionE      DistribucionE"
-        "EstadoDE        EstadoDE  AntecedentesRB  AntecedentesRB     AntecedentesRB"
-        "MedidadAE      MedidadAE       MedidadAE       MedidadAE          MedidadAE";*/
-
+        "HistoralLaboral        HistoralLaboral         HistoralLaboral         HistoralLaboral         HistoralLaboral"       
 }
 
 .Contenedor p{
@@ -619,13 +609,15 @@ and open the template in the editor.
 @media screen and (max-width: 768px){
     .Contenedor {
         grid-template-areas:             
-            "EmpleadosRCT   EmpleadosRCT   EmpleadosRCT"
-            "GraficaPastel   GraficaPastel   GraficaPastel"
-            "Sexo           Sexo           Sexo"
-            "DistribucionE  DistribucionG  DistribucionG"            
-            "EstadoDE       EstadoDE       EstadoDE"
-            "AntecedentesRB AntecedentesRB AntecedentesRB"
-            "MedidadAE      MedidadAE      MedidadAE";
+            "EmpleadosRCT  Sexo"
+            "GraficaPastel        GraficaPastel"
+            "DistribucionE  DistribucionE"
+            "DistribucionSexo DistribucionSexo"
+            "DistribucionSucursales  DistribucionSucursales"
+            "ActividadesLaborales  ActividadesLaborales"
+            "ProductividadSucursal  ProductividadSucursal"
+            "InversionTiempo  InversionTiempo"
+            "HistoralLaboral       HistoralLaboral"
     }
     #misbotones{
         margin-top: 10px;

@@ -130,8 +130,11 @@ WebSocketGeneral.onmessage = function (message) {
     }
     try {
 
+        if(mensaje.nueva_respuesta_de_arrchivo){
+            agregarRespuestaDeCorreo(mensaje);
+        }
+
         if (mensaje.archivo_recibido) {
-            console.log("Socket archivos");
             recibirArchivoSocket(mensaje);
         }
 

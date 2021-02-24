@@ -4,6 +4,29 @@
  * and open the template in the editor.
  */
 
+//funcion para obtener las horas laborales de acuerdo a un rango de fechas
+const obtenerTiempoLaboradoPorRango = (horaFinalizada, horaEntradaUser, horasDiferencia, totalHorasDiferencia, totalSegundosDiferencia, totalMinutosDiferencia) => {
+    if (horaFinalizada.diff(horaEntradaUser, 'hours') > 5) {
+        horasDiferencia = horaFinalizada.diff(horaEntradaUser, 'hours') - 2
+    } else {
+        horasDiferencia = horaFinalizada.diff(horaEntradaUser, 'hours')
+    }
+    minutosDiferencia = moment(moment(horaFinalizada, "HH:mm:ss").diff(moment(horaEntradaUser, "HH:mm:ss"))).format("mm")
+    segundosDiferencia = moment(horaFinalizada.diff(horaEntradaUser)).format("ss")
+    totalHorasDiferencia += horasDiferencia
+    totalSegundosDiferencia += parseInt(segundosDiferencia)
+    if (totalSegundosDiferencia >= 60) {
+        totalMinutosDiferencia++
+        totalSegundosDiferencia -= 60
+    }
+    totalMinutosDiferencia += parseInt(minutosDiferencia)
+    if (totalMinutosDiferencia >= 60) {
+        totalHorasDiferencia++
+        totalMinutosDiferencia -= 60
+    }
+    return{horasDiferencia, minutosDiferencia, segundosDiferencia, totalHorasDiferencia, totalMinutosDiferencia, totalSegundosDiferencia}
+}
+
 //INFORMACION EMPRESA
 $(document).ready(async function () {
     let usuarioInfo = await JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA))
@@ -1008,39 +1031,14 @@ const botonObtenerJornadasReporteEmpleado = async (id360Estatico, jornadas_labor
                     horaFinalizada = moment(element.date_created + "T" + element.time_finished)
                 }
                 if (horaEntradaUser <= horaFinalizada) {
-                    if (horaFinalizada.diff(horaEntradaUser, 'hours') > 5) {
-                        horasDiferencia = horaFinalizada.diff(horaEntradaUser, 'hours') - 2
-                        minutosDiferencia = moment(moment(horaFinalizada, "HH:mm:ss").diff(moment(horaEntradaUser, "HH:mm:ss"))).format("mm")
-                        segundosDiferencia = moment(horaFinalizada.diff(horaEntradaUser)).format("ss")
-                        totalHorasDiferencia += horasDiferencia
-                        totalSegundosDiferencia += parseInt(segundosDiferencia)
-                        if (totalSegundosDiferencia >= 60) {
-                            totalMinutosDiferencia++
-                            totalSegundosDiferencia -= 60
-                        }
-                        totalMinutosDiferencia += parseInt(minutosDiferencia)
-                        if (totalMinutosDiferencia >= 60) {
-                            totalHorasDiferencia++
-                            totalMinutosDiferencia -= 60
-                        }
-                        elemento.horasLaborales = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-light">' + horasDiferencia + ":" + minutosDiferencia + ":" + segundosDiferencia + '</span>'
-                    } else {
-                        horasDiferencia = horaFinalizada.diff(horaEntradaUser, 'hours')
-                        minutosDiferencia = moment(moment(horaFinalizada, "HH:mm:ss").diff(moment(horaEntradaUser, "HH:mm:ss"))).format("mm")
-                        segundosDiferencia = moment(horaFinalizada.diff(horaEntradaUser)).format("ss")
-                        totalHorasDiferencia += horasDiferencia
-                        totalSegundosDiferencia += parseInt(segundosDiferencia)
-                        if (totalSegundosDiferencia >= 60) {
-                            totalMinutosDiferencia++
-                            totalSegundosDiferencia -= 60
-                        }
-                        totalMinutosDiferencia += parseInt(minutosDiferencia)
-                        if (totalMinutosDiferencia >= 60) {
-                            totalHorasDiferencia++
-                            totalMinutosDiferencia -= 60
-                        }
-                        elemento.horasLaborales = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-light">' + horasDiferencia + ":" + minutosDiferencia + ":" + segundosDiferencia + '</span>'
-                    }
+                    let tiempoLaboradoPorRango = obtenerTiempoLaboradoPorRango(horaFinalizada, horaEntradaUser, horasDiferencia, totalHorasDiferencia, totalSegundosDiferencia, totalMinutosDiferencia)
+                    horasDiferencia = tiempoLaboradoPorRango.horasDiferencia
+                    minutosDiferencia = tiempoLaboradoPorRango.minutosDiferencia
+                    segundosDiferencia = tiempoLaboradoPorRango.segundosDiferencia
+                    totalHorasDiferencia = tiempoLaboradoPorRango.totalHorasDiferencia
+                    totalMinutosDiferencia = tiempoLaboradoPorRango.totalMinutosDiferencia
+                    totalSegundosDiferencia = tiempoLaboradoPorRango.totalSegundosDiferencia
+                    elemento.horasLaborales = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-light">' + horasDiferencia + ":" + minutosDiferencia + ":" + segundosDiferencia + '</span>'
                 }
                 if (horaFinalizada < horarioSalidaUser) {
                     elemento.horaSalida = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-warning">' + horaFinalizada.format('HH:mm:ss A') + '</span>'
@@ -1203,7 +1201,7 @@ const verReporteDetallado = async empleado => {
     if (jornadas_laborales_empleado[0]) {
         datosVistaReporteDetallado = {
             nombre: jornadas_laborales_empleado[0].nombre + " " + jornadas_laborales_empleado[0].apellido_paterno + " " + jornadas_laborales_empleado[0].apellido_materno,
-            direccion: jornadas_laborales_empleado[0].direccion,
+            direccion: " - - - -",
             area: jornadas_laborales_empleado[0].area,
             cargo: jornadas_laborales_empleado[0].puesto,
             reporteAislamiento: " - - - -",
@@ -1432,27 +1430,27 @@ const verReporteDetallado = async empleado => {
     let horasSemanaEmpleado = 0
     let horaEntrada = undefined
     let retardos2 = 0
+    let totalSegundosDiferencia = 0
+    let totalMinutosDiferencia = 0
     let faltasSemana = 0
     //let colorIcono = "text-success far fa-smile fa-2x"
     if (jornadas_laborales_rango_empleado.data) {
         jornadas_laborales_rango_empleado.data.forEach(element => {
             tiempoCreado = moment(element.date_created + "T" + element.time_created)
+            let horasDiferencia = 0
             if (element.time_finished) {
-                tiempoTerminado = moment(element.date_updated + "T" + element.time_finished)
-                if (tiempoTerminado.diff(tiempoCreado, 'hours') > 5) {
-                    horasSemanaEmpleado += tiempoTerminado.diff(tiempoCreado, 'hours') - 2
-                } else {
-                    horasSemanaEmpleado += tiempoTerminado.diff(tiempoCreado, 'hours')
+                let tiempoTerminado = moment(element.date_updated + "T" + element.time_finished)
+                if (tiempoCreado > tiempoTerminado) {
+                    tiempoTerminado = moment(element.date_created + "T" + element.time_finished)
                 }
-                //horasSemanaEmpleado += tiempoTerminado.diff(tiempoCreado, 'hours') - 2                
-            } else {
-                if (element.date_updated && element.time_updated) {
-                    ultimaActualizacion = moment(element.date_updated + "T" + element.time_updated)
-                    if (ultimaActualizacion.diff(tiempoCreado, 'hours') > 5) {
-                        horasSemanaEmpleado += ultimaActualizacion.diff(tiempoCreado, 'hours') - 2
-                    } else {
-                        horasSemanaEmpleado += ultimaActualizacion.diff(tiempoCreado, 'hours')
-                    }
+                if (tiempoCreado <= tiempoTerminado) {
+                    let tiempoLaboradoPorRango = obtenerTiempoLaboradoPorRango(tiempoTerminado, tiempoCreado, horasDiferencia, horasSemanaEmpleado, totalSegundosDiferencia, totalMinutosDiferencia)
+                    horasDiferencia = tiempoLaboradoPorRango.horasDiferencia
+                    minutosDiferencia = tiempoLaboradoPorRango.minutosDiferencia
+                    segundosDiferencia = tiempoLaboradoPorRango.segundosDiferencia
+                    horasSemanaEmpleado = tiempoLaboradoPorRango.totalHorasDiferencia
+                    totalMinutosDiferencia = tiempoLaboradoPorRango.totalMinutosDiferencia
+                    totalSegundosDiferencia = tiempoLaboradoPorRango.totalSegundosDiferencia
                 }
             }
             horaEntrada = moment(element.date_created + "T" + jornadas_laborales_empleado[0].horario_entrada)
@@ -2246,6 +2244,8 @@ const verReporteDetallado = async empleado => {
         let puntuales3 = []
         let puntualidad = 0
         let numeroRetardos = 1
+        let totalSegundosDiferencia = 0
+        let totalMinutosDiferencia = 0
         let horasMesEmpleado = 0
 
         if (jornadasLaboralesMesEmpleado.data) {
@@ -2253,9 +2253,21 @@ const verReporteDetallado = async empleado => {
                 tiempoCreado2 = moment(element.date_created + "T" + element.time_created)
                 horaEntrada2 = moment(element.date_created + "T" + jornadas_laborales_empleado[0].horario_entrada)
                 horaEntrada2.add(moment.duration("00:01:00"))
+                let horasDiferencia = 0
                 if (element.time_finished) {
-                    tiempoTerminado2 = moment(element.date_updated + "T" + element.time_finished)
-                    horasMesEmpleado += tiempoTerminado2.diff(tiempoCreado2, 'hours') - 2
+                    let tiempoTerminado2 = moment(element.date_updated + "T" + element.time_finished)
+                    if (tiempoCreado2 > tiempoTerminado2) {
+                        tiempoTerminado2 = moment(element.date_created + "T" + element.time_finished)
+                    }
+                    if (tiempoCreado2 <= tiempoTerminado2) {
+                        let tiempoLaboradoPorRango = obtenerTiempoLaboradoPorRango(tiempoTerminado2, tiempoCreado2, horasDiferencia, horasMesEmpleado, totalSegundosDiferencia, totalMinutosDiferencia)
+                        horasDiferencia = tiempoLaboradoPorRango.horasDiferencia
+                        minutosDiferencia = tiempoLaboradoPorRango.minutosDiferencia
+                        segundosDiferencia = tiempoLaboradoPorRango.segundosDiferencia
+                        horasMesEmpleado = tiempoLaboradoPorRango.totalHorasDiferencia
+                        totalMinutosDiferencia = tiempoLaboradoPorRango.totalMinutosDiferencia
+                        totalSegundosDiferencia = tiempoLaboradoPorRango.totalSegundosDiferencia
+                    }
                 }
                 if (tiempoCreado2 >= horaEntrada2) {
                     retardos[new Date(element.date_created + "T00:00")] = new Date(element.date_created + "T00:00")
@@ -2538,7 +2550,7 @@ const inicioJornadas = $("#inicio-reporte-jornadas-laborales");
 
 const initComunicacionJornadasLaborales = (id360, llamada) => {
 
-    $("#sidebar a:eq(3)").click();
+    $("#sidebar a:eq(2)").click();
     $("#menu_section_Comunicación").click();
     if (!$("#profile_chat" + id360).length) {
         let dataUsr = {"id360": id360};
