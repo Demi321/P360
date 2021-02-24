@@ -6,7 +6,7 @@
 
 
 
-/* global parserJsonData */
+/* global parserJsonData, moment */
 
 var init_estadisticaglobal = (json) => {
 
@@ -367,7 +367,7 @@ var init_estadisticaglobal = (json) => {
       var chart = new google.visualization.LineChart(document.getElementById('chart_div_line'));
       chart.draw(data, options);
     }
-    var fecha_hoy = Date.now();
+    var fecha_hoy = moment().format("YYYY-MM-DD");
     var DatosJornada = $.ajax({           
         type: 'POST',
         url: '/' + DEPENDENCIA + '/API/estatus_jornada_laboral/',
