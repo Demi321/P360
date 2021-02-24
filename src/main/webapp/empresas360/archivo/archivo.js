@@ -900,106 +900,110 @@ const initVistaCorreo = () => {
                     let divCuerpoArchivo = $("<div></div>").addClass("w-100 mt-3");
                     divCuerpoArchivo.html(data.descripcion_archivo);
                     
-                    let divAdjuntos = $("<div></div>").addClass("w-100 adjuntosDetalleArchivo");
-                    divAdjuntos.css({
-                        "display":"grid",
-                        "grid-template-columns": "1fr 1fr 1fr 1fr",
-                        "grid-gap":"10px"
-                    });
-                    
-                    let rutasAdjuntos = data.ruta_archivo.split(",");
-                    $.each(rutasAdjuntos, (index, ruta) => {
-                        
-                        console.log(ruta);
-                        let partes = ruta.split(".");
-                        let extension = partes[ partes.length-1 ];
-                        
-                        let imgPreview = $("<img>").addClass("w-100");
-                        imgPreview.attr("src", PathRecursos + "images/icono_default.png");
-                        imgPreview.css({
-                            "max-height": "100px"
-                        });
-
-                        switch (extension) {
-
-                            case "jpg":
-                            case "png":
-                            case "gif":
-                            case "jpeg":
-                                imgPreview.attr("src", ruta);
-                                break;
-
-                            case "docx":
-                            case "docm":
-                            case "dotx":
-                            case "dotm":
-                            case "doc":
-                                imgPreview.attr("src", PathRecursos + "images/icono_word.png");
-                                break;
-
-                            case "xlsx":
-                            case "xlsm":
-                            case "xlsb":
-                            case "xltx":
-                            case "xltm":
-                            case "xls":
-                            case "xlt":
-                                imgPreview.attr("src", PathRecursos + "images/icono_excel.png");
-                                break;
-
-                            case "pptx":
-                            case "pptm":
-                            case "ppt":
-                            case "xps":
-                            case "potx":
-                            case "ppsx":
-                                imgPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
-                                break;
-
-                            case "pdf":
-                                imgPreview.attr("src", PathRecursos + "images/icono_pdf.png");
-                                break;
-
-                        }
-                        
-                        let divAdjunto = $("<div></div>").addClass("w-100");
-                        divAdjunto.css({
-                            "display":"grid"
-                        });
-                        
-                        let divImagen = $("<div></div>").addClass("w-100");
-                        divImagen.css({
-                            "height":"100px",
-                            "display":"flex",
-                            "justify-content":"center",
-                            "align-items":"center"
-                        });
-                        divImagen.append(imgPreview);
-                        
-                        let partesPorDiagonal = ruta.split("/");
-                        let nombreCorto = partesPorDiagonal[partesPorDiagonal.length - 1];
-                        let botonDescargar = $("<a></a>").addClass("btn btn-block btn-ligth");
-                        botonDescargar.css({
-                            "background-color":"#0097a9",
-                            "border-color":"#0097a9",
-                            "color":"#fff"
-                        });
-                        botonDescargar.attr("href", ruta);
-                        botonDescargar.attr("download", nombreCorto);
-                        botonDescargar.attr("target", "_blank");
-                        botonDescargar.html('<i class="fas fa-download"></i>');
-                        
-                        divAdjunto.append(divImagen);
-                        divAdjunto.append(botonDescargar);
-                        divAdjuntos.append(divAdjunto);
-                        
-                    });
-                    
                     contenedorDetalleArchivo.append(divDetalle);
                     contenedorDetalleArchivo.append(divInfo);
                     contenedorDetalleArchivo.append(divDestinatarios);
                     contenedorDetalleArchivo.append(divCuerpoArchivo);
-                    contenedorDetalleArchivo.append(divAdjuntos);
+                    
+                    if(data.ruta_archivo !== "N/A"){
+                        let divAdjuntos = $("<div></div>").addClass("w-100 adjuntosDetalleArchivo");
+                        divAdjuntos.css({
+                            "display":"grid",
+                            "grid-template-columns": "1fr 1fr 1fr 1fr",
+                            "grid-gap":"10px"
+                        });
+
+                        let rutasAdjuntos = data.ruta_archivo.split(",");
+                        $.each(rutasAdjuntos, (index, ruta) => {
+
+                            console.log(ruta);
+                            let partes = ruta.split(".");
+                            let extension = partes[ partes.length-1 ];
+
+                            let imgPreview = $("<img>").addClass("w-100");
+                            imgPreview.attr("src", PathRecursos + "images/icono_default.png");
+                            imgPreview.css({
+                                "max-height": "100px"
+                            });
+
+                            switch (extension) {
+
+                                case "jpg":
+                                case "png":
+                                case "gif":
+                                case "jpeg":
+                                    imgPreview.attr("src", ruta);
+                                    break;
+
+                                case "docx":
+                                case "docm":
+                                case "dotx":
+                                case "dotm":
+                                case "doc":
+                                    imgPreview.attr("src", PathRecursos + "images/icono_word.png");
+                                    break;
+
+                                case "xlsx":
+                                case "xlsm":
+                                case "xlsb":
+                                case "xltx":
+                                case "xltm":
+                                case "xls":
+                                case "xlt":
+                                    imgPreview.attr("src", PathRecursos + "images/icono_excel.png");
+                                    break;
+
+                                case "pptx":
+                                case "pptm":
+                                case "ppt":
+                                case "xps":
+                                case "potx":
+                                case "ppsx":
+                                    imgPreview.attr("src", PathRecursos + "images/icono_powerpoint.png");
+                                    break;
+
+                                case "pdf":
+                                    imgPreview.attr("src", PathRecursos + "images/icono_pdf.png");
+                                    break;
+
+                            }
+
+                            let divAdjunto = $("<div></div>").addClass("w-100");
+                            divAdjunto.css({
+                                "display":"grid"
+                            });
+
+                            let divImagen = $("<div></div>").addClass("w-100");
+                            divImagen.css({
+                                "height":"100px",
+                                "display":"flex",
+                                "justify-content":"center",
+                                "align-items":"center"
+                            });
+                            divImagen.append(imgPreview);
+
+                            let partesPorDiagonal = ruta.split("/");
+                            let nombreCorto = partesPorDiagonal[partesPorDiagonal.length - 1];
+                            let botonDescargar = $("<a></a>").addClass("btn btn-block btn-ligth");
+                            botonDescargar.css({
+                                "background-color":"#0097a9",
+                                "border-color":"#0097a9",
+                                "color":"#fff"
+                            });
+                            botonDescargar.attr("href", ruta);
+                            botonDescargar.attr("download", nombreCorto);
+                            botonDescargar.attr("target", "_blank");
+                            botonDescargar.html('<i class="fas fa-download"></i>');
+
+                            divAdjunto.append(divImagen);
+                            divAdjunto.append(botonDescargar);
+                            divAdjuntos.append(divAdjunto);
+
+                        });
+                        
+                        contenedorDetalleArchivo.append(divAdjuntos);
+                        
+                    }
                     
                     ocultaLoaderArchivo();
                     
@@ -1260,13 +1264,14 @@ var init_archivo = (json) => {
             return false;
         }
         
-        if( $("#archivos_envio").fileinput('getFilesCount') === 0 ){
+        /* SOLICITAR OBLIGAOTRIAMENTE UN ARCHIVO PARA EL ENVíO */
+        /*if( $("#archivos_envio").fileinput('getFilesCount') === 0 ){
             document.getElementById("archivos_envio").scrollIntoView();
             NotificacionToasArchivos.fire({
                 title: 'Ingresa un archivo para enviar'
             });
             return false;
-        }
+        }*/
         
         return true;
         
@@ -1276,38 +1281,78 @@ var init_archivo = (json) => {
         
         if(validaCamposArchivos()){
             muestraLoaderArchivo();
-
-            let bucketName="proyecto-backend";
-            let bucketRegion="us-east-1" ;
-            let IdentityPoolId = "us-east-1:715df460-b915-49bc-81a9-501b8e9177b6";
-
-            AWS.config.update({
-                    region: bucketRegion,
-                    credentials: new AWS.CognitoIdentityCredentials({
-                    IdentityPoolId: IdentityPoolId
-                    })
-            });
-
-            let s3 = new AWS.S3({
-                    apiVersion: "2006-03-01",
-                params: {Bucket: bucketName}
-            });
+            
             let arregloBanderas = [];
             let cadenaArchivos = '';
-
-            let addFile = () => {	
-
-                var files = document.getElementById('archivos_envio').files;
-                if(!files.length){
-                    return alert("Elige un archivo valido");
+            
+            const registraArchivosDB = () => {
+                if(cadenaArchivos !== ""){
+                    cadenaArchivos = cadenaArchivos.slice(0,-1);
+                }else{
+                    cadenaArchivos = "N/A";
                 }
+                let dataArchivo = {
+                    'titulo_archivo': $("#tituloArchivo").val(),
+                    'descripcion_archivo': $("#descripcionArchivo").summernote('code'),
+                    'ruta_archivo': cadenaArchivos,
+                    'proyecto': $("#list_proj").val(),
+                    'id360': sesion_cookie.idUsuario_Sys,
+                    'destinatarios': destinatarios_archivos,
+                    "tipo_usuario": tipo_usuario,
+                    'tipo_servicio': tipo_servicio,
+                    'tipo_area': tipo_area
+                };
+
+                RequestPOST("/API/empresas360/guardar_archivo_empresas", dataArchivo).then((response) => {
+
+                    ocultaLoaderArchivo();
+
+                    if( response.success ){
+                        formEnvioArchivo[0].reset();
+                        $("#descripcionArchivo").summernote('code','');
+                        //Limpiar el input del vue
+                        vueArchivos.value=null;
+                        contenedorNuevoEnvio.slideUp("fast", () => {
+                            creandoNuevoEnvioArchivo = false;
+                            if(tipoVistaArchivos === 0){
+                                initVistaCorreo();
+                            }else{
+                                initVistaArchivos();
+                            }
+                            NotificacionToasArchivos.fire({
+                                title: 'Archivo enviado'
+                            });
+                        });
+
+                    }
+
+                });
+            };
+            
+            let files = document.getElementById('archivos_envio').files;
+            let cantidadFiles = files.length;
+
+            let addFile = () => {
                 
-                console.log(files);
+                let bucketName="proyecto-backend";
+                let bucketRegion="us-east-1" ;
+                let IdentityPoolId = "us-east-1:715df460-b915-49bc-81a9-501b8e9177b6";
+
+                AWS.config.update({
+                        region: bucketRegion,
+                        credentials: new AWS.CognitoIdentityCredentials({
+                        IdentityPoolId: IdentityPoolId
+                        })
+                });
+
+                let s3 = new AWS.S3({
+                        apiVersion: "2006-03-01",
+                    params: {Bucket: bucketName}
+                });
                 
                 arregloBanderas = [];
                 cadenaArchivos = '';
                 
-                let cantidadFiles = files.length;
                 for( let x = 0; x<cantidadFiles; x++ ){
                     
                     arregloBanderas[x] = false;
@@ -1341,46 +1386,6 @@ var init_archivo = (json) => {
                     
                 }
                 
-                const registraArchivosDB = () => {
-                    cadenaArchivos = cadenaArchivos.slice(0,-1);
-                    let dataArchivo = {
-                        'titulo_archivo': $("#tituloArchivo").val(),
-                        'descripcion_archivo': $("#descripcionArchivo").summernote('code'),
-                        'ruta_archivo': cadenaArchivos,
-                        'proyecto': $("#list_proj").val(),
-                        'id360': sesion_cookie.idUsuario_Sys,
-                        'destinatarios': destinatarios_archivos,
-                        "tipo_usuario": tipo_usuario,
-                        'tipo_servicio': tipo_servicio,
-                        'tipo_area': tipo_area
-                    };
-
-                    RequestPOST("/API/empresas360/guardar_archivo_empresas", dataArchivo).then((response) => {
-
-                        ocultaLoaderArchivo();
-
-                        if( response.success ){
-                            formEnvioArchivo[0].reset();
-                            $("#descripcionArchivo").summernote('code','');
-                            //Limpiar el input del vue
-                            vueArchivos.value=null;
-                            contenedorNuevoEnvio.slideUp("fast", () => {
-                                creandoNuevoEnvioArchivo = false;
-                                if(tipoVistaArchivos === 0){
-                                    initVistaArchivos();
-                                }else{
-                                    initVistaArchivos();
-                                }
-                                NotificacionToasArchivos.fire({
-                                    title: 'Archivo enviado'
-                                });
-                            });
-
-                        }
-
-                    });
-                };
-                
                 var esperaCarga = setInterval(function(){
                     let yaAcabo = true;
                     let cantidadArchivos = arregloBanderas.length;
@@ -1401,8 +1406,13 @@ var init_archivo = (json) => {
                 }, 500);
 
             };
-
-            addFile();
+            
+            if(cantidadFiles>0){
+                addFile();
+            }else{
+                registraArchivosDB();
+            }
+            
         }
 
     });
