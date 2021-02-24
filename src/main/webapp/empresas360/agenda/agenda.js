@@ -80,6 +80,19 @@ function showEvent(evento_id) {
                     console.log( multiselect_update.value)
                     
                 }
+                var action_button_html = ""
+                if(evento.usuario_id === parseInt(usuario_id)){
+                    action_button_html = `<div class="col-12 mt-3 d-flex justify-content-between">
+                                                        <button type="button" class="btn btn-warning" onclick="showUpdateForm(${evento.id})">Editar</button>
+                                                        <button type="button" class="btn btn-info" onclick="showEmailEventForm(${evento.id})">Enviar por correo</button>
+                                                        <button type="button" class="btn btn-danger" onclick="showDeleteForm(${evento.id})">Eliminar</button>
+                                        </div>`
+                }
+                else{
+                    action_button_html = `<div class="col-12 mt-3 d-flex justify-content-center">
+                                                        <button type="button" class="btn btn-info" onclick="showEmailEventForm(${evento.id})">Enviar por correo</button>
+                                        </div>`
+                }
                 body_html = `
                                 <div class="row">
                                         <div class="col-12 col-md-4 mt-2">
@@ -133,11 +146,7 @@ function showEvent(evento_id) {
                                         
                                         ${li_html}
                                                
-                                        <div class="col-12 mt-3 d-flex justify-content-between">
-                                                        <button type="button" class="btn btn-warning" onclick="showUpdateForm(${evento.id})">Editar</button>
-                                                        <button type="button" class="btn btn-info" onclick="showEmailEventForm(${evento.id})">Enviar por correo</button>
-                                                        <button type="button" class="btn btn-danger" onclick="showDeleteForm(${evento.id})">Eliminar</button>
-                                        </div>
+                                        ${action_button_html}
                                 </div>
                                 `
                 $("#bodyEvento").empty().append(body_html);
@@ -514,7 +523,7 @@ new Vue({
                 document.getElementsByClassName("home_empleado")[0].scrollIntoView();
             },
             onOpen(value) {
-                this.value = null;
+                
             }
         }
     });
@@ -553,7 +562,7 @@ var multiselect_update = new Vue({
                 document.getElementsByClassName("home_empleado")[0].scrollIntoView();
             },
             onOpen(value) {
-                this.value = null;
+                
             }
         }
     });
