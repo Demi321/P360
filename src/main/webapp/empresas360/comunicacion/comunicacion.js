@@ -5516,7 +5516,7 @@ function send_chat_messages(input, ul, preview, user, messages, rutaAdjunto) {
     $(".filaMensajesOperaciones").addClass("d-none");
 
     //Retornar si el mensaje está vació
-    if ($.trim(mensaje) === '' && rutaAdjunto === "") {
+    if ($.trim(mensaje) === '' && (rutaAdjunto === "" || rutaAdjunto === undefined || rutaAdjunto === null) ) {
         return false;
     }
 
