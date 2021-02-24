@@ -333,7 +333,7 @@ const init_misreportes = async (json) => {
             }
             from.add(1, 'days');
         }
-        const horasLaboralesSemana = (diasLaboralesSemana - 1) * 8
+        const horasLaboralesSemana = diasLaboralesSemana * 8
 
         let diasLaboralesSemanaEmpleado = 0
         let horasSemanaEmpleado = 0
@@ -431,7 +431,7 @@ const init_misreportes = async (json) => {
             $("#iconoDiasLaboralesEmpleadoMisReportes").addClass(colorIconoSuccess)
             $("#iconoDiasLaboralesEmpleadoMisReportes").css("color", "#97BA38")
         }
-        if (horasSemanaEmpleado < horasLaboralesSemana) {
+        if (horasSemanaEmpleado < (horasLaboralesSemana - 8)) {
             $("#iconoHorasLaboralesEmpleadoMisReportes").removeClass()
             $("#iconoHorasLaboralesEmpleadoMisReportes").addClass(colorIconoWarning)
             $("#iconoHorasLaboralesEmpleadoMisReportes").css("color", "#F8B135")

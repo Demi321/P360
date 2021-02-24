@@ -1420,7 +1420,7 @@ const verReporteDetallado = async empleado => {
         }
         from.add(1, 'days');
     }
-    const horasLaboralesSemana = (diasLaboralesSemana - 1) * 8
+    const horasLaboralesSemana = diasLaboralesSemana * 8
 
     let diasLaboralesSemanaEmpleado = 0
     let horasSemanaEmpleado = 0
@@ -1518,7 +1518,7 @@ const verReporteDetallado = async empleado => {
         $("#iconoDiasLaboralesEmpleado").addClass(colorIconoSuccess)
         $("#iconoDiasLaboralesEmpleado").css("color", "#97BA38")
     }
-    if (horasSemanaEmpleado < horasLaboralesSemana) {
+    if (horasSemanaEmpleado < (horasLaboralesSemana - 8)) {
         $("#iconoHorasLaboralesEmpleado").removeClass()
         $("#iconoHorasLaboralesEmpleado").addClass(colorIconoWarning)
         $("#iconoHorasLaboralesEmpleado").css("color", "#F8B135")
