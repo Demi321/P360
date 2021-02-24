@@ -122,7 +122,10 @@ $(window).on("load", function () {
 //        chart_aislamiento4();
 //        chart_aislamiento5();
 //    }
+//    
 
+//Solucion a la parte responsiva
+    showToggle();//
 });
 
 

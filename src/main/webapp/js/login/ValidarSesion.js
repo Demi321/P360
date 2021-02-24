@@ -107,17 +107,18 @@ $("#Log-in").submit(function (e) {
                         if (institucion.url === window.location.protocol + "//" + window.location.host + '/' + "plataforma360" + '/') {
                             plataforma360 = true;
                             count_plataforma360++;
-                            if (count_plataforma360 === 1) {
+                            if (/*count_plataforma360 === 1*/ i===0) {
                                 frst_id = institucion.id;
                             }
                             listar_institucion(institucion);
+                             $("#institucions_listado" + frst_id).click();
                         }
                     }
                     if (plataforma360) {
                         $("#seleccionar_institucion").removeClass("d-none");
-                        if (count_plataforma360 === 1) {
+                        //if (count_plataforma360 === 1) {
                             $("#institucions_listado" + frst_id).click();
-                        }
+                        //}
 
                         document.getElementById("boton_seleccionar_institucion").addEventListener("click", continuar_institucion_seleccionada);
                         //**console.log(count_plataforma360);
