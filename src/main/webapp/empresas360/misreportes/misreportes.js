@@ -304,27 +304,36 @@ const init_misreportes = async (json) => {
             }
         })
 
-        var from = moment(lunes2, "YYYY-MM-DD").set({'hour': 00, 'minute': 00, 'second': 00, 'millisecond': 000}),
+        var from = moment(lunes2, "YYYY-MM-DD"),
                 to = moment(viernes2, "YYYY-MM-DD"),
                 diasLaboralesSemana = 0,
                 diasFestivos = [moment("2021-01-01T00:00:00"), moment("2021-02-01T00:00:00"), moment("2021-03-15T00:00:00"), moment("2021-04-01T00:00:00"), moment("2021-09-16T00:00:00"), moment("2021-11-15T00:00:00"), moment("2021-25-25T00:00:00")];
-        let diaFeriadoEncontrado = false
+        //let diaFeriadoEncontrado = false
         while (!from.isAfter(to)) {
-            diaFeriadoEncontrado = false
+            //diaFeriadoEncontrado = false
             // Si no es sabado ni domingo
+            /*diasFestivos.forEach(element => {
+             if (moment(from).diff(element, 'days') === 0) {
+             diaFeriadoEncontrado = true
+             }
+             })
+             if (!diaFeriadoEncontrado) {
+             if (from.format("YYYY-MM-DD") <= moment().format("YYYY-MM-DD")) {
+             diasLaboralesSemana++;
+             }
+             }*/
+            diasLaboralesSemana++;
             diasFestivos.forEach(element => {
-                if (moment(from).diff(element, 'days') === 0) {
-                    diaFeriadoEncontrado = true
+                if (from.format('YYYY-MM-DD') === element.format("YYYY-MM-DD")) {
+                    diasLaboralesSemana--
                 }
             })
-            if (!diaFeriadoEncontrado) {
-                if (from.format("YYYY-MM-DD") <= moment().format("YYYY-MM-DD")) {
-                    diasLaboralesSemana++;
-                }
+            if (from.format("YYYY-MM-DD") < moment().format("YYYY-MM-DD")) {
+                diasLaboralesSemana--;
             }
             from.add(1, 'days');
         }
-        const horasLaboralesSemana = diasLaboralesSemana * 8
+        const horasLaboralesSemana = (diasLaboralesSemana - 1) * 8
 
         let diasLaboralesSemanaEmpleado = 0
         let horasSemanaEmpleado = 0
@@ -338,7 +347,7 @@ const init_misreportes = async (json) => {
             jornadas_laborales_rango_empleado.data.forEach(element => {
                 tiempoCreado = moment(element.date_created + "T" + element.time_created)
                 let horasDiferencia = 0
-                if (element.time_finished) {              
+                if (element.time_finished) {
                     let tiempoTerminado = moment(element.date_updated + "T" + element.time_finished)
                     if (tiempoCreado > tiempoTerminado) {
                         tiempoTerminado = moment(element.date_created + "T" + element.time_finished)
