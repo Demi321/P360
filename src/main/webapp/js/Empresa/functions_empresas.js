@@ -1521,7 +1521,6 @@ function fileReader_registro_sucursales(oEvent) {
         });
     }
 }
-
 function mostrar_resultados_registro_sucursales(json) {
     $("#registros_file_RegistrarSucursal").empty();
     $("#registros_file_RegistrarSucursal").css({
