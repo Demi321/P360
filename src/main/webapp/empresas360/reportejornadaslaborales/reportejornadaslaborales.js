@@ -1415,12 +1415,12 @@ const verReporteDetallado = async empleado => {
                 diasLaboralesSemana--
             }
         })
-        if (from.format("YYYY-MM-DD") <= moment().format("YYYY-MM-DD")) {
+        if (from.format("YYYY-MM-DD") < moment().format("YYYY-MM-DD")) {
             diasLaboralesSemana--;
         }
         from.add(1, 'days');
     }
-    const horasLaboralesSemana = diasLaboralesSemana * 8
+    const horasLaboralesSemana = (diasLaboralesSemana - 1) * 8
 
     let diasLaboralesSemanaEmpleado = 0
     let horasSemanaEmpleado = 0
