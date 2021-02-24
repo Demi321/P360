@@ -1203,7 +1203,7 @@ const verReporteDetallado = async empleado => {
     if (jornadas_laborales_empleado[0]) {
         datosVistaReporteDetallado = {
             nombre: jornadas_laborales_empleado[0].nombre + " " + jornadas_laborales_empleado[0].apellido_paterno + " " + jornadas_laborales_empleado[0].apellido_materno,
-            direccion: jornadas_laborales_empleado[0].direccion,
+            direccion: " - - - -",
             area: jornadas_laborales_empleado[0].area,
             cargo: jornadas_laborales_empleado[0].puesto,
             reporteAislamiento: " - - - -",
@@ -2538,7 +2538,7 @@ const inicioJornadas = $("#inicio-reporte-jornadas-laborales");
 
 const initComunicacionJornadasLaborales = (id360, llamada) => {
 
-    $("#sidebar a:eq(3)").click();
+    $("#sidebar a:eq(2)").click();
     $("#menu_section_Comunicación").click();
     if (!$("#profile_chat" + id360).length) {
         let dataUsr = {"id360": id360};

@@ -229,7 +229,7 @@ const init_misreportes = async (json) => {
             };
             if (location_user !== null) {
                 if (location_user.municipio !== null && location_user.estado !== null) {
-                    datosVistaReporteDetallado.direccion = location_user.colonia + " " + location_user.municipio + " " + location_user.estado_long
+                    datosVistaReporteDetallado.direccion = location_user.colonia + ", " + location_user.municipio + ", " + location_user.estado_long
                 }
             } else {
                 datosVistaReporteDetallado.direccion = " - - - - "
