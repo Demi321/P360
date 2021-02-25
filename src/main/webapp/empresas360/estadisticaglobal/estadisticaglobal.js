@@ -22,6 +22,10 @@ var init_estadisticaglobal = (json) => {
     var puntual=0;
     var r =0;
     var retardo=0;
+    var can_hom=0;
+    var por_hom=0;
+    var can_muj=0;
+    var por_muj=0;
     var r_e1=0;
     var r_e2=0;
     var r_e3=0;
@@ -95,6 +99,7 @@ var init_estadisticaglobal = (json) => {
             var fecha = datos[i].fecha_nacimiento;
             if(fecha === null) {
                 r_e6++;
+                document.getElementById("sin_fecha_nac").innerHTML=r_e6;
                 console.log("ES null");
                 console.log("Sin fecha de nacimiento");        
             }
@@ -108,18 +113,23 @@ var init_estadisticaglobal = (json) => {
             console.log(edad);
             if( edad >= 18 && edad <= 25  ){
                 r_e1++;
+                document.getElementById("18-25").innerHTML=r_e1;
                 console.log("rango 18 a 25 ");
             }else if( edad >= 26 && edad <= 35) {
                 r_e2++;
-                console.log("rango 26 a 35");   
+                document.getElementById("26-35").innerHTML=r_e2;
+              console.log("rango 26 a 35");   
             }else if( edad >= 36 && edad <= 45) {
                 r_e3++;
+                document.getElementById("36-45").innerHTML=r_e3;
                 console.log("rango 36 a 45");
             }else if( edad >= 46 && edad <= 55) {
                 r_e4++;
+                document.getElementById("46-55").innerHTML=r_e4;
                 console.log("rango 46 a 55 ");
             }else if( edad > 60) {
                 r_e5++;
+                document.getElementById("mas_60").innerHTML=r_e5;
                 console.log("Mayores de 60");
             }
         }
@@ -169,9 +179,15 @@ var init_estadisticaglobal = (json) => {
         for(var i = 0; i < datos.length ; i++) {
             if(datos[i].genero === "Hombre" || datos[i].genero === "Masculino"){
                 h++;
+                document.getElementById("cantidad_hombres").innerHTML=h;
+                por_hom = h/100 * datos.length;                
+                document.getElementById("porcentaje_hombres").innerHTML=por_hom;
                 console.log(h);
             }else if (datos[i].genero === "Mujer") {
                 m++;
+                document.getElementById("cantidad_mujeres").innerHTML=m;
+                por_muj = m/100 * datos.length;
+                document.getElementById("porcentaje_mujeres").innerHTML=por_muj;
                 console.log(m);
             }                           
         }
@@ -346,10 +362,10 @@ var init_estadisticaglobal = (json) => {
           pointSize: 5,
           backgroundColor: '#ffffff',        
           series: {
-              0: { color: '#358EA5'/*azul*/ },
-              1: { color: '#f1ca3a'/*amarillo*/ },
-              2: { color: '#6f9654'/* verde*/ },
-              3: { color: '#e2431e'/*rojo*/ }                      
+              0: { color: '#49C848'/*azul*/ },
+              1: { color: 'yellow'/*amarillo*/ },
+              2: { color: '#439EAE'/* verde*/ },
+              3: { color: '#ef0c0c'/*rojo*/ }                      
           },        
           hAxis: {
               title:'Actividad',
@@ -395,7 +411,7 @@ var init_estadisticaglobal = (json) => {
     document.getElementById("PorcentajePuntales").innerHTML = puntual + "%";
     document.getElementById("PorcentajeRetardos").innerHTML = retardo + "%";
     puntual = parseInt(puntual);
-    retardo = parseInt(retardo);    
+    retardo = parseInt(retardo).toFixed(2);     
     document.addEventListener("load", setColorBasal(2,'Faltas'));
     document.addEventListener("load", setColorBasal(retardo,'Retardos'));
     document.addEventListener("load", setColorBasal(puntual,'Puntales'));
