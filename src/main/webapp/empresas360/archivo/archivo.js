@@ -9,6 +9,7 @@
 
 var vueArchivos, tablaArchivos, detailRows = [], usuariosReenviaArchivo = [], tipoVistaArchivos = 0, creandoNuevoEnvioArchivo = false;
 var banderaD = false, banderaR = false, banderaDCorreos = false, banderaRCorreos = false;
+var BackupCorreos = {};
 const selectOrigen = $("#origenArchivo");
 const destinatarioArchivo = $("#destinatarioArchivo");
 const remitenteArchivo = $("#remitenteArchivo");
@@ -95,8 +96,8 @@ const buscaEnDirectorioCompletoArchivos = (id360) => {
 recibirArchivoSocket = (mensaje) => {
 
     /* VERIFICAR SI EL PROYECTO ESTA PINTADO */
-    if( !$("#itemProyectoArchivosVistaCorreo_" + mensaje.id_proyecto).length ){
-       agregaDivProyectoCorreo(mensaje.id_proyecto, mensaje.id_proyecto, mensaje.proyecto, 1, false);
+    if( !$("#itemProyectoArchivosVistaCorreo_proyectoArchivos_" + mensaje.id_proyecto).length ){
+       agregaDivProyectoCorreo(mensaje.id_proyecto, "proyectoArchivos_" + mensaje.id_proyecto, mensaje.proyecto, 1, false);
     }else{
         
         let divProyecto = $("#itemProyectoArchivosVistaCorreo_" + mensaje.id_proyecto);
@@ -110,6 +111,9 @@ recibirArchivoSocket = (mensaje) => {
         let proyectoSeleccionado = $("input[name=proyectoSeleccionado]:checked").val();
         if( (proyectoSeleccionado === mensaje.id_proyecto || proyectoSeleccionado === "0") && $("input[name=origenSeleccionado]:checked").val() !== "2"){
             
+            console.log("Pasa condiciones, a pintar ");
+            mensaje.cantidadRespuestasNoLeidas = "0";
+            mensaje.leido = "0";
             agregaItemArchivoCorreo(mensaje); 
             
         }
@@ -320,7 +324,7 @@ agregaDivProyectoCorreo = (value, id, text, cantidad, selected) => {
 };
 
 /* METODO PARA PINTAR UN ARCHIVO EN EL LISTADO */
-agregaItemArchivoCorreo = (data) => {
+agregaItemArchivoCorreo = (data, resaltar) => {
     
     const contenedorArchivos = $("#archivosVistaCorreo .listadoArchivosVistaCorreo");
     const contenedorDetalleArchivo = $("#archivosVistaCorreo .detalleArchivo");
@@ -356,8 +360,14 @@ agregaItemArchivoCorreo = (data) => {
     
     let divDataCantidadRespuestas = $("<div></div>").addClass("w-100 cantidadRespuestasArchivo");
     divDataCantidadRespuestas.attr("id","cantidadRespuestasArchivo_" + data.id_archivo);
-    divDataCantidadRespuestas.append( '<span>'+data.cantidadRespuestas+'</span>' );
-    if(data.cantidadRespuestas === "0"){
+    
+    let cantidadAlertas = parseInt( data.cantidadRespuestasNoLeidas );
+    if( data.leido === "0" && data.id360 !== perfil.id360 ){
+        cantidadAlertas++;
+    }
+    
+    divDataCantidadRespuestas.append( '<span>'+cantidadAlertas+'</span>' );
+    if(cantidadAlertas === 0){
         divDataCantidadRespuestas.css({
             "display":"none"
         });
@@ -383,7 +393,7 @@ agregaItemArchivoCorreo = (data) => {
     div.append(divData);
     div.append(divFecha);
 
-    contenedorArchivos.append(div);
+    contenedorArchivos.prepend(div);
 
     div.mouseenter(() => {
         divControles.css({"display": "block"});
@@ -401,8 +411,6 @@ agregaItemArchivoCorreo = (data) => {
         divPadre.attr("id", "detalleDeArchivo_" + data.id_archivo);
 
         muestraLoaderArchivo();
-
-        divPadre.html('<h5 class="text-center">Detalle de mensaje</h5>');
 
         let divDetalle = $("<div></div>");
         divDetalle.css({
@@ -469,7 +477,14 @@ agregaItemArchivoCorreo = (data) => {
         /* DESTINATARIOS */
         let divDestinatarios = $("<div></div>").addClass("w-100 mt-3");
 
-        let arrayDestinatarios = data.destinatarios.split(",");
+        let arrayDestinatarios;
+        
+        try{
+            arrayDestinatarios = data.destinatarios.split(",");
+        }catch(error){
+            console.log(error);
+            arrayDestinatarios = data.destinatarios;
+        }
 
         $.each(arrayDestinatarios, (index, destinatario) => {
 
@@ -602,7 +617,8 @@ agregaItemArchivoCorreo = (data) => {
         divPadre.append(divRespuestasDeCorreo);
 
         let dataConsultaConversacion = {
-            "id_archivo": data.id_archivo
+            "id_archivo": data.id_archivo,
+            "id360": perfil.id360
         };
 
         RequestPOST("/API/empresas360/consultar_conversacion_archivo", dataConsultaConversacion).then((response) => {
@@ -687,6 +703,10 @@ agregaItemArchivoCorreo = (data) => {
             buttonCancelarResponde.click(() => {
 
                 divEnviarMensaje.slideUp("fast", () => {
+                    
+                    fileInput.fileinput('clear');
+                    textareaContenido.summernote('code', '');
+                    
                     divBotonResponde.slideDown("fast");
                 });
 
@@ -718,7 +738,8 @@ agregaItemArchivoCorreo = (data) => {
                         "cuerpo_conversacion": textareaContenido.summernote('code'),
                         "archivos_conversacion": cadenaArchivosRespuesta,
                         "fecha": getFecha(),
-                        "hora": getHora()
+                        "hora": getHora(),
+                        "agrupador": data.agrupador
                     };
 
                     RequestPOST("/API/empresas360/guardar_archivo_empresas_respuesta", dataNuevaRespuesta).then((response) => {
@@ -726,6 +747,7 @@ agregaItemArchivoCorreo = (data) => {
                         if (response.success) {
                             console.log("Respuesta registrada, se debe enviar por socket");
                         }
+                        
                         ocultaLoaderArchivo();
                         buttonCancelarResponde.click();
 
@@ -821,6 +843,17 @@ agregaItemArchivoCorreo = (data) => {
         contenedorDetalleArchivo.append(divPadre);
 
     });
+    
+    if(resaltar){
+        let resaltar = setInterval(() => {
+            div.toggleClass("correoNuevo");
+        }, 250);
+
+        setTimeout(() => {
+            clearInterval(resaltar);
+            div.removeClass("correoNuevo");
+        }, 2000);
+    }
 
 };
 
@@ -870,9 +903,20 @@ cargarArchivosCorreo = () => {
     RequestPOST("/API/empresas360/consultar_archivos_empresas_filtros", dataSolicitaArchivos).then((response) => {
 
         contenedorArchivos.empty();
+        
+        BackupCorreos = {};
 
         if (response.length > 0) {
             $.each(response, (index, archivo) => {
+                
+                let respuestasNoLeidas = archivo.respuestasNoLeidas !== null ? archivo.respuestasNoLeidas.split(",") : [];
+                
+                BackupCorreos[archivo.id_archivo] = {
+                    leido: parseInt(archivo.leido),
+                    cantidadRespuestasNoLeidas: parseInt(archivo.cantidadRespuestasNoLeidas),
+                    respuestasNoLeidas: respuestasNoLeidas
+                };
+                
                 agregaItemArchivoCorreo(archivo);
             });
         } else {
@@ -1564,6 +1608,16 @@ var init_archivo = (json) => {
     let tipo_area = json.tipo_area;
     let vuewModelDestinatariosArchivos;
     let destinatarios_archivos = [];
+    
+    $("body").on("click","#menu_section_Archivo", () => {
+        
+        /*if( $("#modulo_section_8604").hasClass("d-none") ){
+            
+        }*/
+        
+        $("#toggle div").click();
+        initVistaCorreo();
+    });
 
     lottieLoader_blockpage.style = "width: 200px;height: 200px;";
     document.getElementById("loaderArchivos").appendChild(lottieLoader_blockpage);
@@ -1875,9 +1929,6 @@ var init_archivo = (json) => {
         }
 
     });
-
-    /* LLAMADA A LA VISTA DESEADA */
-    initVistaCorreo();
 
     $(".archivo input[name=tVista]").change(() => {
         tipoVistaArchivos = parseInt($(".archivo input[name=tVista]:checked").val());

@@ -290,3 +290,7 @@ and open the template in the editor.
     border-radius: 50%;
     color: #0097a9;
 }
+
+.archivo .correoNuevo{
+    background-color: rgba(0,0,0,0.2);
+}
