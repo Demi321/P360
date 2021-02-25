@@ -372,49 +372,52 @@ const init_misreportes = async (json) => {
             diasLaboralesSemanaEmpleado = jornadas_laborales_rango_empleado.data.length
         }
         faltasSemana = diasLaboralesSemana - diasLaboralesSemanaEmpleado
-        let inactividadSemanal = horasLaboralesSemana - horasSemanaEmpleado
-        if (inactividadSemanal < 0) {
-            inactividadSemanal = 0
-        }
-        let porcentajeProductividadSemanal = 0
-        porcentajeProductividadSemanal = ((horasSemanaEmpleado / horasLaboralesSemana) * 100)
-        porcentajeProductividadSemanal = porcentajeProductividadSemanal > 100 ? 100 : porcentajeProductividadSemanal.toFixed()
-        google.charts.load("current", {'packages': ["corechart"]});
-        await google.charts.setOnLoadCallback(drawChart2MisReportes);
-        function drawChart2MisReportes() {
-            var data = google.visualization.arrayToDataTable([
-                ['Task', 'Hours per Day'],
-                ['Productividad', horasSemanaEmpleado],
-                ['Inactividad', inactividadSemanal]
-            ]);
-            var options = {
-                //title: 'Productividad',
-                //width: '100%',
-                pieHole: 0.8,
-                colors: ['#93C12A', '#C6C6C4'],
-                backgroundColor: '#f5f5f5',
-                pieSliceText: 'none',
-                pieSliceTextStyle: {
-                    color: 'black',
-                    //fontSize: 20
-                    bold: true
-                },
-                legend: 'none',
-                chartArea: {
-                    //left: "0",
-                    height: "80%",
-                    //top: "0",
-                    width: "80%"
-                }
-            };
-            var chart = new google.visualization.PieChart(document.getElementById('donutchartMisReportes'));
-            chart.draw(data, options);
-        }
+        const crearGraficaProductividadSemanal = (horasLaboralesSemana, horasSemanaEmpleado) => {
+            let inactividadSemanal = horasLaboralesSemana - horasSemanaEmpleado
+            if (inactividadSemanal < 0) {
+                inactividadSemanal = 0
+            }
+            let porcentajeProductividadSemanal = 0
+            porcentajeProductividadSemanal = ((horasSemanaEmpleado / horasLaboralesSemana) * 100)
+            porcentajeProductividadSemanal = porcentajeProductividadSemanal > 100 ? 100 : porcentajeProductividadSemanal.toFixed()
+            google.charts.load("current", {'packages': ["corechart"]});
+            google.charts.setOnLoadCallback(drawChart2MisReportes);
+            function drawChart2MisReportes() {
+                var data = google.visualization.arrayToDataTable([
+                    ['Task', 'Hours per Day'],
+                    ['Productividad', horasSemanaEmpleado],
+                    ['Inactividad', inactividadSemanal]
+                ]);
+                var options = {
+                    //title: 'Productividad',
+                    //width: '100%',
+                    pieHole: 0.8,
+                    colors: ['#93C12A', '#C6C6C4'],
+                    backgroundColor: '#f5f5f5',
+                    pieSliceText: 'none',
+                    pieSliceTextStyle: {
+                        color: 'black',
+                        //fontSize: 20
+                        bold: true
+                    },
+                    legend: 'none',
+                    chartArea: {
+                        //left: "0",
+                        height: "80%",
+                        //top: "0",
+                        width: "80%"
+                    }
+                };
+                var chart = new google.visualization.PieChart(document.getElementById('donutchartMisReportes'));
+                chart.draw(data, options);
+            }
 
-        /*$(window).resize(function () {
-         drawChart();
-         });*/
-        $("#jornadas_laborales_productividad_porcentajeMisReportes").text(porcentajeProductividadSemanal);
+            /*$(window).resize(function () {
+             drawChart();
+             });*/
+            $("#jornadas_laborales_productividad_porcentajeMisReportes").text(porcentajeProductividadSemanal);
+        }
+        crearGraficaProductividadSemanal(horasLaboralesSemana, horasSemanaEmpleado)
         $("#diasLaboralesSemanaEmpleadoMisReportes").text(diasLaboralesSemanaEmpleado)
         $("#horasLaboralesSemanaEmpleadoMisReportes").text(horasSemanaEmpleado)
         $("#retardosSemanaEmpleadoMisReportes").text(retardos2)
@@ -502,7 +505,7 @@ const init_misreportes = async (json) => {
             let totalSegundosDiferencia = 0
             let totalMinutosDiferencia = 0
             let horasMesEmpleado = 0
-
+            let diasLaboraloMesEmpleado = 0
             if (jornadasLaboralesMesEmpleado.data) {
                 jornadasLaboralesMesEmpleado.data.forEach(element => {
                     tiempoCreado2 = moment(element.date_created + "T" + element.time_created)
@@ -534,40 +537,51 @@ const init_misreportes = async (json) => {
                 })
                 puntualidad = puntuales3.length
                 numeroRetardos = retardos3.length
+                diasLaboraloMesEmpleado = jornadasLaboralesMesEmpleado.data.length
             }
-
-            google.charts.load("current", {packages: ["corechart"]});
-            google.charts.setOnLoadCallback(drawChartMisReportesPuntualidad);
-            function drawChartMisReportesPuntualidad() {
-                var data = google.visualization.arrayToDataTable([
-                    ['Task', 'Hours per Day'],
-                    ['Puntualidad', puntualidad],
-                    ['Inpuntualidad', numeroRetardos]
-                ]);
-                var options = {
-                    //title: 'Puntualidad',
-                    //width: '100%',
-                    pieHole: 0.8,
-                    colors: ['#D54152', 'C6C6C4'],
-                    backgroundColor: '#f5f5f5',
-                    legend: 'none',
-                    pieSliceText: 'none',
-                    pieSliceTextStyle: {
-                        color: 'black',
-                        //fontSize: 20
-                        bold: true
-                    },
-                    chartArea: {
-                        left: 0,
-                        height: "90%",
-                        //top: "0%",
-                        width: "100%"
-                    }
+            const crearGraficaPuntualidad = () => {
+                let diasLaboraloMesEmpleado = 0
+                let porcentajePuntualidad = 0
+                if (jornadasLaboralesMesEmpleado.data) {
+                    diasLaboraloMesEmpleado = jornadasLaboralesMesEmpleado.data.length
+                    porcentajePuntualidad = ((puntualidad / diasLaboraloMesEmpleado) * 100)
+                    porcentajePuntualidad = porcentajePuntualidad > 100 ? 100 : porcentajePuntualidad.toFixed()
                 }
-                ;
-                var chart = new google.visualization.PieChart(document.getElementById('donutchart3MisReportes'));
-                chart.draw(data, options);
+                google.charts.load("current", {packages: ["corechart"]});
+                google.charts.setOnLoadCallback(drawChartMisReportesPuntualidad);
+                function drawChartMisReportesPuntualidad() {
+                    var data = google.visualization.arrayToDataTable([
+                        ['Task', 'Hours per Day'],
+                        ['Puntualidad', puntualidad],
+                        ['Inpuntualidad', numeroRetardos]
+                    ]);
+                    var options = {
+                        //title: 'Puntualidad',
+                        //width: '100%',
+                        pieHole: 0.8,
+                        colors: ['#D54152', 'C6C6C4'],
+                        backgroundColor: '#f5f5f5',
+                        legend: 'none',
+                        pieSliceText: 'none',
+                        pieSliceTextStyle: {
+                            color: 'black',
+                            //fontSize: 20
+                            bold: true
+                        },
+                        chartArea: {
+                            left: 0,
+                            height: "90%",
+                            //top: "0%",
+                            width: "100%"
+                        }
+                    }
+                    ;
+                    var chart = new google.visualization.PieChart(document.getElementById('donutchart3MisReportes'));
+                    chart.draw(data, options);
+                }
+                $("#jornadas_laborales_puntualidad_porcentajeMisReportes").text(porcentajePuntualidad);
             }
+            crearGraficaPuntualidad()
 
 
             //RESUMEN GENERAL
@@ -623,149 +637,157 @@ const init_misreportes = async (json) => {
             }
 
             let horasTotalesLaboralesMesEmpleado = diasTotales * 8
-            let inactividadMensual = horasTotalesLaboralesMesEmpleado - horasMesEmpleado
-            if (inactividadMensual < 0) {
-                inactividadMensual = 0
-            }
-            let porcentajeProductividadMensual = 0
-            porcentajeProductividadMensual = ((horasMesEmpleado / horasTotalesLaboralesMesEmpleado) * 100)
-            porcentajeProductividadMensual = porcentajeProductividadMensual > 100 ? 100 : porcentajeProductividadMensual.toFixed()
+            const crearGraficaProductividadMensual = () => {
+                let inactividadMensual = horasTotalesLaboralesMesEmpleado - horasMesEmpleado
+                if (inactividadMensual < 0) {
+                    inactividadMensual = 0
+                }
+                let porcentajeProductividadMensual = 0
+                porcentajeProductividadMensual = ((horasMesEmpleado / horasTotalesLaboralesMesEmpleado) * 100)
+                porcentajeProductividadMensual = porcentajeProductividadMensual > 100 ? 100 : porcentajeProductividadMensual.toFixed()
 
-            google.charts.load("current", {packages: ["corechart"]});
-            google.charts.setOnLoadCallback(drawChart3MisReportes);
-            function drawChart3MisReportes() {
-                var data = google.visualization.arrayToDataTable([
-                    ['Task', 'Hours per Day'],
-                    ['Productividad', horasMesEmpleado],
-                    ['Inactividad', inactividadMensual]
-                ]);
-                var options = {
-                    //title: 'Productividad',
-                    //width: '100%',                
-                    pieHole: 0.8,
-                    colors: ['#93C12A', '#C6C6C4'],
-                    backgroundColor: '#f5f5f5',
-                    legend: 'none',
-                    pieSliceText: 'none',
-                    pieSliceTextStyle: {
-                        color: 'black',
-                        //fontSize: 20
-                        bold: true
-                    },
-                    chartArea: {
-                        left: "0",
-                        height: "90%",
-                        //top: "0%",
-                        width: "100%"
-                    }
-                };
-                var chart = new google.visualization.PieChart(document.getElementById('donutchart2MisReportes'));
-                chart.draw(data, options);
+                google.charts.load("current", {packages: ["corechart"]});
+                google.charts.setOnLoadCallback(drawChart3MisReportes);
+                function drawChart3MisReportes() {
+                    var data = google.visualization.arrayToDataTable([
+                        ['Task', 'Hours per Day'],
+                        ['Productividad', horasMesEmpleado],
+                        ['Inactividad', inactividadMensual]
+                    ]);
+                    var options = {
+                        //title: 'Productividad',
+                        //width: '100%',                
+                        pieHole: 0.8,
+                        colors: ['#93C12A', '#C6C6C4'],
+                        backgroundColor: '#f5f5f5',
+                        legend: 'none',
+                        pieSliceText: 'none',
+                        pieSliceTextStyle: {
+                            color: 'black',
+                            //fontSize: 20
+                            bold: true
+                        },
+                        chartArea: {
+                            left: "0",
+                            height: "90%",
+                            //top: "0%",
+                            width: "100%"
+                        }
+                    };
+                    var chart = new google.visualization.PieChart(document.getElementById('donutchart2MisReportes'));
+                    chart.draw(data, options);
+                }
+                $("#jornadas_laborales_productividad_mensual_porcentajeMisReportes").text(porcentajeProductividadMensual);
             }
-            let diasLaboraloMesEmpleado = 0
-            let porcentajePuntualidad = 0
-            let porcentajeCumplimiento = 0
-            if (jornadasLaboralesMesEmpleado.data) {
-                diasLaboraloMesEmpleado = jornadasLaboralesMesEmpleado.data.length
-                porcentajePuntualidad = ((puntualidad / diasLaboraloMesEmpleado) * 100)
-                porcentajePuntualidad = porcentajePuntualidad > 100 ? 100 : porcentajePuntualidad.toFixed()
-                porcentajeCumplimiento = ((diasLaboraloMesEmpleado / (diasLaboraloMesEmpleado + numeroFaltas)) * 100)
-                porcentajeCumplimiento = porcentajeCumplimiento > 100 ? 100 : porcentajeCumplimiento.toFixed()
+            crearGraficaProductividadMensual()
+            const crearGraficaCumplimiento = () => {
+                let diasLaboraloMesEmpleado = 0
+                let porcentajeCumplimiento = 0
+                if (jornadasLaboralesMesEmpleado.data) {
+                    diasLaboraloMesEmpleado = jornadasLaboralesMesEmpleado.data.length
+                    porcentajeCumplimiento = ((diasLaboraloMesEmpleado / (diasLaboraloMesEmpleado + numeroFaltas)) * 100)
+                    porcentajeCumplimiento = porcentajeCumplimiento > 100 ? 100 : porcentajeCumplimiento.toFixed()
+                }
+                google.charts.load("current", {'packages': ["corechart"]});
+                google.charts.setOnLoadCallback(drawChart4MisReportes);
+                function drawChart4MisReportes() {
+                    var data = google.visualization.arrayToDataTable([
+                        ['Task', 'Hours per Day'],
+                        ['Cumplimiento', diasLaboraloMesEmpleado],
+                        ['Incumplimiento', numeroFaltas]
+                    ]);
+                    var options = {
+                        //title: 'Cumplimiento',
+                        //width: '100%',
+                        pieHole: 0.8,
+                        colors: ['#683982', 'C6C6C4'],
+                        backgroundColor: '#f5f5f5',
+                        legend: 'none',
+                        pieSliceText: 'none',
+                        pieSliceTextStyle: {
+                            color: 'black',
+                            //fontSize: 20
+                            bold: true
+                        },
+                        chartArea: {
+                            left: 0,
+                            height: "90%",
+                            //top: "0%",
+                            width: "100%"
+                        }
+                    };
+                    var chart = new google.visualization.PieChart(document.getElementById('donutchart4MisReportes'));
+                    chart.draw(data, options);
+                }
+                $("#jornadas_laborales_cumplimiento_porcentajeMisReportes").text(porcentajeCumplimiento);
             }
-            google.charts.load("current", {'packages': ["corechart"]});
-            google.charts.setOnLoadCallback(drawChart4MisReportes);
-            function drawChart4MisReportes() {
-                var data = google.visualization.arrayToDataTable([
-                    ['Task', 'Hours per Day'],
-                    ['Cumplimiento', diasLaboraloMesEmpleado],
-                    ['Incumplimiento', numeroFaltas]
-                ]);
-                var options = {
-                    //title: 'Cumplimiento',
-                    //width: '100%',
-                    pieHole: 0.8,
-                    colors: ['#683982', 'C6C6C4'],
-                    backgroundColor: '#f5f5f5',
-                    legend: 'none',
-                    pieSliceText: 'none',
-                    pieSliceTextStyle: {
-                        color: 'black',
-                        //fontSize: 20
-                        bold: true
-                    },
-                    chartArea: {
-                        left: 0,
-                        height: "90%",
-                        //top: "0%",
-                        width: "100%"
-                    }
-                };
-                var chart = new google.visualization.PieChart(document.getElementById('donutchart4MisReportes'));
-                chart.draw(data, options);
+            crearGraficaCumplimiento()
+            const resumenGeneral = () => {
+                $('#diasLaboralesMesEmpleadoMisReportes').text(diasLaboraloMesEmpleado)
+                $('#diasTotalesLaboralesMesEmpleadoMisReportes').text(diasTotales)
+                $('#horasLaboralesMesEmpleadoMisReportes').text(horasMesEmpleado)
+                $('#horasTotalesLaboralesMesEmpleadoMisReportes').text(horasTotalesLaboralesMesEmpleado)
+                $('#retardosLaboralesMesEmpleadoMisReportes').text(retardos3.length)
+                $('#faltasLaboralesMesEmpleadoMisReportes').text(faltasArreglo.length)
             }
-            $('#diasLaboralesMesEmpleadoMisReportes').text(diasLaboraloMesEmpleado)
-            $('#diasTotalesLaboralesMesEmpleadoMisReportes').text(diasTotales)
-            $('#horasLaboralesMesEmpleadoMisReportes').text(horasMesEmpleado)
-            $('#horasTotalesLaboralesMesEmpleadoMisReportes').text(horasTotalesLaboralesMesEmpleado)
-            $('#retardosLaboralesMesEmpleadoMisReportes').text(retardos3.length)
-            $('#faltasLaboralesMesEmpleadoMisReportes').text(faltasArreglo.length)
-            $("#jornadas_laborales_productividad_mensual_porcentajeMisReportes").text(porcentajeProductividadMensual);
-            $("#jornadas_laborales_puntualidad_porcentajeMisReportes").text(porcentajePuntualidad);
-            $("#jornadas_laborales_cumplimiento_porcentajeMisReportes").text(porcentajeCumplimiento);
+            resumenGeneral()
 
             //CALENDARIO
-            $.datepicker.regional['es'] = {
-                closeText: 'Cerrar',
-                prevText: '< ',
-                nextText: ' >',
-                currentText: 'Hoy',
-                monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-                monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-                dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-                dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
-                dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
-                weekHeader: 'Sm',
-                dateFormat: 'dd/mm/yy',
-                firstDay: 1,
-                isRTL: false,
-                showMonthAfterYear: false,
-                yearSuffix: ''
-            };
-            $.datepicker.setDefaults($.datepicker.regional['es']);
+            const crearCalendario = () => {
+                $.datepicker.regional['es'] = {
+                    closeText: 'Cerrar',
+                    prevText: '< ',
+                    nextText: ' >',
+                    currentText: 'Hoy',
+                    monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                    monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                    dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+                    dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+                    weekHeader: 'Sm',
+                    dateFormat: 'dd/mm/yy',
+                    firstDay: 1,
+                    isRTL: false,
+                    showMonthAfterYear: false,
+                    yearSuffix: ''
+                };
+                $.datepicker.setDefaults($.datepicker.regional['es']);
 
-            let vacaciones = {};
-            vacaciones[ new Date('01/29/2021')] = new Date('01/29/2021');
-            vacaciones[ new Date('01/30/2021')] = new Date('01/30/2021');
-            vacaciones[ new Date('01/31/2021')] = new Date('01/31/2021');
+                let vacaciones = {};
+                vacaciones[ new Date('01/29/2021')] = new Date('01/29/2021');
+                vacaciones[ new Date('01/30/2021')] = new Date('01/30/2021');
+                vacaciones[ new Date('01/31/2021')] = new Date('01/31/2021');
 
-            $("#calendarioRendimientoMensualMisReportes").datepicker("refresh")
+                $("#calendarioRendimientoMensualMisReportes").datepicker("refresh")
 
-            await $("#calendarioRendimientoMensualMisReportes").datepicker({
-                firstDay: 0,
-                beforeShowDay: function (date) {
-                    var highlight = puntuales[date];
-                    var highlight2 = retardos[date];
-                    var highlight3 = faltas[date];
-                    var highlight4 = vacaciones[date];
-                    if (highlight) {
-                        return [true, "puntuales", 'Tooltip text'];
+                $("#calendarioRendimientoMensualMisReportes").datepicker({
+                    firstDay: 0,
+                    beforeShowDay: function (date) {
+                        var highlight = puntuales[date];
+                        var highlight2 = retardos[date];
+                        var highlight3 = faltas[date];
+                        var highlight4 = vacaciones[date];
+                        if (highlight) {
+                            return [true, "puntuales", 'Tooltip text'];
+                        }
+                        if (highlight2) {
+                            return [true, "retardos", 'Tooltip text'];
+                        }
+                        if (highlight3) {
+                            return [true, "faltas", 'Tooltip text'];
+                        }
+                        if (highlight4) {
+                            return [true, "vacaciones", 'Tooltip text'];
+                        } else {
+                            return [true, '', ''];
+                        }
+                    },
+                    onChangeMonthYear: async function (year, month) {
+                        await rendimientoMensual(month - 1)
                     }
-                    if (highlight2) {
-                        return [true, "retardos", 'Tooltip text'];
-                    }
-                    if (highlight3) {
-                        return [true, "faltas", 'Tooltip text'];
-                    }
-                    if (highlight4) {
-                        return [true, "vacaciones", 'Tooltip text'];
-                    } else {
-                        return [true, '', ''];
-                    }
-                },
-                onChangeMonthYear: async function (year, month) {
-                    await rendimientoMensual(month - 1)
-                }
-            });
+                });
+            }
+            crearCalendario()
         }
         await rendimientoMensual(moment().month())
 
