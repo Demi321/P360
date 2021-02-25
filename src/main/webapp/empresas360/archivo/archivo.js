@@ -96,30 +96,30 @@ const buscaEnDirectorioCompletoArchivos = (id360) => {
 recibirArchivoSocket = (mensaje) => {
 
     /* VERIFICAR SI EL PROYECTO ESTA PINTADO */
-    if( !$("#itemProyectoArchivosVistaCorreo_proyectoArchivos_" + mensaje.id_proyecto).length ){
-       agregaDivProyectoCorreo(mensaje.id_proyecto, "proyectoArchivos_" + mensaje.id_proyecto, mensaje.proyecto, 1, false);
-    }else{
-        
+    if (!$("#itemProyectoArchivosVistaCorreo_proyectoArchivos_" + mensaje.id_proyecto).length) {
+        agregaDivProyectoCorreo(mensaje.id_proyecto, "proyectoArchivos_" + mensaje.id_proyecto, mensaje.proyecto, 1, false);
+    } else {
+
         let divProyecto = $("#itemProyectoArchivosVistaCorreo_" + mensaje.id_proyecto);
-        
+
         /* AUMENTAR LA CANTIDAD DEL SPAN */
         let spanCantidad = divProyecto.find("span");
-        let cantidad = parseInt( spanCantidad.text() );
-        spanCantidad.text( cantidad+1 );
-        
-       /* SABER SI EL INPUT ESTA MARCADO */
+        let cantidad = parseInt(spanCantidad.text());
+        spanCantidad.text(cantidad + 1);
+
+        /* SABER SI EL INPUT ESTA MARCADO */
         let proyectoSeleccionado = $("input[name=proyectoSeleccionado]:checked").val();
-        if( (proyectoSeleccionado === mensaje.id_proyecto || proyectoSeleccionado === "0") && $("input[name=origenSeleccionado]:checked").val() !== "2"){
-            
+        if ((proyectoSeleccionado === mensaje.id_proyecto || proyectoSeleccionado === "0") && $("input[name=origenSeleccionado]:checked").val() !== "2") {
+
             console.log("Pasa condiciones, a pintar ");
             mensaje.cantidadRespuestasNoLeidas = "0";
             mensaje.leido = "0";
-            agregaItemArchivoCorreo(mensaje); 
-            
+            agregaItemArchivoCorreo(mensaje);
+
         }
-       
+
     }
-    
+
     buttonNotificacionCorreo.click();
 
 };
@@ -294,7 +294,7 @@ agregaDivProyectoCorreo = (value, id, text, cantidad, selected) => {
     const listadoProyectos = $(".listadoDeProyectos .radio-proyectos");
 
     let div = $("<div></div>").addClass("form-group");
-    div.attr("id","itemProyectoArchivosVistaCorreo_" + id);
+    div.attr("id", "itemProyectoArchivosVistaCorreo_" + id);
     let input = $("<input>");
     input.attr("value", value);
     input.attr("type", "radio");
@@ -325,12 +325,12 @@ agregaDivProyectoCorreo = (value, id, text, cantidad, selected) => {
 
 /* METODO PARA PINTAR UN ARCHIVO EN EL LISTADO */
 agregaItemArchivoCorreo = (data, resaltar) => {
-    
+
     const contenedorArchivos = $("#archivosVistaCorreo .listadoArchivosVistaCorreo");
     const contenedorDetalleArchivo = $("#archivosVistaCorreo .detalleArchivo");
 
     let div = $("<div></div>").addClass("itemArchivo");
-    div.attr("id","itemArchivoVistaCorreo_" + data.id_archivo);
+    div.attr("id", "itemArchivoVistaCorreo_" + data.id_archivo);
 
     let divData = $("<div></div>").addClass("dataItemArchivo");
     let divDataContent = $("<div></div>").addClass("w-100");
@@ -357,22 +357,22 @@ agregaItemArchivoCorreo = (data, resaltar) => {
     let asunto = $("<p></p>").addClass("asunto");
     asunto.text(data.titulo_archivo);
     divDataContent.append(asunto);
-    
+
     let divDataCantidadRespuestas = $("<div></div>").addClass("w-100 cantidadRespuestasArchivo");
-    divDataCantidadRespuestas.attr("id","cantidadRespuestasArchivo_" + data.id_archivo);
-    
-    let cantidadAlertas = parseInt( data.cantidadRespuestasNoLeidas );
-    if( data.leido === "0" && data.id360 !== perfil.id360 ){
+    divDataCantidadRespuestas.attr("id", "cantidadRespuestasArchivo_" + data.id_archivo);
+
+    let cantidadAlertas = parseInt(data.cantidadRespuestasNoLeidas);
+    if (data.leido === "0" && data.id360 !== perfil.id360) {
         cantidadAlertas++;
     }
-    
-    divDataCantidadRespuestas.append( '<span>'+cantidadAlertas+'</span>' );
-    if(cantidadAlertas === 0){
+
+    divDataCantidadRespuestas.append('<span>' + cantidadAlertas + '</span>');
+    if (cantidadAlertas === 0) {
         divDataCantidadRespuestas.css({
-            "display":"none"
+            "display": "none"
         });
     }
-    
+
     divData.append(divDataContent);
     divData.append(divDataCantidadRespuestas);
 
@@ -478,10 +478,10 @@ agregaItemArchivoCorreo = (data, resaltar) => {
         let divDestinatarios = $("<div></div>").addClass("w-100 mt-3");
 
         let arrayDestinatarios;
-        
-        try{
+
+        try {
             arrayDestinatarios = data.destinatarios.split(",");
-        }catch(error){
+        } catch (error) {
             console.log(error);
             arrayDestinatarios = data.destinatarios;
         }
@@ -703,10 +703,10 @@ agregaItemArchivoCorreo = (data, resaltar) => {
             buttonCancelarResponde.click(() => {
 
                 divEnviarMensaje.slideUp("fast", () => {
-                    
+
                     fileInput.fileinput('clear');
                     textareaContenido.summernote('code', '');
-                    
+
                     divBotonResponde.slideDown("fast");
                 });
 
@@ -747,7 +747,7 @@ agregaItemArchivoCorreo = (data, resaltar) => {
                         if (response.success) {
                             console.log("Respuesta registrada, se debe enviar por socket");
                         }
-                        
+
                         ocultaLoaderArchivo();
                         buttonCancelarResponde.click();
 
@@ -843,8 +843,8 @@ agregaItemArchivoCorreo = (data, resaltar) => {
         contenedorDetalleArchivo.append(divPadre);
 
     });
-    
-    if(resaltar){
+
+    if (resaltar) {
         let resaltar = setInterval(() => {
             div.toggleClass("correoNuevo");
         }, 250);
@@ -861,7 +861,7 @@ agregaItemArchivoCorreo = (data, resaltar) => {
 cargarArchivosCorreo = () => {
 
     muestraLoaderArchivo();
-    
+
     const contenedorArchivos = $("#archivosVistaCorreo .listadoArchivosVistaCorreo");
     const contenedorDetalleArchivo = $("#archivosVistaCorreo .detalleArchivo");
 
@@ -903,20 +903,20 @@ cargarArchivosCorreo = () => {
     RequestPOST("/API/empresas360/consultar_archivos_empresas_filtros", dataSolicitaArchivos).then((response) => {
 
         contenedorArchivos.empty();
-        
+
         BackupCorreos = {};
 
         if (response.length > 0) {
             $.each(response, (index, archivo) => {
-                
+
                 let respuestasNoLeidas = archivo.respuestasNoLeidas !== null ? archivo.respuestasNoLeidas.split(",") : [];
-                
+
                 BackupCorreos[archivo.id_archivo] = {
                     leido: parseInt(archivo.leido),
                     cantidadRespuestasNoLeidas: parseInt(archivo.cantidadRespuestasNoLeidas),
                     respuestasNoLeidas: respuestasNoLeidas
                 };
-                
+
                 agregaItemArchivoCorreo(archivo);
             });
         } else {
@@ -1527,7 +1527,7 @@ const initVistaCorreo = () => {
 
         $.each(response, (index, proyecto) => {
 
-            suma += parseInt( proyecto.cantidadArchivos );
+            suma += parseInt(proyecto.cantidadArchivos);
             agregaDivProyectoCorreo(proyecto.id_proyecto, "proyectoArchivos_" + proyecto.id_proyecto, proyecto.nombre_proyecto, proyecto.cantidadArchivos, false);
 
         });
@@ -1608,19 +1608,31 @@ var init_archivo = (json) => {
     let tipo_area = json.tipo_area;
     let vuewModelDestinatariosArchivos;
     let destinatarios_archivos = [];
-    
-    $("body").on("click","#menu_section_Archivo", () => {
-        
+
+    $("body").on("click", "#menu_section_Archivo", () => {
+
         /*if( $("#modulo_section_8604").hasClass("d-none") ){
-            
-        }*/
-        
+         
+         }*/
+
         $("#toggle div").click();
         initVistaCorreo();
     });
 
-    lottieLoader_blockpage.style = "width: 200px;height: 200px;";
-    document.getElementById("loaderArchivos").appendChild(lottieLoader_blockpage);
+    var lottieLoader_archivos = document.createElement("div");
+    lottieLoader_archivos.style = "width: 200px;height: 200px;";
+    lottieLoader_archivos.id = "lottie_blockpage";
+    document.getElementById("loaderArchivos").appendChild(lottieLoader_archivos);
+
+    var lottieAnimation_archivos = bodymovin.loadAnimation({
+        container: lottieLoader_archivos, // ID del div
+        path: "https://empresas.claro360.com/p360_v4_dev_moises/json/Rayas rojo.json", // Ruta fichero .json de la animación
+        renderer: 'svg', // Requerido
+        loop: true, // Opcional
+        autoplay: true, // Opcional
+//                name: "Hello World" // Opcional
+    });
+
 
     $("#archivos_envio").fileinput({
         theme: 'fa',
