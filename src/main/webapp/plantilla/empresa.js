@@ -6,7 +6,7 @@
 
 
 
-/* global NotificacionToas, WebSocketGeneral, CantidadMensajesPorChat, buttonNotificacionLlamada */
+/* global NotificacionToas, WebSocketGeneral, CantidadMensajesPorChat, buttonNotificacionLlamada, buttonNotificacionCorreo */
 
 //
 //Obtenet la posicion del usuario 
@@ -132,6 +132,7 @@ WebSocketGeneral.onmessage = function (message) {
 
         if(mensaje.nueva_respuesta_de_archivo){
             agregarRespuestaDeCorreo(mensaje);
+            buttonNotificacionCorreo.click();
         }
 
         if (mensaje.archivo_recibido) {
