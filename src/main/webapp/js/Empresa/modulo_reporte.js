@@ -84,9 +84,9 @@ function guardar_reporte_evento() {
             //validar marcador !=null y getPosition != undefined
 //            lat: marcador.getPosition().lat(),
 //            lng: marcador.getPosition().lng(),
-            tipo_usuario: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            tipo_servicio: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-            id360: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario
+            tipo_usuario: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+            tipo_servicio: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+            id360: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario
         };
         if (marcador !== null && marcador !== undefined) {
             if (marcador.getPosition() !== undefined) {

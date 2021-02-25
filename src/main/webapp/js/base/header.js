@@ -71,7 +71,7 @@ $(window).on("load", function () {
             document.getElementById("servicios_grid").scrollIntoView();
         }
     });
-    //var sesion_cookie = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
+    //var sesion_cookie = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA));
     console.log(sesion_cookie);
     if (sesion_cookie === "") {
 

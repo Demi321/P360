@@ -251,11 +251,11 @@ function registro_plantilla_laboral(nombre) {
                 json[key] = json[keys[i]];
                 delete json[keys[i]];
             }
-            json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
+            json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
             json.tipo_servicio = json.listado_sucursales;
             delete json["listado_sucursales"];
             json.tipo_area = json.listado_areas;
-            json.id360 = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario;
+            json.id360 = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario;
             json.numerodeempleado = json.num_empleado;
 
             delete json["listado_areas"];
@@ -435,9 +435,9 @@ function fileReader(oEvent) {
                             }
                         });
                         json.alias = alias;
-                        json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
+                        json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
                         json.tipo_servicio = json.numerodesucursal;
-                        json.id360 = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario;
+                        json.id360 = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario;
                         info_completa_hoja.push(json);
                     });
                     info_completa.push(info_completa_hoja);

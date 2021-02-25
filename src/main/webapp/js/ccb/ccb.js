@@ -232,7 +232,7 @@ directorio_pacientesCCB().then(function (directorio) {
 var json = {
     "fecha": getFecha(),
     "hora": getHora(),
-    "institucion_refiere": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion,
+    "institucion_refiere": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion,
     "telefono_contacto_institucion": "55797461328",
     "nombre": "Rodrigo Juarez Castro",
     "apellidop_paciente": "Juarez",
@@ -708,7 +708,7 @@ function agregar_bandeja(json) {
          - NoingresoenUTC-19
          */
 
-        if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).ccb === "1") {
+        if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).ccb === "1") {
             if (card[0].className.includes("AceptadaporUTC-19")) {
                 $("#botones").empty();
                 var btnrecepcion = document.createElement("input");
@@ -1467,9 +1467,9 @@ function actualiza_bandeja(json) {
 }
 
 function cambio_estado_ccb(json) {
-    json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-    json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
-    json.nombre_institucion = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion;
+    json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+    json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
+    json.nombre_institucion = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion;
     json.proyecto = window.location.origin + "/" + DEPENDENCIA;
     return Promise.resolve($.ajax({
         type: 'POST',
@@ -1502,9 +1502,9 @@ function ConsultarDirectorioCCB() {
 }
 
 function quitar_rechazo(json) {
-    json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-    json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
-    json.nombre_institucion = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion;
+    json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+    json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
+    json.nombre_institucion = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion;
     json.proyecto = window.location.origin + "/" + DEPENDENCIA;
     return Promise.resolve($.ajax({
         type: 'POST',
@@ -1521,9 +1521,9 @@ function quitar_rechazo(json) {
     }));
 }
 function cancelar_solicitud(json) {
-    json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-    json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
-    json.nombre_institucion = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion;
+    json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+    json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
+    json.nombre_institucion = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion;
     json.proyecto = window.location.origin + "/" + DEPENDENCIA;
     return Promise.resolve($.ajax({
         type: 'POST',
@@ -1541,9 +1541,9 @@ function cancelar_solicitud(json) {
 }
 
 function recepcion_paciente(json) {
-    json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-    json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
-    json.nombre_institucion = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion;
+    json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+    json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
+    json.nombre_institucion = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion;
     json.proyecto = window.location.origin + "/" + DEPENDENCIA;
     return Promise.resolve($.ajax({
         type: 'POST',
@@ -1561,9 +1561,9 @@ function recepcion_paciente(json) {
 }
 
 function notifica_involucrados(json) {
-    json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-    json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
-    json.nombre_institucion = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion;
+    json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+    json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
+    json.nombre_institucion = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion;
     json.proyecto = window.location.origin + "/" + DEPENDENCIA;
     return Promise.resolve($.ajax({
         type: 'POST',
@@ -1581,13 +1581,13 @@ function notifica_involucrados(json) {
 }
 
 function notificar_alta(json) {
-    json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-    json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
-    json.nombre_institucion = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion;
+    json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+    json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
+    json.nombre_institucion = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion;
     json.proyecto = window.location.origin + "/" + DEPENDENCIA;
     json.fecha_cambio = getFecha();
     json.hora_cambio = getHora();
-    json.idOperador = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys;
+    json.idOperador = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys;
     return Promise.resolve($.ajax({
         type: 'POST',
         url: '/' + DEPENDENCIA + '/API/notificar_alta',
@@ -1603,9 +1603,9 @@ function notificar_alta(json) {
     }));
 }
 function notificar_regreso(json) {
-    json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-    json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
-    json.nombre_institucion = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion;
+    json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+    json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
+    json.nombre_institucion = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion;
     json.proyecto = window.location.origin + "/" + DEPENDENCIA;
     json.fecha_cambio = getFecha();
     json.hora_cambio = getHora();

@@ -70,7 +70,7 @@ function getCookie(cname) {
 }
 
 function checkCookie() {
-    var user = getCookie("username_v3.1_" + DEPENDENCIA);
+    var user = getCookie("username_v3.2_" + DEPENDENCIA);
     sesion_cookie = user;
 
     if (user === "") {
@@ -132,13 +132,13 @@ function checkCookie() {
             "id_sesion": sesion_cookie.id_sesion
         }).then((response) => {
             if (response.failure) {
-                deleteCookie("username_v3.1_" + DEPENDENCIA);
+                deleteCookie("username_v3.2_" + DEPENDENCIA);
             }
         });
-        if (!JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("modulos")) {
-            deleteCookie("username_v3.1_" + DEPENDENCIA);
+        if (!JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("modulos")) {
+            deleteCookie("username_v3.2_" + DEPENDENCIA);
         }
-        var user = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
+        var user = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA));
         //**console.log(user);
         if (user !== "") {
             //**console.log("Sesion detectada por cookie");
@@ -212,13 +212,13 @@ function checkCookie() {
         }
 
         if ($("#user").length)
-            document.getElementById("user").innerHTML = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre;
+            document.getElementById("user").innerHTML = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre;
         if ($("#NameAdministrador").length)
-            document.getElementById("NameAdministrador").value = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre;
+            document.getElementById("NameAdministrador").value = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre;
         if ($("#IdAdministrador").length)
-            document.getElementById("IdAdministrador").value = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys;
+            document.getElementById("IdAdministrador").value = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys;
 
-        var pr = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).puede_registrar;
+        var pr = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).puede_registrar;
 //console.info(pr);
 
         if (pr === null || pr === "false") {
@@ -233,7 +233,7 @@ function checkCookie() {
             }
         }
 
-//        var usuar = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).usuario
+//        var usuar = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).usuario
 //        if (!(usuar === "supervision-sedena" || usuar === "supervision-gn" || usuar === "Global")) {
 //            document.getElementById("padronregistroLI").style.display = "none";
 //            $("#padronregistroLI").remove();
@@ -245,7 +245,7 @@ function checkCookie() {
             var config = JSON.parse($("#config").val());
             ////**console.log(config);
         }
-//        var conf_personalizada = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).configuracion;
+//        var conf_personalizada = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).configuracion;
 //        //**console.log("*******************************");
 //        //**console.log("configuracion");
 //        //**console.log(config);
@@ -257,12 +257,12 @@ function checkCookie() {
 }
 if ($("#closeSession").length) {
     document.getElementById("closeSession").addEventListener("click", function () {
-        deleteCookie("username_v3.1_" + DEPENDENCIA);
+        deleteCookie("username_v3.2_" + DEPENDENCIA);
     });
 }
 if ($("#menu_cerrar_sesion").length) {
     document.getElementById("menu_cerrar_sesion").addEventListener("click", function () {
-        deleteCookie("username_v3.1_" + DEPENDENCIA);
+        deleteCookie("username_v3.2_" + DEPENDENCIA);
     });
 }
 
@@ -389,7 +389,7 @@ function usuariosregistrados() {
 
     var id = document.createElement("input");
     id.type = "hidden";
-    id.value = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys; //idUsr;
+    id.value = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys; //idUsr;
     id.name = "id";
 
     var submit = document.createElement("input");
@@ -430,7 +430,7 @@ function UsuariosActivosPDF() {
 
     var id = document.createElement("input");
     id.type = "hidden";
-    id.value = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys; //idUsr;
+    id.value = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys; //idUsr;
     id.name = "id";
 
     var submit = document.createElement("input");

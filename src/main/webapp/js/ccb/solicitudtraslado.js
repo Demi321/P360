@@ -11,8 +11,8 @@
 var json1 = {
     "fecha": getFecha(),
     "hora": getHora(),
-    "institucion_refiere": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion,
-    //"institucion_refiere": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre,
+    "institucion_refiere": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion,
+    //"institucion_refiere": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre,
     "medico_refiere": "Dr. Ruben Arguero",
     "telefono_contacto": "5548592615",
     "correo_contacto": "ruben.arg@unam.com.mx",
@@ -48,8 +48,8 @@ var json1 = {
 var json2 = {
     "fecha": getFecha(),
     "hora": getHora(),
-    "institucion_refiere": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion,
-//        "institucion_refiere": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre,
+    "institucion_refiere": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion,
+//        "institucion_refiere": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre,
     "telefono_contacto_institucion": "55797461328",
     "nombre": "Rodrigo Juarez Castro",
     "apellidop_paciente": "Juarez",
@@ -220,9 +220,9 @@ $("#form2").submit(function (e) {
 
 $("#fecha").val(getFecha());
 $("#hora").val(getHora());
-$("#institucion_refiere").val(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion);
-//    $("#institucion_refiere").val(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre);
-$("#telefono_contacto_refiere").val(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).telefono_institucion);
+$("#institucion_refiere").val(JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion);
+//    $("#institucion_refiere").val(JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre);
+$("#telefono_contacto_refiere").val(JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).telefono_institucion);
 var hoy = new Date();
 //console.log(hoy);
 $(function () {
@@ -632,8 +632,8 @@ function valForm2(intervalo_puntos) {
     var jsonForm2 = {
         "fecha": fecha_formato($("#fecha").val()),
         "hora": $("#hora").val(),
-        "institucion_refiere": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion,
-//            "institucion_refiere": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre,
+        "institucion_refiere": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion,
+//            "institucion_refiere": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre,
         "telefono_contacto_institucion": ($("#telefono_institucion").val().replace(/'/gm, "")).replace(/"/gm, ""),
         "nombre": ($("#nombre").val().replace(/'/gm, "")).replace(/"/gm, ""),
         "apellidop_paciente": ($("#apellidop_paciente").val().replace(/'/gm, "")).replace(/"/gm, ""),
@@ -743,7 +743,7 @@ function valForm2(intervalo_puntos) {
     };
 
     console.log(jsonForm2);
-//    if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio !== "67") {
+//    if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio !== "67") {
 
     solicitud_traslado(jsonForm2).then(function (response) {
         clearInterval(intervalo_puntos);
@@ -869,9 +869,9 @@ function calcularDias() {
 
 
 function rechazo_automatico(json) {
-    json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-    json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
-    json.nombre_institucion = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion;
+    json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+    json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
+    json.nombre_institucion = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion;
     json.proyecto = window.location.origin + "/" + DEPENDENCIA;
     return Promise.resolve($.ajax({
         type: 'POST',
@@ -890,9 +890,9 @@ function rechazo_automatico(json) {
     }));
 }
 function solicitud_traslado(json) {
-    json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-    json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
-    json.nombre_institucion = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion;
+    json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+    json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
+    json.nombre_institucion = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion;
     json.proyecto = window.location.origin + "/" + DEPENDENCIA;
     return Promise.resolve($.ajax({
         type: 'POST',

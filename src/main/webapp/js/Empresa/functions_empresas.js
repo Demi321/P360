@@ -16,22 +16,22 @@ var directorio_completo = null;
 RequestPOST("/API/ConsultarDirectorio", {
     "fecha": getFecha(),
     "hora": getHora(),
-    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-    "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-//    "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area,
+    "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+    "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+//    "tipo_area": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area,
     "tipo_area": "0"
 }).then((response) => {
     directorio_completo = response.directorio;
 });
 
 var configuracionUsuario = null;
-RequestPOST("/API/empresas360/configuracionUsuario", {id360:JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario}).then((response) => {
+RequestPOST("/API/empresas360/configuracionUsuario", {id360:JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario}).then((response) => {
     if(response.length>0){
         configuracionUsuario = response[0];
     }
 });
 
-//var sesion_cookie = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
+//var sesion_cookie = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA));
 AWS.config.update({
     region: bucketRegion,
     credentials: new AWS.CognitoIdentityCredentials({
@@ -392,7 +392,7 @@ function agregar_menu2(nombre,fawsome) {
 }
 function mostrar_info_perfil() {
     RequestPOST("/API/cuenta360/empresas360/perfil/empleado", {
-        "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario
+        "id360": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario
     }).then(function (response) {
         if (response.success) {
             perfil = response;
@@ -473,9 +473,9 @@ function fileReader(oEvent) {
                             }
                         });
                         json.alias = alias;
-                        json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-                        json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
-                        json.id360 = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario;
+                        json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+                        json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
+                        json.id360 = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario;
                         info_completa_hoja.push(json);
                     });
                     info_completa.push(info_completa_hoja);
@@ -703,10 +703,10 @@ function initializeSessionSubscriber(data) {
                     /*$("#nom").val(empleado.nombre + " " + empleado.apellidos);
                      $("#num").val(empleado.idUsuario_Sys);*/
                     RequestPOST("/API/empresas360/registro/horario_laboral", {
-                        "id_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario,
-                        "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-                        "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-                        "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area,
+                        "id_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario,
+                        "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+                        "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+                        "tipo_area": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area,
                         "apikey": Credenciales.apikey,
                         "idsesion": Credenciales.idsesion,
                         "token": Credenciales.token,
@@ -727,7 +727,7 @@ function initializeSessionSubscriber(data) {
                             console.log("guardarreporte");
 
                             RequestPOST("/API/empresas360/registro/horario_laboral", {
-                                "id_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario,
+                                "id_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario,
                                 "id": response.id,
                                 "reporte": $("#rep").val(),
                                 "fecha": getFecha(),
@@ -968,11 +968,11 @@ function registro_plantilla_laboral(nombre) {
                 json[key] = json[keys[i]];
                 delete json[keys[i]];
             }
-            json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
+            json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
             json.tipo_servicio = json.listado_sucursales;
             delete json["listado_sucursales"];
             json.tipo_area = json.listado_areas;
-            json.id360 = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario;
+            json.id360 = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario;
             json.numerodeempleado = json.num_empleado;
 
             delete json["listado_areas"];
@@ -1149,10 +1149,10 @@ function fileReader_plantilla_laboral(oEvent) {
                             }
                         });
                         json.alias = alias;
-                        json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
+                        json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
                         json.tipo_servicio = json.numerodesucursal;
                         delete json["numerodesucursal"];
-                        json.id360 = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario;
+                        json.id360 = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario;
                         info_completa_hoja.push(json);
                     });
                     info_completa.push(info_completa_hoja);
@@ -1479,7 +1479,7 @@ function fileReader_registro_sucursales(oEvent) {
                             }
                         });
                         json.alias = alias;
-//                                json.tipo_usuario = getCookie("username_v3.1_" + DEPENDENCIA).tipo_usuario;
+//                                json.tipo_usuario = getCookie("username_v3.2_" + DEPENDENCIA).tipo_usuario;
                         json.id_empresa = sesion_cookie.tipo_usuario;
                         json.tipo_servicio = sesion_cookie.tipo_servicio;
                         json.id360 = sesion_cookie.id_usuario;

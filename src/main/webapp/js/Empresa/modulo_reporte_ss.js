@@ -57,10 +57,10 @@ function guardar_reporte_seguridad() {
             asunto: $("#asunto_reporte_seguridad").val(),
             categoria: $("#categoria_seguridad").val(),
             descripcion: $("#reporte_reporte_seguridad").val(),
-            institucion: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-            tipo_usuario: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            tipo_servicio: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-            id360: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario
+            institucion: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+            tipo_usuario: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+            tipo_servicio: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+            id360: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario
         };
         if (marcador2 !== null) {
             if (marcador2.getPosition() !== undefined) {

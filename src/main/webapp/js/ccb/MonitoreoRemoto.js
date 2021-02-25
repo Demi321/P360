@@ -180,7 +180,7 @@ Su saturación de oxigeno es de " + $("#saturacion_oxigeno").val() + "%, \n\
                 "estado": estado,
                 "diagnostico": diagnostico,
                 //"personal": $("#nombre_doctor").val()
-                "personal": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre
+                "personal": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre
             };
 
             actualizacion_estadoCCB(json).then(function (response) {
@@ -223,8 +223,8 @@ Su saturación de oxigeno es de " + $("#saturacion_oxigeno").val() + "%, \n\
                             arrayUsr.push($("#idUsuario").val());
                             res.idUsuarios = arrayUsr;
                             res.folio = $("#id").val();
-                            res.personal = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre;
-                            res.idOperador_llamada = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys;
+                            res.personal = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre;
+                            res.idOperador_llamada = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys;
                             res.numero_llamada = $("#numero_llamada").val();
                             
                             $("#modal_aviso").text("Conectando");
@@ -449,7 +449,7 @@ Su saturación de oxigeno es de " + $("#saturacion_oxigeno").val() + "%, \n\
                     // Send a signal once the user enters data in the form
                     form.addEventListener('submit', function submit(event) {
                         event.preventDefault();
-                        enviarMensaje(session, JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre, msgTxt.value);
+                        enviarMensaje(session, JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre, msgTxt.value);
 
                     });
                     // Initialize the publisher
@@ -457,7 +457,7 @@ Su saturación de oxigeno es de " + $("#saturacion_oxigeno").val() + "%, \n\
                         insertMode: 'replace',
                         width: '100%',
                         height: '100%',
-                        name: "" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre,
+                        name: "" + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre,
                         publishVideo: false
                     };
                     var pos = NuevaUbicacionPublicador();
@@ -507,7 +507,7 @@ Su saturación de oxigeno es de " + $("#saturacion_oxigeno").val() + "%, \n\
                             colgar.value = "";
                             colgar.addEventListener("click", function () {
 
-                                //enviarMensaje(session, JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre, "Ha dejado la llamada.");
+                                //enviarMensaje(session, JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre, "Ha dejado la llamada.");
 
                                 session.unpublish(publisher);
                                 $(".side1Chat").addClass("d-none");

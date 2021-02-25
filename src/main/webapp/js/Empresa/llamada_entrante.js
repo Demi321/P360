@@ -2,7 +2,7 @@
 
 
 data = JSON.parse(document.getElementById("data").value);
-//var sesion_cookie=JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA))
+//var sesion_cookie=JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA))
 
 var proyecto = DatosProyecto();
 
@@ -17,9 +17,9 @@ if (sesion_cookie !== undefined && sesion_cookie !== null && sesion_cookie !== "
     RequestPOST("/API/ConsultarDirectorio", {
         "fecha": getFecha(),
         "hora": getHora(),
-        "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-        "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-//    "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area,
+        "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+        "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+//    "tipo_area": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area,
         "tipo_area": "0"
     }).then((response) => {
         dataG = response;
@@ -178,10 +178,10 @@ function IniciarInvitado() {
 
 }
 //RequestPOST("/API/empresas360/GruposPersonalizados", {
-//    "idUsuarioSys": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
-//    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-//    "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-//    "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
+//    "idUsuarioSys": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
+//    "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+//    "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+//    "tipo_area": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area
 //}).then((response) => {
 //    dataG = response;
 //    initializeSession();
@@ -775,7 +775,7 @@ function initializeSession_Invitado(settings) {
                     "value": settings.nombre_invitado + ": " + msgTxt.value,
                     "fecha": getFecha(),
                     "hora": getHora(),
-//                    "idUsuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+//                    "idUsuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
                     "username": settings.nombre_invitado,
                     "tipo": "texto"
                 };
@@ -813,7 +813,7 @@ function initializeSession_Invitado(settings) {
                         "value": settings.nombre_invitado + ": " + MSJ,
                         "fecha": getFecha(),
                         "hora": getHora(),
-//                    "idUsuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+//                    "idUsuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
                         "username": settings.nombre_invitado,
                         "tipo": "texto"
                     };
@@ -1187,7 +1187,7 @@ function RegistrarDesconexionOp() {
         "method": "POST",
         "data": JSON.stringify({
             "idLlamada": data.registro_llamada.idLlamada,
-            "idSys": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+            "idSys": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
             "hora_desconexion": getHora(),
             "chat": JSON.stringify(chat)
         }),
@@ -2088,9 +2088,9 @@ $("#btn-reporte").click(function () {
 });
 
 function guardarReporteLlamadaSaliente(json) {
-    if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("tipo_usuario") && JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("tipo_servicio")) {
-        json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-        json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
+    if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("tipo_usuario") && JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("tipo_servicio")) {
+        json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+        json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
     }
     return Promise.resolve($.ajax({
         type: 'POST',
@@ -2295,7 +2295,7 @@ function buscarelemento_directorio(id360) {
 habilitarMaximizarVideo();
 
 function checkCookie() {
-    var user = getCookie("username_v3.1_" + DEPENDENCIA);
+    var user = getCookie("username_v3.2_" + DEPENDENCIA);
     sesion_cookie = user;
 
     if (user !== "") {
@@ -2305,13 +2305,13 @@ function checkCookie() {
             "id_sesion": sesion_cookie.id_sesion
         }).then((response) => {
             if (response.failure) {
-                deleteCookie("username_v3.1_" + DEPENDENCIA);
+                deleteCookie("username_v3.2_" + DEPENDENCIA);
             }
         });
-        if (!JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("modulos")) {
-            deleteCookie("username_v3.1_" + DEPENDENCIA);
+        if (!JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("modulos")) {
+            deleteCookie("username_v3.2_" + DEPENDENCIA);
         }
-        var user = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
+        var user = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA));
         console.log(user);
         if (user !== "") {
             console.log("Sesion detectada por cookie");
@@ -2385,13 +2385,13 @@ function checkCookie() {
         }
 
         if ($("#user").length)
-            document.getElementById("user").innerHTML = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre;
+            document.getElementById("user").innerHTML = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre;
         if ($("#NameAdministrador").length)
-            document.getElementById("NameAdministrador").value = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre;
+            document.getElementById("NameAdministrador").value = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre;
         if ($("#IdAdministrador").length)
-            document.getElementById("IdAdministrador").value = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys;
+            document.getElementById("IdAdministrador").value = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys;
 
-        var pr = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).puede_registrar;
+        var pr = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).puede_registrar;
 //console.info(pr);
 
         if (pr === null || pr === "false") {
@@ -2406,7 +2406,7 @@ function checkCookie() {
             }
         }
 
-//        var usuar = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).usuario
+//        var usuar = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).usuario
 //        if (!(usuar === "supervision-sedena" || usuar === "supervision-gn" || usuar === "Global")) {
 //            document.getElementById("padronregistroLI").style.display = "none";
 //            $("#padronregistroLI").remove();
@@ -2418,7 +2418,7 @@ function checkCookie() {
             var config = JSON.parse($("#config").val());
             //console.log(config);
         }
-//        var conf_personalizada = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).configuracion;
+//        var conf_personalizada = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).configuracion;
 //        console.log("*******************************");
 //        console.log("configuracion");
 //        console.log(config);

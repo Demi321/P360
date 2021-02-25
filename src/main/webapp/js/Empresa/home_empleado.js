@@ -7,16 +7,16 @@ var directorio_completo = null;
 RequestPOST("/API/ConsultarDirectorio", {
     "fecha": getFecha(),
     "hora": getHora(),
-    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-    "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-//    "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area,
+    "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+    "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+//    "tipo_area": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area,
     "tipo_area": "0"
 }).then((response) => {
     directorio_completo = response.directorio;
 });
 
 var configuracionUsuario = null;
-RequestPOST("/API/empresas360/configuracionUsuario", {id360:JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario}).then((response) => {
+RequestPOST("/API/empresas360/configuracionUsuario", {id360:JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario}).then((response) => {
     if(response.length>0){
         configuracionUsuario = response[0];
     }
@@ -268,9 +268,9 @@ WebSocketGeneral.onmessage = function (message) {
 RequestPOST("/API/ConsultarDirectorio", {
     "fecha": getFecha(),
     "hora": getHora(),
-    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-    "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-    "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
+    "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+    "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+    "tipo_area": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area
 }).then((directorio) => {
     console.log(directorio);
 });
@@ -279,7 +279,7 @@ var BucketName = "lineamientos";
 var bucketRegion = "us-east-1";
 var IdentityPoolId = "us-east-1:a8460f87-8d3f-4452-935a-b95a4fcc83ed";
 
-var sesion_cookie = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
+var sesion_cookie = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA));
 AWS.config.update({
     region: bucketRegion,
     credentials: new AWS.CognitoIdentityCredentials({

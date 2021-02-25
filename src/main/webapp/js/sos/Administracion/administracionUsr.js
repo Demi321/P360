@@ -33,8 +33,8 @@ function ConsultarDirectorio() {
         data: JSON.stringify({
             "fecha": getFecha(),
             "hora": getHora(),
-            "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            "tipo_servicio":JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+            "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+            "tipo_servicio":JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
         }),
         success: function (response) {
         },
@@ -82,7 +82,7 @@ function vuemodel() {
 }
 
 document.getElementById("buscarIntegrante").addEventListener("click", function () {
-    var cookie = getCookie("username_v3.1_" + DEPENDENCIA);
+    var cookie = getCookie("username_v3.2_" + DEPENDENCIA);
     if (cookie.length > 0) {
         if (tel_a_agregar !== "") {
             TraeInfoIntegrante(tel_a_agregar[0].idUsuario).then(function (response) {
@@ -237,8 +237,8 @@ function BusquedaUsuarioControlador() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",  
         data: JSON.stringify({
-            "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            "tipo_servicio":JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+            "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+            "tipo_servicio":JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
         }),
         success: function (response){
         },

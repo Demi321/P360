@@ -4,8 +4,8 @@ var servicios;
 var mapa;
 var marker;
 
-//        var tipo_usuario = getCookie("username_v3.1_" + DEPENDENCIA) === "" ? "0" : JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-//        var tipo_servicio = getCookie("username_v3.1_" + DEPENDENCIA) === "" ? "0" : JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
+//        var tipo_usuario = getCookie("username_v3.2_" + DEPENDENCIA) === "" ? "0" : JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+//        var tipo_servicio = getCookie("username_v3.2_" + DEPENDENCIA) === "" ? "0" : JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
 var tipo_usuario = 0;
 var tipo_servicio = 0;
 

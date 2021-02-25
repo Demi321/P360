@@ -191,10 +191,10 @@ function initializeSessionEmpleado(data, aumenta) {
                      $("#num").val(empleado.idUsuario_Sys);*/
                     let aumentaInt = aumenta ? 1 : 0;
                     RequestPOST("/API/empresas360/registro/horario_laboral", {
-                        "id_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario,
-                        "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-                        "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-                        "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area,
+                        "id_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario,
+                        "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+                        "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+                        "tipo_area": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area,
                         "apikey": Credenciales.apikey,
                         "idsesion": Credenciales.idsesion,
                         "token": Credenciales.token,
@@ -218,7 +218,7 @@ function initializeSessionEmpleado(data, aumenta) {
                             console.log("guardarreporte");
                             $("#mensaje-cargando-proceso").removeClass("d-none");
                             RequestPOST("/API/empresas360/registro/horario_laboral_cierre", {
-                                "id_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario,
+                                "id_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario,
                                 "id": response.id,
                                 "reporte": $("#rep").val(),
                                 "fecha": getFecha(),
@@ -289,7 +289,7 @@ function initializeSessionEmpleado(data, aumenta) {
                             activarVideo.innerHTML = '<i class="fas fa-video"></i>';
 
                             let data = {
-                                "id_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario,
+                                "id_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario,
                                 "fecha": getFecha(),
                                 "hora": getHora()
                             };
@@ -502,7 +502,7 @@ const consulta_historial_entrada_salida = (fecha_inicio, fecha_final) => {
     let data = new Object();
     data.inicio = fecha_inicio;
     data.fin = fecha_final;
-    data.id = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario;
+    data.id = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario;
 
     RequestPOST("/API/empresas360/jornadas_laborales", data).then((response) => {
 
@@ -617,7 +617,7 @@ const consulta_historial_entrada_salida = (fecha_inicio, fecha_final) => {
 
 $("#botonDescargaReporteJornada").click(function () {
 
-    const dataUser = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
+    const dataUser = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA));
 
     $("#fecha_exportacion_excel").text(formatDateDefault(new Date()));
     $("#fecha_inicio_excel").text($("#fecha_inicio_reporte").val());
@@ -656,7 +656,7 @@ const cabeceraReporteExcel_entrada_salida = () => {
 
 if (perfil === null) {
     RequestPOST("/API/cuenta360/empresas360/perfil/empleado", {
-        "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario
+        "id360": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario
     }).then(function (response) {
         if (response.success) {
             perfil = response;

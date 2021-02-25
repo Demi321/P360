@@ -245,7 +245,7 @@ function fileReader_registro_sucursales(oEvent) {
                             }
                         });
                         json.alias = alias;
-//                                json.tipo_usuario = getCookie("username_v3.1_" + DEPENDENCIA).tipo_usuario;
+//                                json.tipo_usuario = getCookie("username_v3.2_" + DEPENDENCIA).tipo_usuario;
                         json.id_empresa = sesion_cookie.tipo_usuario;
                         json.tipo_servicio = sesion_cookie.tipo_servicio;
                         json.id360 = sesion_cookie.id_usuario;

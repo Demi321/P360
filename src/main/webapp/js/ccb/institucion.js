@@ -26,7 +26,7 @@ $("#ingresados").click(function () {
 });
 
 $(document).ready(function () {
-    $("#titulo").text(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion);
+    $("#titulo").text(JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion);
 });
 
 //activar_listener_socket();
@@ -66,8 +66,8 @@ function activar_calendario() {
                 var ms = {
                     "fecha_calendario": fecha_calendario,
                     "backup_institucion": true,
-                    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-                    "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+                    "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+                    "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
                 };
                 EnviarMensajePorSocket(ms);
             } else {
@@ -75,8 +75,8 @@ function activar_calendario() {
                 var ms = {
                     "fecha_calendario": fecha_calendario,
                     "backup_institucion_fecha": true,
-                    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-                    "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+                    "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+                    "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
                 };
                 EnviarMensajePorSocket(ms);
             }
@@ -107,8 +107,8 @@ function activar_listener_socket(fecha_calendario) {
                 var ms = {
                     "backup_institucion": true,
                     "fecha_calendario": fecha_calendario,
-                    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-                    "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+                    "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+                    "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
                 };
                 EnviarMensajePorSocket(ms);
             }
@@ -128,8 +128,8 @@ function activar_listener_socket(fecha_calendario) {
         var ms = {
             "backup_institucion": true,
             "fecha_calendario": fecha_calendario,
-            "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+            "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+            "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
         };
         EnviarMensajePorSocket(ms);
     }
@@ -164,8 +164,8 @@ directorio_pacientesCCB().then(function (directorio) {
                     var ms = {
                         "folio": op.id,
                         "backup_institucion_id": true,
-                        "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-                        "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+                        "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+                        "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
                     };
                     EnviarMensajePorSocket(ms);
 
@@ -184,7 +184,7 @@ directorio_pacientesCCB().then(function (directorio) {
 var json = {
     "fecha": getFecha(),
     "hora": getHora(),
-    "institucion_refiere": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion,
+    "institucion_refiere": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion,
     "telefono_contacto_institucion": "55797461328",
     "nombre": "Rodrigo Juarez Castro",
     "apellidop_paciente": "Juarez",
@@ -719,9 +719,9 @@ function calculoHora(cliente, json) {
 
 }
 function inicio_traslado(json) {
-    json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-    json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
-    json.nombre_institucion = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion;
+    json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+    json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
+    json.nombre_institucion = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion;
     json.proyecto = window.location.origin + "/" + DEPENDENCIA;
     return Promise.resolve($.ajax({
         type: 'POST',

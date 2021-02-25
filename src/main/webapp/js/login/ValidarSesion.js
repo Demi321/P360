@@ -20,7 +20,7 @@ function setCookie(cname, cvalue, exdays) {
     var expires = "expires=" + d.toGMTString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 
-    var user = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
+    var user = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA));
     ////**console.log(user);
     if (user !== "") {
         var hostdir = window.location.protocol + "//" + window.location.host;
@@ -56,7 +56,7 @@ function getCookie(cname) {
 }
 
 function checkCookie() {
-    var user = getCookie("username_v3.1_" + DEPENDENCIA);
+    var user = getCookie("username_v3.2_" + DEPENDENCIA);
     //**console.log(user);
     if (user !== "") {
         user = JSON.parse(user);
@@ -84,7 +84,7 @@ $("#Log-in").submit(function (e) {
         success: function (response) {
             //**console.log(response);
             $("#logo360").addClass("d-none");
-            //setCookie("username_v3.1_" + DEPENDENCIA, JSON.stringify(response), 1000);
+            //setCookie("username_v3.2_" + DEPENDENCIA, JSON.stringify(response), 1000);
             if (!response.success) {
 //                Swal.fire({
 //                    title: 'Error en la cuenta.',
@@ -177,7 +177,7 @@ $("#Log-in").submit(function (e) {
                             //**console.log(sesion_cookie);
                             sesion_cookie.modulo_principal = "agregar_perfil";
                             sesion_cookie.modulos = "";
-                            setCookie("username_v3.1_" + DEPENDENCIA, JSON.stringify(sesion_cookie), 1000);
+                            setCookie("username_v3.2_" + DEPENDENCIA, JSON.stringify(sesion_cookie), 1000);
 
                         } else {
                             Swal.fire({
@@ -426,29 +426,29 @@ function continuar_institucion_seleccionada() {
     delete sesion_cookie.telemedicina_medico;
     delete sesion_cookie.telemedicina_paciente;
     delete sesion_cookie.videovigilancia;
-    setCookie("username_v3.1_" + DEPENDENCIA, JSON.stringify(sesion_cookie), 1000);
+    setCookie("username_v3.2_" + DEPENDENCIA, JSON.stringify(sesion_cookie), 1000);
 
 }
 
 
 /*function checkCookie() {
- var user = getCookie("username_v3.1_" + DEPENDENCIA);
+ var user = getCookie("username_v3.2_" + DEPENDENCIA);
  
  if (user != "") {
  //**console.log("/////////");
- //**console.log(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario);
- //**console.log(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario === "21");
- //**console.log(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hospital);
+ //**console.log(JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario);
+ //**console.log(JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario === "21");
+ //**console.log(JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hospital);
  
- if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hospital) {
+ if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hospital) {
  
- if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario === "20") {
+ if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario === "20") {
  var hostdir = window.location.protocol + "//" + window.location.host;
  //                var path = hostdir + '/' + DEPENDENCIA + '/CCB';
  var path = hostdir + '/' + DEPENDENCIA + '/EstadisticosCCB';
  window.location.replace(path);
  } else {
- if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).traslado_ccb === "1") {
+ if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).traslado_ccb === "1") {
  var hostdir = window.location.protocol + "//" + window.location.host;
  var path = hostdir + '/' + DEPENDENCIA + '/Institucion';
  window.location.replace(path);
@@ -460,15 +460,15 @@ function continuar_institucion_seleccionada() {
  
  }
  
- } else if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio === "46") {
+ } else if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio === "46") {
  var hostdir = window.location.protocol + "//" + window.location.host;
  var path = hostdir + '/' + DEPENDENCIA + '/TestCovidCCB';
  window.location.replace(path);
- }else if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario === "19") {
+ }else if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario === "19") {
  var hostdir = window.location.protocol + "//" + window.location.host;
  var path = hostdir + '/' + DEPENDENCIA + '/CRUM';
  window.location.replace(path);
- }else if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario === "21") {
+ }else if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario === "21") {
  var hostdir = window.location.protocol + "//" + window.location.host;
  var path = hostdir + '/' + DEPENDENCIA + '/SUCRE';
  //**console.log(path);
@@ -513,7 +513,7 @@ function continuar_institucion_seleccionada() {
  "Password": document.getElementById("contra").value
  }),
  success: function (response) {
- setCookie("username_v3.1_" + DEPENDENCIA, JSON.stringify(response), 1000);
+ setCookie("username_v3.2_" + DEPENDENCIA, JSON.stringify(response), 1000);
  
  },
  error: function (err) {

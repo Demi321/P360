@@ -117,14 +117,14 @@ $("#evidencia_seguridad_sanitaria").click(() => {
 //        $("#img_reporte_seguridad").click();
 });
 
-RequestGET("/API/empresas360/info_empresa/" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario).then((response) => {
+RequestGET("/API/empresas360/info_empresa/" + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario).then((response) => {
     console.log(response);
     if (response.tipo_usuario) {
         $("#nombre_empresa").val(response.tipo_usuario);
     }
 });
 var catalogo_lineamientos = null;
-RequestGET("/API/empresas360/info_sucursal/" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio).then((response) => {
+RequestGET("/API/empresas360/info_sucursal/" + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio).then((response) => {
     console.log(response);
     if (response.success) {
         $("#nombre_sucursal").val(response.nombre);
@@ -226,9 +226,9 @@ function guardar_reporte_evento() {
             //validar marcador !=null y getPosition != undefined
 //            lat: marcador.getPosition().lat(),
 //            lng: marcador.getPosition().lng(),
-            tipo_usuario: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            tipo_servicio: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-            id360: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario
+            tipo_usuario: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+            tipo_servicio: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+            id360: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario
         };
         if (marcador !== null && marcador !== undefined) {
             if (marcador.getPosition() !== undefined) {
@@ -332,10 +332,10 @@ function guardar_reporte_seguridad() {
             asunto: $("#asunto_reporte_seguridad").val(),
             categoria: $("#categoria_seguridad").val(),
             descripcion: $("#reporte_reporte_seguridad").val(),
-            institucion: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-            tipo_usuario: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            tipo_servicio: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-            id360: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario
+            institucion: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+            tipo_usuario: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+            tipo_servicio: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+            id360: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario
         };
         if (marcador2 !== null) {
             if (marcador2.getPosition() !== undefined) {
@@ -429,7 +429,7 @@ function guardar_reporte_seguridad() {
 var perfiles_personal = null;
 consulta_listado_profesores();
 function consulta_listado_profesores() {
-    RequestGET("/API/GET/listado_personal/" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario + "/" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio).then(function (response) {
+    RequestGET("/API/GET/listado_personal/" + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario + "/" + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio).then(function (response) {
         perfiles_personal = response;
         listado_docente("Perfil");
         colocar_grupos();
@@ -483,7 +483,7 @@ $("#form_crear_grupo").submit(function (e) {
     if ($("#nombre_grupo").val() !== "") {
         //crear el grupo
         let json = {
-            id_institucion_academica: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
+            id_institucion_academica: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
             nombre: $("#nombre_grupo").val(),
             profesores_asignados: profesores_grupo
         };
@@ -543,7 +543,7 @@ let info_institucion = {};
 var info_grupo = false;
 
 function colocar_grupos() {
-    RequestGET("/API/GET/listado_grupos/" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio).then(function (response) {
+    RequestGET("/API/GET/listado_grupos/" + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio).then(function (response) {
         console.log(response);
         let grupos = response;
         $.each(grupos, function (i) {
@@ -574,7 +574,7 @@ var marker = null;
 var datosInstitucion = {};
 function datos_institucion(nombre) {
     let json = {
-        id: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+        id: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
     };
     RequestPOST("/API/escuela/servicio/info_escuela", json).then(function (response) {
         console.log(response);
@@ -583,7 +583,7 @@ function datos_institucion(nombre) {
 
             perfil_docente("Perfil");
 
-            $("#" + nombre.replace(/\s/g, "") + "_codigo").text(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio + "-" + response.token);
+            $("#" + nombre.replace(/\s/g, "") + "_codigo").text(JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio + "-" + response.token);
             $("#" + nombre.replace(/\s/g, "") + "_nombre").text(response.nombre);
             $("#" + nombre.replace(/\s/g, "") + "_direccion").text(response.direccion);
             $("#" + nombre.replace(/\s/g, "") + "_nombre_director").text(response.nombre_director + " " + response.apellido_paterno_director + " " + response.apellido_materno_director);
@@ -623,7 +623,7 @@ function datos_institucion(nombre) {
 
 function perfil_docente(nombre) {
 
-    let session = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA));
+    let session = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA));
 
     let div_contenedor = document.createElement("div");
     div_contenedor.className = "row col-12 m-0 p-0";
@@ -887,8 +887,8 @@ function agregar_personal_perfil(json) {
 //            json[key] = json[keys[i]];
 //            delete json[keys[i]];
 //        }
-//        json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-//        json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
+//        json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+//        json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
 //        RequestPOST("/API/escuela360/registro_personal", json).then(function (response) {
 //            console.log(response);
 //            Swal.fire({
@@ -963,7 +963,7 @@ const verificaEdicionPermitida = () => {
         if (esAdministrador)
             resolve(true);
         else {
-            RequestGET("/API/empresas360/obtenData/edicion_individual/" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario).then(function (response) {
+            RequestGET("/API/empresas360/obtenData/edicion_individual/" + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario).then(function (response) {
 
                 if (response.edicion_individual.toString() === "1")
                     resolve(true);
@@ -1034,7 +1034,7 @@ const actualizaParametroModel = (dato, value, textConfirm) => {
                     if (respuesta) {
                         let json = new Object();
                         json[dato] = value;
-                        json.id = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
+                        json.id = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
                         resolve(RequestPOST("/API/empresas360/modifica/" + dato, json).then(function (response) {
                             return response.success;
                         }));
@@ -1067,12 +1067,12 @@ $(document).ready(function () {
      * Establecer globalmente si es usuario es un administrador de sucursal
      */
 
-    esAdministrador = (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario.toString() === "0") ? true : false;
+    esAdministrador = (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario.toString() === "0") ? true : false;
 
     /*
      * Carga inicial de la información actual de la bd
      */
-    RequestGET("/API/empresas360/obtenData/" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario).then(function (response) {
+    RequestGET("/API/empresas360/obtenData/" + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario).then(function (response) {
 
         if (response.success) {
 
@@ -1195,7 +1195,7 @@ $(document).ready(function () {
      * Boton para editar la configuración edición individual de la plantilla laboral (módulo para administradores)
      */
     $("#edicion_individual").click(function () {
-        let id = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
+        let id = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
         RequestGET("/API/empresas360/obtenMatricula/" + id).then(function (response) {
             if (response.data.length === 0) {
                 swal.fire({

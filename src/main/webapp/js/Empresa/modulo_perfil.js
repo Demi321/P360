@@ -33,7 +33,7 @@ RequestGET("/API/empresas360/info_area/" + sesion_cookie.tipo_area).then((respon
 
 function mostrar_info_perfil() {
     RequestPOST("/API/cuenta360/empresas360/perfil/empleado", {
-        "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario
+        "id360": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario
     }).then(function (response) {
         if (response.success) {
             perfil = response;

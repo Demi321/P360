@@ -29,7 +29,7 @@ const obtenerTiempoLaboradoPorRango = (horaFinalizada, horaEntradaUser, horasDif
 
 //INFORMACION EMPRESA
 $(document).ready(async function () {
-    let usuarioInfo = await JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA))
+    let usuarioInfo = await JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA))
 
     let empresaUsuarioInfo = await RequestGET("/API/empresas360/info_empresa/" + usuarioInfo.tipo_usuario);
     $("#nombreEmpresa").text(empresaUsuarioInfo.razon_social)
@@ -57,7 +57,7 @@ $(document).ready(async function () {
 
     //AJAX OBTENER REPORTE DE JORNADAS LABORALES DE UNA EMPRESA POR RANGO DE FECHAS 
     let empleadosEnJorandaLaboral = undefined
-    await RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_ids/en_jornada", {id: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario}).then((ids) => {
+    await RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_ids/en_jornada", {id: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario}).then((ids) => {
         empleadosEnJorandaLaboral = ids
     })
     contadorActivos = empleadosEnJorandaLaboral.length
@@ -2624,7 +2624,7 @@ const inicioJornadasLaborales = () => {
     cuerpoTableEmpleadosEnJornada.empty();
 
     let data = new Object();
-    data.id = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
+    data.id = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
 
     RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_ids/en_jornada", data).then((ids) => {
         empleadosEmpresa = ids;
@@ -2775,7 +2775,7 @@ inicioJornadasLaborales();
 
 const cargaEmpleados = () => {
     let data = new Object();
-    data.id = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
+    data.id = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
     RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_ids", data).then((ids) => {
         empleadosEmpresa = ids;
         RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_empleados", ids).then((response) => {
@@ -3005,7 +3005,7 @@ const consulta_historial = (fecha_inicio, fecha_final) => {
 
             case "TODOS":
 
-                data.id = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
+                data.id = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
                 RequestPOST("/API/empresas360/jornadas_laborales/empresa", data).then((response) => {
 
                     if (response.success) {

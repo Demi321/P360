@@ -142,15 +142,15 @@ function EnviarMensajePorSocket(json) {
             console.warn("Llave: " + k[i] + " con valor nulo");
         }
     }
-    if(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area===undefined){
+    if(JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area===undefined){
         
     }
 
-    json.idUsuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys;
-    json.id360 = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys;
-    json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-    json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
-    json.tipo_area = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area;
+    json.idUsuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys;
+    json.id360 = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys;
+    json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+    json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
+    json.tipo_area = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area;
     json.fecha_envio = getFecha();
     json.hora_envio = getHora();
     json.idSocket = idSocketOperador;

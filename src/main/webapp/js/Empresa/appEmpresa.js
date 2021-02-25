@@ -2,7 +2,7 @@
 
 
 data = JSON.parse(document.getElementById("data").value);
-//var sesion_cookie=JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA))
+//var sesion_cookie=JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA))
 if (!data.RegistroLlamada.time) {
     data.RegistroLlamada.time = {};
 }
@@ -17,10 +17,10 @@ var proyecto = DatosProyecto();
 //});
 
 RequestPOST("/API/empresas360/GruposPersonalizados", {
-    "idUsuarioSys": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
-    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-    "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-    "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
+    "idUsuarioSys": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
+    "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+    "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+    "tipo_area": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area
 }).then((response) => {
     dataG = response;
 //    initializeSession();
@@ -720,7 +720,7 @@ function RegistrarDesconexionOp() {
         "method": "POST",
         "data": JSON.stringify({
             "idLlamada": data.RegistroLlamada.idLlamada,
-            "idSys": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+            "idSys": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
             "hora_desconexion": getHora(),
             "chat": JSON.stringify(chat)
         }),
@@ -1499,9 +1499,9 @@ function ConsultarDirectorio() {
         data: JSON.stringify({
             "fecha": getFecha(),
             "hora": getHora(),
-            "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-            "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
+            "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+            "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+            "tipo_area": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area
         }),
         success: function (response) {
             console.info(response);
@@ -1590,10 +1590,10 @@ $("#btn-reporte").click(function () {
             "hora": getHora(),
             "fecha": getFecha(),
             "participantes":Object.keys(JSON.parse($("#data").val()).RegistroLlamada.participantes),
-            "id360":JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario,
-            "tipo_usuario":JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            "tipo_servicio":JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-            "tipo_area":JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
+            "id360":JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario,
+            "tipo_usuario":JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+            "tipo_servicio":JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+            "tipo_area":JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area
         };
         if (id_minuta !== null) {
             json.id_minuta = id_minuta;
@@ -1708,9 +1708,9 @@ $("#btn-reporte").click(function () {
 });*/
 
 function guardarReporteLlamadaSaliente(json) {
-    if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("tipo_usuario") && JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("tipo_servicio")) {
-        json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-        json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
+    if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("tipo_usuario") && JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("tipo_servicio")) {
+        json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+        json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
     }
     return Promise.resolve($.ajax({
         type: 'POST',

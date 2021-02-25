@@ -271,12 +271,12 @@ function InsertarCard(data/*idUsr, modoLlamada, IDapikey, IDsesion, IDtoken, IDL
         var tipo_usuario = document.createElement("input");
         tipo_usuario.type = "hidden";
         tipo_usuario.id = "tipo_usuario" + idLlamada;
-        tipo_usuario.value = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
+        tipo_usuario.value = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
         tipo_usuario.name = "tipo_usuario";
         var tipo_servicio = document.createElement("input");
         tipo_servicio.type = "hidden";
         tipo_servicio.id = "tipo_servicio" + idLlamada;
-        tipo_servicio.value = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
+        tipo_servicio.value = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
         tipo_servicio.name = "tipo_servicio";
 
         var divsub = document.createElement("div");
@@ -542,7 +542,7 @@ function vueModelIncidentes() {
 function dataG_LITE() {
 
     var json = {
-        "idUsuarioSys": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys
+        "idUsuarioSys": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys
     };
     var settings = {
         "async": true,
@@ -565,10 +565,10 @@ function dataG_LITE() {
 function dataG_FULL() {
 
     var json = {
-        "idUsuarioSys": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys
+        "idUsuarioSys": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys
     };
-    var tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-    var tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
+    var tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+    var tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
     var settings = {
         "async": true,
         "crossDomain": true,
@@ -1052,8 +1052,8 @@ function enviarMensaje(session, from, mensaje) {
         "value": from + ": " + mensaje,
         "fecha": getFecha(),
         "hora": getHora(),
-        "idUsuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
-        "username": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre,
+        "idUsuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
+        "username": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre,
         "tipo": "texto"
     };
     session.signal({
@@ -1073,8 +1073,8 @@ function enviarMensajeOT(session, type, json) {
 //        "value": from+": "+mensaje,
 //        "fecha": getFecha(),
 //        "hora": getHora(),
-//        "idUsuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
-//        "username": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre,
+//        "idUsuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
+//        "username": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre,
 //        "tipo": "texto"
 //    };
 //    
@@ -1773,14 +1773,14 @@ function ContentInfoWindowHistoricoRuta(data, fecha) {
 }
 function RegistroNotificaciones(idUsers, idLlamada) {
     var json = {};
-    if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("tipo_usuario") && JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("tipo_servicio")) {
+    if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("tipo_usuario") && JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("tipo_servicio")) {
         json = {
             "idUsuarios_Movil": idUsers,
             "idLlamada": idLlamada,
             "fecha": getFecha(),
             "hora": getHora(),
-            "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+            "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+            "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
         };
     } else {
         json = {
@@ -4827,7 +4827,7 @@ function FireBaseKey(Elemento, TipoDeSolicitud, apikey, idsesion, token, Depende
                                     var idSys = document.createElement("input");
                                     idSys.type = "hidden";
                                     idSys.id = "idSys";
-                                    idSys.value = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys;
+                                    idSys.value = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys;
                                     idSys.name = "idSys";
 
                                     var origen = document.createElement("input");
@@ -4845,13 +4845,13 @@ function FireBaseKey(Elemento, TipoDeSolicitud, apikey, idsesion, token, Depende
                                     var tipo_usuario = document.createElement("input");
                                     tipo_usuario.type = "hidden";
                                     tipo_usuario.id = "tipo_usuario";
-                                    tipo_usuario.value = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
+                                    tipo_usuario.value = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
                                     tipo_usuario.name = "tipo_usuario";
 
                                     var tipo_servicio = document.createElement("input");
                                     tipo_servicio.type = "hidden";
                                     tipo_servicio.id = "tipo_servicio";
-                                    tipo_servicio.value = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
+                                    tipo_servicio.value = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
                                     tipo_servicio.name = "tipo_servicio";
 
 
@@ -5358,14 +5358,14 @@ function GenerarTicket(tipo) {
 
 function InsertaNotificacion(idLlamada, idUsuario, fecha, hora) {
     var json = {};
-    if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("tipo_usuario") && JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("tipo_servicio")) {
+    if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("tipo_usuario") && JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("tipo_servicio")) {
         json = {
             "idLlamada": idLlamada,
             "idUsuario": idUsuario,
             "fecha": fecha,
             "hora": hora,
-            "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+            "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+            "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
         };
     } else {
         json = {
@@ -6264,13 +6264,13 @@ function buildJSON_Section(id) {
 
 function acceso_externo(url) {
     RequestPOST("/API/cuenta360/access_token", {
-        "token": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).token,
-        "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
-        "id_sesion": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_sesion
+        "token": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).token,
+        "id360": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
+        "id_sesion": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_sesion
     }).then(function (response) {
         if (response.success) {
             //access_token
-            let path = url + "API/cuenta360/access_token/" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys + "/" + response.access_token;
+            let path = url + "API/cuenta360/access_token/" + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys + "/" + response.access_token;
             window.location.replace(path);
 //            window.open(path);
         }
@@ -6279,14 +6279,14 @@ function acceso_externo(url) {
 }
 function acceso_externo_ruta(url, ruta) {
     RequestPOST("/API/cuenta360/access_token", {
-        "token": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).token,
-        "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
-        "id_sesion": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_sesion
+        "token": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).token,
+        "id360": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
+        "id_sesion": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_sesion
     }).then(function (response) {
         if (response.success) {
             //access_token
             ruta = ruta.replace(/\//g, "*");
-            let path = url + "API/cuenta360/access_token/" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys + "/" + response.access_token + "/" + ruta;
+            let path = url + "API/cuenta360/access_token/" + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys + "/" + response.access_token + "/" + ruta;
             window.location.replace(path);
 //            window.open(path);
         }
@@ -6707,9 +6707,9 @@ function demo(json){
 
 function acceso_externo_seccion(url, seccion) {
     RequestPOST("/API/cuenta360/access_token", {
-        "token": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).token,
-        "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
-        "id_sesion": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_sesion
+        "token": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).token,
+        "id360": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
+        "id_sesion": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_sesion
     }).then(function (response) {
         if (response.success) {
             //access_token

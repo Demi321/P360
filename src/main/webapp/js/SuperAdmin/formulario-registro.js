@@ -1,8 +1,8 @@
 /* global Promise, DEPENDENCIA */
 var servicios;
 
-//var tipo_usuario = getCookie("username_v3.1_" + DEPENDENCIA) === "" ? "0" : JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-//var tipo_servicio = getCookie("username_v3.1_" + DEPENDENCIA) === "" ? "0" : JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
+//var tipo_usuario = getCookie("username_v3.2_" + DEPENDENCIA) === "" ? "0" : JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+//var tipo_servicio = getCookie("username_v3.2_" + DEPENDENCIA) === "" ? "0" : JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
 var tipo_usuario = 0;
 var tipo_servicio = 0;
 traeServicios(tipo_usuario, tipo_servicio).then(function (response) {
@@ -152,7 +152,7 @@ traeServicios(tipo_usuario, tipo_servicio).then(function (response) {
                 }
 //                DatosRegistro.Confirma = document.getElementById("confirma").checked;
                 DatosRegistro.Confirma = "false";
-                //DatosRegistro.RegistradoPor = getCookie("username_v3.1_" + DEPENDENCIA)==="" ? "NULL" : JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys;
+                //DatosRegistro.RegistradoPor = getCookie("username_v3.2_" + DEPENDENCIA)==="" ? "NULL" : JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys;
                 DatosRegistro.RegistradoPor = "NULL";
                 DatosRegistro.tipo_usuario = $("#tipoUser").val();
                 DatosRegistro.tipo_servicio = $("#tipoServ").val();
