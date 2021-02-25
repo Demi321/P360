@@ -288,6 +288,9 @@ function fileReader_registro_sucursales(oEvent) {
     }
 }
 function mostrar_resultados_registro_sucursales(json) {
+    //ocultar formulario 
+    $("#form_RegistrarSucursal").addClass("d-none");
+
     $("#registros_file_RegistrarSucursal").empty();
     $("#registros_file_RegistrarSucursal").css({
         "position": "absolute",
@@ -403,14 +406,20 @@ function mostrar_resultados_registro_sucursales(json) {
         $("#registros_file_RegistrarSucursal").removeAttr("style");
         $("#cont_subir_documento_RegistrarSucursal").removeClass("h-100");
         $("#sucursales").val("");
+        //mostrar formulario 
+        $("#form_RegistrarSucursal").removeClass("d-none");
     });
     registrar.addEventListener("click", function () {
         //colocar loader
         console.log("colocar lottie de carga de pagina");
+
+        var lottieLoader_cont = document.createElement("div");
+        lottieLoader_cont.className = "registro_sucursal_masiva";
         var lottieLoader_reg_sucursal = document.createElement("div");
         lottieLoader_reg_sucursal.style = "width: 100px;height: 100px;";
         lottieLoader_reg_sucursal.id = "lottie_reg_sucursal";
-        document.getElementById("registros_file_RegistrarSucursal").appendChild(lottieLoader_reg_sucursal);
+        lottieLoader_cont.appendChild(lottieLoader_reg_sucursal);
+        document.getElementById("registros_file_RegistrarSucursal").appendChild(lottieLoader_cont);
 
         var lottieAnimation_reg_sucursal = bodymovin.loadAnimation({
             container: lottieLoader_reg_sucursal, // ID del div
