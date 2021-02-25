@@ -1052,7 +1052,11 @@ const botonObtenerJornadasReporteEmpleado = async (id360Estatico, jornadas_labor
              }*/
             if (horaEntradaUser >= horarioEntradaUser) {
                 elemento.horaEntrada = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-warning">' + horaEntradaUser.format('HH:mm:ss A') + '</span>'
-                elemento.observaciones = '<i class="text-danger fas fa-clock"></i>'
+                if (horasDiferencia > 8) {
+                    elemento.observaciones = '<i class="text-danger fas fa-clock"></i> + ' + (horasDiferencia - 8)
+                } else {
+                    elemento.observaciones = '<i class="text-danger fas fa-clock"></i>'
+                }
                 retardoHistorialLaboral++
             } else {
                 elemento.horaEntrada = '<span style="padding: 5px 10px; font-size: 1.1rem;" class="badge badge-pill badge-success">' + horaEntradaUser.format('HH:mm:ss A') + '</span>'
@@ -2280,7 +2284,7 @@ const verReporteDetallado = async empleado => {
             numeroRetardos = retardos3.length
             diasLaboraloMesEmpleado = jornadasLaboralesMesEmpleado.data.length
         }
-        
+
         const crearGraficaPuntualidad = () => {
             let diasLaboraloMesEmpleado = 0
             let porcentajePuntualidad = 0
