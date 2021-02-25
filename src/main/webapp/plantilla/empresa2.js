@@ -126,47 +126,52 @@ $(window).on("load", function () {
 
 //Solucion a la parte responsiva
     showToggle();//
+//validar que sea un usuario administrador 
+//
+    if (sesion_cookie.tipo_servicio === "0" || sesion_cookie.tipo_area === "0") {
 
-    //revisar si aun no se ha registrado una empresa
-    if (!Object.keys(empresa_usuario).length) {
-        swal.fire({
-            title: "Bienvenido a tu plataforma empresarial",
-            text: "Comienza registrado tu empresa.",
-            confirmButtonText: "Ir",
-            allowOutsideClick: false
-        });
-    } else
-    //revisar si aun bno se han cargado sucursales 
-    if (!sucursales_usuario.length) {
-        console.log("redirigir a colaboradores")
-        swal.fire({
-            title: "Bienvenido a tu plataforma empresarial",
-            text: "Comienza registrado una sucursal.",
-            confirmButtonText: "Ir",
-            allowOutsideClick: false
-        }).then((result) => {
-            console.log(result)
-            if (!$("#collapseConfiguración").hasClass("show")) {
-                $("#headingConfiguración a").click();
-            }
-            $("#menu_section_RegistrarSucursal").click();
-        });
-    } else
-    // revisar si aun no se han registrado usuarios nuevos     
-    if (!directorio_usuario.length) {
-        console.log("redirigir a colaboradores")
-        swal.fire({
-            title: "Bienvenido a tu plataforma empresarial",
-            text: "Muy bien, ya cuentas con: " + sucursales_usuario.length + " " + (sucursales_usuario.length === 1 ? " sucursal registrada" : " sucursales registradas") + ". ¡Ahora continua invitando a tus colaboradores!...",
-            confirmButtonText: "Ir",
-            allowOutsideClick: false
-        }).then((result) => {
-            console.log(result)
-            if (!$("#collapseRecursosHumanos").hasClass("show")) {
-                $("#headingRecursosHumanos a").click();
-            }
-            $("#menu_section_PlantillaLaboral").click();
-        });
+
+        //revisar si aun no se ha registrado una empresa
+        if (!Object.keys(empresa_usuario).length) {
+            swal.fire({
+                title: "Bienvenido a tu plataforma empresarial",
+                text: "Comienza registrado tu empresa.",
+                confirmButtonText: "Ir",
+                allowOutsideClick: false
+            });
+        } else
+        //revisar si aun bno se han cargado sucursales 
+        if (!sucursales_usuario.length) {
+            console.log("redirigir a colaboradores")
+            swal.fire({
+                title: "Bienvenido a tu plataforma empresarial",
+                text: "Comienza registrado una sucursal.",
+                confirmButtonText: "Ir",
+                allowOutsideClick: false
+            }).then((result) => {
+                console.log(result)
+                if (!$("#collapseConfiguración").hasClass("show")) {
+                    $("#headingConfiguración a").click();
+                }
+                $("#menu_section_RegistrarSucursal").click();
+            });
+        } else
+        // revisar si aun no se han registrado usuarios nuevos     
+        if (!directorio_usuario.length) {
+            console.log("redirigir a colaboradores")
+            swal.fire({
+                title: "Bienvenido a tu plataforma empresarial",
+                text: "Muy bien, ya cuentas con: " + sucursales_usuario.length + " " + (sucursales_usuario.length === 1 ? " sucursal registrada" : " sucursales registradas") + ". ¡Ahora continua invitando a tus colaboradores!...",
+                confirmButtonText: "Ir",
+                allowOutsideClick: false
+            }).then((result) => {
+                console.log(result)
+                if (!$("#collapseRecursosHumanos").hasClass("show")) {
+                    $("#headingRecursosHumanos a").click();
+                }
+                $("#menu_section_PlantillaLaboral").click();
+            });
+        }
     }
 });
 

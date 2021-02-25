@@ -436,7 +436,7 @@ function fileReader(oEvent) {
                         });
                         json.alias = alias;
                         json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-                        json.tipo_servicio = info_hoja[j].numerodesucursal;
+                        json.tipo_servicio = json.numerodesucursal;
                         json.id360 = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario;
                         info_completa_hoja.push(json);
                     });
