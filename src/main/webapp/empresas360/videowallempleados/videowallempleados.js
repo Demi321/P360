@@ -33,10 +33,10 @@ $("div[id^='menu_section_']").click((e) => {
 
 // obtener Backup de los videos de empleados 
 RequestPOST("/API/empresas360/modulo_videowall/stats", {
-    "idUsuarioSys": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
-    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-    "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-    "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
+    "idUsuarioSys": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
+    "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+    "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+    "tipo_area": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area
 }).then((stats) => {
     //*console.log(stats);
     videowall_listado = stats;
@@ -52,10 +52,10 @@ RequestPOST("/API/empresas360/modulo_videowall/stats", {
         }
     }
     RequestPOST("/API/empresas360/video_empleados", {
-        "idUsuarioSys": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
-        "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-        "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-        "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
+        "idUsuarioSys": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
+        "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+        "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+        "tipo_area": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area
     }).then((response) => {
         $(".videowallempleados .user_datails p svg").click(() => {
             $(".videowallempleados .user_datails").addClass("d-none");

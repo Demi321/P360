@@ -18,7 +18,7 @@ $("#ActualizacionEstado").submit(function (e) {
         "estado": $("#estado_nuevo").val(),
         "diagnostico": $("#diagnostico_nuevo").val(),
         //"personal": $("#nombre_doctor").val()
-        "personal": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre
+        "personal": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre
     };
     actualizacion_estadoCCB(json).then(function (response) {
         const Toast = Swal.mixin({
@@ -96,7 +96,7 @@ $("#llamar_familiar").click(function () {
                                     console.log(res);
                                     res.idUsuarios = familiares;
                                     res.folio = $("#id").val();
-                                    res.personal = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre;
+                                    res.personal = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre;
                                     $("#modal_aviso").text("Conectando");
                                     initializeSession(res);
                                 });
@@ -358,7 +358,7 @@ function initializeSession(Credenciales) {
             // Send a signal once the user enters data in the form
             form.addEventListener('submit', function submit(event) {
                 event.preventDefault();
-                enviarMensaje(session, JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre, msgTxt.value);
+                enviarMensaje(session, JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre, msgTxt.value);
 
             });
             // Initialize the publisher
@@ -366,7 +366,7 @@ function initializeSession(Credenciales) {
                 insertMode: 'replace',
                 width: '100%',
                 height: '100%',
-                name: "" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre,
+                name: "" + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre,
                 publishVideo: false
             };
             var pos = NuevaUbicacionPublicador();
@@ -398,7 +398,7 @@ function initializeSession(Credenciales) {
                     colgar.value = "";
                     colgar.addEventListener("click", function () {
 
-                        //enviarMensaje(session, JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre, "Ha dejado la llamada.");
+                        //enviarMensaje(session, JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre, "Ha dejado la llamada.");
 
                         session.unpublish(publisher);
                         $(".side1Chat").addClass("d-none");

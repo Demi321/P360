@@ -79,11 +79,11 @@ if ($("#logofooter").length) {
 
 try {
 
-//    if (!JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hospital) {
+//    if (!JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hospital) {
 //        //remover menu de reporte hospital
 //        $("#menuReporteHospital").remove();
 //
-//        if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).usuario !== "SuperAdmin") {
+//        if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).usuario !== "SuperAdmin") {
 //            $("#menuReporteHospital").remove();
 ////            $("#menuCRUM").remove();
 ////            $("#menuSUCRE").remove();
@@ -94,7 +94,7 @@ try {
 //        }
 //    } else {
 //
-//        if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario === "20") {
+//        if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario === "20") {
 //            //$("#menuReporteHospital").remove();
 //            $("#menuCRUM").remove();
 //            $("#menuSUCRE").remove();
@@ -111,21 +111,21 @@ try {
 //            $("#menuvinculacion_pacientes").remove();
 //            //$("#menuSolicitudTraslado").remove();
 //            //$("#menuInstitucion").remove();
-//            if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).traslado_ccb !== "1") {
+//            if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).traslado_ccb !== "1") {
 //                $("#menuSolicitudTraslado").remove();
 //                $("#menuInstitucion").remove();
 //            }
 //        }
 //
 //    }
-//    if (!JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).covid) {
+//    if (!JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).covid) {
 //        //remover menu de reporte hospital
-//        if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).usuario !== "SuperAdmin") {
+//        if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).usuario !== "SuperAdmin") {
 //            $("#menutestcovid").remove();
 //        }
 //    }
 //
-//    if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario === "19") {
+//    if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario === "19") {
 //        //remover menu de reporte hospital
 //
 //
@@ -138,7 +138,7 @@ try {
 //        $("#menuvinculacion_familiar").remove();
 //        $("#menuvinculacion_pacientes").remove();
 //    }
-//    if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario === "21") {
+//    if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario === "21") {
 //        //remover menu de reporte hospital
 //
 //
@@ -154,20 +154,20 @@ try {
 
 
 
-//    if(!JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hospital){
+//    if(!JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hospital){
 //        //remover menu de reporte hospital
-//        if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).usuario !== "SuperAdmin") {
+//        if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).usuario !== "SuperAdmin") {
 //            $("#menuRegistroPaciente").remove();
 //        }
 //    }
 
     if ($("#T2Header").length) {
-        $("#T2Header").text(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion);
+        $("#T2Header").text(JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion);
     }
-    $("header").addClass(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).segmento);
+    $("header").addClass(JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).segmento);
 
     var modulos = $('[id^=modulo]'); 
-    let modulos_cargados = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).modulos.split(",");
+    let modulos_cargados = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).modulos.split(",");
     for (i = 0; i < modulos_cargados.length; i++) {
         modulos_cargados[i] = parseInt(modulos_cargados[i]);
     }
@@ -203,7 +203,7 @@ try {
      </li>
      */
 
-    let modulos_externos = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).modulos_externos;
+    let modulos_externos = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).modulos_externos;
     for (var i = 0; i < modulos_externos.length; i++) {
         let modulo_externo = modulos_externos[i];
         agregar_enlace(modulo_externo[0], modulo_externo[1], modulo_externo[2]);

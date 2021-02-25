@@ -190,7 +190,7 @@ function actualizaReporteElemento(id) {
             json.idUsuario = json.idUsuario_Movil;
             delete json.idUsuario_Movil;
             json.razonamiento = document.getElementById("razonamiento").value;
-            json.idUsuario_Sys = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys;
+            json.idUsuario_Sys = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys;
             json.fecha_revision = getFecha();
             json.hora_revision = getHora();
             return false;

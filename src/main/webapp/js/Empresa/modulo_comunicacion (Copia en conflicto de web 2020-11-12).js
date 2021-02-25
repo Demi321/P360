@@ -22,7 +22,7 @@ if (perfil !== "" && perfil !== null && perfil !== undefined) {
     });
 } else {
     RequestPOST("/API/cuenta360/empresas360/perfil/empleado", {
-        "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario
+        "id360": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_usuario
     }).then(function (response) {
         if (response.success) {
             perfil = response;
@@ -41,9 +41,9 @@ if (perfil !== "" && perfil !== null && perfil !== undefined) {
 RequestPOST("/API/ConsultarDirectorio", {
     "fecha": getFecha(),
     "hora": getHora(),
-    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-    "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-//    "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area,
+    "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+    "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+//    "tipo_area": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area,
     "tipo_area": "0"
 }).then((response) => {
     console.log(response);

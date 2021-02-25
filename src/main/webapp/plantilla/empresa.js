@@ -297,9 +297,9 @@ function notificacion_llamada(mensaje) {
             //revisar si credenciales trae roomname 
             if (mensaje.credenciales.roomName) {
                 RequestPOST("/API/cuenta360/access_token", {
-                    "token": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).token,
-                    "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
-                    "id_sesion": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_sesion
+                    "token": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).token,
+                    "id360": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
+                    "id_sesion": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_sesion
                 }).then(function (response) {
                     if (response.success) {
                         //access_token
@@ -351,9 +351,9 @@ function prueba_notificacion(mensaje) {
             reproduccionSonidoNotificacion.pause();
             if (mensaje.credenciales.roomName) {
                 RequestPOST("/API/cuenta360/access_token", {
-                    "token": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).token,
-                    "id360": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
-                    "id_sesion": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_sesion
+                    "token": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).token,
+                    "id360": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
+                    "id_sesion": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).id_sesion
                 }).then(function (response) {
                     if (response.success) {
                         //access_token

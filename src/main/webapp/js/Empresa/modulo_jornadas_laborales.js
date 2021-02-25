@@ -80,7 +80,7 @@ const inicioJornadasLaborales = () => {
     cuerpoTableEmpleadosEnJornada.empty();
   
     let data = new Object();
-    data.id = JSON.parse(getCookie("username_v3.1_"+DEPENDENCIA)).tipo_usuario;
+    data.id = JSON.parse(getCookie("username_v3.2_"+DEPENDENCIA)).tipo_usuario;
     
     RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_ids/en_jornada",data).then( (ids) => {
         empleadosEmpresa = ids;
@@ -225,7 +225,7 @@ inicioJornadasLaborales();
 
 const cargaEmpleados = () => {
     let data = new Object();
-    data.id = JSON.parse(getCookie("username_v3.1_"+DEPENDENCIA)).tipo_usuario;
+    data.id = JSON.parse(getCookie("username_v3.2_"+DEPENDENCIA)).tipo_usuario;
     RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_ids",data).then( (ids) => {
         empleadosEmpresa = ids;
         RequestPOST("/API/empresas360/jornadas_laborales/empresa/obtener_empleados", ids).then( (response) => {
@@ -452,7 +452,7 @@ const consulta_historial = (fecha_inicio, fecha_final) => {
 
             case "TODOS":
 
-                data.id = JSON.parse(getCookie("username_v3.1_"+DEPENDENCIA)).tipo_usuario;
+                data.id = JSON.parse(getCookie("username_v3.2_"+DEPENDENCIA)).tipo_usuario;
                 RequestPOST("/API/empresas360/jornadas_laborales/empresa",data).then((response) => {
 
                     if( response.success ){

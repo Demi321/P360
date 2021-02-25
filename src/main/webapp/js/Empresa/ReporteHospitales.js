@@ -8,7 +8,7 @@
 
 function getUltimoReporte() {
     var json = {
-        "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+        "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
     };
     return Promise.resolve($.ajax({
         type: 'POST',
@@ -131,8 +131,8 @@ function llenarValores(reporte) {
 }
 function guardarReporteHospital() {
     var json = {
-        "id_Operador": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
-        "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
+        "id_Operador": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
+        "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
         "fecha": getFecha(),
         "hora": getHora(),
         "pacientes_totales": $("#pacientes_totales").val(),

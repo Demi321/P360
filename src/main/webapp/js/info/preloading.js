@@ -87,7 +87,7 @@ function verificar_ip_local(ip) {
             var d = new Date();
             d.setTime(d.getTime() - (1 * 24 * 60 * 60 * 1000));
             var expires = "expires=" + d.toGMTString();
-            document.cookie = "username_v3.1_" + DEPENDENCIA + "=" + "value" + ";" + expires + ";path=/";
+            document.cookie = "username_v3.2_" + DEPENDENCIA + "=" + "value" + ";" + expires + ";path=/";
             //window.location.reload();
 
         }

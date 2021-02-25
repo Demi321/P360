@@ -32,9 +32,9 @@ function ConsultarDirectorio() {
         data: JSON.stringify({
             "fecha": getFecha(),
             "hora": getHora(),
-            "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            "tipo_servicio":JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-            "tipo_area":JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
+            "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+            "tipo_servicio":JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+            "tipo_area":JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area
         }),
         success: function (response) {
             //console.info(response);

@@ -25,7 +25,7 @@ $("#ingresados").click(function () {
     $("#sidebar .IngresadoenUTC-19").removeClass("d-none");
 });
 $(document).ready(function () {
-    $("#titulo").text(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion);
+    $("#titulo").text(JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion);
 });
 //activar_listener_socket();
 activar_calendario();
@@ -64,8 +64,8 @@ function activar_calendario() {
                 var ms = {
                     "fecha_calendario": fecha_calendario,
                     "referencia_hospitalaria_solicitudes_pendientes": true,
-                    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-                    "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+                    "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+                    "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
                 };
                 EnviarMensajePorSocket(ms);
 
@@ -75,8 +75,8 @@ function activar_calendario() {
 //                var ms = {
 //                    "fecha_calendario": fecha_calendario,
 //                    "referencia_hospitalaria_solicitudes_fecha": true,
-//                    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-//                    "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+//                    "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+//                    "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
 //                };
 //                EnviarMensajePorSocket(ms);
 //
@@ -85,8 +85,8 @@ function activar_calendario() {
 //                var ms = {
 //                    "fecha_calendario": fecha_calendario,
 //                    "referencia_hospitalaria_solicitudes_fecha": true,
-//                    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-//                    "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+//                    "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+//                    "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
 //                };
 //                EnviarMensajePorSocket(ms);
 //            }
@@ -117,14 +117,14 @@ function activar_listener_socket(fecha_calendario) {
                 var ms = {
                     "fecha_calendario": fecha_calendario,
                     "referencia_hospitalaria_solicitudes_pendientes": true,
-                    "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-                    "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+                    "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+                    "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
                 };
                 EnviarMensajePorSocket(ms);
             }
             if (mensaje.solicitudes_referencia_hospitalaria) {
                 //Agregar a la bandeja de solicitudes
-//                if (mensaje.to_tipo_servicio === JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio && mensaje.to_tipo_usuario === JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario) {
+//                if (mensaje.to_tipo_servicio === JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio && mensaje.to_tipo_usuario === JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario) {
 //                    console.log("entrada");
 //                    agregar_bandeja_entrada(mensaje)
 //                }
@@ -134,7 +134,7 @@ function activar_listener_socket(fecha_calendario) {
                         agregar_bandeja_entrada(mensaje);
                     }
                 }
-                if (mensaje.tipo_servicio === JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio && mensaje.tipo_usuario === JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario) {
+                if (mensaje.tipo_servicio === JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio && mensaje.tipo_usuario === JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario) {
                     console.log("saliente");
                     if (!$("#" + mensaje.id).length) {
                         agregar_bandeja_salida(mensaje);
@@ -161,14 +161,14 @@ function activar_listener_socket(fecha_calendario) {
         var ms = {
             "fecha_calendario": fecha_calendario,
             "referencia_hospitalaria_solicitudes_pendientes": true,
-            "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+            "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+            "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
         };
         EnviarMensajePorSocket(ms);
     }
 }
 
-RequestGET("/API/referencias_hospitalarias/pacientes/"+JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario+"/"+JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio).then(function (directorio) {
+RequestGET("/API/referencias_hospitalarias/pacientes/"+JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario+"/"+JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio).then(function (directorio) {
     console.log(directorio);
     var paciente;
     vue = new Vue({
@@ -198,8 +198,8 @@ RequestGET("/API/referencias_hospitalarias/pacientes/"+JSON.parse(getCookie("use
                     var ms = {
                         "folio": op.id,
                         "rreferencia_hospitalaria_solicitudes_id": true,
-                        "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-                        "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+                        "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+                        "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
                     };
                     EnviarMensajePorSocket(ms);
                 }
@@ -216,7 +216,7 @@ RequestGET("/API/referencias_hospitalarias/pacientes/"+JSON.parse(getCookie("use
 var json = {
     "fecha": getFecha(),
     "hora": getHora(),
-    "institucion_refiere": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion,
+    "institucion_refiere": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion,
     "telefono_contacto_institucion": "55797461328",
     "nombre": "Rodrigo Juarez Castro",
     "apellidop_paciente": "Juarez",
@@ -943,8 +943,8 @@ function agregar_bandeja_entrada(json) {
                         json.to_tipo_usuario_traslado = result.value[3].toString().split("-")[0];
                         json.to_tipo_servicio_traslado = result.value[3].toString().split("-")[1];
                         json.responsable_institucion = result.value[4] !== null ? result.value[4] : "0";
-                        json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-                        json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
+                        json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+                        json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
                         RequestPOST("/API/referencias_hospitalarias/aceptar_solicitud", json).then((response) => {
                             console.log(response);
                             json = response;
@@ -964,7 +964,7 @@ function agregar_bandeja_entrada(json) {
                     }
                 }
             });
-            RequestGET("/API/referencia_hospitalaria/directorio_traslado/" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio).then((response) => {
+            RequestGET("/API/referencia_hospitalaria/directorio_traslado/" + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio).then((response) => {
 
                 console.log(response);
                 for (let i = 0; i < response.length; i++) {
@@ -978,7 +978,7 @@ function agregar_bandeja_entrada(json) {
                     $("#institucion_traslado").append(option);
                 }
             });
-            RequestGET("/API/referencias_hospitalarias/personal_traslado/" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario + "/" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio).then((personal) => {
+            RequestGET("/API/referencias_hospitalarias/personal_traslado/" + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario + "/" + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio).then((personal) => {
 
                 $.each(personal, (i) => {
                     let persona = personal[i];
@@ -992,12 +992,12 @@ function agregar_bandeja_entrada(json) {
         rechazar.addEventListener("click", function () {
             let info = {
                 id_solicitud: json.id_referencia_hospitalaria,
-                tipo_usuario: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-                tipo_servicio: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+                tipo_usuario: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+                tipo_servicio: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
             };
             json.id_solicitud = json.id_referencia_hospitalaria;
-            json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-            json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
+            json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+            json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
 
             RequestPOST("/API/referencias_hospitalarias/rechazar_solicitud", json).then((response) => {
                 console.log(response);
@@ -1025,8 +1025,8 @@ function agregar_bandeja_entrada(json) {
 
 
         if (json.estado === "2" &&
-                json.to_tipo_usuario_traslado === JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario &&
-                json.to_tipo_servicio_traslado === JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio) { //solicitud aceptada
+                json.to_tipo_usuario_traslado === JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario &&
+                json.to_tipo_servicio_traslado === JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio) { //solicitud aceptada
             $("#botones").empty();
             var btnrecepcion = document.createElement("input");
             btnrecepcion.id = "btnrecepcion";
@@ -1035,8 +1035,8 @@ function agregar_bandeja_entrada(json) {
             btnrecepcion.value = "Aceptar Traslado";
             btnrecepcion.addEventListener("click", function () {
                 var tel_a_agregar = new Array();
-                let tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-                let tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
+                let tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+                let tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
                 Swal.fire({
                     title: 'Asignar Personal',
                     html: '<label class="sweetalrt" style="padding: 5px; color: #ff8200; font: 12px arial; margin-top: 25px; margin-bottom: 10px; margin-left: auto;  margin-right: auto; width: 80%;">Asignar personal de ambulancia.</label>' +
@@ -1061,14 +1061,14 @@ function agregar_bandeja_entrada(json) {
 //                            if (tel_a_agregar.length > 0) {
                         let info = {
                             id_solicitud: json.id_referencia_hospitalaria,
-                            tipo_usuario: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-                            tipo_servicio: JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
+                            tipo_usuario: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+                            tipo_servicio: JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
                             responsable_traslado: $("#personal_ambulancia").val() !== null ? $("#personal_ambulancia").val() : "0",
                             ambulancia: result.value[0]
                         };
                         json.id_solicitud = json.id_referencia_hospitalaria;
-                        json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-                        json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
+                        json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+                        json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
                         json.responsable_traslado = $("#personal_ambulancia").val() !== null ? $("#personal_ambulancia").val() : "0";
                         json.ambulancia = result.value[0];
                         RequestPOST("/API/referencias_hospitalarias/aceptar_traslado", json).then((response) => {
@@ -1127,8 +1127,8 @@ function agregar_bandeja_entrada(json) {
             $("#botones").append(btnrecepcion);
 //            $("#botones").append(btnCancelada);
         } else if (json.estado === "5" &&
-                json.to_tipo_usuario_traslado === JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario &&
-                json.to_tipo_servicio_traslado === JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio) { //traslado aceptado
+                json.to_tipo_usuario_traslado === JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario &&
+                json.to_tipo_servicio_traslado === JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio) { //traslado aceptado
             $("#botones").empty();
             var btnrecepcion = document.createElement("input");
             btnrecepcion.id = "btnrecepcion";
@@ -1188,8 +1188,8 @@ function agregar_bandeja_entrada(json) {
             $("#botones").append(btnrecepcion);
 //            $("#botones").append(btnCancelada);
         } else if (json.estado === "6" &&
-                json.tipo_usuario_institucion === JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario &&
-                json.tipo_servicio_institucion === JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio) { //traslado en curso
+                json.tipo_usuario_institucion === JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario &&
+                json.tipo_servicio_institucion === JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio) { //traslado en curso
             $("#botones").empty();
             var btnrecepcion = document.createElement("input");
             btnrecepcion.id = "btnrecepcion";
@@ -1249,8 +1249,8 @@ function agregar_bandeja_entrada(json) {
             $("#botones").append(btnrecepcion);
 //            $("#botones").append(btnCancelada);
         } else if (json.estado === "7" &&
-                json.tipo_usuario_institucion === JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario &&
-                json.tipo_servicio_institucion === JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio) { //paciente ingresado
+                json.tipo_usuario_institucion === JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario &&
+                json.tipo_servicio_institucion === JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio) { //paciente ingresado
             $("#botones").empty();
             var btnrecepcion = document.createElement("input");
             btnrecepcion.id = "btnrecepcion";
@@ -1311,8 +1311,8 @@ function agregar_bandeja_entrada(json) {
             $("#botones").append(btnrecepcion);
 //            $("#botones").append(btnCancelada);
         } else if (json.estado === "3" &&
-                json.tipo_usuario_institucion === JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario &&
-                json.tipo_servicio_institucion === JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio) { //solicitud rechazada
+                json.tipo_usuario_institucion === JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario &&
+                json.tipo_servicio_institucion === JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio) { //solicitud rechazada
             var btnQuitarRechazo = document.createElement("input");
             btnQuitarRechazo.id = "btnQuitarRechazo";
             btnQuitarRechazo.className = "btn btn-danger boton";

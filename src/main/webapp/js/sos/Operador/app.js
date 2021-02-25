@@ -1167,7 +1167,7 @@ function initializeSessionSOS() {
                     EnviarMensajePorSocket(json);
                     session.signal({
                         type: 'Operador' + DEPENDENCIA,
-                        data: "Llamada Atendida por operador " + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys
+                        data: "Llamada Atendida por operador " + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys
                     }, function (error) {
                         if (error) {
                             console.error('Error sending signal:', error.name, error.message);
@@ -1394,7 +1394,7 @@ function initializeSessionSOS() {
                         Aviso += "- " + dependencia[3] + "<br>";
                         url.push(dependencia[2]);
 
-                        notificados += hostdir + '/' + DEPENDENCIA + "/" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario + "/" + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio + "|" + dependencia[2] + ",";
+                        notificados += hostdir + '/' + DEPENDENCIA + "/" + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario + "/" + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio + "|" + dependencia[2] + ",";
                     }
 
                 }
@@ -1660,7 +1660,7 @@ function UpdateIncidentes(prefijo_estado) {
                         "origen": "App " + data.Modo.nombre,
                         "prioridad": incidente.Prioridad,
                         "motivo": incidente.Incidente,
-                        "operador": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys + " " + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre + " " + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).apellidos
+                        "operador": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys + " " + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre + " " + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).apellidos
                     },
                     "datos_llamada": {
                         "folio": Folio,
@@ -1679,7 +1679,7 @@ function UpdateIncidentes(prefijo_estado) {
                         "hora_ocurre": f + " " + data.RegistroLlamada.hora
                     },
                     "tiempo_llamada": {
-                        "recibida_por": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys + " " + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre + " " + JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).apellidos,
+                        "recibida_por": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys + " " + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre + " " + JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).apellidos,
                         "h_recepcion": HRecepcion,
                         "h_transmision": HTransmision,
                         "t_transmision": RestarDate(dR, dT),
@@ -1712,7 +1712,7 @@ function UpdateIncidentes(prefijo_estado) {
                 "reporte_dependencias":
                         {
                             "nombre_dependencia": DEPENDENCIA_ALIAS,
-                            "nombre_encargado": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+                            "nombre_encargado": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
                             "num_atencion": "1",
                             "f_trasmision": f + " " + HTransmision,
                             "h_lectura": HCaptura,
@@ -1766,7 +1766,7 @@ function SolicitarFolio(codigo) {
                 "origen": DEPENDENCIA,
                 "fecha": getFecha(),
                 "hora": getHora(),
-                "operador": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys
+                "operador": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys
             }
             ),
             success: function (response) {
@@ -1789,7 +1789,7 @@ function SolicitarFolio(codigo) {
                 "origen": DEPENDENCIA,
                 "fecha": getFecha(),
                 "hora": getHora(),
-                "operador": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys
+                "operador": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys
             }
             ),
             success: function (response) {
@@ -1839,7 +1839,7 @@ function GuardarReporte(idLlamada, descipcionLugar, temergencia, prioridad, repo
     data.RegistroLlamada.time.h_captura_reporte = getFecha() + " " + getHora();
 //   
     var json = {};
-    if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("tipo_usuario") && JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("tipo_servicio")) {
+    if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("tipo_usuario") && JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("tipo_servicio")) {
         json = {
 
             "idLlamada": idLlamada,
@@ -1854,8 +1854,8 @@ function GuardarReporte(idLlamada, descipcionLugar, temergencia, prioridad, repo
             "hora": hora_reporte,
             "fecha": getFecha(),
             "bitacora": data.RegistroLlamada.time,
-            "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+            "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+            "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
         };
     } else {
         json = {
@@ -2064,7 +2064,7 @@ function RegistroLlamadaAtendida(d) {
             "idModo_Llamada_Finalizada": '5',
             "ruta_generada": ruta.toString(),
             "idUsuarios_Movil": idUsuario,
-            "idUsuario_Sys": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+            "idUsuario_Sys": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
             "prefijoFolio": prefijoFolio
         }),
         success: function (response) {
@@ -3018,8 +3018,8 @@ $("#EstablecerIncidente").on("click", function (e) {
                                 "responseIncidentes": responseIncidentes,
                                 "registroFolio": response,
                                 "dependencia": hostdir + '/' + DEPENDENCIA,
-                                "idOperador": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
-                                "operador": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre,
+                                "idOperador": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
+                                "operador": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre,
                                 "registrar_incidente": true,
                                 "idSocket": idSocketOperador
 

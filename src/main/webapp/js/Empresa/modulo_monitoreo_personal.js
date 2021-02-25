@@ -591,7 +591,7 @@ function iniciarllamada(firebaseArray, idUsers, jsonArray) {
                         var idSys = document.createElement("input");
                         idSys.type = "hidden";
                         idSys.id = "idSys";
-                        idSys.value = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys;
+                        idSys.value = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys;
                         idSys.name = "idSys";
 
                         var origen = document.createElement("input");
@@ -609,13 +609,13 @@ function iniciarllamada(firebaseArray, idUsers, jsonArray) {
                         var tipo_usuario = document.createElement("input");
                         tipo_usuario.type = "hidden";
                         tipo_usuario.id = "tipo_usuario";
-                        tipo_usuario.value = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
+                        tipo_usuario.value = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
                         tipo_usuario.name = "tipo_usuario";
 
                         var tipo_servicio = document.createElement("input");
                         tipo_servicio.type = "hidden";
                         tipo_servicio.id = "tipo_servicio";
-                        tipo_servicio.value = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
+                        tipo_servicio.value = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
                         tipo_servicio.name = "tipo_servicio";
 
 
@@ -760,14 +760,14 @@ function SeleccionarGrupoGeneral(data) {
 }
 function RegistroNotificaciones(idUsers, idLlamada) {
     var json = {};
-    if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("tipo_usuario") && JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("tipo_servicio")) {
+    if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("tipo_usuario") && JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("tipo_servicio")) {
         json = {
             "idUsuarios_Movil": idUsers,
             "idLlamada": idLlamada,
             "fecha": getFecha(),
             "hora": getHora(),
-            "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+            "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+            "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
         };
     } else {
         json = {
@@ -1742,10 +1742,10 @@ function ElimiarMiembroEnGrupoDOM(id_Grupo, idUsuarios_Movil) {
 function DataGrupos() {
 
     let json = {
-        "idUsuarioSys": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
-        "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-        "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-        "tipo_area": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
+        "idUsuarioSys": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
+        "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+        "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+        "tipo_area": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area
     };
     var settings = {
         "async": true,
@@ -1815,9 +1815,9 @@ function ConsultarDirectorio() {
         data: JSON.stringify({
             "fecha": getFecha(),
             "hora": getHora(),
-            "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            "tipo_servicio":JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio,
-            "tipo_area":JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_area
+            "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+            "tipo_servicio":JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio,
+            "tipo_area":JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_area
         }),
         success: function (response) {
             //console.info(response);

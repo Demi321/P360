@@ -519,12 +519,12 @@ function agregaGif() {
 
 function BusquedaFolioExterno(FolioExterno) {
     var json = {};
-//    if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("tipo_usuario") && JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("tipo_servicio")) {
+//    if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("tipo_usuario") && JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("tipo_servicio")) {
 //        json = {
 //            "folioexterno": FolioExterno,
 //            "url": window.location.host,
-//            "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-//            "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+//            "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+//            "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
 //        };
 //    } else {
         json = {
@@ -565,10 +565,10 @@ function BusquedaFolioExterno(FolioExterno) {
 function BusquedaPorFecha(Fecha) {
     //document.getElementById("collapseResultados").className="collapse show";
     var json = {};
-    if (JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("tipo_usuario") && JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).hasOwnProperty("tipo_servicio")) {
+    if (JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("tipo_usuario") && JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).hasOwnProperty("tipo_servicio")) {
         json = {
             "fecha": Fecha,
-            "idUser": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+            "idUser": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
             "fecha_de_busqueda": getFecha(),
             "hora_de_busqueda": getHora(),
             "usuario": false,
@@ -578,13 +578,13 @@ function BusquedaPorFecha(Fecha) {
             "video": false,
             "voz": false,
             "chat": false,
-            "tipo_usuario": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario,
-            "tipo_servicio": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio
+            "tipo_usuario": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario,
+            "tipo_servicio": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio
         };
     } else {
         json = {
             "fecha": Fecha,
-            "idUser": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).idUsuario_Sys,
+            "idUser": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).idUsuario_Sys,
             "fecha_de_busqueda": getFecha(),
             "hora_de_busqueda": getHora(),
             "usuario": false,

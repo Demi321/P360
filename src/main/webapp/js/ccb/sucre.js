@@ -26,7 +26,7 @@ $("#ingresados").click(function () {
 });
 
 $(document).ready(function () {
-    $("#titulo").text(JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion);
+    $("#titulo").text(JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion);
 });
 
 //activar_listener_socket();
@@ -174,7 +174,7 @@ directorio_pacientesCCB().then(function (directorio) {
 var json = {
     "fecha": getFecha(),
     "hora": getHora(),
-    "institucion_refiere": JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion,
+    "institucion_refiere": JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion,
     "telefono_contacto_institucion": "55797461328",
     "nombre": "Rodrigo Juarez Castro",
     "apellidop_paciente": "Juarez",
@@ -834,9 +834,9 @@ function actualiza_bandeja(json) {
 }
 
 function cambio_estado_sucre(json) {
-    json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-    json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
-    json.nombre_institucion = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion;
+    json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+    json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
+    json.nombre_institucion = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion;
     json.proyecto = window.location.origin + "/" + DEPENDENCIA;
     return Promise.resolve($.ajax({
         type: 'POST',
@@ -868,9 +868,9 @@ function ConsultarDirectorioSUCRE() {
 }
 
 function inicio_traslado(json) {
-    json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-    json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
-    json.nombre_institucion = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).nombre_institucion;
+    json.tipo_usuario = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_usuario;
+    json.tipo_servicio = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).tipo_servicio;
+    json.nombre_institucion = JSON.parse(getCookie("username_v3.2_" + DEPENDENCIA)).nombre_institucion;
     json.proyecto = window.location.origin + "/" + DEPENDENCIA;
     return Promise.resolve($.ajax({
         type: 'POST',
