@@ -127,6 +127,15 @@ $(window).on("load", function () {
 //Solucion a la parte responsiva
     showToggle();//
 
+    //revisar si aun no se ha registrado una empresa
+    if (!Object.keys(empresa_usuario).length) {
+        swal.fire({
+            title: "Bienvenido a tu plataforma empresarial",
+            text: "Comienza registrado tu empresa.",
+            confirmButtonText: "Ir",
+            allowOutsideClick: false
+        });
+    } else
     //revisar si aun bno se han cargado sucursales 
     if (!sucursales_usuario.length) {
         console.log("redirigir a colaboradores")
@@ -148,7 +157,7 @@ $(window).on("load", function () {
         console.log("redirigir a colaboradores")
         swal.fire({
             title: "Bienvenido a tu plataforma empresarial",
-            text: "Muy bien, ya cuentas con: "+ sucursales_usuario.length +" "+ (sucursales_usuario.length === 1 ? " sucursal registrada" : " sucursales registradas")+". ¡Ahora continua invitando a tus colaboradores!...",
+            text: "Muy bien, ya cuentas con: " + sucursales_usuario.length + " " + (sucursales_usuario.length === 1 ? " sucursal registrada" : " sucursales registradas") + ". ¡Ahora continua invitando a tus colaboradores!...",
             confirmButtonText: "Ir",
             allowOutsideClick: false
         }).then((result) => {

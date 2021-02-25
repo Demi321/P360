@@ -436,7 +436,7 @@ function fileReader(oEvent) {
                         });
                         json.alias = alias;
                         json.tipo_usuario = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_usuario;
-                        json.tipo_servicio = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).tipo_servicio;
+                        json.tipo_servicio = info_hoja[j].numerodesucursal;
                         json.id360 = JSON.parse(getCookie("username_v3.1_" + DEPENDENCIA)).id_usuario;
                         info_completa_hoja.push(json);
                     });
@@ -471,7 +471,7 @@ function mostrar_resultados(json) {
         "position": "absolute",
         "top": "0",
         "left": "0",
-        "background": "#343a40",
+        "background": "#f5f5f5",
         "height": "100%",
         "width": "100%",
         "z-index": "100"
