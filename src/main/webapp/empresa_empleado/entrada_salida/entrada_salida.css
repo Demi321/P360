@@ -568,7 +568,7 @@
     border-radius: 0 0.25rem 0.25rem 0;
 }
 .entrada_salida .checador {
-    background-image: url(https://empresas.claro360.com/p360_v4_dev_moises/SVG/Icono_jorada_laboral.svg);
+    background-image: url(https://empresas.claro360.com/p360_v4/SVG/Icono_jorada_laboral.svg);
     width: 25px;
     height: 25px;
     filter: invert(1);
@@ -576,7 +576,7 @@
     background-repeat: no-repeat;
 }
 .entrada_salida .finalizar_jornada_icon {
-    background-image: url(https://empresas.claro360.com/p360_v4_dev_moises/SVG/Finalizar_jornada.svg);
+    background-image: url(https://empresas.claro360.com/p360_v4/SVG/Finalizar_jornada.svg);
     width: 20px;
     height: 20px;
     background-position: center;
@@ -586,7 +586,7 @@
     left: 10px;
 }
 .entrada_salida .walking_man {
-    background-image: url(https://empresas.claro360.com/p360_v4_dev_moises/SVG/Icono_time_lapse.svg);
+    background-image: url(https://empresas.claro360.com/p360_v4/SVG/Icono_time_lapse.svg);
     width: 30px;
     height: 30px;
     background-position: center;

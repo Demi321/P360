@@ -547,7 +547,7 @@ and open the template in the editor.
     margin: 0 15px;
 }
 .home_empleado .finalizar_jornada_icon {
-    background-image: url(https://empresas.claro360.com/p360_v4_dev_moises/SVG/Finalizar_jornada.svg);
+    background-image: url(https://empresas.claro360.com/p360_v4/SVG/Finalizar_jornada.svg);
     width: 20px;
     height: 20px;
     background-position: center;
@@ -557,7 +557,7 @@ and open the template in the editor.
     left: 10px;
 }
 .home_empleado .walking_man {
-    background-image: url(https://empresas.claro360.com/p360_v4_dev_moises/SVG/Icono_time_lapse.svg);
+    background-image: url(https://empresas.claro360.com/p360_v4/SVG/Icono_time_lapse.svg);
     width: 30px;
     height: 30px;
     background-position: center;

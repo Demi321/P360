@@ -272,7 +272,7 @@ let reporte_trabajo = (b) => {
     let titulo = $("<div>Reporte de Trabajo</div>").addClass("col-12 p-0 text-white titulo");
     let icono = $('<div></div>').addClass("col-4 p-0 text-white icono");
     icono.css({
-        "background-image": "url(https://empresas.claro360.com/p360_v4_dev_moises/SVG/reporte_trabajo.svg)",
+        "background-image": "url(https://empresas.claro360.com/p360_v4/SVG/reporte_trabajo.svg)",
         "background-size": "contain",
         "background-position": "center",
         "background-repeat": "no-repeat"
@@ -321,7 +321,7 @@ let reporte_sintomas = (b) => {
     let titulo = $("<div>Reporte de Síntomas</div>").addClass("col-12 p-0 text-white titulo");
     let icono = $('<div></div>').addClass("col-4 p-0 text-white icono");
     icono.css({
-        "background-image": "url(https://empresas.claro360.com/p360_v4_dev_moises/SVG/reporte_sintomas.svg)",
+        "background-image": "url(https://empresas.claro360.com/p360_v4/SVG/reporte_sintomas.svg)",
         "background-size": "contain",
         "background-position": "center",
         "background-repeat": "no-repeat"
@@ -372,7 +372,7 @@ let reporte_proteccion_personal = (b) => {
     let titulo = $("<div>Equipo de Protección Personal</div>").addClass("col-12 p-0 text-white titulo");
     let icono = $('<div></div>').addClass("col-4 p-0 text-white icono");
     icono.css({
-        "background-image": "url(https://empresas.claro360.com/p360_v4_dev_moises/SVG/equipo_proteccion_personal.svg)",
+        "background-image": "url(https://empresas.claro360.com/p360_v4/SVG/equipo_proteccion_personal.svg)",
         "background-size": "contain",
         "background-position": "center",
         "background-repeat": "no-repeat"
@@ -423,7 +423,7 @@ let reporte_seguridad_sanitaria = (b) => {
     let titulo = $("<div>Reporte de Seguridad Sanitaria</div>").addClass("col-12 p-0 text-white titulo");
     let icono = $('<div></div>').addClass("col-4 p-0 text-white icono");
     icono.css({
-        "background-image": "url(https://empresas.claro360.com/p360_v4_dev_moises/SVG/reporte_seguridad_sanitaria.svg)",
+        "background-image": "url(https://empresas.claro360.com/p360_v4/SVG/reporte_seguridad_sanitaria.svg)",
         "background-size": "contain",
         "background-position": "center",
         "background-repeat": "no-repeat"

@@ -1847,7 +1847,7 @@ function notificacion_llamada(mensaje) {
                 console.log(result);
                 if (result.value) {
                     console.log("Externa");
-                    window.open('https://empresas.claro360.com/plataforma360_dev_moises/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');  
+                    window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');  
                 } else{
                   console.log("Aquí mismo");
                   console.log(result);
@@ -1897,7 +1897,7 @@ function prueba_notificacion(mensaje) {
                 console.log(result);
                 if (result.value) {
                     console.log("Externa");
-                    window.open('https://empresas.claro360.com/plataforma360_dev_moises/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');  
+                    window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');  
                 } else{
                     console.log("Aquí mismo");
                     Swal.close();

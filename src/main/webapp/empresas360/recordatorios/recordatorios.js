@@ -286,7 +286,7 @@ const init_recordatorios = (json) => {
             var recordatorios_json = JSON.parse(recordatorios);
             var recordatorios_array = recordatorios_json.recordatorios;
             var audioElement = document.createElement('audio');
-            audioElement.setAttribute('src', "https://empresas.claro360.com/p360_v4_dev_moises/empresas360/recordatorios/SD_ALERT_3.mp3");
+            audioElement.setAttribute('src', "https://empresas.claro360.com/p360_v4/empresas360/recordatorios/SD_ALERT_3.mp3");
             audioElement.addEventListener('ended', function() {
                 this.play();
             }, false);

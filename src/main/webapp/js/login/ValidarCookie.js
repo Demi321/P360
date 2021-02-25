@@ -270,7 +270,7 @@ if ($("#menu_cerrar_sesion").length) {
 //agregar_enlace_estatico("Plan Interno", "https://planinterno360.ml/", "PlanInterno");
 //agregar_enlace_estatico("Seguridad Sanitaria", "https://seguridadsanitaria360.ml/lineamientos/", "SeguridadSanitaria");
 //agregar_enlace_estatico("Escuela 360", "https://escuela360.ml/plataforma360/", "VisualizacionDatos");
-//agregar_enlace_estatico("Mi Empresa 360", "https://empresas.claro360.com/plataforma360_dev_moises/", "Empresa360");
+//agregar_enlace_estatico("Mi Empresa 360", "https://empresas.claro360.com/plataforma360/", "Empresa360");
 //agregar_enlace_estatico("Plataforma 360", "https://sos911.ml/plataforma360/", "Empresa360");
 //agregar_enlace_estatico("Visualización de Datos", "https://geodatos.claro360.com/", "VisualizacionDatos");
 //agregar_enlace_estatico("Hogar Conectado", "https://pruebasvideovigilancia.ml/", "Videovigilancia");

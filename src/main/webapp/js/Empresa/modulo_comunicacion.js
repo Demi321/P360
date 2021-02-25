@@ -2103,7 +2103,7 @@ console.log("Empieza a crear los componentes de contacto");
                             console.log(result);
                             if (result.value) {
                                 console.log("Externa");
-                                window.open('https://empresas.claro360.com/plataforma360_dev_moises/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');
+                                window.open('https://empresas.claro360.com/plataforma360/Llamada/' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');
                             } else {
                                 console.log("Aquí mismo");
                                 console.log(result);
@@ -2749,7 +2749,7 @@ $("#iniciar_llamada").click(() => {
     console.log(id360);
     RequestPOST("/API/notificacion/llamada360", id360).then((mensaje) => {
         console.log(mensaje);
-        window.open('https://empresas.claro360.com/plataforma360_dev_moises/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
+        window.open('https://empresas.claro360.com/plataforma360/Llamada/' + mensaje.registro_llamada.idLlamada + '/' + mensaje.credenciales.apikey + '/' + mensaje.credenciales.idsesion + '/' + mensaje.credenciales.token + '', '_blank');
 
     });
 });
@@ -4043,7 +4043,7 @@ const initCall = (msj) => {
                                 icon: 'success',
                                 title: 'Invitacion enviada correctamente.'
                             })
-                            //window.open('https://empresas.claro360.com/plataforma360_dev_moises/Llamada/agregar_participante' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
+                            //window.open('https://empresas.claro360.com/plataforma360/Llamada/agregar_participante' + msj.registro_llamada.idLlamada + '/' + msj.credenciales.apikey + '/' + msj.credenciales.idsesion + '/' + msj.credenciales.token + '', '_blank');  
                         });
                     }
                 }

@@ -288,7 +288,7 @@ console.log(json);
 
         var reporte_evento_incidente_Loader_lottieAnimation = bodymovin.loadAnimation({
             container: reporte_evento_incidente_lottieLoader, // ID del div
-            path: "https://empresas.claro360.com/p360_v4_dev_moises/json/loading_lottie.json", // Ruta fichero .json de la animación
+            path: "https://empresas.claro360.com/p360_v4/json/loading_lottie.json", // Ruta fichero .json de la animación
             renderer: 'svg', // Requerido
             loop: true, // Opcional
             autoplay: true, // Opcional
