@@ -272,3 +272,21 @@ and open the template in the editor.
 .detalleArchivo .contenedorRespuestas .card-header:nth-child(even):hover{
     background-color: rgba(0,0,0,0.2);
 }
+
+.archivo .dataItemArchivo{
+    display: grid;
+    grid-template-columns: 1fr 20px;
+}
+
+.archivo .dataItemArchivo .cantidadRespuestasArchivo{
+    text-align: center;
+    padding-top: 10px;
+}
+
+.archivo .dataItemArchivo .cantidadRespuestasArchivo span{
+    font-size: 1.2rem;
+    border: 1px solid #0097a9;
+    padding: 5px;
+    border-radius: 50%;
+    color: #0097a9;
+}

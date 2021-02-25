@@ -26,6 +26,19 @@ var agregaDivProyectoCorreo;
 var cargarArchivosCorreo;
 var agregaItemArchivoCorreo;
 
+/* NOTIFICACION SONIDOS */
+var buttonNotificacionCorreo = $("<button></button>").addClass("d-none");
+var sonidoCorreo = document.getElementById('sonidoCorreos');
+$("body").append(buttonNotificacionCorreo);
+
+buttonNotificacionCorreo.click(() => {
+
+    sonidoCorreo.muted = true;
+    sonidoCorreo.muted = false;
+    sonidoCorreo.play();
+
+});
+
 const loaderArchivos = $("#loaderArchivos");
 
 /* VENTANA MODAL PARA CONFIRMAR O DECLINAR UNA ACCION */
@@ -79,6 +92,35 @@ const buscaEnDirectorioCompletoArchivos = (id360) => {
     return user;
 };
 
+recibirArchivoSocket = (mensaje) => {
+
+    /* VERIFICAR SI EL PROYECTO ESTA PINTADO */
+    if( !$("#itemProyectoArchivosVistaCorreo_" + mensaje.id_proyecto).length ){
+       agregaDivProyectoCorreo(mensaje.id_proyecto, mensaje.id_proyecto, mensaje.proyecto, 1, false);
+    }else{
+        
+        let divProyecto = $("#itemProyectoArchivosVistaCorreo_" + mensaje.id_proyecto);
+        
+        /* AUMENTAR LA CANTIDAD DEL SPAN */
+        let spanCantidad = divProyecto.find("span");
+        let cantidad = parseInt( spanCantidad.text() );
+        spanCantidad.text( cantidad+1 );
+        
+       /* SABER SI EL INPUT ESTA MARCADO */
+        let proyectoSeleccionado = $("input[name=proyectoSeleccionado]:checked").val();
+        if( (proyectoSeleccionado === mensaje.id_proyecto || proyectoSeleccionado === "0") && $("input[name=origenSeleccionado]:checked").val() !== "2"){
+            
+            agregaItemArchivoCorreo(mensaje); 
+            
+        }
+       
+    }
+    
+    buttonNotificacionCorreo.click();
+
+};
+
+/* METODO PARA PINTAR RESPUESTAS SOBRE UN CORREO SELECCIONADO */
 agregarRespuestaDeCorreo = (respuesta) => {
 
     let contenedorRespuestas = $("#contenedorRespuestasCorreo_" + respuesta.id_archivo);
@@ -242,11 +284,13 @@ agregarRespuestaDeCorreo = (respuesta) => {
 
 };
 
+/* METODO PARA PINTAR UN PROYECTO EN EL LISTADO */
 agregaDivProyectoCorreo = (value, id, text, cantidad, selected) => {
 
     const listadoProyectos = $(".listadoDeProyectos .radio-proyectos");
 
     let div = $("<div></div>").addClass("form-group");
+    div.attr("id","itemProyectoArchivosVistaCorreo_" + id);
     let input = $("<input>");
     input.attr("value", value);
     input.attr("type", "radio");
@@ -263,7 +307,7 @@ agregaDivProyectoCorreo = (value, id, text, cantidad, selected) => {
         "color": "#fff"
     });
     cantidadArchivosProyecto.text(cantidad);
-    //label.append(cantidadArchivosProyecto);
+    label.append(cantidadArchivosProyecto);
 
     div.append(input);
     div.append(label);
@@ -275,14 +319,17 @@ agregaDivProyectoCorreo = (value, id, text, cantidad, selected) => {
     }
 };
 
+/* METODO PARA PINTAR UN ARCHIVO EN EL LISTADO */
 agregaItemArchivoCorreo = (data) => {
     
     const contenedorArchivos = $("#archivosVistaCorreo .listadoArchivosVistaCorreo");
     const contenedorDetalleArchivo = $("#archivosVistaCorreo .detalleArchivo");
 
     let div = $("<div></div>").addClass("itemArchivo");
+    div.attr("id","itemArchivoVistaCorreo_" + data.id_archivo);
 
     let divData = $("<div></div>").addClass("dataItemArchivo");
+    let divDataContent = $("<div></div>").addClass("w-100");
     let remitente = $("<h5></h5>").addClass("remitenteArchivo");
 
     let nombreRemitente = "";
@@ -302,10 +349,22 @@ agregaItemArchivoCorreo = (data) => {
     }
 
     remitente.text(nombreRemitente);
-    divData.append(remitente);
+    divDataContent.append(remitente);
     let asunto = $("<p></p>").addClass("asunto");
     asunto.text(data.titulo_archivo);
-    divData.append(asunto);
+    divDataContent.append(asunto);
+    
+    let divDataCantidadRespuestas = $("<div></div>").addClass("w-100 cantidadRespuestasArchivo");
+    divDataCantidadRespuestas.attr("id","cantidadRespuestasArchivo_" + data.id_archivo);
+    divDataCantidadRespuestas.append( '<span>'+data.cantidadRespuestas+'</span>' );
+    if(data.cantidadRespuestas === "0"){
+        divDataCantidadRespuestas.css({
+            "display":"none"
+        });
+    }
+    
+    divData.append(divDataContent);
+    divData.append(divDataCantidadRespuestas);
 
     let divControles = $("<div></div>").addClass("controlesItemArchivo");
     let buttonEliminar = $("<button></button>").addClass("btn btn-sm btn-ligth");
@@ -765,6 +824,7 @@ agregaItemArchivoCorreo = (data) => {
 
 };
 
+/* METODO PARA HACER UNA CARGA DE ARCHIVOS MEDIANTE FILTROS */
 cargarArchivosCorreo = () => {
 
     muestraLoaderArchivo();
@@ -1168,7 +1228,9 @@ const initVistaArchivos = () => {
                                 'destinatarios': usuariosReenviaArchivo,
                                 "tipo_usuario": sesion_cookie.tipo_usuario,
                                 'tipo_servicio': sesion_cookie.tipo_servicio,
-                                'tipo_area': sesion_cookie.tipo_area
+                                'tipo_area': sesion_cookie.tipo_area,
+                                "fecha": getFecha(),
+                                "hora": getHora()
                             };
 
                             RequestPOST("/API/empresas360/guardar_archivo_empresas", dataArchivo).then((response) => {
@@ -1417,21 +1479,19 @@ const initVistaCorreo = () => {
         $(".listadoDeProyectos .radio-proyectos").empty();
 
         agregaDivProyectoCorreo("0", "todosLosProyectos", "Todos los proyectos", '0', true);
+        let suma = 0;
 
         $.each(response, (index, proyecto) => {
 
+            suma += parseInt( proyecto.cantidadArchivos );
             agregaDivProyectoCorreo(proyecto.id_proyecto, "proyectoArchivos_" + proyecto.id_proyecto, proyecto.nombre_proyecto, proyecto.cantidadArchivos, false);
 
         });
 
         cargarArchivosCorreo();
 
-        const proyectosDOM = $("input[name=proyectoSeleccionado]");
-        proyectosDOM.off();
-        proyectosDOM.change(function () {
-
+        $("body").on("change", "input[name=proyectoSeleccionado]", () => {
             cargarArchivosCorreo();
-
         });
 
         ocultaLoaderArchivo();
@@ -1442,7 +1502,7 @@ const initVistaCorreo = () => {
             });
         }
 
-        //$("input[name=proyectoSeleccionado]").first().next().find("span").text(suma);
+        $("input[name=proyectoSeleccionado]").first().next().find("span").text(suma);
 
     });
 
@@ -1697,7 +1757,9 @@ var init_archivo = (json) => {
                     'destinatarios': destinatarios_archivos,
                     "tipo_usuario": tipo_usuario,
                     'tipo_servicio': tipo_servicio,
-                    'tipo_area': tipo_area
+                    'tipo_area': tipo_area,
+                    'fecha': getFecha(),
+                    'hora': getHora()
                 };
 
                 RequestPOST("/API/empresas360/guardar_archivo_empresas", dataArchivo).then((response) => {
@@ -1826,47 +1888,6 @@ var init_archivo = (json) => {
             initVistaArchivos();
 
     });
-
-    recibirArchivoSocket = (mensaje) => {
-
-        console.log("Recibir archivo por socket");
-        let remitente = buscaEnDirectorioCompletoArchivos(mensaje.id360).nombre;
-
-        if (Notification.permission !== "granted") {
-            console.log("weeeeee");
-            Notification.requestPermission();
-        } else {
-
-            console.log("Wiiiiii");
-            let options = {
-                body: remitente + " te ha enviado " + mensaje.titulo_archivo + "." + mensaje.tipo_archivo,
-                icon: PathRecursos + "images/claro2min.png",
-                silent: true
-            };
-
-            console.log(options);
-            let notificacion = new Notification("Nuevo archivo recibido", options);
-            setTimeout(notificacion.close.bind(notificacion), 15000);
-
-            notificacion.onshow = function () {
-                //document.getElementById('').play();
-            };
-
-            notificacion.onclick = () => {
-                $("#menu_section_Archivo").click();
-
-                selectOrigen.val("2");
-                selectOrigen.trigger("change");
-                buscaArchivosEnviado(mensaje.titulo_archivo);
-            };
-
-            notificacion.silent = true;
-            console.log("Termina socket");
-
-        }
-
-
-    };
 
     /* LLENADO DE SELECT REMITENTES Y DESTINATARIOS CON EL DIRECTORIO GENERAL */
 
