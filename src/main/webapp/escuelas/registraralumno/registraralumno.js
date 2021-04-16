@@ -6,34 +6,36 @@
 
 /* Accion para registrar y activar una empresa */
 
-$("#form_RegistrarMateria").submit((e) => {
+$("#form_RegistrarAlumno").submit((e) => {
     e.preventDefault();
 
-    let json = buildJSON_Section("form_RegistrarMateria");
+    let json = buildJSON_Section("form_RegistrarAlumno");
    // json.logotipo = json.upFile_logo_nueva_empresa_logotipo;
     //json.id360 = sesion_cookie.id_usuario;
     console.log(json);
-    RequestPOST("/API/registro/materia", json).then((response) => {
+    RequestPOST("/API/registro/alumno_grupo", json).then((response) => {
         console.log(response);
         swal.fire({
             text: response.mensaje
         }).then(() => {
             //recargar por access token 
             if (response.success) {
-                let url = window.location.protocol + "//" + window.location.host + "/" + DEPENDENCIA + "/";
-                acceso_externo(url);
+                var id = response.id
+                $('#base_modulo_RegistrarSucursal').load('registro_alumno')
+                /*let url = window.location.protocol + "//" + window.location.host + "/" + DEPENDENCIA + "/";
+                acceso_externo(url);*/
             }
         });
     });
 });
 
-function eliminarMateria(indice){
+function eliminarAlumno(alumno){
     
         let json = {};
-        json.id_materia = indice;
+        json.id_alumno = alumno;
         
         console.log(json);
-       RequestPOST("/API/elimina/materia", json).then((response) => {
+       RequestPOST("/API/elimina/alumno_horario", json).then((response) => {
             console.log(response);
             swal.fire({
                 text: response.mensaje
@@ -41,7 +43,7 @@ function eliminarMateria(indice){
                 //recargar por access token 
                 if (response.success) {
                     var id = response.id
-                    $('#base_modulo_RegistrarSucursal').load('registro_materia')
+                    $('#base_modulo_RegistrarSucursal').load('registro_alumno')
                     /*let url = window.location.protocol + "//" + window.location.host + "/" + DEPENDENCIA + "/";
                     acceso_externo(url);*/
                 }
